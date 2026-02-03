@@ -1,30 +1,30 @@
 # OptiJob 🚀
 
 **OptiJob** est votre coach carrière personnel alimenté par l'IA, conçu spécifiquement pour le marché africain et international.
-Notre plateforme analyse votre profil, optimise votre CV pour les ATS (Applicant Tracking Systems) et génère des lettres de motivation persuasives en quelques secondes.
+Notre plateforme analyse votre profil, optimise votre CV pour les ATS et vous fournit des outils professionnels (Signature, Lettres) en un clic.
 
 ---
 
-## ✨ Fonctionnalités & Design (v2.0)
+## ✨ Fonctionnalités & Design (v1.0)
 
-### 🎨 Expérience Visuelle "Deep Blue"
+### 🎨 Expérience "Hyper Pro"
 
 - **Thème Premium** : Esthétique soignée (`#0F172A`) avec typographie **Manrope**.
-- **Hero Section** : Animation "Stacked CVs" (cartes superposées) et avatars **profils africains** pour l'ancrage local.
-- **Micro-interactions** : Effets de survol, animations au scroll (Framer Motion).
+- **Composants Modernes** : Accordéons, Bento Grids, Cartes interactives.
+- **Micro-interactions** : Effets de survol et animations fluides (Framer Motion).
 
 > 👉 **[Voir toutes les fonctionnalités en détail](./FEATURES.md)**
 
-### ⚡ Bento Grid (Fonctionnalités)
+### ⚡ Bento Grid (Fonctionnalités Clés)
 
-Une grille modulaire présentant les 6 piliers de l'application :
+Une suite complète d'outils pour votre carrière :
 
-1. **Coach IA & Anti-Rejet** : Analyse ATS intelligente.
-2. **Ciblage de Poste** : Adaptation aux mots-clés des offres.
-3. **Lettre de Motivation** : Rédaction automatique.
-4. **Mode Ultra Rapide** : Import LinkedIn/PDF en < 2 min.
-5. **Export PDF HD** : Rendu vectoriel pro.
-6. **Templates** : Galerie de modèles modernes.
+1.  **Coach IA & Magic Analyzer** : Scannez votre CV et obtenez un score instantané.
+2.  **Éditeur Temps Réel** : Formulaire simple page (Accordéons) + Aperçu Live.
+3.  **Signature Électronique** : Module de signature intégré.
+4.  **Lettres de Motivation** : Gestionnaire de lettres dédié.
+5.  **Templates Pro** : Modèles adaptés à chaque industrie (Tech, Corporate...).
+6.  **Export PDF HD** : Rendu vectoriel parfait pour l'impression.
 
 ### 👥 Ciblage Audience (Vibrant)
 

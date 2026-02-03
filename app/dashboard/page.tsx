@@ -1,24 +1,37 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Plus, FileText, Eye, Download, Search } from 'lucide-react';
+import { Plus, FileText, Eye, Download, Search, ArrowLeft } from 'lucide-react';
 import { useCVStore } from '@/store/useCVStore';
 import { useState } from 'react';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { CVCard } from '@/components/dashboard/CVCard';
+import { TemplateSelector } from '@/components/dashboard/TemplateSelector';
+import { TemplateId } from '@/types/cv';
 
 export default function DashboardPage() {
   const { cvList, createNewCV, deleteCV } = useCVStore();
   const [isCreating, setIsCreating] = useState(false);
+  const [step, setStep] = useState<'template' | 'name'>('template');
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>('modern');
   const [newTitle, setNewTitle] = useState('');
 
   const handleCreateCV = () => {
     if (newTitle.trim()) {
-      const id = createNewCV(newTitle.trim());
+      const id = createNewCV(newTitle.trim(), selectedTemplate);
       setNewTitle('');
       setIsCreating(false);
+      setStep('template');
+      setSelectedTemplate('modern');
       window.location.href = `/editor/${id}`;
     }
+  };
+
+  const handleOpenModal = () => {
+    setIsCreating(true);
+    setStep('template');
+    setSelectedTemplate('modern');
+    setNewTitle('');
   };
 
   return (
@@ -44,7 +57,7 @@ export default function DashboardPage() {
               />
            </div>
            <button
-             onClick={() => setIsCreating(true)}
+             onClick={handleOpenModal}
              className="flex items-center gap-2 px-5 py-3 bg-[#2463eb] hover:bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-105"
            >
              <Plus className="w-5 h-5" />
@@ -107,14 +120,14 @@ export default function DashboardPage() {
             {/* Create New Card (Visual) */}
             <motion.div 
                whileHover={{ scale: 1.02 }}
-               onClick={() => setIsCreating(true)}
+               onClick={handleOpenModal}
                className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors h-[320px]"
             >
                <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                  <Plus className="w-8 h-8 text-slate-400 group-hover:text-blue-500" />
                </div>
                <p className="font-bold text-slate-600 group-hover:text-blue-600">Nouveau CV</p>
-               <p className="text-xs text-slate-400 mt-1">Partir de zéro ou d'un modèle</p>
+               <p className="text-xs text-slate-400 mt-1">Choisir un modèle</p>
             </motion.div>
 
             {/* Existing CVs */}
@@ -125,7 +138,7 @@ export default function DashboardPage() {
                 title={cv.title} 
                 updatedAt={cv.updatedAt} 
                 onDelete={deleteCV}
-                score={Math.floor(Math.random() * (98 - 70) + 70)} // Random score 70-98 for demo
+                score={Math.floor(Math.random() * (98 - 70) + 70)}
               />
             ))}
           </div>
@@ -139,7 +152,7 @@ export default function DashboardPage() {
                Créez votre premier CV professionnel en quelques minutes grâce à notre assistant IA.
              </p>
              <button
-               onClick={() => setIsCreating(true)}
+               onClick={handleOpenModal}
                className="inline-flex items-center gap-2 px-8 py-4 bg-[#2463eb] text-white rounded-xl font-bold hover:shadow-xl hover:shadow-blue-600/20 transition-all"
              >
                <Plus className="w-5 h-5" />
@@ -148,39 +161,74 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Modal Creation */}
+        {/* Modal Creation with Template Selection */}
         {isCreating && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
              <motion.div 
                initial={{ opacity: 0, scale: 0.95 }}
                animate={{ opacity: 1, scale: 1 }}
-               className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl"
+               className="bg-white rounded-2xl p-8 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
              >
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">Nommez votre CV</h2>
-                <input
-                   autoFocus
-                   type="text"
-                   placeholder="Ex: CV Développeur 2024"
-                   className="w-full px-4 py-3 border border-slate-200 rounded-xl mb-6 focus:ring-2 focus:ring-blue-500 outline-none"
-                   value={newTitle}
-                   onChange={(e) => setNewTitle(e.target.value)}
-                   onKeyDown={(e) => e.key === 'Enter' && handleCreateCV()}
-                />
-                <div className="flex gap-3">
-                   <button 
-                     onClick={() => setIsCreating(false)}
-                     className="flex-1 py-3 font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
-                   >
-                     Annuler
-                   </button>
-                   <button 
-                     onClick={handleCreateCV}
-                     disabled={!newTitle.trim()}
-                     className="flex-1 py-3 font-bold text-white bg-[#2463eb] rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                   >
-                     Créer
-                   </button>
-                </div>
+                {step === 'template' ? (
+                  <>
+                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Choisissez un modèle</h2>
+                    <p className="text-slate-500 text-sm mb-6">Sélectionnez le style qui correspond le mieux à votre profil.</p>
+                    
+                    <TemplateSelector 
+                       selectedId={selectedTemplate} 
+                       onSelect={setSelectedTemplate} 
+                    />
+                    
+                    <div className="flex gap-3 mt-8">
+                       <button 
+                         onClick={() => setIsCreating(false)}
+                         className="flex-1 py-3 font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
+                       >
+                         Annuler
+                       </button>
+                       <button 
+                         onClick={() => setStep('name')}
+                         className="flex-1 py-3 font-bold text-white bg-[#2463eb] rounded-xl hover:bg-blue-700 transition-colors"
+                       >
+                         Continuer
+                       </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <button 
+                      onClick={() => setStep('template')}
+                      className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-4"
+                    >
+                       <ArrowLeft className="w-4 h-4" /> Retour
+                    </button>
+                    <h2 className="text-2xl font-bold text-slate-900 mb-6">Nommez votre CV</h2>
+                    <input
+                       autoFocus
+                       type="text"
+                       placeholder="Ex: CV Développeur 2024"
+                       className="w-full px-4 py-3 border border-slate-200 rounded-xl mb-6 focus:ring-2 focus:ring-blue-500 outline-none"
+                       value={newTitle}
+                       onChange={(e) => setNewTitle(e.target.value)}
+                       onKeyDown={(e) => e.key === 'Enter' && handleCreateCV()}
+                    />
+                    <div className="flex gap-3">
+                       <button 
+                         onClick={() => setIsCreating(false)}
+                         className="flex-1 py-3 font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
+                       >
+                         Annuler
+                       </button>
+                       <button 
+                         onClick={handleCreateCV}
+                         disabled={!newTitle.trim()}
+                         className="flex-1 py-3 font-bold text-white bg-[#2463eb] rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                       >
+                         Créer
+                       </button>
+                    </div>
+                  </>
+                )}
              </motion.div>
           </div>
         )}

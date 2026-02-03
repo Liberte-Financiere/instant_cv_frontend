@@ -1,164 +1,255 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Globe, Linkedin, Github } from 'lucide-react';
 import { useCVStore } from '@/store/useCVStore';
-import { formatDate } from '@/lib/utils';
+import { ModernSidebar } from '@/components/templates/ModernSidebar';
+import { ProfessionalClean } from '@/components/templates/ProfessionalClean';
+import { ExecutiveCorporate } from '@/components/templates/ExecutiveCorporate';
+import { CreativeGrid } from '@/components/templates/CreativeGrid';
+import { TechStack } from '@/components/templates/TechStack';
+import { ZoomIn, ZoomOut, Download, Printer, Loader2, FileText, ChevronDown } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { printCV } from '@/lib/pdf-export';
+import { exportToWord } from '@/lib/word-export';
 
 export function CVPreview() {
   const { currentCV } = useCVStore();
+  const [zoom, setZoom] = useState(0.8);
+  const [isExporting, setIsExporting] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const cvRef = useRef<HTMLDivElement>(null);
 
-  if (!currentCV) {
-    return (
-      <div className="h-full flex items-center justify-center text-slate-300">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-slate-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-sm font-medium">Chargement...</p>
-        </div>
-      </div>
-    );
-  }
+  if (!currentCV) return null;
 
-  const { personalInfo, experiences, education, skills, languages } = currentCV;
+  const renderTemplate = () => {
+    switch (currentCV.templateId) {
+      case 'modern':
+        return <ModernSidebar cv={currentCV} />;
+      case 'professional':
+        return <ProfessionalClean cv={currentCV} />;
+      case 'executive':
+        return <ExecutiveCorporate cv={currentCV} />;
+      case 'creative':
+        return <CreativeGrid cv={currentCV} />;
+      case 'tech':
+        return <TechStack cv={currentCV} />;
+      default:
+        return <ModernSidebar cv={currentCV} />;
+    }
+  };
+
+  const handleExportPDF = () => {
+    if (!cvRef.current) return;
+    
+    setShowExportMenu(false);
+    
+    // Use browser print dialog - user can save as PDF
+    const printWindow = window.open('', '_blank', 'width=900,height=700');
+    if (!printWindow) {
+      alert('Veuillez autoriser les popups pour exporter en PDF.');
+      return;
+    }
+
+    // Clone styles
+    const styles = Array.from(document.styleSheets)
+      .map(styleSheet => {
+        try {
+          return Array.from(styleSheet.cssRules)
+            .map(rule => rule.cssText)
+            .join('\n');
+        } catch {
+          return '';
+        }
+      })
+      .join('\n');
+
+    const filename = `${currentCV.personalInfo.firstName}_${currentCV.personalInfo.lastName}_CV`;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${filename}</title>
+          <style>
+            ${styles}
+            
+            * {
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            
+            body {
+              margin: 0;
+              padding: 0;
+              background: white;
+            }
+            
+            @page {
+              size: A4;
+              margin: 0;
+            }
+            
+            @media print {
+              body { margin: 0; padding: 0; }
+              .cv-template { width: 210mm !important; min-height: 297mm !important; }
+            }
+            
+            /* Hide print toolbar hint after 5s */
+            .print-hint {
+              position: fixed;
+              top: 10px;
+              left: 50%;
+              transform: translateX(-50%);
+              background: #1e293b;
+              color: white;
+              padding: 12px 24px;
+              border-radius: 8px;
+              font-family: system-ui, sans-serif;
+              font-size: 14px;
+              z-index: 9999;
+              animation: fadeOut 5s forwards;
+            }
+            @keyframes fadeOut {
+              0%, 80% { opacity: 1; }
+              100% { opacity: 0; pointer-events: none; }
+            }
+            @media print { .print-hint { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div class="print-hint">
+            💡 Choisissez "Enregistrer au format PDF" dans la destination
+          </div>
+          ${cvRef.current.outerHTML}
+        </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+    
+    // Wait for styles to load then trigger print
+    setTimeout(() => {
+      printWindow.focus();
+      printWindow.print();
+    }, 800);
+  };
+
+  const handleExportWord = async () => {
+    setIsExporting(true);
+    setShowExportMenu(false);
+    try {
+      await exportToWord(currentCV);
+    } catch (error) {
+      console.error('Export Word failed:', error);
+      alert('Erreur lors de l\'export Word. Veuillez réessayer.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handlePrint = () => {
+    if (!cvRef.current) return;
+    printCV(cvRef.current);
+  };
 
   return (
-    <div className="w-full h-full bg-white text-slate-800 font-sans text-sm leading-relaxed flex flex-col sm:flex-row min-h-[297mm]">
-      {/* Sidebar (Left Column) */}
-      <div className="w-[32%] bg-slate-900 text-white p-8 space-y-8 flex-shrink-0 print:bg-slate-900 print:text-white">
-        {/* Avatar & Name */}
-        <div className="text-center sm:text-left">
-           <div className="w-24 h-24 mx-auto sm:mx-0 bg-slate-800 rounded-full flex items-center justify-center text-3xl font-bold mb-6 text-blue-400 ring-4 ring-slate-800 ring-offset-2 ring-offset-slate-900">
-             {personalInfo.firstName?.[0]}{personalInfo.lastName?.[0]}
-           </div>
-           <h1 className="text-2xl font-bold leading-tight mb-2">
-             {personalInfo.firstName} <br /> {personalInfo.lastName}
-           </h1>
-           <p className="text-blue-400 font-medium text-sm uppercase tracking-wider">
-             {personalInfo.title}
-           </p>
+    <div className="h-full flex flex-col bg-slate-200/50">
+      {/* Toolbar */}
+      <div className="h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between shrink-0 print:hidden">
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setZoom(Math.max(0.3, zoom - 0.1))}
+            className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg"
+          >
+            <ZoomOut className="w-4 h-4" />
+          </button>
+          <span className="text-xs font-medium w-12 text-center">{Math.round(zoom * 100)}%</span>
+          <button 
+            onClick={() => setZoom(Math.min(2, zoom + 0.1))}
+            className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg"
+          >
+            <ZoomIn className="w-4 h-4" />
+          </button>
         </div>
 
-        {/* Contact Info */}
-        <div className="space-y-4">
-           <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">Contact</h3>
-           <div className="space-y-3 text-sm text-slate-300">
-             {personalInfo.email && (
-               <div className="flex items-center gap-3">
-                 <Mail className="w-4 h-4 text-blue-400 shrink-0" />
-                 <span className="break-all">{personalInfo.email}</span>
-               </div>
-             )}
-             {personalInfo.phone && (
-               <div className="flex items-center gap-3">
-                 <Phone className="w-4 h-4 text-blue-400 shrink-0" />
-                 <span>{personalInfo.phone}</span>
-               </div>
-             )}
-             {personalInfo.address && (
-               <div className="flex items-start gap-3">
-                 <MapPin className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                 <span>{personalInfo.address}</span>
-               </div>
-             )}
-           </div>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={handlePrint} 
+            className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+            title="Imprimer"
+          >
+             <Printer className="w-4 h-4" />
+          </button>
+          
+          {/* Export Dropdown */}
+          <div className="relative">
+            <button 
+              onClick={() => setShowExportMenu(!showExportMenu)}
+              disabled={isExporting}
+              className="flex items-center gap-2 bg-slate-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isExporting ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Export...
+                </>
+              ) : (
+                <>
+                  <Download className="w-3.5 h-3.5" />
+                  Exporter
+                  <ChevronDown className="w-3 h-3" />
+                </>
+              )}
+            </button>
+            
+            {showExportMenu && !isExporting && (
+              <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50">
+                <button 
+                  onClick={handleExportPDF}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  <Download className="w-4 h-4 text-red-500" />
+                  <div className="text-left">
+                    <div className="font-medium">Télécharger PDF</div>
+                    <div className="text-xs text-slate-400">Enregistrer en PDF depuis l&apos;impression</div>
+                  </div>
+                </button>
+                <button 
+                  onClick={handleExportWord}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors border-t border-slate-100"
+                >
+                  <FileText className="w-4 h-4 text-blue-500" />
+                  <div className="text-left">
+                    <div className="font-medium">Télécharger Word</div>
+                    <div className="text-xs text-slate-400">Format .docx éditable</div>
+                  </div>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* Skills */}
-        {skills.length > 0 && (
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">Compétences</h3>
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill) => (
-                <span key={skill.id} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded text-xs font-medium">
-                  {skill.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Languages */}
-        {languages.length > 0 && (
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">Langues</h3>
-            <div className="space-y-3">
-              {languages.map((lang) => (
-                <div key={lang.id} className="flex justify-between items-center text-sm">
-                  <span className="text-slate-300">{lang.name}</span>
-                  <span className="text-xs text-slate-500 font-medium">{lang.level}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Main Content (Right Column) */}
-      <div className="flex-1 p-8 sm:p-12 space-y-8 bg-white">
-         {/* Profile Summary */}
-         {personalInfo.summary && (
-           <section>
-             <h2 className="text-lg font-bold text-slate-900 border-l-4 border-blue-600 pl-4 mb-4 uppercase tracking-wide">
-               Profil Professionnel
-             </h2>
-             <p className="text-slate-600 leading-relaxed text-justify">
-               {personalInfo.summary}
-             </p>
-           </section>
-         )}
+      {/* Click outside to close menu */}
+      {showExportMenu && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setShowExportMenu(false)}
+        />
+      )}
 
-         {/* Experience */}
-         {experiences.length > 0 && (
-           <section>
-             <h2 className="text-lg font-bold text-slate-900 border-l-4 border-blue-600 pl-4 mb-6 uppercase tracking-wide">
-               Expérience Professionnelle
-             </h2>
-             <div className="space-y-8">
-               {experiences.map((exp) => (
-                 <div key={exp.id} className="relative pl-2 group">
-                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-2">
-                     <h3 className="font-bold text-slate-800 text-lg group-hover:text-blue-600 transition-colors">
-                       {exp.position}
-                     </h3>
-                     <span className="text-sm font-medium text-slate-500 tabular-nums shrink-0">
-                       {exp.startDate && formatDate(exp.startDate)} — {exp.current ? 'Présent' : (exp.endDate && formatDate(exp.endDate))}
-                     </span>
-                   </div>
-                   <div className="text-blue-600 font-medium mb-3">{exp.company}</div>
-                   {exp.description && (
-                     <div className="text-slate-600 text-sm leading-relaxed whitespace-pre-wrap">
-                       {exp.description}
-                     </div>
-                   )}
-                 </div>
-               ))}
-             </div>
-           </section>
-         )}
-
-         {/* Education */}
-         {education.length > 0 && (
-           <section>
-             <h2 className="text-lg font-bold text-slate-900 border-l-4 border-blue-600 pl-4 mb-6 uppercase tracking-wide">
-               Formation
-             </h2>
-             <div className="space-y-6">
-               {education.map((edu) => (
-                 <div key={edu.id}>
-                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
-                      <h3 className="font-bold text-slate-800 text-base">
-                        {edu.degree} — {edu.field}
-                      </h3>
-                      <span className="text-sm text-slate-500 tabular-nums">
-                        {edu.startDate && formatDate(edu.startDate)} — {edu.endDate && formatDate(edu.endDate)}
-                      </span>
-                   </div>
-                   <div className="text-slate-500">{edu.institution}</div>
-                 </div>
-               ))}
-             </div>
-           </section>
-         )}
+      {/* Preview Area */}
+      <div className="flex-1 overflow-auto p-8 flex justify-center items-start print:p-0 print:overflow-visible">
+        <div 
+           ref={cvRef}
+           className="bg-white shadow-xl origin-top transition-transform duration-200 ease-out print:shadow-none print:m-0 print:scale-100"
+           style={{ 
+             width: '210mm', 
+             minHeight: '297mm',
+             transform: `scale(${zoom})`
+           }}
+        >
+          {renderTemplate()}
+        </div>
       </div>
     </div>
   );

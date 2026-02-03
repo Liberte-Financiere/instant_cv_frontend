@@ -17,3 +17,74 @@
 body {
   font-family: var(--font-sans);
 }
+
+/* Force text wrapping in CV templates */
+.cv-template,
+.cv-template p,
+.cv-template div,
+.cv-template span {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Print styles for PDF export */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Page setup */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  
+  /* CV Template sizing */
+  .cv-template {
+    width: 210mm !important;
+    min-height: auto !important;
+  }
+  
+  /* SECTIONS CAN BREAK - permet aux sections de se couper */
+  .cv-template section {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+  
+  /* Keep headings with at least some content after them */
+  .cv-template h2,
+  .cv-template h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  
+  /* INDIVIDUAL ITEMS stay together (experience, education, certification, etc.) */
+  /* These are the direct children divs inside sections - typically each entry */
+  .cv-template .cv-item,
+  .cv-template section > div > div {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  /* Avoid orphan lines */
+  .cv-template p {
+    orphans: 2;
+    widows: 2;
+  }
+}
+
+/* Screen styles - show page boundaries for long CVs */
+.cv-template {
+  /* Visual page separator every 297mm */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0mm,
+    transparent 296mm,
+    rgba(0, 0, 0, 0.08) 296mm,
+    rgba(0, 0, 0, 0.08) 297mm
+  );
+  background-size: 100% 297mm;
+}

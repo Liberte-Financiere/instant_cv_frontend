@@ -1,5 +1,3 @@
-// CV Types for Antigravity
-
 export interface PersonalInfo {
   firstName: string;
   lastName: string;
@@ -42,15 +40,79 @@ export interface Language {
   level: "Débutant" | "Intermédiaire" | "Avancé" | "Natif";
 }
 
+export interface Hobby {
+  id: string;
+  name: string;
+}
+
+// NEW: Certifications
+export interface Certification {
+  id: string;
+  name: string;
+  organization: string;
+  date: string;
+  url?: string;
+}
+
+// NEW: Projects
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  url?: string;
+  technologies?: string;
+}
+
+// NEW: References
+export interface Reference {
+  id: string;
+  name: string;
+  position: string;
+  company: string;
+  email?: string;
+  phone?: string;
+}
+
+// NEW: Social Links
+export interface SocialLink {
+  id: string;
+  platform: 'linkedin' | 'github' | 'portfolio' | 'twitter' | 'other';
+  url: string;
+  label?: string;
+}
+
+export interface CVFooter {
+  showFooter: boolean;
+  madeAt: string;
+  madeDate: string;
+  signatureUrl?: string;
+}
+
+// NEW: CV Settings for customization
+export interface CVSettings {
+  accentColor: string; // hex color
+  fontFamily?: 'sans' | 'serif' | 'mono';
+}
+
+export type TemplateId = 'modern' | 'professional' | 'executive' | 'creative' | 'tech';
+
 export interface CV {
   id: string;
   title: string;
-  templateId: string;
+  templateId: TemplateId;
   personalInfo: PersonalInfo;
   experiences: Experience[];
   education: Education[];
   skills: Skill[];
   languages: Language[];
+  hobbies: Hobby[];
+  certifications: Certification[];
+  projects: Project[];
+  references: Reference[];
+  socialLinks: SocialLink[];
+  divers: string;
+  footer: CVFooter;
+  settings: CVSettings;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -61,13 +123,26 @@ export type EditorStep =
   | "education"
   | "skills"
   | "languages"
+  | "hobbies"
+  | "certifications"
+  | "projects"
+  | "references"
+  | "divers"
   | "preview";
 
 export const EDITOR_STEPS: { key: EditorStep; label: string }[] = [
-  { key: "personal", label: "Informations Personnelles" },
+  { key: "personal", label: "Infos Personnelles" },
   { key: "experience", label: "Expériences" },
   { key: "education", label: "Formation" },
   { key: "skills", label: "Compétences" },
+  { key: "certifications", label: "Certifications" },
+  { key: "projects", label: "Projets" },
   { key: "languages", label: "Langues" },
+  { key: "hobbies", label: "Centres d'intérêt" },
+  { key: "references", label: "Références" },
+  { key: "divers", label: "Divers" },
   { key: "preview", label: "Aperçu" },
 ];
+
+// Variant type for reusable components
+export type CVVariant = 'modern' | 'professional' | 'executive' | 'creative' | 'tech';

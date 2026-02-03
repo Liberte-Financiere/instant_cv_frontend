@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, FileText, Settings, LogOut, Plus, User, LayoutTemplate } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, LogOut, Plus, User, LayoutTemplate, PenTool } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AvatarGroup } from '@/components/ui/AvatarGroup'; // Re-using for user avatar if needed, or simple img
 
@@ -11,6 +11,7 @@ const navigation = [
   { name: 'Mes CV', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Mes lettres', href: '/cover-letters', icon: FileText },
   { name: 'Modèles', href: '/templates', icon: LayoutTemplate },
+  { name: 'Signature', href: '/signature', icon: PenTool },
   { name: 'Compte', href: '/settings', icon: Settings },
 ];
 
