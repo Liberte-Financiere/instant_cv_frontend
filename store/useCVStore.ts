@@ -2,8 +2,9 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { 
   CV, PersonalInfo, Experience, Education, Skill, Language, 
-  Hobby, CVFooter, EditorStep, Certification, Project, Reference, SocialLink, CVSettings 
+  Hobby, CVFooter, EditorStep, Certification, Project, Reference, SocialLink, CVSettings, CVSectionId 
 } from '@/types/cv';
+import { DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { generateId } from '@/lib/utils';
 
 interface CVState {
@@ -68,6 +69,9 @@ interface CVState {
   updateDivers: (text: string) => void;
   updateFooter: (footer: Partial<CVFooter>) => void;
   updateSettings: (settings: Partial<CVSettings>) => void;
+  
+  // Section Order
+  updateSectionOrder: (order: CVSectionId[]) => void;
 }
 
 const DEFAULT_SETTINGS: CVSettings = {
@@ -105,6 +109,7 @@ const createEmptyCV = (title: string, templateId: string = 'modern'): CV => ({
     signatureUrl: '',
   },
   settings: DEFAULT_SETTINGS,
+  sectionOrder: [...DEFAULT_SECTION_ORDER],
   createdAt: new Date(),
   updatedAt: new Date(),
 });
@@ -308,6 +313,12 @@ export const useCVStore = create<CVState>()(
       updateSettings: (settings) => set((state) => updateCV(state, (cv) => ({
         ...cv,
         settings: { ...(cv.settings || DEFAULT_SETTINGS), ...settings },
+      }))),
+
+      // Section Order
+      updateSectionOrder: (order) => set((state) => updateCV(state, (cv) => ({
+        ...cv,
+        sectionOrder: order,
       }))),
     }),
     {

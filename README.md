@@ -1,96 +1,99 @@
-# OptiJob 🚀
+# InstantCV 🚀
 
-**OptiJob** est votre coach carrière personnel alimenté par l'IA, conçu spécifiquement pour le marché africain et international.
-Notre plateforme analyse votre profil, optimise votre CV pour les ATS et vous fournit des outils professionnels (Signature, Lettres) en un clic.
-
----
-
-## ✨ Fonctionnalités & Design (v1.0)
-
-### 🎨 Expérience "Hyper Pro"
-
-- **Thème Premium** : Esthétique soignée (`#0F172A`) avec typographie **Manrope**.
-- **Composants Modernes** : Accordéons, Bento Grids, Cartes interactives.
-- **Micro-interactions** : Effets de survol et animations fluides (Framer Motion).
-
-> 👉 **[Voir toutes les fonctionnalités en détail](./FEATURES.md)**
-
-### ⚡ Bento Grid (Fonctionnalités Clés)
-
-Une suite complète d'outils pour votre carrière :
-
-1.  **Coach IA & Magic Analyzer** : Scannez votre CV et obtenez un score instantané.
-2.  **Éditeur Temps Réel** : Formulaire simple page (Accordéons) + Aperçu Live.
-3.  **Signature Électronique** : Module de signature intégré.
-4.  **Lettres de Motivation** : Gestionnaire de lettres dédié.
-5.  **Templates Pro** : Modèles adaptés à chaque industrie (Tech, Corporate...).
-6.  **Export PDF HD** : Rendu vectoriel parfait pour l'impression.
-
-### 👥 Ciblage Audience (Vibrant)
-
-Design distinctif pour chaque cible :
-
-- **Étudiants** : Carte Vert Menthe (Fraîcheur, Début).
-- **Professionnels** : Carte Bleu Nuit (Sérieux, Leadership).
-- **Reconversion** : Gradient Orange-Rose (Changement, Dynamisme).
+**InstantCV** est votre éditeur de CV professionnel alimenté par l'IA, conçu pour le marché africain et international.
+Créez, personnalisez et partagez votre CV en quelques clics.
 
 ---
 
-## 🛠️ Stack Technique & Architecture
+## ✨ Fonctionnalités
 
-### Core
+### 🎨 Éditeur de CV
 
-- **Framework** : [Next.js 16](https://nextjs.org/) (App Router, Turbopack)
+- **7 Templates Professionnels** :
+  - Moderne (sidebar sombre)
+  - Classique Épuré
+  - Exécutif (serif)
+  - Créatif (accents audacieux)
+  - Tech Expert (style terminal)
+  - **Minimaliste** (ultra-épuré)
+  - **Compatible ATS** (optimisé pour robots recruteurs)
+
+- **Personnalisation** :
+  - Couleur d'accent personnalisable
+  - Photo de profil avec drag & drop
+  - **Réorganisation des sections** (glisser-déposer)
+  - Prévisualisation en temps réel
+
+### 📤 Export & Partage
+
+- **Export PDF** via boîte de dialogue d'impression
+- **Export Word** (.docx) éditable
+- **Partage par lien** : page publique `/cv/[id]`
+
+### 📝 Sections CV
+
+- Informations personnelles + photo
+- Réseaux sociaux (LinkedIn, GitHub, etc.)
+- Profil professionnel
+- Expériences
+- Formations
+- Compétences
+- Langues
+- Certifications
+- Projets
+- Références
+- Informations complémentaires
+- Pied de page personnalisé
+
+---
+
+## 🛠️ Stack Technique
+
+- **Framework** : [Next.js 15](https://nextjs.org/) (App Router)
 - **Langage** : TypeScript
 - **Styling** : [Tailwind CSS v4](https://tailwindcss.com/)
 - **Animations** : [Framer Motion](https://www.framer.com/motion/)
+- **State** : [Zustand](https://zustand-demo.pmnd.rs/)
+- **Export** : docx, file-saver
 
-### Structure Modulaire (`/components`)
-
-Le code a été refactorisé pour une maintenance optimale :
+### Structure
 
 ```text
 components/
-├── landing/           # Sections de la page d'accueil
-│   ├── Hero.tsx       # Intègre <CVStackMockup />
-│   ├── Features.tsx   # Utilise <FeatureCard />
-│   ├── Pricing.tsx    # Tarifs en FCFA
-│   └── ...
-├── ui/                # Composants Réutilisables (Design System)
-│   ├── SectionHeader  # Titres standardisés
-│   ├── Button         # Variantes (Primary, Glass, etc.)
-│   └── AvatarGroup    # Gestion des avatars utilisateurs
-└── shared/            # Composants Globaux (Navbar, Footer)
+├── templates/         # Templates CV (7 modèles)
+├── cv-sections/       # Composants modulaires (CVExperience, CVEducation...)
+├── editor/            # Éditeur (FormSection, CVPreview, ColorPicker, ShareButton)
+├── dashboard/         # Sélecteur de templates
+└── ui/                # Composants réutilisables
 ```
 
 ---
 
 ## 🚀 Installation
 
-1. **Cloner le projet**
+```bash
+# Cloner le projet
+git clone https://github.com/votre-username/instant-cv.git
+cd instant-cv
 
-   ```bash
-   git clone https://github.com/votre-username/optijob.git
-   cd optijob
-   ```
+# Installer les dépendances
+npm install
 
-2. **Installer les dépendances**
-
-   ```bash
-   npm install
-   ```
-
-3. **Lancer le serveur**
-
-   ```bash
-   npm run dev
-   ```
+# Lancer le serveur
+npm run dev
+```
 
 ---
 
-## 🌍 Adaptation Locale
+## 📖 Utilisation
 
-- **Devise** : Tarification affichée en **FCFA**.
-- **Imagerie** : Avatars et modèles adaptés à la diversité.
+1. **Créer un CV** : Cliquez sur "Créer mon CV"
+2. **Choisir un template** : Sélectionnez parmi 7 modèles
+3. **Remplir les informations** : Utilisez les accordéons pour chaque section
+4. **Personnaliser** : Changez la couleur d'accent, ajoutez une photo
+5. **Exporter** : PDF ou Word
+6. **Partager** : Générez un lien public
 
-*© 2026 OptiJob Inc.*
+---
+
+*© 2026 InstantCV - Créé avec ❤️*

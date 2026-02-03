@@ -6,6 +6,7 @@ import {
   CVSkills, CVLanguages, CVHobbies, CVCertifications, 
   CVProjects, CVReferences, CVDivers, CVFooter 
 } from '@/components/cv-sections';
+import { getAccentColor } from '@/components/cv-sections/styles';
 
 interface TemplateProps {
   cv: CV;
@@ -20,24 +21,38 @@ export function ModernSidebar({ cv }: TemplateProps) {
   const socialLinks = cv.socialLinks || [];
   const divers = cv.divers || '';
   const footer = cv.footer || { showFooter: false, madeAt: '', madeDate: '' };
+  
+  // Get custom accent color or default
+  const accentColor = getAccentColor('modern', cv.settings?.accentColor);
 
   const variant = 'modern';
 
   return (
     <div className="cv-template w-full h-full bg-white text-slate-800 font-sans text-sm leading-relaxed flex flex-col min-h-[297mm]">
       <div className="flex flex-col sm:flex-row flex-1">
-        {/* Sidebar (Left Column) - stretches to match content height */}
+        {/* Sidebar (Left Column) */}
         <div className="w-[30%] bg-slate-900 text-white p-5 space-y-5 flex-shrink-0 print:bg-slate-900 print:text-white">
           {/* Avatar & Name */}
           <div className="text-center sm:text-left">
-             <div className="w-24 h-24 mx-auto sm:mx-0 bg-slate-800 rounded-full flex items-center justify-center text-3xl font-bold mb-6 text-blue-400 ring-4 ring-slate-800 ring-offset-2 ring-offset-slate-900">
-               {personalInfo.firstName?.[0]}{personalInfo.lastName?.[0]}
-             </div>
+             {personalInfo.photoUrl ? (
+               <img 
+                 src={personalInfo.photoUrl} 
+                 alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
+                 className="w-24 h-24 mx-auto sm:mx-0 rounded-full object-cover mb-6 ring-4 ring-slate-800 ring-offset-2 ring-offset-slate-900"
+               />
+             ) : (
+               <div 
+                 className="w-24 h-24 mx-auto sm:mx-0 bg-slate-800 rounded-full flex items-center justify-center text-3xl font-bold mb-6 ring-4 ring-slate-800 ring-offset-2 ring-offset-slate-900"
+                 style={{ color: accentColor }}
+               >
+                 {personalInfo.firstName?.[0]}{personalInfo.lastName?.[0]}
+               </div>
+             )}
              
              <h1 className="text-2xl font-bold leading-tight mb-2">
                {personalInfo.firstName} <br /> {personalInfo.lastName}
              </h1>
-             <p className="text-blue-400 font-medium text-sm uppercase tracking-wider">
+             <p className="font-medium text-sm uppercase tracking-wider" style={{ color: accentColor }}>
                {personalInfo.title}
              </p>
           </div>
@@ -45,7 +60,7 @@ export function ModernSidebar({ cv }: TemplateProps) {
           {/* Contact Info */}
           <div className="space-y-4">
              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">Contact</h3>
-             <CVContact personalInfo={personalInfo} socialLinks={socialLinks} variant={variant} layout="sidebar" />
+             <CVContact personalInfo={personalInfo} socialLinks={socialLinks} variant={variant} layout="sidebar" accentColor={accentColor} />
           </div>
 
           {/* Skills - Sidebar version */}
@@ -94,17 +109,16 @@ export function ModernSidebar({ cv }: TemplateProps) {
 
         {/* Main Content (Right Column) */}
         <div className="flex-1 p-6 sm:p-8 space-y-6 bg-white">
-           <CVSummary summary={personalInfo.summary} variant={variant} />
-           <CVExperience experiences={experiences} variant={variant} />
-           <CVEducation education={education} variant={variant} />
-           <CVCertifications certifications={certifications} variant={variant} />
-           <CVProjects projects={projects} variant={variant} />
-           <CVReferences references={references} variant={variant} />
-           <CVDivers divers={divers} variant={variant} />
+           <CVSummary summary={personalInfo.summary} variant={variant} accentColor={accentColor} />
+           <CVExperience experiences={experiences} variant={variant} accentColor={accentColor} />
+           <CVEducation education={education} variant={variant} accentColor={accentColor} />
+           <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} />
+           <CVProjects projects={projects} variant={variant} accentColor={accentColor} />
+           <CVReferences references={references} variant={variant} accentColor={accentColor} />
+           <CVDivers divers={divers} variant={variant} accentColor={accentColor} />
+           <CVFooter footer={footer} variant={variant} />
         </div>
       </div>
-
-      <CVFooter footer={footer} variant={variant} />
     </div>
   );
 }

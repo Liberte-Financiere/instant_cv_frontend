@@ -10,6 +10,8 @@ import { Stepper } from '@/components/editor/Stepper';
 import { FormSection } from '@/components/editor/FormSection';
 import { CVPreview } from '@/components/editor/CVPreview';
 import { ColorPicker } from '@/components/editor/ColorPicker';
+import { ShareButton } from '@/components/editor/ShareButton';
+import { SectionOrderEditor } from '@/components/editor/SectionOrderEditor';
 import { EDITOR_STEPS } from '@/types/cv';
 
 export default function EditorPage() {
@@ -76,7 +78,8 @@ export default function EditorPage() {
 
         <div className="flex items-center gap-3">
            <ColorPicker />
-           
+           <SectionOrderEditor />
+           <ShareButton />           
            <button 
              className="hidden sm:flex items-center gap-2 px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors"
              title="Changer de modèle"

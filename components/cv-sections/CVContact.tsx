@@ -2,13 +2,13 @@
 
 import { Mail, Phone, MapPin, Linkedin, Github, Globe, Twitter } from 'lucide-react';
 import { PersonalInfo, SocialLink, CVVariant } from '@/types/cv';
-import { variantStyles } from './styles';
 
 interface CVContactProps {
   personalInfo: PersonalInfo;
   socialLinks?: SocialLink[];
   variant: CVVariant;
   layout?: 'vertical' | 'horizontal' | 'sidebar';
+  accentColor?: string;
 }
 
 const platformIcons: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -19,8 +19,7 @@ const platformIcons: Record<string, React.ComponentType<{ className?: string }>>
   other: Globe,
 };
 
-export function CVContact({ personalInfo, socialLinks = [], variant, layout = 'vertical' }: CVContactProps) {
-  const styles = variantStyles[variant];
+export function CVContact({ personalInfo, socialLinks = [], variant, layout = 'vertical', accentColor }: CVContactProps) {
   const isSidebar = layout === 'sidebar';
   
   const contactItems = [
@@ -32,13 +31,15 @@ export function CVContact({ personalInfo, socialLinks = [], variant, layout = 'v
   if (contactItems.length === 0 && socialLinks.length === 0) return null;
 
   const baseTextClass = isSidebar ? 'text-slate-300' : 'text-slate-600';
-  const iconClass = isSidebar ? 'text-blue-400' : styles.accentText;
 
   return (
     <div className={layout === 'horizontal' ? 'flex flex-wrap gap-4' : 'space-y-3'}>
       {contactItems.map((item, idx) => (
         <div key={idx} className={`flex items-${item.icon === MapPin ? 'start' : 'center'} gap-3 text-sm ${baseTextClass}`}>
-          <item.icon className={`w-4 h-4 ${iconClass} shrink-0 ${item.icon === MapPin ? 'mt-0.5' : ''}`} />
+          <item.icon 
+            className={`w-4 h-4 shrink-0 ${item.icon === MapPin ? 'mt-0.5' : ''}`} 
+            style={accentColor ? { color: accentColor } : undefined}
+          />
           <span className={item.breakAll ? 'break-all' : ''}>{item.value}</span>
         </div>
       ))}
@@ -54,7 +55,8 @@ export function CVContact({ personalInfo, socialLinks = [], variant, layout = 'v
                 href={link.url} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className={`flex items-center gap-2 text-sm ${iconClass} hover:underline`}
+                className="flex items-center gap-2 text-sm hover:underline"
+                style={accentColor ? { color: accentColor } : undefined}
               >
                 <Icon className="w-4 h-4" />
                 {layout !== 'horizontal' && <span>{link.label || link.platform}</span>}

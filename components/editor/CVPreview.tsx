@@ -6,6 +6,8 @@ import { ProfessionalClean } from '@/components/templates/ProfessionalClean';
 import { ExecutiveCorporate } from '@/components/templates/ExecutiveCorporate';
 import { CreativeGrid } from '@/components/templates/CreativeGrid';
 import { TechStack } from '@/components/templates/TechStack';
+import { MinimalistTemplate } from '@/components/templates/MinimalistTemplate';
+import { ATSFriendlyTemplate } from '@/components/templates/ATSFriendlyTemplate';
 import { ZoomIn, ZoomOut, Download, Printer, Loader2, FileText, ChevronDown } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { printCV } from '@/lib/pdf-export';
@@ -32,6 +34,10 @@ export function CVPreview() {
         return <CreativeGrid cv={currentCV} />;
       case 'tech':
         return <TechStack cv={currentCV} />;
+      case 'minimalist':
+        return <MinimalistTemplate cv={currentCV} />;
+      case 'ats':
+        return <ATSFriendlyTemplate cv={currentCV} />;
       default:
         return <ModernSidebar cv={currentCV} />;
     }

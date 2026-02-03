@@ -43,6 +43,18 @@ const TEMPLATES: TemplateOption[] = [
     description: 'Terminal style. Développeurs.', 
     color: 'bg-[#1e1e1e] text-green-400 font-mono' 
   },
+  { 
+    id: 'minimalist', 
+    name: 'Minimaliste', 
+    description: 'Ultra-épuré, élégant. Tous secteurs.', 
+    color: 'bg-white border text-slate-700' 
+  },
+  { 
+    id: 'ats', 
+    name: 'Compatible ATS', 
+    description: 'Optimisé pour robots recruteurs.', 
+    color: 'bg-white border-2 border-black text-black font-serif' 
+  },
 ];
 
 interface TemplateSelectorProps {

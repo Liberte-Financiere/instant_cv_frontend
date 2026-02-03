@@ -4,7 +4,7 @@ export interface PersonalInfo {
   email: string;
   phone: string;
   address: string;
-  photo?: string;
+  photoUrl?: string;
   title: string;
   summary: string;
 }
@@ -52,6 +52,7 @@ export interface Certification {
   organization: string;
   date: string;
   url?: string;
+  credentialUrl?: string;
 }
 
 // NEW: Projects
@@ -60,10 +61,10 @@ export interface Project {
   name: string;
   description: string;
   url?: string;
+  github?: string;
   technologies?: string;
 }
 
-// NEW: References
 export interface Reference {
   id: string;
   name: string;
@@ -71,6 +72,7 @@ export interface Reference {
   company: string;
   email?: string;
   phone?: string;
+  hideContact?: boolean;
 }
 
 // NEW: Social Links
@@ -94,7 +96,14 @@ export interface CVSettings {
   fontFamily?: 'sans' | 'serif' | 'mono';
 }
 
-export type TemplateId = 'modern' | 'professional' | 'executive' | 'creative' | 'tech';
+export type TemplateId = 'modern' | 'professional' | 'executive' | 'creative' | 'tech' | 'minimalist' | 'ats';
+
+export type CVSectionId = 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'hobbies' | 'certifications' | 'projects' | 'references' | 'divers';
+
+export const DEFAULT_SECTION_ORDER: CVSectionId[] = [
+  'summary', 'experience', 'education', 'skills', 'languages', 
+  'hobbies', 'certifications', 'projects', 'references', 'divers'
+];
 
 export interface CV {
   id: string;
@@ -113,6 +122,7 @@ export interface CV {
   divers: string;
   footer: CVFooter;
   settings: CVSettings;
+  sectionOrder: CVSectionId[];
   createdAt: Date;
   updatedAt: Date;
 }

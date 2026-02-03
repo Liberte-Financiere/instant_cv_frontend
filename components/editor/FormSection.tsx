@@ -8,6 +8,7 @@ import {
 import { useCVStore } from '@/store/useCVStore';
 import { Input } from '@/components/ui/Input';
 import { Accordion } from '@/components/ui/Accordion';
+import { PhotoUpload } from './PhotoUpload';
 import { EditorStep } from '@/types/cv';
 
 interface FormSectionProps {
@@ -77,14 +78,12 @@ export function FormSection({ currentStep }: FormSectionProps) {
         onToggle={() => handleToggle('personal')}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-           <div className="col-span-full flex items-center gap-4 mb-2 p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300">
-              <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center text-slate-400">
-                 <User className="w-8 h-8" />
-              </div>
-              <div>
-                 <button className="text-sm font-bold text-blue-600 hover:underline">Ajouter une photo</button>
-                 <p className="text-xs text-slate-500">Formats acceptés: JPG, PNG. Max 2MB.</p>
-              </div>
+           <div className="col-span-full flex justify-center py-4 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+              <PhotoUpload 
+                currentUrl={personalInfo.photoUrl}
+                onPhotoChange={(url) => updatePersonalInfo({ photoUrl: url })}
+                onRemove={() => updatePersonalInfo({ photoUrl: undefined })}
+              />
            </div>
 
            <Input label="Prénom" value={personalInfo.firstName} onChange={(e) => updatePersonalInfo({ firstName: e.target.value })} placeholder="Ex: Jean" />
