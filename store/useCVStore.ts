@@ -44,6 +44,7 @@ interface CVState {
 const createEmptyCV = (title: string): CV => ({
   id: generateId(),
   title,
+  templateId: 'modern', // Default template
   personalInfo: {
     firstName: '',
     lastName: '',

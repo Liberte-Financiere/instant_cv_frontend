@@ -2,13 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FileText, Settings, LogOut, Plus, User } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { LayoutDashboard, FileText, Settings, LogOut, Plus, User, LayoutTemplate } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AvatarGroup } from '@/components/ui/AvatarGroup'; // Re-using for user avatar if needed, or simple img
 
 const navigation = [
   { name: 'Mes CV', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Modèles', href: '/templates', icon: FileText },
+  { name: 'Mes lettres', href: '/cover-letters', icon: FileText },
+  { name: 'Modèles', href: '/templates', icon: LayoutTemplate },
   { name: 'Compte', href: '/settings', icon: Settings },
 ];
 
@@ -36,7 +38,7 @@ export function Sidebar() {
            </button>
         </div>
 
-        <nav className="space-y-1">
+        <nav className="space-y-2">
           {navigation.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -46,14 +48,23 @@ export function Sidebar() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                  "relative flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 group",
                   isActive 
-                    ? "bg-slate-800 text-white" 
+                    ? "bg-slate-800 text-white shadow-lg shadow-black/20" 
                     : "text-slate-400 hover:text-white hover:bg-slate-800/50"
                 )}
               >
-                <Icon className={cn("w-5 h-5", isActive ? "text-[#2463eb]" : "text-slate-400")} />
-                {item.name}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-500 rounded-r-full"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                )}
+                <Icon className={cn("w-5 h-5 transition-colors", isActive ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")} />
+                <span className="relative z-10">{item.name}</span>
               </Link>
             );
           })}

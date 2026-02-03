@@ -77,10 +77,28 @@ export default function DashboardPage() {
         />
       </div>
 
+      {/* Magic Analyzer Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-12 rounded-3xl border-2 border-dashed border-purple-200 bg-purple-50/50 p-8 text-center hover:bg-purple-50 transition-colors cursor-pointer group"
+      >
+         <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+            <span className="text-2xl">✨</span>
+         </div>
+         <h2 className="text-xl font-bold text-slate-900 mb-2">Magic Analyzer</h2>
+         <p className="text-slate-500 max-w-lg mx-auto text-sm">
+           Glissez votre ancien CV ici pour une analyse instantanée par l&apos;IA et découvrez comment l&apos;améliorer en quelques secondes.
+         </p>
+      </motion.div>
+
       {/* Main Content */}
       <div className="mb-6 flex items-center justify-between">
-         <h2 className="text-xl font-bold text-slate-900">Mes Documents récents</h2>
-         <button className="text-sm font-medium text-blue-600 hover:text-blue-700">Voir tout</button>
+         <h2 className="text-xl font-bold text-slate-900">Vos CVs récents</h2>
+         <button className="flex items-center gap-1 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors">
+            Voir tout 
+            <span className="text-xs">→</span>
+         </button>
       </div>
 
       {/* CV Grid or Empty State */}
@@ -106,7 +124,8 @@ export default function DashboardPage() {
                 id={cv.id} 
                 title={cv.title} 
                 updatedAt={cv.updatedAt} 
-                onDelete={deleteCV} 
+                onDelete={deleteCV}
+                score={Math.floor(Math.random() * (98 - 70) + 70)} // Random score 70-98 for demo
               />
             ))}
           </div>

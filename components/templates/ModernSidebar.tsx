@@ -1,25 +1,15 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Globe, Linkedin, Github } from 'lucide-react';
-import { useCVStore } from '@/store/useCVStore';
+import { Mail, Phone, MapPin } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import { CV } from '@/types/cv';
 
-export function CVPreview() {
-  const { currentCV } = useCVStore();
+interface TemplateProps {
+  cv: CV;
+}
 
-  if (!currentCV) {
-    return (
-      <div className="h-full flex items-center justify-center text-slate-300">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-slate-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-sm font-medium">Chargement...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const { personalInfo, experiences, education, skills, languages } = currentCV;
+export function ModernSidebar({ cv }: TemplateProps) {
+  const { personalInfo, experiences, education, skills, languages } = cv;
 
   return (
     <div className="w-full h-full bg-white text-slate-800 font-sans text-sm leading-relaxed flex flex-col sm:flex-row min-h-[297mm]">
@@ -27,9 +17,11 @@ export function CVPreview() {
       <div className="w-[32%] bg-slate-900 text-white p-8 space-y-8 flex-shrink-0 print:bg-slate-900 print:text-white">
         {/* Avatar & Name */}
         <div className="text-center sm:text-left">
+           {/* Initials Avatar fallback */}
            <div className="w-24 h-24 mx-auto sm:mx-0 bg-slate-800 rounded-full flex items-center justify-center text-3xl font-bold mb-6 text-blue-400 ring-4 ring-slate-800 ring-offset-2 ring-offset-slate-900">
              {personalInfo.firstName?.[0]}{personalInfo.lastName?.[0]}
            </div>
+           
            <h1 className="text-2xl font-bold leading-tight mb-2">
              {personalInfo.firstName} <br /> {personalInfo.lastName}
            </h1>

@@ -45,6 +45,7 @@ export interface Language {
 export interface CV {
   id: string;
   title: string;
+  templateId: string;
   personalInfo: PersonalInfo;
   experiences: Experience[];
   education: Education[];
