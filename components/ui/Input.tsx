@@ -26,10 +26,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className
           )}
           ref={ref}
+          aria-invalid={!!error}
+          aria-describedby={error ? "input-error" : undefined}
           {...props}
         />
         {error && (
-          <span className="text-xs text-red-500 mt-1 ml-1">{error}</span>
+          <span id="input-error" className="text-xs text-red-500 mt-1 ml-1" role="alert">{error}</span>
         )}
       </div>
     )

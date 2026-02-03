@@ -17,13 +17,7 @@ export function Hero() {
           
           {/* Left Content */}
           <div className="flex flex-col gap-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 w-fit mx-auto lg:mx-0">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2463eb] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2463eb]"></span>
-              </span>
-              <span className="text-xs font-medium text-blue-200 uppercase tracking-wider">Nouvelle IA Générative v2.0</span>
-            </div>
+
 
             <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
               Votre succès mérite plus qu'un <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#2463eb]">simple PDF</span>

@@ -105,12 +105,14 @@ export default function AuthPage() {
                 />
                 <button 
                   onClick={() => setIsLogin(true)}
+                  aria-pressed={isLogin}
                   className={`flex-1 py-2.5 text-sm font-bold z-10 transition-colors ${isLogin ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Connexion
                 </button>
                 <button 
                   onClick={() => setIsLogin(false)}
+                  aria-pressed={!isLogin}
                   className={`flex-1 py-2.5 text-sm font-bold z-10 transition-colors ${!isLogin ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Inscription
