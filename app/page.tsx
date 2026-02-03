@@ -5,6 +5,7 @@ import { Hero } from '@/components/landing/Hero';
 import { Features } from '@/components/landing/Features';
 import { TargetAudience } from '@/components/landing/TargetAudience';
 import { Pricing } from '@/components/landing/Pricing'; // Import Pricing
+import { FAQ } from '@/components/landing/FAQ';
 import { CallToAction } from '@/components/landing/CallToAction';
 import { Footer } from '@/components/landing/Footer';
 
@@ -16,7 +17,8 @@ export default function Home() {
       <Hero />
       <Features />
       <TargetAudience />
-      <Pricing /> {/* Add Pricing */}
+      <Pricing />
+      <FAQ />
       <CallToAction />
       <Footer />
     </div>

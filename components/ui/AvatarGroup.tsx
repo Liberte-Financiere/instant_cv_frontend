@@ -31,12 +31,12 @@ export function AvatarGroup({
             borderColor
           )}
         >
-          {/* Using standard img tag for simplicity with mapped public assets, 
-              or Next.js Image if we had the static imports. 
-              Given the dynamic path, standard img is fine or Next Image with width/height */}
-          <img
+          {/* Using Next.js Image for automatic optimization */}
+          <Image
             src={`/avatars/avatar${(i % 3) + 1}.png`} 
             alt={`User ${i + 1}`} 
+            width={40}
+            height={40}
             className="w-full h-full object-cover"
           />
         </div>

@@ -6,12 +6,25 @@ import { Navbar } from "@/components/shared/Navbar";
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Optijob | AI Resume Builder",
-  description: "Créez des CV professionnels qui décrochent des entretiens. Simple, rapide et optimisé pour le succès.",
-  keywords: ["CV", "créateur CV", "resume builder", "CV professionnel", "Optijob"],
+  title: "Optijob | Le Coach CV par l'IA",
+  description: "Créez un CV pro compatible ATS et une lettre de motivation en 2 minutes. Rejoignez 10,000+ candidats qui ont décroché leur job de rêve.",
+  keywords: ["CV", "créateur CV", "resume builder", "IA", "ATS", "emploi", "lettre de motivation"],
+  openGraph: {
+    title: "Optijob - Décrochez votre job de rêve",
+    description: "L'IA qui optimise votre CV pour les recruteurs. Essai gratuit, sans carte bancaire.",
+    type: "website",
+    locale: "fr_FR",
+    siteName: "OptiJob",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Optijob - Votre Coach Carrière IA",
+    description: "Créez un CV parfait en quelques clics.",
+  },
 };
 
 export default function RootLayout({
