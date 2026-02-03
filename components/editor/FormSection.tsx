@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Plus, Trash2 } from 'lucide-react';
-import { useCVStore } from '@/store/cvStore';
+import { useCVStore } from '@/store/useCVStore';
 import type { EditorStep } from '@/types/cv';
 import { EDITOR_STEPS, type Experience, type Education, type Skill, type Language } from '@/types/cv';
 import { useState } from 'react';

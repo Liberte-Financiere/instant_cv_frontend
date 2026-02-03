@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Plus, FileText, Trash2, Edit, Calendar } from 'lucide-react';
 import Link from 'next/link';
-import { useCVStore } from '@/store/cvStore';
+import { useCVStore } from '@/store/useCVStore';
 import { useState } from 'react';
 
 export default function DashboardPage() {

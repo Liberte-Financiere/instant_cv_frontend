@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin } from 'lucide-react';
-import { useCVStore } from '@/store/cvStore';
+import { useCVStore } from '@/store/useCVStore';
 import { formatDate } from '@/lib/utils';
 
 export function CVPreview() {

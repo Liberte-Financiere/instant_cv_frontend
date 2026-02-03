@@ -328,7 +328,7 @@ export const useCVStore = create<CVState>()(
       },
     }),
     {
-      name: 'antigravity-cv-storage',
+      name: 'optijob-cv-storage',
     }
   )
 );

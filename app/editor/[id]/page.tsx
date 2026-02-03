@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Download, Save } from 'lucide-react';
 import Link from 'next/link';
-import { useCVStore } from '@/store/cvStore';
+import { useCVStore } from '@/store/useCVStore';
 import { Stepper } from '@/components/editor/Stepper';
 import { FormSection } from '@/components/editor/FormSection';
 import { CVPreview } from '@/components/editor/CVPreview';

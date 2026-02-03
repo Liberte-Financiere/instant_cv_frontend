@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OptiJob 🚀
 
-## Getting Started
+**OptiJob** est votre coach carrière personnel alimenté par l'IA, conçu spécifiquement pour le marché africain et international. 
+Notre plateforme analyse votre profil, optimise votre CV pour les ATS (Applicant Tracking Systems) et génère des lettres de motivation persuasives en quelques secondes.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Fonctionnalités & Design (v2.0)
+
+### 🎨 Expérience Visuelle "Deep Blue"
+- **Thème Premium** : Esthétique soignée (`#0F172A`) avec typographie **Manrope**.
+- **Hero Section** : Animation "Stacked CVs" (cartes superposées) et avatars **profils africains** pour l'ancrage local.
+- **Micro-interactions** : Effets de survol, animations au scroll (Framer Motion).
+
+### ⚡ Bento Grid (Fonctionnalités)
+Une grille modulaire présentant les 6 piliers de l'application :
+1.  **Coach IA & Anti-Rejet** : Analyse ATS intelligente.
+2.  **Ciblage de Poste** : Adaptation aux mots-clés des offres.
+3.  **Lettre de Motivation** : Rédaction automatique.
+4.  **Mode Ultra Rapide** : Import LinkedIn/PDF en < 2 min.
+5.  **Export PDF HD** : Rendu vectoriel pro.
+6.  **Templates** : Galerie de modèles modernes.
+
+### 👥 Ciblage Audience (Vibrant)
+Design distinctif pour chaque cible :
+- **Étudiants** : Carte Vert Menthe (Fraîcheur, Début).
+- **Professionnels** : Carte Bleu Nuit (Sérieux, Leadership).
+- **Reconversion** : Gradient Orange-Rose (Changement, Dynamisme).
+
+---
+
+## 🛠️ Stack Technique & Architecture
+
+### Core
+- **Framework** : [Next.js 16](https://nextjs.org/) (App Router, Turbopack)
+- **Langage** : TypeScript
+- **Styling** : [Tailwind CSS v4](https://tailwindcss.com/)
+- **Animations** : [Framer Motion](https://www.framer.com/motion/)
+
+### Structure Modulaire (`/components`)
+Le code a été refactorisé pour une maintenance optimale :
+
+```
+components/
+├── landing/           # Sections de la page d'accueil
+│   ├── Hero.tsx       # Intègre <CVStackMockup />
+│   ├── Features.tsx   # Utilise <FeatureCard />
+│   ├── Pricing.tsx    # Tarifs en FCFA
+│   └── ...
+├── ui/                # Composants Réutilisables (Design System)
+│   ├── SectionHeader  # Titres standardisés
+│   ├── Button         # Variantes (Primary, Glass, etc.)
+│   └── AvatarGroup    # Gestion des avatars utilisateurs
+└── shared/            # Composants Globaux (Navbar, Footer)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1.  **Cloner le projet**
+    ```bash
+    git clone https://github.com/votre-username/optijob.git
+    cd optijob
+    ```
 
-## Learn More
+2.  **Installer les dépendances**
+    ```bash
+    npm install
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+3.  **Lancer le serveur**
+    ```bash
+    npm run dev
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌍 Adaptation Locale
+- **Devise** : Tarification affichée en **FCFA**.
+- **Imagerie** : Avatars et modèles adaptés à la diversité.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*© 2026 OptiJob Inc.*

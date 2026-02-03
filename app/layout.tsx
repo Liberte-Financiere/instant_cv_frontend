@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/shared/Navbar";
 
-const inter = Inter({
-  variable: "--font-inter",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Antigravity | Créateur de CV Intelligent",
-  description: "Créez des CV professionnels en quelques minutes avec notre éditeur intelligent. Simple, rapide et élégant.",
-  keywords: ["CV", "créateur CV", "resume builder", "CV professionnel"],
+  title: "Optijob | AI Resume Builder",
+  description: "Créez des CV professionnels qui décrochent des entretiens. Simple, rapide et optimisé pour le succès.",
+  keywords: ["CV", "créateur CV", "resume builder", "CV professionnel", "Optijob"],
 };
 
 export default function RootLayout({
@@ -20,10 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body className={`${inter.variable} font-sans antialiased bg-gray-50`}>
+    <html lang="fr" className="scroll-smooth">
+      <body className={`${manrope.variable} font-sans antialiased bg-[#0F172A] text-slate-900 dark:text-white`}>
         <Navbar />
-        <main className="pt-16">
+        <main>
           {children}
         </main>
       </body>
