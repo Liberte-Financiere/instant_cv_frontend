@@ -13,6 +13,8 @@ Notre plateforme analyse votre profil, optimise votre CV pour les ATS (Applicant
 - **Hero Section** : Animation "Stacked CVs" (cartes superposées) et avatars **profils africains** pour l'ancrage local.
 - **Micro-interactions** : Effets de survol, animations au scroll (Framer Motion).
 
+> 👉 **[Voir toutes les fonctionnalités en détail](./FEATURES.md)**
+
 ### ⚡ Bento Grid (Fonctionnalités)
 
 Une grille modulaire présentant les 6 piliers de l'application :

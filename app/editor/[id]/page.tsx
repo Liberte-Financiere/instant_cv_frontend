@@ -1,20 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Download, Save } from 'lucide-react';
+import { ArrowLeft, Download, Save, Eye, LayoutTemplate } from 'lucide-react';
 import Link from 'next/link';
 import { useCVStore } from '@/store/useCVStore';
 import { Stepper } from '@/components/editor/Stepper';
 import { FormSection } from '@/components/editor/FormSection';
 import { CVPreview } from '@/components/editor/CVPreview';
-import { EDITOR_STEPS, type EditorStep } from '@/types/cv';
+import { EDITOR_STEPS } from '@/types/cv';
 
 export default function EditorPage() {
   const params = useParams();
-  const router = useRouter();
   const { currentCV, currentStep, loadCV, setCurrentStep } = useCVStore();
+  const [zoom, setZoom] = useState(1);
 
   const id = params.id as string;
 
@@ -40,88 +40,105 @@ export default function EditorPage() {
 
   if (!currentCV) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Chargement du CV...</p>
+          <div className="w-16 h-16 border-4 border-[#2463eb] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-600 font-medium">Chargement de votre espace de travail...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="bg-white border-b border-gray-100 sticky top-16 z-40"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14">
-            <div className="flex items-center gap-4">
-              <Link
-                href="/dashboard"
-                className="p-2 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Link>
-              <div>
-                <h1 className="font-semibold text-gray-900">{currentCV.title}</h1>
-                <p className="text-xs text-gray-500">Édition en cours</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button className="px-4 py-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors flex items-center gap-2">
-                <Save className="w-4 h-4" />
-                <span className="hidden sm:inline">Sauvegarder</span>
-              </button>
-              <button className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                <span className="hidden sm:inline">Télécharger</span>
-              </button>
+    <div className="min-h-screen bg-slate-100 flex flex-col">
+      {/* Editor Header */}
+      <header className="bg-white border-b border-slate-200 h-16 sticky top-0 z-50 px-4 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/dashboard"
+            className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+            title="Retour au Dashboard"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div className="h-8 w-px bg-slate-200 mx-2 hidden sm:block" />
+          <div>
+            <h1 className="font-bold text-slate-900 text-sm sm:text-base truncate max-w-[200px] sm:max-w-xs">
+              {currentCV.title}
+            </h1>
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+               <span className="w-2 h-2 rounded-full bg-green-500" />
+               <span>Sauvegardé</span>
             </div>
           </div>
         </div>
-      </motion.header>
 
-      {/* Main Content - Split Screen */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left Column - Form */}
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="lg:w-3/5 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8 overflow-y-auto"
-            style={{ maxHeight: 'calc(100vh - 180px)' }}
-          >
-            <Stepper
-              currentStep={currentStep}
-              onStepChange={setCurrentStep}
-            />
-            <FormSection
-              currentStep={currentStep}
-              onNext={handleNext}
-              onPrev={handlePrev}
-            />
-          </motion.div>
+        <div className="flex items-center gap-3">
+           <button 
+             className="hidden sm:flex items-center gap-2 px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors"
+             title="Changer de modèle"
+           >
+             <LayoutTemplate className="w-4 h-4" />
+             <span>Modèle</span>
+           </button>
+           
+           <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
 
-          {/* Right Column - Preview */}
-          <motion.div
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="lg:w-2/5 lg:sticky lg:top-[120px] self-start"
-          >
-            <div className="bg-gray-100 rounded-2xl p-4">
-              <div className="text-center mb-3">
-                <span className="text-xs font-medium text-gray-500 uppercase">Aperçu</span>
+           <button 
+             className="flex items-center gap-2 px-4 py-2 bg-[#2463eb] hover:bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+           >
+             <Download className="w-4 h-4" />
+             <span className="hidden sm:inline">Exporter PDF</span>
+           </button>
+        </div>
+      </header>
+
+      {/* Workspace */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Panel: Form & Stepper */}
+        <div className="w-full lg:w-[55%] xl:w-[50%] flex flex-col border-r border-slate-200 bg-white">
+           {/* Stepper Header */}
+           <div className="p-4 border-b border-slate-100">
+              <Stepper currentStep={currentStep} onStepChange={setCurrentStep} />
+           </div>
+           
+           {/* Scrollable Form Area */}
+           <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar">
+              <div className="max-w-2xl mx-auto">
+                 <FormSection 
+                   currentStep={currentStep} 
+                   onNext={handleNext} 
+                   onPrev={handlePrev} 
+                 />
               </div>
-              <CVPreview />
-            </div>
-          </motion.div>
+           </div>
+        </div>
+
+        {/* Right Panel: Live Preview */}
+        <div className="hidden lg:flex flex-1 bg-slate-100 flex-col relative overflow-hidden">
+           {/* Functional Header for Preview (Zoom, View Mode) */}
+           <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur border border-slate-200 rounded-full px-4 py-2 flex items-center gap-4 shadow-sm z-10 text-sm font-medium text-slate-600">
+              <button onClick={() => setZoom(Math.max(0.5, zoom - 0.1))} className="hover:text-blue-600 p-1">-</button>
+              <span>{Math.round(zoom * 100)}%</span>
+              <button onClick={() => setZoom(Math.min(1.5, zoom + 0.1))} className="hover:text-blue-600 p-1">+</button>
+           </div>
+
+           {/* Preview Container */}
+           <div className="flex-1 overflow-auto flex items-start justify-center p-8 custom-scrollbar">
+              <motion.div 
+                layout
+                style={{ 
+                  scale: zoom,
+                  transformOrigin: 'top center' 
+                }}
+                className="bg-white shadow-2xl shadow-slate-300/50"
+              >
+                 {/* A4 Wrapper managed by CVPreview or here */}
+                 <div className="w-[210mm] min-h-[297mm] origin-top bg-white">
+                    <CVPreview />
+                 </div>
+              </motion.div>
+           </div>
         </div>
       </div>
     </div>
