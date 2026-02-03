@@ -66,8 +66,13 @@ export default function AuthPage() {
               "J'ai refait mon CV en 10 minutes. Le lendemain, j'avais 3 entretiens. L'analyse IA est tout simplement bluffante."
             </p>
             <div className="flex items-center gap-4">
-               <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
-                 <img src="/avatars/avatar1.png" alt="User" className="w-full h-full object-cover"/>
+               <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden relative">
+                 <Image 
+                   src="/avatars/avatar1.png" 
+                   alt="User" 
+                   fill
+                   className="object-cover"
+                 />
                </div>
                <div>
                  <div className="text-white font-bold">Sarah K.</div>
