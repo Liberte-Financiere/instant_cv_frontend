@@ -1,4 +1,3 @@
-import { Document, Paragraph, TextRun, HeadingLevel, AlignmentType, Packer } from 'docx';
 import { saveAs } from 'file-saver';
 import type { CV } from '@/types/cv';
 
@@ -6,6 +5,9 @@ import type { CV } from '@/types/cv';
  * Export CV data to a Word document
  */
 export async function exportToWord(cv: CV): Promise<void> {
+  // Dynamically import docx only when needed
+  const { Document, Paragraph, TextRun, HeadingLevel, AlignmentType, Packer } = await import('docx');
+
   const { personalInfo, experiences, education, skills, languages, certifications, projects, references, hobbies, divers } = cv;
 
   const doc = new Document({

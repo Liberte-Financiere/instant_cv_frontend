@@ -9,9 +9,10 @@ interface CVReferencesProps {
   variant: CVVariant;
   title?: string;
   accentColor?: string;
+  showContact?: boolean;
 }
 
-export function CVReferences({ references, variant, title = 'Références', accentColor }: CVReferencesProps) {
+export function CVReferences({ references, variant, title = 'Références', accentColor, showContact = true }: CVReferencesProps) {
   const styles = variantStyles[variant];
   
   if (references.length === 0) return null;
@@ -38,7 +39,7 @@ export function CVReferences({ references, variant, title = 'Références', acce
               <div className={`text-sm ${variant === 'tech' ? 'text-gray-400' : 'text-slate-600'}`}>
                 {ref.position}{ref.company && ` chez ${ref.company}`}
               </div>
-              {!ref.hideContact && (ref.email || ref.phone) && (
+              {showContact && !ref.hideContact && (ref.email || ref.phone) && (
                 <div className="flex gap-4 mt-1">
                   {ref.email && (
                     <span className={`flex items-center gap-1 text-xs ${variant === 'tech' ? 'text-gray-500' : 'text-slate-500'}`}>

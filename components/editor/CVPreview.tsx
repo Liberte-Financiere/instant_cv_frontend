@@ -1,17 +1,34 @@
 'use client';
 
 import { useCVStore } from '@/store/useCVStore';
-import { ModernSidebar } from '@/components/templates/ModernSidebar';
-import { ProfessionalClean } from '@/components/templates/ProfessionalClean';
-import { ExecutiveCorporate } from '@/components/templates/ExecutiveCorporate';
-import { CreativeGrid } from '@/components/templates/CreativeGrid';
-import { TechStack } from '@/components/templates/TechStack';
-import { MinimalistTemplate } from '@/components/templates/MinimalistTemplate';
-import { ATSFriendlyTemplate } from '@/components/templates/ATSFriendlyTemplate';
+import dynamic from 'next/dynamic';
 import { ZoomIn, ZoomOut, Download, Printer, Loader2, FileText, ChevronDown } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { printCV } from '@/lib/pdf-export';
 import { exportToWord } from '@/lib/word-export';
+
+// Dynamic imports for templates
+const ModernSidebar = dynamic(() => import('@/components/templates/ModernSidebar').then(mod => mod.ModernSidebar), { 
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div> 
+});
+const ProfessionalClean = dynamic(() => import('@/components/templates/ProfessionalClean').then(mod => mod.ProfessionalClean), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
+const ExecutiveCorporate = dynamic(() => import('@/components/templates/ExecutiveCorporate').then(mod => mod.ExecutiveCorporate), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
+const CreativeGrid = dynamic(() => import('@/components/templates/CreativeGrid').then(mod => mod.CreativeGrid), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
+const TechStack = dynamic(() => import('@/components/templates/TechStack').then(mod => mod.TechStack), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
+const MinimalistTemplate = dynamic(() => import('@/components/templates/MinimalistTemplate').then(mod => mod.MinimalistTemplate), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
+const ATSFriendlyTemplate = dynamic(() => import('@/components/templates/ATSFriendlyTemplate').then(mod => mod.ATSFriendlyTemplate), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
 
 export function CVPreview() {
   const { currentCV } = useCVStore();
