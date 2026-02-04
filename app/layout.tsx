@@ -36,6 +36,24 @@ export default function RootLayout({
     <html lang="fr" className="scroll-smooth">
       <body className={`${manrope.variable} font-sans antialiased bg-[#0F172A] text-slate-900 dark:text-white`}>
         {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "OptiJob",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "description": "Créez un CV pro compatible ATS en 2 minutes avec l'IA."
+            })
+          }}
+        />
       </body>
     </html>
   );

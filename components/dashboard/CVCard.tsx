@@ -4,16 +4,16 @@ import { Edit, Trash2, Download, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { CV } from '@/types/cv';
+import { CVThumbnail } from './CVThumbnail';
 
 interface CVCardProps {
-  id: string;
-  title: string;
-  updatedAt: Date;
+  cv: CV;
   onDelete: (id: string) => void;
   score?: number; // Optional score for the progress circle
 }
 
-export function CVCard({ id, title, updatedAt, onDelete, score = 0 }: CVCardProps) {
+export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
   // Calculate relative time or format date
   const formatDate = (date: Date) => {
     const now = new Date();
@@ -49,21 +49,15 @@ export function CVCard({ id, title, updatedAt, onDelete, score = 0 }: CVCardProp
       className="group bg-white rounded-3xl border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 overflow-hidden flex flex-col h-[320px]"
     >
       {/* Visual Preview Area */}
-      <div className="flex-1 bg-slate-50 relative overflow-hidden group-hover:bg-slate-100/50 transition-colors">
-        {/* Mockup - Simplified for elegance */}
-        <div className="absolute inset-x-8 top-8 bottom-0 bg-white rounded-t-lg shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.1)] p-4 transform group-hover:translate-y-[-4px] transition-transform duration-500">
-           <div className="space-y-3 opacity-30">
-              <div className="w-12 h-12 rounded-full bg-slate-200 mb-4" />
-              <div className="h-2 bg-slate-200 rounded w-3/4" />
-              <div className="h-2 bg-slate-200 rounded w-1/2" />
-              <div className="h-32 bg-slate-100 rounded-lg mt-6" />
-           </div>
+      <div className="flex-1 bg-slate-50 relative overflow-hidden group-hover:bg-slate-100/50 transition-colors flex justify-center pt-8">
+        <div className="transform group-hover:scale-105 transition-transform duration-500 shadow-md">
+           <CVThumbnail cv={cv} scale={0.25} />
         </div>
 
         {/* Overlay Actions */}
-        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 backdrop-blur-[2px] transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 gap-2">
+        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 backdrop-blur-[2px] transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 gap-2 z-10">
            <Link
-             href={`/editor/${id}`}
+             href={`/editor/${cv.id}`}
              className="p-3 bg-white rounded-xl text-slate-600 hover:text-blue-600 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
              title="Éditer"
            >
@@ -76,7 +70,7 @@ export function CVCard({ id, title, updatedAt, onDelete, score = 0 }: CVCardProp
              <Download className="w-5 h-5" />
            </button>
            <button
-             onClick={() => onDelete(id)}
+             onClick={() => onDelete(cv.id)}
              className="p-3 bg-white rounded-xl text-slate-600 hover:text-red-500 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
              title="Supprimer"
            >
@@ -85,20 +79,20 @@ export function CVCard({ id, title, updatedAt, onDelete, score = 0 }: CVCardProp
         </div>
 
         {/* Status Badge */}
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100 flex items-center gap-1.5">
+        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100 flex items-center gap-1.5 z-10">
            <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
            En ligne
         </div>
       </div>
 
       {/* Card Footer */}
-      <div className="p-5 flex items-center justify-between bg-white relative z-10">
+      <div className="p-5 flex items-center justify-between bg-white relative z-10 border-t border-slate-100">
         <div>
-           <h3 className="font-bold text-slate-900 text-base mb-1 truncate max-w-[160px]" title={title}>
-             {title}
+           <h3 className="font-bold text-slate-900 text-base mb-1 truncate max-w-[160px]" title={cv.title}>
+             {cv.title}
            </h3>
            <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-             <span>{formatDate(updatedAt)}</span>
+             <span>{formatDate(cv.updatedAt)}</span>
            </div>
         </div>
 

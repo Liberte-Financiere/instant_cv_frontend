@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { FileText, Menu, X, User } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 
 const navLinks = [
   { href: '#features', label: 'Fonctionnalités' },
@@ -36,28 +37,30 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <button
+              <Button
                 key={link.href}
-                className="text-slate-300 hover:text-white transition-colors font-medium text-sm"
+                variant="ghost"
+                className="text-slate-300 hover:text-white transition-colors font-medium text-sm hover:bg-white/5"
               >
                 {link.label}
-              </button>
+              </Button>
             ))}
-            <Link
-              href="/auth"
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#2463eb] text-white rounded-full font-bold text-sm hover:bg-[#1d4ed8] hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
-            >
-              Se connecter
+            <Link href="/auth">
+              <Button className="rounded-full shadow-lg shadow-blue-500/25">
+                Se connecter
+              </Button>
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-slate-300 hover:text-white"
+            className="md:hidden text-slate-300 hover:text-white hover:bg-white/5"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          </Button>
         </div>
 
         {/* Mobile Navigation */}
@@ -75,17 +78,20 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="block text-slate-300 hover:text-white font-medium"
               >
-                {link.label}
+                <Button variant="ghost" className="w-full justify-start text-slate-300 hover:text-white">
+                  {link.label}
+                </Button>
               </Link>
             ))}
             <Link
               href="/auth"
               onClick={() => setIsOpen(false)}
-              className="block w-full py-3 bg-[#2463eb] text-white text-center rounded-full font-bold"
+              className="block"
             >
-              Se connecter
+              <Button className="w-full rounded-full">
+                Se connecter
+              </Button>
             </Link>
           </div>
         </motion.div>

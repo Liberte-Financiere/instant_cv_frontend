@@ -134,9 +134,7 @@ export default function DashboardPage() {
             {cvList.map((cv) => (
               <CVCard 
                 key={cv.id} 
-                id={cv.id} 
-                title={cv.title} 
-                updatedAt={cv.updatedAt} 
+                cv={cv}
                 onDelete={deleteCV}
                 score={Math.floor(Math.random() * (98 - 70) + 70)}
               />

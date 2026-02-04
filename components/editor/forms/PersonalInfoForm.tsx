@@ -2,6 +2,9 @@
 
 import { useCVStore } from '@/store/useCVStore';
 import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Textarea } from '@/components/ui/Textarea';
+import { Label } from '@/components/ui/Label';
 import { PhotoUpload } from '../PhotoUpload';
 import { Trash2, Plus } from 'lucide-react';
 
@@ -41,21 +44,21 @@ export function PersonalInfoForm() {
 
       {/* Social Links */}
       <div className="col-span-full mt-4 pt-4 border-t border-slate-100">
-        <label className="block text-sm font-bold text-slate-700 mb-3">Réseaux sociaux</label>
+        <Label className="mb-3">Réseaux sociaux</Label>
         <div className="space-y-2">
           {socialLinks.map((link) => (
             <div key={link.id} className="flex items-center gap-2">
-              <select 
+              <Select 
                 value={link.platform} 
                 onChange={(e) => updateSocialLink(link.id, { platform: e.target.value as any })}
-                className="text-sm border border-slate-200 rounded-lg px-2 py-2 bg-white"
+                className="w-32"
               >
                 <option value="linkedin">LinkedIn</option>
                 <option value="github">GitHub</option>
                 <option value="portfolio">Portfolio</option>
                 <option value="twitter">Twitter</option>
                 <option value="other">Autre</option>
-              </select>
+              </Select>
               <Input 
                 placeholder="https://..." 
                 value={link.url} 
@@ -78,10 +81,9 @@ export function PersonalInfoForm() {
       
       {/* Summary */}
       <div className="col-span-full mt-4 pt-4 border-t border-slate-100">
-        <label className="block text-sm font-bold text-slate-700 mb-2">Résumé Professionnel</label>
-        <textarea
+        <Textarea
+          label="Résumé Professionnel"
           rows={4}
-          className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none"
           placeholder="Décrivez brièvement votre parcours..."
           value={personalInfo.summary}
           onChange={(e) => updatePersonalInfo({ summary: e.target.value })}

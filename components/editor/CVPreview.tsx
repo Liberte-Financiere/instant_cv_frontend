@@ -3,7 +3,8 @@
 import { useCVStore } from '@/store/useCVStore';
 import dynamic from 'next/dynamic';
 import { ZoomIn, ZoomOut, Download, Printer, Loader2, FileText, ChevronDown } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/Button';
 import { printCV } from '@/lib/pdf-export';
 import { exportToWord } from '@/lib/word-export';
 
@@ -35,28 +36,41 @@ export function CVPreview() {
   const [zoom, setZoom] = useState(0.8);
   const [isExporting, setIsExporting] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  
+  // Debounce logic for performance
+  // We keep a local version of CV that only updates after delay
+  const [debouncedCV, setDebouncedCV] = useState(currentCV);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedCV(currentCV);
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timer);
+  }, [currentCV]);
+
   const cvRef = useRef<HTMLDivElement>(null);
 
-  if (!currentCV) return null;
+  if (!debouncedCV) return null;
 
   const renderTemplate = () => {
-    switch (currentCV.templateId) {
+    switch (debouncedCV.templateId) {
       case 'modern':
-        return <ModernSidebar cv={currentCV} />;
+        return <ModernSidebar cv={debouncedCV} />;
       case 'professional':
-        return <ProfessionalClean cv={currentCV} />;
+        return <ProfessionalClean cv={debouncedCV} />;
       case 'executive':
-        return <ExecutiveCorporate cv={currentCV} />;
+        return <ExecutiveCorporate cv={debouncedCV} />;
       case 'creative':
-        return <CreativeGrid cv={currentCV} />;
+        return <CreativeGrid cv={debouncedCV} />;
       case 'tech':
-        return <TechStack cv={currentCV} />;
+        return <TechStack cv={debouncedCV} />;
       case 'minimalist':
-        return <MinimalistTemplate cv={currentCV} />;
+        return <MinimalistTemplate cv={debouncedCV} />;
       case 'ats':
-        return <ATSFriendlyTemplate cv={currentCV} />;
+        return <ATSFriendlyTemplate cv={debouncedCV} />;
       default:
-        return <ModernSidebar cv={currentCV} />;
+        return <ModernSidebar cv={debouncedCV} />;
     }
   };
 
@@ -66,14 +80,18 @@ export function CVPreview() {
     setShowExportMenu(false);
     
     // Open public CV page with auto-print trigger
-    window.open(`/cv/${currentCV.id}?print=true`, '_blank');
+    if (debouncedCV?.id) {
+       window.open(`/cv/${debouncedCV.id}?print=true`, '_blank');
+    }
   };
 
   const handleExportWord = async () => {
     setIsExporting(true);
     setShowExportMenu(false);
     try {
-      await exportToWord(currentCV);
+      if (debouncedCV) {
+        await exportToWord(debouncedCV);
+      }
     } catch (error) {
       console.error('Export Word failed:', error);
       alert('Erreur lors de l\'export Word. Veuillez réessayer.');
@@ -92,36 +110,44 @@ export function CVPreview() {
       {/* Toolbar */}
       <div className="h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between shrink-0 print:hidden">
         <div className="flex items-center gap-2">
-          <button 
+          <Button 
+            variant="ghost" 
+            size="icon"
             onClick={() => setZoom(Math.max(0.3, zoom - 0.1))}
-            className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg"
+            className="text-slate-500 rounded-lg hover:bg-slate-100"
           >
             <ZoomOut className="w-4 h-4" />
-          </button>
+          </Button>
           <span className="text-xs font-medium w-12 text-center">{Math.round(zoom * 100)}%</span>
-          <button 
+          <Button 
+            variant="ghost" 
+            size="icon"
             onClick={() => setZoom(Math.min(2, zoom + 0.1))}
-            className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg"
+            className="text-slate-500 rounded-lg hover:bg-slate-100"
           >
             <ZoomIn className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
 
         <div className="flex items-center gap-2">
-          <button 
+          <Button 
+            variant="ghost" 
+            size="icon"
             onClick={handlePrint} 
-            className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+            className="text-slate-600 rounded-lg hover:bg-slate-100"
             title="Imprimer"
           >
              <Printer className="w-4 h-4" />
-          </button>
+          </Button>
           
           {/* Export Dropdown */}
           <div className="relative">
-            <button 
+            <Button
+              size="sm"
+              variant="primary"
               onClick={() => setShowExportMenu(!showExportMenu)}
               disabled={isExporting}
-              className="flex items-center gap-2 bg-slate-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-slate-900 hover:bg-slate-800 shadow-none text-xs gap-2"
             >
               {isExporting ? (
                 <>
@@ -135,30 +161,32 @@ export function CVPreview() {
                   <ChevronDown className="w-3 h-3" />
                 </>
               )}
-            </button>
+            </Button>
             
             {showExportMenu && !isExporting && (
               <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50">
-                <button 
+                <Button 
+                  variant="ghost"
                   onClick={handleExportPDF}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="w-full justify-start gap-3 px-4 py-3 h-auto text-sm text-slate-700 hover:bg-slate-50 rounded-none bg-transparent"
                 >
                   <Download className="w-4 h-4 text-red-500" />
                   <div className="text-left">
                     <div className="font-medium">Télécharger PDF</div>
                     <div className="text-xs text-slate-400">Enregistrer en PDF depuis l&apos;impression</div>
                   </div>
-                </button>
-                <button 
+                </Button>
+                <Button 
+                  variant="ghost"
                   onClick={handleExportWord}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors border-t border-slate-100"
+                  className="w-full justify-start gap-3 px-4 py-3 h-auto text-sm text-slate-700 hover:bg-slate-50 border-t border-slate-100 rounded-none bg-transparent"
                 >
                   <FileText className="w-4 h-4 text-blue-500" />
                   <div className="text-left">
                     <div className="font-medium">Télécharger Word</div>
                     <div className="text-xs text-slate-400">Format .docx éditable</div>
                   </div>
-                </button>
+                </Button>
               </div>
             )}
           </div>
