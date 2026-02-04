@@ -4,8 +4,10 @@ import { CV } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
   CVSkills, CVLanguages, CVHobbies, CVCertifications, 
-  CVProjects, CVReferences, CVDivers, CVFooter 
+  CVProjects, CVReferences, CVDivers, CVFooter, CVQualities 
 } from '@/components/cv-sections';
+
+import { SECTION_TITLES } from '@/constants/sections';
 
 interface TemplateProps {
   cv: CV;
@@ -41,8 +43,8 @@ export function ExecutiveCorporate({ cv }: TemplateProps) {
         <div className="space-y-8">
           <CVSummary summary={personalInfo.summary} variant={variant} />
           <CVExperience experiences={experiences} variant={variant} />
-          <CVEducation education={education} variant={variant} />
-          <CVCertifications certifications={certifications} variant={variant} />
+          <CVEducation education={education} variant={variant} title={SECTION_TITLES.education} />
+          <CVCertifications certifications={certifications} variant={variant} title={SECTION_TITLES.certifications} />
           
           {/* Skills & Languages */}
           <div className="grid grid-cols-2 gap-8">
@@ -51,6 +53,7 @@ export function ExecutiveCorporate({ cv }: TemplateProps) {
           </div>
 
           <CVProjects projects={projects} variant={variant} />
+          <CVQualities qualities={cv.qualities || []} variant={variant} title={SECTION_TITLES.qualities} />
           <CVHobbies hobbies={hobbies} variant={variant} />
           <CVReferences references={references} variant={variant} />
           <CVDivers divers={divers} variant={variant} />

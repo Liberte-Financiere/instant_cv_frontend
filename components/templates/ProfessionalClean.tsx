@@ -4,8 +4,10 @@ import { CV } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
   CVSkills, CVLanguages, CVHobbies, CVCertifications, 
-  CVProjects, CVReferences, CVDivers, CVFooter 
+  CVProjects, CVReferences, CVDivers, CVFooter, CVQualities 
 } from '@/components/cv-sections';
+
+import { SECTION_TITLES } from '@/constants/sections';
 
 interface TemplateProps {
   cv: CV;
@@ -39,7 +41,7 @@ export function ProfessionalClean({ cv }: TemplateProps) {
         <div className="space-y-8">
           <CVSummary summary={personalInfo.summary} variant={variant} />
           <CVExperience experiences={experiences} variant={variant} />
-          <CVEducation education={education} variant={variant} />
+          <CVEducation education={education} variant={variant} title={SECTION_TITLES.education} />
           
           {/* Skills & Languages side by side */}
           <div className="grid grid-cols-2 gap-8">
@@ -47,8 +49,9 @@ export function ProfessionalClean({ cv }: TemplateProps) {
             <CVLanguages languages={languages} variant={variant} />
           </div>
 
-          <CVCertifications certifications={certifications} variant={variant} />
+          <CVCertifications certifications={certifications} variant={variant} title={SECTION_TITLES.certifications} />
           <CVProjects projects={projects} variant={variant} />
+          <CVQualities qualities={cv.qualities || []} variant={variant} title={SECTION_TITLES.qualities} />
           <CVHobbies hobbies={hobbies} variant={variant} />
           <CVReferences references={references} variant={variant} />
           <CVDivers divers={divers} variant={variant} />

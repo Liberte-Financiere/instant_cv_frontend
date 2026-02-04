@@ -19,8 +19,8 @@ export function EducationForm() {
             <div className="col-span-full"><Input label="École / Université" value={edu.institution} onChange={(e) => updateEducation(edu.id, { institution: e.target.value })} placeholder="Ex: HEC Paris" /></div>
             <Input label="Diplôme" value={edu.degree} onChange={(e) => updateEducation(edu.id, { degree: e.target.value })} placeholder="Ex: Master 2" />
             <Input label="Domaine d'études" value={edu.field} onChange={(e) => updateEducation(edu.id, { field: e.target.value })} placeholder="Ex: Marketing Digital" />
-            <Input label="Date de début" type="month" value={edu.startDate} onChange={(e) => updateEducation(edu.id, { startDate: e.target.value })} />
-            <Input label="Date de fin" type="month" value={edu.endDate} onChange={(e) => updateEducation(edu.id, { endDate: e.target.value })} />
+            <Input label="Date de début" type="date" value={edu.startDate} onChange={(e) => updateEducation(edu.id, { startDate: e.target.value })} />
+            <Input label="Date de fin" type="date" value={edu.endDate} onChange={(e) => updateEducation(edu.id, { endDate: e.target.value })} />
           </div>
         </div>
       ))}

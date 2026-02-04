@@ -29,8 +29,39 @@ export function ExperienceForm() {
               <div className="col-span-full"><Input label="Poste occupé" value={exp.position} onChange={(e) => updateExperience(exp.id, { position: e.target.value })} placeholder="Ex: Chef de projet marketing" /></div>
               <Input label="Entreprise" value={exp.company} onChange={(e) => updateExperience(exp.id, { company: e.target.value })} placeholder="Ex: Google" />
               <div className="grid grid-cols-2 gap-2">
-                <Input label="Début" type="month" value={exp.startDate} onChange={(e) => updateExperience(exp.id, { startDate: e.target.value })} />
-                <Input label="Fin" type="month" value={exp.endDate} onChange={(e) => updateExperience(exp.id, { endDate: e.target.value })} disabled={exp.current} />
+                <Input 
+                  label="Début" 
+                  type="date" 
+                  value={exp.startDate} 
+                  onChange={(e) => updateExperience(exp.id, { startDate: e.target.value })} 
+                />
+                <div className="relative">
+                  <Input 
+                    label="Fin" 
+                    type="date" 
+                    value={exp.endDate} 
+                    onChange={(e) => updateExperience(exp.id, { endDate: e.target.value })} 
+                    disabled={exp.current} 
+                  />
+                  <div className="absolute -bottom-6 left-0 flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id={`current-${exp.id}`}
+                      checked={exp.current}
+                      onChange={(e) => {
+                        const isCurrent = e.target.checked;
+                        updateExperience(exp.id, { 
+                          current: isCurrent,
+                          endDate: isCurrent ? '' : exp.endDate 
+                        });
+                      }}
+                      className="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                    />
+                    <label htmlFor={`current-${exp.id}`} className="text-xs text-slate-500 cursor-pointer select-none">
+                      Poste actuel
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
             <div>

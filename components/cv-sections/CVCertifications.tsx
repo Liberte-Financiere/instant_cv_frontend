@@ -11,7 +11,7 @@ interface CVCertificationsProps {
   accentColor?: string;
 }
 
-export function CVCertifications({ certifications, variant, title = 'Certifications', accentColor }: CVCertificationsProps) {
+export function CVCertifications({ certifications, variant, title = 'Formations', accentColor }: CVCertificationsProps) {
   const styles = variantStyles[variant];
   
   if (certifications.length === 0) return null;

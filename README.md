@@ -7,7 +7,14 @@ Créez, personnalisez et partagez votre CV en quelques clics.
 
 ## ✨ Fonctionnalités
 
+### 🤖 Assistant IA (Nouveau)
+- **Correction & Amélioration** de texte automatique.
+- **Génération de contenu** (bullet points) à partir d'un titre.
+- **Traduction** instantanée FR/EN.
+- *Propulsé par Google Gemini.*
+
 ### 🎨 Éditeur de CV
+[Voir la liste complètes des fonctionnalités](./FEATURES.md)
 
 - **7 Templates Professionnels** :
   - Moderne (sidebar sombre)

@@ -18,7 +18,7 @@ export function CertificationsForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Input label="Intitulé de la formation" value={cert.name} onChange={(e) => updateCertification(cert.id, { name: e.target.value })} placeholder="Ex: Bootcamp Fullstack, Certification AWS..." />
             <Input label="Organisme" value={cert.organization} onChange={(e) => updateCertification(cert.id, { organization: e.target.value })} placeholder="Ex: OpenClassrooms, Amazon..." />
-            <Input label="Date" type="month" value={cert.date} onChange={(e) => updateCertification(cert.id, { date: e.target.value })} />
+            <Input label="Date" type="date" value={cert.date} onChange={(e) => updateCertification(cert.id, { date: e.target.value })} />
             <Input label="Lien / Identifiant (optionnel)" value={cert.url || ''} onChange={(e) => updateCertification(cert.id, { url: e.target.value })} placeholder="https://..." />
           </div>
         </div>

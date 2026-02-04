@@ -4,8 +4,10 @@ import { CV } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
   CVSkills, CVLanguages, CVHobbies, CVCertifications, 
-  CVProjects, CVReferences, CVDivers, CVFooter 
+  CVProjects, CVReferences, CVDivers, CVFooter, CVQualities 
 } from '@/components/cv-sections';
+
+import { SECTION_TITLES } from '@/constants/sections';
 
 interface TemplateProps {
   cv: CV;
@@ -44,7 +46,7 @@ export function CreativeGrid({ cv }: TemplateProps) {
             <div className="col-span-2 space-y-8">
               <CVSummary summary={personalInfo.summary} variant={variant} />
               <CVExperience experiences={experiences} variant={variant} />
-              <CVEducation education={education} variant={variant} />
+              <CVEducation education={education} variant={variant} title={SECTION_TITLES.education} />
               <CVProjects projects={projects} variant={variant} />
             </div>
 
@@ -52,7 +54,8 @@ export function CreativeGrid({ cv }: TemplateProps) {
             <div className="space-y-8">
               <CVSkills skills={skills} variant={variant} layout="bars" />
               <CVLanguages languages={languages} variant={variant} />
-              <CVCertifications certifications={certifications} variant={variant} />
+              <CVCertifications certifications={certifications} variant={variant} title={SECTION_TITLES.certifications} />
+              <CVQualities qualities={cv.qualities || []} variant={variant} title={SECTION_TITLES.qualities} />
               <CVHobbies hobbies={hobbies} variant={variant} />
               <CVReferences references={references} variant={variant} showContact={false} />
             </div>

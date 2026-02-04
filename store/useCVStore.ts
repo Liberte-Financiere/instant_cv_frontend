@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { 
-  CV, PersonalInfo, Experience, Education, Skill, Language, 
+  CV, PersonalInfo, Experience, Education, Skill, Language, Quality,
   Hobby, CVFooter, EditorStep, Certification, Project, Reference, SocialLink, CVSettings, CVSectionId 
 } from '@/types/cv';
 import { DEFAULT_SECTION_ORDER } from '@/types/cv';
@@ -60,6 +60,11 @@ interface CVState {
   updateReference: (id: string, ref: Partial<Reference>) => void;
   removeReference: (id: string) => void;
 
+  // Qualities
+  addQuality: (quality: Omit<Quality, 'id'>) => void;
+  updateQuality: (id: string, quality: Partial<Quality>) => void;
+  removeQuality: (id: string) => void;
+
   // Social Links
   addSocialLink: (link: Omit<SocialLink, 'id'>) => void;
   updateSocialLink: (id: string, link: Partial<SocialLink>) => void;
@@ -101,6 +106,7 @@ const createEmptyCV = (title: string, templateId: string = 'modern'): CV => ({
   certifications: [],
   projects: [],
   references: [],
+  qualities: [],
   socialLinks: [],
   divers: '',
   footer: {
@@ -154,6 +160,7 @@ export const useCVStore = create<CVState>()(
             certifications: cv.certifications || [],
             projects: cv.projects || [],
             references: cv.references || [],
+            qualities: cv.qualities || [],
             socialLinks: cv.socialLinks || [],
             divers: cv.divers || '',
             footer: cv.footer || { showFooter: false, madeAt: '', madeDate: '', signatureUrl: '' },
@@ -282,6 +289,20 @@ export const useCVStore = create<CVState>()(
       removeReference: (id) => set((state) => updateCV(state, (cv) => ({
         ...cv,
         references: (cv.references || []).filter((r) => r.id !== id),
+      }))),
+
+      // Qualities
+      addQuality: (quality) => set((state) => updateCV(state, (cv) => ({
+        ...cv,
+        qualities: [...(cv.qualities || []), { ...quality, id: generateId() }],
+      }))),
+      updateQuality: (id, quality) => set((state) => updateCV(state, (cv) => ({
+        ...cv,
+        qualities: (cv.qualities || []).map((q) => q.id === id ? { ...q, ...quality } : q),
+      }))),
+      removeQuality: (id) => set((state) => updateCV(state, (cv) => ({
+        ...cv,
+        qualities: (cv.qualities || []).filter((q) => q.id !== id),
       }))),
 
       // Social Links

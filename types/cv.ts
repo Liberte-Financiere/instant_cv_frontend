@@ -65,6 +65,12 @@ export interface Project {
   technologies?: string;
 }
 
+// NEW: Qualities (Soft Skills)
+export interface Quality {
+  id: string;
+  name: string;
+}
+
 export interface Reference {
   id: string;
   name: string;
@@ -99,11 +105,11 @@ export interface CVSettings {
 
 export type TemplateId = 'modern' | 'professional' | 'executive' | 'creative' | 'tech' | 'minimalist' | 'ats';
 
-export type CVSectionId = 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'hobbies' | 'certifications' | 'projects' | 'references' | 'divers';
+export type CVSectionId = 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'hobbies' | 'certifications' | 'projects' | 'references' | 'qualities' | 'divers';
 
 export const DEFAULT_SECTION_ORDER: CVSectionId[] = [
   'summary', 'experience', 'education', 'skills', 'languages', 
-  'hobbies', 'certifications', 'projects', 'references', 'divers'
+  'hobbies', 'certifications', 'projects', 'references', 'qualities', 'divers'
 ];
 
 export interface CV {
@@ -119,6 +125,7 @@ export interface CV {
   certifications: Certification[];
   projects: Project[];
   references: Reference[];
+  qualities: Quality[]; // NEW
   socialLinks: SocialLink[];
   divers: string;
   footer: CVFooter;
@@ -137,6 +144,7 @@ export type EditorStep =
   | "hobbies"
   | "certifications"
   | "projects"
+  | "qualities" // NEW
   | "references"
   | "divers"
   | "preview";
@@ -149,7 +157,8 @@ export const EDITOR_STEPS: { key: EditorStep; label: string }[] = [
   { key: "certifications", label: "Formations" },
   { key: "projects", label: "Projets" },
   { key: "languages", label: "Langues" },
-  { key: "hobbies", label: "Centres d'intérêt" },
+  { key: "qualities", label: "Qualités" }, // NEW
+  { key: "hobbies", label: "Intérêts" },
   { key: "references", label: "Références" },
   { key: "divers", label: "Divers" },
   { key: "preview", label: "Aperçu" },

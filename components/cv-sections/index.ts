@@ -10,5 +10,6 @@ export { CVCertifications } from './CVCertifications';
 export { CVProjects } from './CVProjects';
 export { CVReferences } from './CVReferences';
 export { CVDivers } from './CVDivers';
+export { CVQualities } from './CVQualities';
 export { CVFooter } from './CVFooter';
 export { variantStyles, getAccentColor } from './styles';

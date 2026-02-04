@@ -1,54 +1,60 @@
-# 🌟 Fonctionnalités d'OptiJob
+# 🚀 Fonctionnalités InstantCV
 
-OptiJob est une plateforme complète de création de CV alimentée par l'IA, conçue pour optimiser vos chances de décrocher un emploi.
+Ce document détaille l'ensemble des fonctionnalités disponibles dans l'application InstantCV.
 
-## 🚀 Fonctionnalités Actuelles (v1.0.0)
+## ✨ Assistant IA "Magic Wand" (Bêta)
+Une intelligence artificielle puissante (Google Gemini 2.5 Flash Lite) intégrée directement dans l'éditeur pour vous aider à rédiger un CV parfait.
 
-### 1. Magic Analyzer (IA)
-Analysez la pertinence de votre CV actuel en quelques secondes.
+### Capacités :
+- **✅ Corriger** : Analyse et corrige instantanément les fautes d'orthographe et de grammaire.
+- **✨ Améliorer** : Reformule vos phrases pour leur donner un ton professionnel, impactant et orienté résultat (Action Verbs).
+- **📝 Développer** : Transforme un simple titre de poste ou une phrase courte en une liste de 3 à 4 points clés détaillés.
+- **🇬🇧 Traduire** : Traduit vos textes en anglais professionnel instantanément.
 
-- **Drag & Drop** : Interface intuitive pour déposer votre CV (PDF).
-- **Score IA** : Évaluation précise de 0 à 100.
-- **Feedback Détaillé** : Points forts et axes d'amélioration identifiés automatiquement.
-- **Page Dédiée** : `/analysis` et `/analysis/results`.
+### Où l'utiliser ?
+L'assistant est disponible via le bouton "✨" dans :
+1.  **Résumé Professionnel** (Profil)
+2.  **Expériences Professionnelles** (Description)
+3.  **Projets** (Description)
 
-### 2. Éditeur de CV "Hyper Pro"
-Une expérience d'édition fluide et moderne.
-
-- **Navigation Accordéon** : Formulaire scrollable unique avec sections pliables (Plus de stepper rigide).
-- **Live Preview** : Aperçu temps réel de votre document.
-- **Templates Multiples** :
-    - **Modern Dark** : Sidebar sombre, idéal pour la Tech.
-    - **Professional Clean** : Design épuré, idéal pour Corporate/Finance.
-- **Assistant Score** : Indicateur de qualité en temps réel dans l'en-tête.
-
-### 3. Signature Électronique
-Gérez vos signatures pour officialiser vos documents.
-
-- **Upload & Dessin** : Importez une image ou dessinez votre signature.
-- **Gestion Centralisée** : Retrouvez vos signatures dans l'onglet dédié `/signature`.
-
-### 4. Lettres de Motivation
-Ne vous limitez pas au CV.
-
-- **Section "Mes lettres"** : Gestion dédiée de vos lettres de motivation.
-- **Design Cohérent** : Vos lettres reprennent le style de votre CV.
-
-### 5. Landing Page "Deep Blue"
-Une vitrine moderne et immersive.
-
-- **Hero Section Animée** : Titre impactant avec dégradés et animation "Stack" de CVs.
-- **Bento Grid** : Présentation visuelle des fonctionnalités.
-- **Mode Sombre Natif** : Design basé sur la palette `Slate` (`#0F172A`).
-
-### 6. Authentification & Dashboard
-- **Split Screen Auth** : Connexion sécurisée et élégante.
-- **Dashboard Complet** : Vue d'ensemble de vos CVs, Lettres et Statistiques.
+### Sécurité
+- **Anti-Injection** : Les prompts sont sécurisés pour empêcher l'exécution de commandes malveillantes.
+- **Confidentialité** : Vos données sont traitées de manière éphémère par l'API.
 
 ---
 
-## 🛠️ Stack Technique
-- **Framework** : Next.js 16 (App Router).
-- **UI** : Tailwind CSS v4, Framer Motion, Lucide Icons.
-- **State** : Zustand.
-- **Vitesse** : Optimisé pour charger instantanément.
+## 🎨 Éditeur de CV en Temps Réel
+
+### Navigation Fluide
+- **Stepper Intuitif** : Une barre de progression claire pour naviguer entre les sections (11 étapes).
+- **Sauvegarde Automatique** : Vos modifications sont enregistrées localement (Local Storage).
+
+### Sections Standardisées
+1.  **Infos Personnelles** : Photo, contact, titre, résumé.
+2.  **Expériences** : Postes, entreprises, dates, descriptions riches.
+3.  **Éducation** : Diplômes et parcours académique.
+4.  **Compétences** : Liste de compétences techniques et soft skills.
+5.  **Formations** : Certifications, formations continues, MOOCs. (Anciennement "Certifications")
+6.  **Projets** : Réalisations personnelles ou professionnelles notables.
+7.  **Langues** : Niveaux de langue.
+8.  **Centres d'intérêt** : Hobbies et passions.
+9.  **Références** : Contacts professionnels.
+10. **Divers** : Permis, bénévolat, etc.
+
+### Templates Design
+7 Modèles uniques adaptés à tous les profils :
+- **Moderne**
+- **Classique**
+- **Exécutif**
+- **Créatif**
+- **Tech**
+- **Minimaliste**
+- **Compatible ATS**
+
+---
+
+## 📤 Export & Partage
+
+- **Export PDF HD** : Génération de PDF haute qualité respectant la mise en page.
+- **Smart Pagination** : Gestion intelligente des sauts de page pour éviter de couper le texte.
+- **Mode Aperçu** : Visualisation fidèle au rendu final avant export.

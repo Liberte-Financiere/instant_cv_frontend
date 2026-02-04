@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { 
   User, Briefcase, GraduationCap, Wrench, Languages, 
-  Heart, FileText, Award, FolderOpen, UserCheck
+  Heart, FileText, Award, FolderOpen, UserCheck, Sparkles
 } from 'lucide-react';
 import { useCVStore } from '@/store/useCVStore';
 import { Accordion } from '@/components/ui/Accordion';
@@ -20,6 +20,7 @@ import { LanguagesForm } from './forms/LanguagesForm';
 import { HobbiesForm } from './forms/HobbiesForm';
 import { ReferencesForm } from './forms/ReferencesForm';
 import { DiversForm } from './forms/DiversForm';
+import { QualitiesForm } from './forms/QualitiesForm';
 
 interface FormSectionProps {
   currentStep: EditorStep;
@@ -27,7 +28,7 @@ interface FormSectionProps {
   onPrev: () => void;
 }
 
-type SectionKey = 'personal' | 'experience' | 'education' | 'skills' | 'languages' | 'hobbies' | 'certifications' | 'projects' | 'references' | 'divers';
+type SectionKey = 'personal' | 'experience' | 'education' | 'skills' | 'languages' | 'hobbies' | 'certifications' | 'projects' | 'references' | 'qualities' | 'divers';
 
 const stepToSection: Record<EditorStep, SectionKey> = {
   personal: 'personal',
@@ -38,6 +39,7 @@ const stepToSection: Record<EditorStep, SectionKey> = {
   hobbies: 'hobbies',
   certifications: 'certifications',
   projects: 'projects',
+  qualities: 'qualities',
   references: 'references',
   divers: 'divers',
   preview: 'personal',
@@ -147,7 +149,17 @@ export function FormSection({ currentStep }: FormSectionProps) {
         <HobbiesForm />
       </Accordion>
 
-      {/* 9. RÉFÉRENCES */}
+      {/* 9. QUALITÉS */}
+      <Accordion 
+        title="Qualités" 
+        icon={<Sparkles className="w-5 h-5" />}
+        isOpen={openSection === 'qualities' && isExpanded}
+        onToggle={() => handleToggle('qualities')}
+      >
+        <QualitiesForm />
+      </Accordion>
+
+      {/* 10. RÉFÉRENCES */}
       <Accordion 
         title="Références" 
         icon={<UserCheck className="w-5 h-5" />}
@@ -157,7 +169,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
         <ReferencesForm />
       </Accordion>
 
-      {/* 10. DIVERS & SIGNATURE */}
+      {/* 11. DIVERS & SIGNATURE */}
       <Accordion 
         title="Divers & Signature" 
         icon={<FileText className="w-5 h-5" />}

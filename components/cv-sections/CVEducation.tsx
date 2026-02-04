@@ -10,7 +10,7 @@ interface CVEducationProps {
   accentColor?: string;
 }
 
-export function CVEducation({ education, variant, title = 'Formation', accentColor }: CVEducationProps) {
+export function CVEducation({ education, variant, title = 'Éducation', accentColor }: CVEducationProps) {
   const styles = variantStyles[variant];
   
   if (education.length === 0) return null;

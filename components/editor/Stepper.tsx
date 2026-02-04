@@ -15,8 +15,8 @@ export function Stepper({ currentStep, onStepChange }: StepperProps) {
   const currentIndex = EDITOR_STEPS.findIndex((s) => s.key === currentStep);
 
   return (
-    <div className="pb-8 mb-6 border-b border-gray-100">
-      <div className="flex items-center justify-between">
+    <div className="pb-8 mb-6 border-b border-gray-100 overflow-x-auto">
+      <div className="flex items-center justify-between min-w-[600px] px-2">
         {EDITOR_STEPS.map((step, index) => {
           const isCompleted = index < currentIndex;
           const isCurrent = step.key === currentStep;
@@ -34,11 +34,11 @@ export function Stepper({ currentStep, onStepChange }: StepperProps) {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   className={cn(
-                    'w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300',
+                    'w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300',
                     isCompleted
                       ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white'
                       : isCurrent
-                      ? 'bg-indigo-500 text-white ring-4 ring-indigo-100'
+                      ? 'bg-indigo-500 text-white ring-2 ring-indigo-200 ring-offset-1'
                       : 'bg-gray-100 text-gray-400 group-hover:bg-gray-200'
                   )}
                 >

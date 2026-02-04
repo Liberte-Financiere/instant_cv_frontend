@@ -4,9 +4,11 @@ import { CV } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
   CVSkills, CVLanguages, CVHobbies, CVCertifications, 
-  CVProjects, CVReferences, CVDivers, CVFooter 
+  CVProjects, CVReferences, CVDivers, CVFooter, CVQualities 
 } from '@/components/cv-sections';
 import { getAccentColor } from '@/components/cv-sections/styles';
+
+import { SECTION_TITLES } from '@/constants/sections';
 
 interface TemplateProps {
   cv: CV;
@@ -114,9 +116,10 @@ export function ModernSidebar({ cv }: TemplateProps) {
         <div className="flex-1 p-6 sm:p-8 space-y-6 bg-white">
            <CVSummary summary={personalInfo.summary} variant={variant} accentColor={accentColor} />
            <CVExperience experiences={experiences} variant={variant} accentColor={accentColor} />
-           <CVEducation education={education} variant={variant} accentColor={accentColor} />
-           <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} />
+           <CVEducation education={education} variant={variant} accentColor={accentColor} title={SECTION_TITLES.education} />
+           <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} title={SECTION_TITLES.certifications} />
            <CVProjects projects={projects} variant={variant} accentColor={accentColor} />
+           <CVQualities qualities={cv.qualities || []} variant={variant} accentColor={accentColor} title={SECTION_TITLES.qualities} />
            <CVReferences references={references} variant={variant} accentColor={accentColor} />
            <CVDivers divers={divers} variant={variant} accentColor={accentColor} />
            <CVFooter footer={footer} variant={variant} />
