@@ -1,6 +1,6 @@
 'use client';
 
-import { Edit, Trash2, Download, Clock } from 'lucide-react';
+import { Edit, Trash2, Download, Clock, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -63,12 +63,14 @@ export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
            >
              <Edit className="w-5 h-5" />
            </Link>
-           <button
-             className="p-3 bg-white rounded-xl text-slate-600 hover:text-green-600 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
-             title="Télécharger"
+           <Link
+             href={`/share/${cv.id}`}
+             target="_blank"
+             className="p-3 bg-white rounded-xl text-slate-600 hover:text-purple-600 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
+             title="Voir le lien public"
            >
-             <Download className="w-5 h-5" />
-           </button>
+             <Eye className="w-5 h-5" />
+           </Link>
            <button
              onClick={() => onDelete(cv.id)}
              className="p-3 bg-white rounded-xl text-slate-600 hover:text-red-500 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
@@ -79,9 +81,17 @@ export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
         </div>
 
         {/* Status Badge */}
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100 flex items-center gap-1.5 z-10">
-           <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-           En ligne
+        <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
+           <div className="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100 flex items-center gap-1.5 z-10">
+              <span className={`w-1.5 h-1.5 rounded-full ${cv.isPublic ? 'bg-green-500' : 'bg-slate-300'}`} />
+              {cv.isPublic ? 'Public' : 'Privé'}
+           </div>
+           {cv.views > 0 && (
+             <div className="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-purple-600 shadow-sm border border-slate-100 flex items-center gap-1.5 z-10">
+                <Eye className="w-3 h-3" />
+                {cv.views}
+             </div>
+           )}
         </div>
       </div>
 

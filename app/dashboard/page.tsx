@@ -9,12 +9,79 @@ import { CVCard } from '@/components/dashboard/CVCard';
 import { TemplateSelector } from '@/components/dashboard/TemplateSelector';
 import { TemplateId } from '@/types/cv';
 
+import { useRouter } from 'next/navigation';
+import { AnalysisResultModal } from '@/components/dashboard/AnalysisResultModal';
+import { toast } from 'sonner';
+
 export default function DashboardPage() {
-  const { cvList, createNewCV, deleteCV } = useCVStore();
+  const router = useRouter();
+  const { createNewCV, cvList, createImportedCV, setAnalysisData, deleteCV } = useCVStore();
   const [isCreating, setIsCreating] = useState(false);
   const [step, setStep] = useState<'template' | 'name'>('template');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>('modern');
   const [newTitle, setNewTitle] = useState('');
+  
+  // Analysis State
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<any | null>(null);
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      toast.error('Veuillez uploader un fichier PDF.');
+      return;
+    }
+
+    setIsAnalyzing(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('/api/ai/analyze', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        let errorMessage = 'Erreur lors de l\'analyse';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorData.details || errorMessage;
+          console.error('API Error Details:', errorData);
+        } catch (e) {
+          const text = await response.text();
+          console.error('API Error Text:', text);
+        }
+        throw new Error(errorMessage);
+      }
+      
+      const data = await response.json();
+      
+      // Store complete analysis data in global store
+      setAnalysisData(data);
+      
+      toast.success("Analyse terminée !");
+      router.push('/analysis');
+      
+    } catch (error: any) {
+      toast.error(error.message || 'Une erreur est survenue');
+    } finally {
+      setIsAnalyzing(false);
+      // Reset input
+      event.target.value = '';
+    }
+  };
+
+  const handleImportCV = () => {
+    if (!analysisResult?.cvData) return;
+    
+    // Create new CV from imported data
+    const id = createImportedCV(analysisResult.cvData);
+    setAnalysisResult(null);
+    window.location.href = `/editor/${id}`;
+  };
 
   const handleCreateCV = () => {
     if (newTitle.trim()) {
@@ -34,37 +101,11 @@ export default function DashboardPage() {
     setNewTitle('');
   };
 
+  const totalViews = cvList.reduce((acc, cv) => acc + (cv.views || 0), 0);
+
   return (
     <div className="p-8 max-w-7xl mx-auto">
-      {/* Top Header */}
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-        <div>
-           <div className="text-slate-500 text-sm font-medium mb-1">
-             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
-           </div>
-           <h1 className="text-3xl font-bold text-[#0F172A]">
-             Bonjour, Jean 👋
-           </h1>
-        </div>
-        
-        <div className="flex gap-3">
-           <div className="relative hidden md:block">
-              <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input 
-                type="text" 
-                placeholder="Rechercher un CV..." 
-                className="pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-64"
-              />
-           </div>
-           <button
-             onClick={handleOpenModal}
-             className="flex items-center gap-2 px-5 py-3 bg-[#2463eb] hover:bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-105"
-           >
-             <Plus className="w-5 h-5" />
-             <span className="hidden sm:inline">Créer un CV</span>
-           </button>
-        </div>
-      </header>
+      {/* ... (header) ... */}
       
       {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -77,7 +118,7 @@ export default function DashboardPage() {
         />
         <StatCard 
            title="Profils Consultés" 
-           value="124" 
+           value={totalViews.toString()} 
            icon={Eye} 
            color="purple"
            trend="+15%"
@@ -94,14 +135,30 @@ export default function DashboardPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-12 rounded-3xl border-2 border-dashed border-purple-200 bg-purple-50/50 p-8 text-center hover:bg-purple-50 transition-colors cursor-pointer group"
+        className="mb-12 rounded-3xl border-2 border-dashed border-purple-200 bg-purple-50/50 p-8 text-center hover:bg-purple-50 transition-colors cursor-pointer group relative overflow-hidden"
+        onClick={() => document.getElementById('cv-upload')?.click()}
       >
+         {isAnalyzing && (
+            <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
+              <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4" />
+              <p className="text-purple-700 font-bold animate-pulse">L'IA analyse votre CV...</p>
+            </div>
+         )}
+         
+         <input 
+           type="file" 
+           id="cv-upload"
+           accept=".pdf" // Add .txt later if needed
+           className="hidden" 
+           onChange={handleFileUpload}
+         />
+
          <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
             <span className="text-2xl">✨</span>
          </div>
          <h2 className="text-xl font-bold text-slate-900 mb-2">Magic Analyzer</h2>
          <p className="text-slate-500 max-w-lg mx-auto text-sm">
-           Glissez votre ancien CV ici pour une analyse instantanée par l&apos;IA et découvrez comment l&apos;améliorer en quelques secondes.
+           Glissez votre ancien CV (PDF) ici pour une analyse instantanée par l&apos;IA et découvrez comment l&apos;améliorer.
          </p>
       </motion.div>
 
@@ -158,6 +215,14 @@ export default function DashboardPage() {
              </button>
           </div>
         )}
+
+      {/* Analysis Result Modal */}
+      <AnalysisResultModal 
+        isOpen={!!analysisResult}
+        result={analysisResult}
+        onClose={() => setAnalysisResult(null)}
+        onImport={handleImportCV}
+      />
 
         {/* Modal Creation with Template Selection */}
         {isCreating && (

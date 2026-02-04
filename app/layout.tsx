@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
+import { Toaster } from 'sonner';
 
 
 const manrope = Manrope({
@@ -54,6 +55,7 @@ export default function RootLayout({
             })
           }}
         />
+        <Toaster position="top-center" />
       </body>
     </html>
   );

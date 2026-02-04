@@ -32,7 +32,8 @@ const SECTION_LABELS: Record<CVSectionId, string> = {
   certifications: 'Formations',
   projects: 'Projets',
   references: 'Références',
-  divers: 'Informations complémentaires',
+  divers: 'Divers',
+  qualities: 'Qualités',
 };
 
 interface SortableItemProps {

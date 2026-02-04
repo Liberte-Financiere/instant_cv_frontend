@@ -7,14 +7,44 @@ import type {
 import { DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { generateId } from '@/lib/utils';
 
+// New Interface for Detailed Analysis
+export interface SectionAudit {
+  score: number;
+  strengths: string[];
+  improvements: string[];
+  recommendations: string[];
+}
+
+export interface DetailedAnalysis {
+  globalScore: number;
+  globalReview: string;
+  detectedKeywords: string[];
+  recommendedPositions: {
+    title: string;
+    match: number;
+    reason: string;
+  }[];
+  sections: {
+    structure: SectionAudit;
+    experience: SectionAudit;
+    education: SectionAudit;
+    skills: SectionAudit;
+  };
+}
+
 interface CVState {
   currentCV: CV | null;
   currentStep: EditorStep;
   cvList: CV[];
+
+  // Analysis State
+  lastAnalysis: { analysis: DetailedAnalysis, cvData: Partial<CV> } | null;
+  setAnalysisData: (data: { analysis: DetailedAnalysis, cvData: Partial<CV> } | null) => void;
   
   // Core Actions
   setCurrentStep: (step: EditorStep) => void;
   createNewCV: (title: string, templateId?: string) => string;
+  createImportedCV: (data: Partial<CV>) => string;
   loadCV: (id: string) => void;
   deleteCV: (id: string) => void;
   
@@ -77,6 +107,10 @@ interface CVState {
   
   // Section Order
   updateSectionOrder: (order: CVSectionId[]) => void;
+
+  // Sharing & Analytics
+  incrementViews: (cvId: string) => void;
+  togglePublic: (cvId: string) => void;
 }
 
 const DEFAULT_SETTINGS: CVSettings = {
@@ -117,6 +151,8 @@ const createEmptyCV = (title: string, templateId: string = 'modern'): CV => ({
   },
   settings: DEFAULT_SETTINGS,
   sectionOrder: [...DEFAULT_SECTION_ORDER],
+  views: 0,
+  isPublic: false,
   createdAt: new Date(),
   updatedAt: new Date(),
 });
@@ -137,6 +173,9 @@ export const useCVStore = create<CVState>()(
       currentCV: null,
       currentStep: 'personal',
       cvList: [],
+      
+      lastAnalysis: null,
+      setAnalysisData: (data) => set({ lastAnalysis: data }),
 
       setCurrentStep: (step) => set({ currentStep: step }),
 
@@ -145,6 +184,46 @@ export const useCVStore = create<CVState>()(
         set((state) => ({
           cvList: [...state.cvList, newCV],
           currentCV: newCV,
+          currentStep: 'personal',
+        }));
+        return newCV.id;
+      },
+
+      createImportedCV: (data) => {
+        const newCV = createEmptyCV(`CV Importé ${new Date().toLocaleDateString()}`, 'modern');
+        
+        // Helper to ensure all items in an array have an ID
+        const ensureIds = (arr: any[]) => {
+            if (!Array.isArray(arr)) return [];
+            return arr.map(item => ({ ...item, id: item.id || generateId() }));
+        };
+
+        // Merge imported data with default structure AND ensure IDs
+        const mergedCV: CV = {
+           ...newCV,
+           ...data,
+           id: newCV.id, // Keep generated main ID
+           settings: newCV.settings, // Keep default settings
+           
+           // Sanitize Arrays
+           experiences: ensureIds(data.experiences || []),
+           education: ensureIds(data.education || []),
+           skills: ensureIds(data.skills || []),
+           languages: ensureIds(data.languages || []),
+           hobbies: ensureIds(data.hobbies || []),
+           certifications: ensureIds(data.certifications || []),
+           projects: ensureIds(data.projects || []),
+           references: ensureIds(data.references || []),
+           qualities: ensureIds(data.qualities || []),
+           socialLinks: ensureIds(data.socialLinks || []),
+           
+           createdAt: new Date(),
+           updatedAt: new Date(),
+        };
+
+        set((state) => ({
+          cvList: [...state.cvList, mergedCV],
+          currentCV: mergedCV,
           currentStep: 'personal',
         }));
         return newCV.id;
@@ -165,6 +244,8 @@ export const useCVStore = create<CVState>()(
             divers: cv.divers || '',
             footer: cv.footer || { showFooter: false, madeAt: '', madeDate: '', signatureUrl: '' },
             settings: cv.settings || DEFAULT_SETTINGS,
+            views: cv.views || 0,
+            isPublic: cv.isPublic || false,
           };
           set({ currentCV: migratedCV, currentStep: 'personal' });
         }
@@ -341,6 +422,24 @@ export const useCVStore = create<CVState>()(
       updateSectionOrder: (order) => set((state) => updateCV(state, (cv) => ({
         ...cv,
         sectionOrder: order,
+      }))),
+
+      // Sharing & Analytics
+      incrementViews: (cvId) => set((state) => {
+        const updatedList = state.cvList.map((c) => 
+          c.id === cvId ? { ...c, views: (c.views || 0) + 1 } : c
+        );
+        return {
+          cvList: updatedList,
+          currentCV: state.currentCV?.id === cvId 
+            ? { ...state.currentCV, views: (state.currentCV.views || 0) + 1 } 
+            : state.currentCV
+        };
+      }),
+
+      togglePublic: (cvId) => set((state) => updateCV(state, (cv) => ({
+        ...cv,
+        isPublic: !cv.isPublic,
       }))),
     }),
     {

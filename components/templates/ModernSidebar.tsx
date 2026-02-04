@@ -73,8 +73,8 @@ export function ModernSidebar({ cv }: TemplateProps) {
             <div>
               <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">Compétences</h3>
               <div className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <span key={skill.id} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded text-xs font-medium">
+                {skills.map((skill, index) => (
+                  <span key={skill.id || index} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded text-xs font-medium">
                     {skill.name}
                   </span>
                 ))}
@@ -87,8 +87,8 @@ export function ModernSidebar({ cv }: TemplateProps) {
             <div>
               <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">Langues</h3>
               <div className="space-y-3">
-                {languages.map((lang) => (
-                  <div key={lang.id} className="flex justify-between items-center text-sm">
+                 {languages.map((lang, index) => (
+                  <div key={lang.id || index} className="flex justify-between items-center text-sm">
                     <span className="text-slate-300">{lang.name}</span>
                     <span className="text-xs text-slate-500 font-medium">{lang.level}</span>
                   </div>
@@ -102,8 +102,8 @@ export function ModernSidebar({ cv }: TemplateProps) {
             <div>
               <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">Centres d&apos;intérêt</h3>
               <div className="flex flex-wrap gap-2">
-                {hobbies.map((hobby) => (
-                  <span key={hobby.id} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded text-xs font-medium">
+                 {hobbies.map((hobby, index) => (
+                  <span key={hobby.id || index} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded text-xs font-medium">
                     {hobby.name}
                   </span>
                 ))}

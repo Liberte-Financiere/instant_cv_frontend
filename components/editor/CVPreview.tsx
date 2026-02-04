@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 import { printCV } from '@/lib/pdf-export';
 import { exportToWord } from '@/lib/word-export';
+import { CV } from '@/types/cv';
 
 // Dynamic imports for templates
 const ModernSidebar = dynamic(() => import('@/components/templates/ModernSidebar').then(mod => mod.ModernSidebar), { 
@@ -31,23 +32,36 @@ const ATSFriendlyTemplate = dynamic(() => import('@/components/templates/ATSFrie
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
 
-export function CVPreview() {
+interface CVPreviewProps {
+  data?: CV; // Optional prop for read-only mode (e.g., share page)
+}
+
+export function CVPreview({ data }: CVPreviewProps) {
   const { currentCV } = useCVStore();
   const [zoom, setZoom] = useState(0.8);
   const [isExporting, setIsExporting] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   
+  // Use passed data OR store data
+  const cvToRender = data || currentCV;
+
   // Debounce logic for performance
   // We keep a local version of CV that only updates after delay
-  const [debouncedCV, setDebouncedCV] = useState(currentCV);
+  const [debouncedCV, setDebouncedCV] = useState(cvToRender);
   
   useEffect(() => {
+    // If data is passed directly (read-only), no need to debounce store changes
+    if (data) {
+      setDebouncedCV(data);
+      return;
+    }
+
     const timer = setTimeout(() => {
       setDebouncedCV(currentCV);
     }, 500); // 500ms delay
 
     return () => clearTimeout(timer);
-  }, [currentCV]);
+  }, [currentCV, data]);
 
   const cvRef = useRef<HTMLDivElement>(null);
 

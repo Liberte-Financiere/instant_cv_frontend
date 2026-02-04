@@ -133,6 +133,11 @@ export interface CV {
   sectionOrder: CVSectionId[];
   createdAt: Date;
   updatedAt: Date;
+  
+  // Analytics & Sharing
+  views: number;
+  isPublic: boolean;
+  publicLink?: string;
 }
 
 export type EditorStep =

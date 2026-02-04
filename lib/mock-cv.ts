@@ -70,7 +70,7 @@ export const MOCK_PREVIEW_CV: CV = {
   ],
   languages: [
     { id: "1", name: "Français", level: "Natif" },
-    { id: "2", name: "Anglais", level: "Avancé (C1)" },
+    { id: "2", name: "Anglais", level: "Avancé" },
     { id: "3", name: "Espagnol", level: "Intermédiaire" },
   ],
   hobbies: [
@@ -111,6 +111,9 @@ export const MOCK_PREVIEW_CV: CV = {
     fontFamily: "sans",
   },
   sectionOrder: DEFAULT_SECTION_ORDER,
+  qualities: [],
+  views: 0,
+  isPublic: false,
   createdAt: new Date(),
   updatedAt: new Date(),
 };

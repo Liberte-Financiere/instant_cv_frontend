@@ -62,8 +62,6 @@ export async function POST(req: Request) {
       userMessage = "Problème de configuration (Clé API invalide).";
     }
 
-    }
-
     return NextResponse.json({ 
       error: userMessage, // Always use the friendly message
       details: errorMessage // Keep technical details separate
