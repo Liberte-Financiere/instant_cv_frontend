@@ -61,99 +61,12 @@ export function CVPreview() {
   };
 
   const handleExportPDF = () => {
-    if (!cvRef.current) return;
+    if (!currentCV) return;
     
     setShowExportMenu(false);
     
-    // Use browser print dialog - user can save as PDF
-    const printWindow = window.open('', '_blank', 'width=900,height=700');
-    if (!printWindow) {
-      alert('Veuillez autoriser les popups pour exporter en PDF.');
-      return;
-    }
-
-    // Clone styles
-    const styles = Array.from(document.styleSheets)
-      .map(styleSheet => {
-        try {
-          return Array.from(styleSheet.cssRules)
-            .map(rule => rule.cssText)
-            .join('\n');
-        } catch {
-          return '';
-        }
-      })
-      .join('\n');
-
-    const filename = `${currentCV.personalInfo.firstName}_${currentCV.personalInfo.lastName}_CV`;
-
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>${filename}</title>
-          <style>
-            ${styles}
-            
-            * {
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
-            
-            body {
-              margin: 0;
-              padding: 0;
-              background: white;
-            }
-            
-            @page {
-              size: A4;
-              margin: 0;
-            }
-            
-            @media print {
-              body { margin: 0; padding: 0; }
-              .cv-template { width: 210mm !important; min-height: 297mm !important; }
-            }
-            
-            /* Hide print toolbar hint after 5s */
-            .print-hint {
-              position: fixed;
-              top: 10px;
-              left: 50%;
-              transform: translateX(-50%);
-              background: #1e293b;
-              color: white;
-              padding: 12px 24px;
-              border-radius: 8px;
-              font-family: system-ui, sans-serif;
-              font-size: 14px;
-              z-index: 9999;
-              animation: fadeOut 5s forwards;
-            }
-            @keyframes fadeOut {
-              0%, 80% { opacity: 1; }
-              100% { opacity: 0; pointer-events: none; }
-            }
-            @media print { .print-hint { display: none; } }
-          </style>
-        </head>
-        <body>
-          <div class="print-hint">
-            💡 Choisissez "Enregistrer au format PDF" dans la destination
-          </div>
-          ${cvRef.current.outerHTML}
-        </body>
-      </html>
-    `);
-    
-    printWindow.document.close();
-    
-    // Wait for styles to load then trigger print
-    setTimeout(() => {
-      printWindow.focus();
-      printWindow.print();
-    }, 800);
+    // Open public CV page with auto-print trigger
+    window.open(`/cv/${currentCV.id}?print=true`, '_blank');
   };
 
   const handleExportWord = async () => {

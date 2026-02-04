@@ -39,7 +39,16 @@ body {
   /* Page setup */
   @page {
     size: A4;
-    margin: 0;
+    /* Add space on top/bottom for pages 2, 3... */
+    margin: 15mm 0; 
+  }
+
+  /* Page 1 often has full-bleed header/sidebar, so remove margins except bottom */
+  @page :first {
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 15mm;
   }
   
   /* CV Template sizing */
@@ -77,14 +86,30 @@ body {
 }
 
 /* Screen styles - show page boundaries for long CVs */
-.cv-template {
-  /* Visual page separator every 297mm */
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0mm,
-    transparent 296mm,
-    rgba(0, 0, 0, 0.08) 296mm,
-    rgba(0, 0, 0, 0.08) 297mm
-  );
-  background-size: 100% 297mm;
+@media screen {
+  .cv-template {
+    /* Visual page separator every 297mm */
+    position: relative;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0mm,
+      transparent 296.5mm,
+      rgba(255, 0, 0, 0.2) 296.5mm,
+      rgba(255, 0, 0, 0.2) 297mm
+    );
+    background-size: 100% 297mm;
+  }
+
+  /* Add a text hint for page breaks on screen */
+  .cv-template::before {
+    content: 'Fin de page (A4)';
+    position: absolute;
+    right: -120px;
+    top: 295mm;
+    color: #ef4444;
+    font-size: 12px;
+    font-weight: bold;
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }

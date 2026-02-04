@@ -1,6 +1,6 @@
 'use client';
 
-import { use } from 'react';
+import { use, useEffect } from 'react';
 import { useCVStore } from '@/store/useCVStore';
 import { ModernSidebar } from '@/components/templates/ModernSidebar';
 import { ProfessionalClean } from '@/components/templates/ProfessionalClean';
@@ -19,6 +19,23 @@ interface PageProps {
 export default function PublicCVPage({ params }: PageProps) {
   const { id } = use(params);
   const { currentCV, loadCV } = useCVStore();
+
+  // useSearchParams needs to be wrapped in Suspense boundary properly or used in a separate client component in Next 13+
+  // But for simplicity in this structure we can use window.location search in useEffect if we want to avoid Layout changes
+  // or just use useSearchParams from navigation
+  // Let's use simple window check to avoid Next.js build complexity with Suspense for now
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined' && currentCV) {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('print') === 'true') {
+        // Delay slightly to ensure rendering is complete
+        setTimeout(() => {
+          window.print();
+        }, 500);
+      }
+    }
+  }, [currentCV]);
 
   // Try to load the CV if not already loaded or different
   if (!currentCV || currentCV.id !== id) {
