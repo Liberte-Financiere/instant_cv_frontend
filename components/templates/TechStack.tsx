@@ -14,12 +14,34 @@ interface TemplateProps {
 }
 
 export function TechStack({ cv }: TemplateProps) {
-  // ... (skipping destructuring)
+  const { personalInfo, experiences, education, skills, languages } = cv;
+  const hobbies = cv.hobbies || [];
+  const qualities = cv.qualities || [];
+  const certifications = cv.certifications || [];
+  const projects = cv.projects || [];
+  const references = cv.references || [];
+  const socialLinks = cv.socialLinks || [];
+  const divers = cv.divers || '';
+  const footer = cv.footer || { showFooter: false, madeAt: '', madeDate: '' };
+
+  const variant = 'tech';
 
   return (
     <div className="cv-template w-full h-full bg-[#1e1e1e] text-gray-300 font-mono text-sm min-h-[297mm] p-8 flex flex-col">
       <div className="flex-1">
-        {/* ... (skipping Header) ... */}
+        {/* Header */}
+        <header className="border-b border-gray-700 pb-6 mb-8 flex justify-between items-end">
+          <div>
+            <p className="text-green-500 text-xs mb-1">// developer profile</p>
+            <h1 className="text-3xl font-bold text-white">
+              {personalInfo.firstName} {personalInfo.lastName}
+            </h1>
+            <p className="text-green-400 mt-1">&gt; {personalInfo.title}</p>
+          </div>
+          <div className="text-right text-xs text-gray-500">
+            <CVContact personalInfo={personalInfo} socialLinks={socialLinks} variant={variant} layout="vertical" />
+          </div>
+        </header>
 
         {/* Main Content */}
         <div className="space-y-8">
