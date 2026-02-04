@@ -87,9 +87,9 @@ export function FormSection({ currentStep }: FormSectionProps) {
         <ExperienceForm />
       </Accordion>
 
-      {/* 3. FORMATION */}
+      {/* 3. FORMATION (Renamed to Éducation) */}
       <Accordion 
-        title="Formation" 
+        title="Éducation" 
         icon={<GraduationCap className="w-5 h-5" />}
         isOpen={openSection === 'education' && isExpanded}
         onToggle={() => handleToggle('education')}
@@ -107,9 +107,9 @@ export function FormSection({ currentStep }: FormSectionProps) {
         <SkillsForm />
       </Accordion>
 
-      {/* 5. CERTIFICATIONS */}
+      {/* 5. CERTIFICATIONS (Renamed to Formations) */}
       <Accordion 
-        title="Certifications" 
+        title="Formations" 
         icon={<Award className="w-5 h-5" />}
         isOpen={openSection === 'certifications' && isExpanded}
         onToggle={() => handleToggle('certifications')}

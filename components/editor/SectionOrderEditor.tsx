@@ -25,11 +25,11 @@ import { CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 const SECTION_LABELS: Record<CVSectionId, string> = {
   summary: 'Profil',
   experience: 'Expériences',
-  education: 'Formations',
+  education: 'Éducation',
   skills: 'Compétences',
   languages: 'Langues',
   hobbies: 'Centres d\'intérêt',
-  certifications: 'Certifications',
+  certifications: 'Formations',
   projects: 'Projets',
   references: 'Références',
   divers: 'Informations complémentaires',

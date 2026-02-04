@@ -7,6 +7,8 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { PhotoUpload } from '../PhotoUpload';
 import { Trash2, Plus } from 'lucide-react';
+import { MagicButton } from '../MagicButton';
+
 
 export function PersonalInfoForm() {
   const { 
@@ -81,8 +83,16 @@ export function PersonalInfoForm() {
       
       {/* Summary */}
       <div className="col-span-full mt-4 pt-4 border-t border-slate-100">
+        <div className="flex justify-between items-center mb-2">
+            <Label>Résumé Professionnel</Label>
+            <MagicButton 
+              section="Summary"
+              currentText={personalInfo.summary}
+              onApply={(newText) => updatePersonalInfo({ summary: newText })}
+              compact
+            />
+        </div>
         <Textarea
-          label="Résumé Professionnel"
           rows={4}
           placeholder="Décrivez brièvement votre parcours..."
           value={personalInfo.summary}

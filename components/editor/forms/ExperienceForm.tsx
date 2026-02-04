@@ -3,6 +3,7 @@
 import { useCVStore } from '@/store/useCVStore';
 import { Input } from '@/components/ui/Input';
 import { Trash2, Plus, Briefcase } from 'lucide-react';
+import { MagicButton } from '../MagicButton';
 
 export function ExperienceForm() {
   const { currentCV, addExperience, updateExperience, removeExperience } = useCVStore();
@@ -32,7 +33,24 @@ export function ExperienceForm() {
                 <Input label="Fin" type="month" value={exp.endDate} onChange={(e) => updateExperience(exp.id, { endDate: e.target.value })} disabled={exp.current} />
               </div>
             </div>
-            <div><label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label><textarea rows={3} value={exp.description} onChange={(e) => updateExperience(exp.id, { description: e.target.value })} placeholder="Détaillez vos missions et résultats..." className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" /></div>
+            <div>
+              <div className="flex justify-between items-center mb-1.5">
+                  <label className="text-sm font-medium text-slate-700">Description</label>
+                  <MagicButton 
+                    section="Experience"
+                    currentText={exp.description}
+                    onApply={(newText) => updateExperience(exp.id, { description: newText })}
+                    compact
+                  />
+              </div>
+              <textarea 
+                rows={3} 
+                value={exp.description} 
+                onChange={(e) => updateExperience(exp.id, { description: e.target.value })} 
+                placeholder="Détaillez vos missions et résultats..." 
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
+              />
+            </div>
           </div>
         ))
       )}

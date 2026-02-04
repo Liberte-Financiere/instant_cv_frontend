@@ -3,6 +3,7 @@
 import { useCVStore } from '@/store/useCVStore';
 import { Input } from '@/components/ui/Input';
 import { Trash2, Plus } from 'lucide-react';
+import { MagicButton } from '../MagicButton';
 
 export function ProjectsForm() {
   const { currentCV, addProject, updateProject, removeProject } = useCVStore();
@@ -22,8 +23,22 @@ export function ProjectsForm() {
               <Input label="Technologies utilisées" value={project.technologies || ''} onChange={(e) => updateProject(project.id, { technologies: e.target.value })} placeholder="Ex: React, Node.js, MongoDB" helpText="Séparées par des virgules" />
             </div>
             <div className="col-span-full">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
-              <textarea rows={2} value={project.description} onChange={(e) => updateProject(project.id, { description: e.target.value })} placeholder="Décrivez le projet..." className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" />
+              <div className="flex justify-between items-center mb-1.5">
+                  <label className="text-sm font-medium text-slate-700">Description</label>
+                  <MagicButton 
+                    section="Project"
+                    currentText={project.description}
+                    onApply={(newText) => updateProject(project.id, { description: newText })}
+                    compact
+                  />
+              </div>
+              <textarea 
+                rows={2} 
+                value={project.description} 
+                onChange={(e) => updateProject(project.id, { description: e.target.value })} 
+                placeholder="Décrivez le projet..." 
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
+              />
             </div>
           </div>
         </div>

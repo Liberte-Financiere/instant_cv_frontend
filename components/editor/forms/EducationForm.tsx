@@ -24,7 +24,7 @@ export function EducationForm() {
           </div>
         </div>
       ))}
-      <button onClick={() => addEducation({ institution: '', degree: '', field: '', startDate: '', endDate: '' })} className="w-full py-3 border-2 border-dashed border-slate-200 rounded-xl text-slate-500 font-bold hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-center gap-2"><Plus className="w-4 h-4" />Ajouter une formation</button>
+      <button onClick={() => addEducation({ institution: '', degree: '', field: '', startDate: '', endDate: '' })} className="w-full py-3 border-2 border-dashed border-slate-200 rounded-xl text-slate-500 font-bold hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-center gap-2"><Plus className="w-4 h-4" />Ajouter un diplôme</button>
     </div>
   );
 }

@@ -144,9 +144,9 @@ export type EditorStep =
 export const EDITOR_STEPS: { key: EditorStep; label: string }[] = [
   { key: "personal", label: "Infos Personnelles" },
   { key: "experience", label: "Expériences" },
-  { key: "education", label: "Formation" },
+  { key: "education", label: "Éducation" },
   { key: "skills", label: "Compétences" },
-  { key: "certifications", label: "Certifications" },
+  { key: "certifications", label: "Formations" },
   { key: "projects", label: "Projets" },
   { key: "languages", label: "Langues" },
   { key: "hobbies", label: "Centres d'intérêt" },
