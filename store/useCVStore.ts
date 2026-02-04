@@ -76,6 +76,7 @@ interface CVState {
 
 const DEFAULT_SETTINGS: CVSettings = {
   accentColor: '#2563eb', // Blue
+  sidebarColor: '#0f172a', // Slate 900
   fontFamily: 'sans',
 };
 

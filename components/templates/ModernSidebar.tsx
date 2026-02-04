@@ -24,6 +24,7 @@ export function ModernSidebar({ cv }: TemplateProps) {
   
   // Get custom accent color or default
   const accentColor = getAccentColor('modern', cv.settings?.accentColor);
+  const sidebarColor = cv.settings?.sidebarColor || '#0f172a'; // Default to Slate 900
 
   const variant = 'modern';
 
@@ -31,8 +32,10 @@ export function ModernSidebar({ cv }: TemplateProps) {
     <div className="cv-template w-full h-full bg-white text-slate-800 font-sans text-sm leading-relaxed flex flex-col min-h-[297mm]">
       <div className="flex flex-col sm:flex-row flex-1">
         {/* Sidebar (Left Column) */}
-        <div className="w-[30%] bg-slate-900 text-white p-5 space-y-5 flex-shrink-0 print:bg-slate-900 print:text-white">
-          {/* Avatar & Name */}
+        <div 
+          className="w-[30%] text-white p-5 space-y-5 flex-shrink-0 print:text-white"
+          style={{ backgroundColor: sidebarColor }}
+        >          {/* Avatar & Name */}
           <div className="text-center sm:text-left">
              {personalInfo.photoUrl ? (
                <img 

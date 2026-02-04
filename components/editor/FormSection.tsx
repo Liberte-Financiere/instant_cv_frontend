@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { 
   User, Briefcase, GraduationCap, Wrench, Languages, 
   Plus, Trash2, Heart, FileText, PenTool, Award, 
@@ -62,10 +63,21 @@ export function FormSection({ currentStep }: FormSectionProps) {
   const divers = currentCV.divers || '';
   const footer = currentCV.footer || { showFooter: false, madeAt: '', madeDate: '', signatureUrl: '' };
 
+  const [isExpanded, setIsExpanded] = useState(true);
   const openSection = stepToSection[currentStep] || 'personal';
 
+  // Sync expansion when step changes from outside (e.g. Stepper)
+  useEffect(() => {
+    setIsExpanded(true);
+  }, [currentStep]);
+
   const handleToggle = (key: SectionKey) => {
-    setCurrentStep(key as EditorStep);
+    if (stepToSection[currentStep] === key) {
+      setIsExpanded(!isExpanded);
+    } else {
+      setCurrentStep(key as EditorStep);
+      setIsExpanded(true);
+    }
   };
 
   return (
@@ -74,7 +86,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       <Accordion 
         title="Informations Personnelles" 
         icon={<User className="w-5 h-5" />}
-        isOpen={openSection === 'personal'}
+        isOpen={openSection === 'personal' && isExpanded}
         onToggle={() => handleToggle('personal')}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -152,7 +164,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       <Accordion 
         title="Expériences" 
         icon={<Briefcase className="w-5 h-5" />}
-        isOpen={openSection === 'experience'}
+        isOpen={openSection === 'experience' && isExpanded}
         onToggle={() => handleToggle('experience')}
       >
         <div className="space-y-6">
@@ -190,7 +202,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       <Accordion 
         title="Formation" 
         icon={<GraduationCap className="w-5 h-5" />}
-        isOpen={openSection === 'education'}
+        isOpen={openSection === 'education' && isExpanded}
         onToggle={() => handleToggle('education')}
       >
         <div className="space-y-6">
@@ -214,7 +226,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       <Accordion 
         title="Compétences" 
         icon={<Wrench className="w-5 h-5" />}
-        isOpen={openSection === 'skills'}
+        isOpen={openSection === 'skills' && isExpanded}
         onToggle={() => handleToggle('skills')}
       >
         <div className="flex flex-wrap gap-3">
@@ -236,7 +248,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       <Accordion 
         title="Certifications" 
         icon={<Award className="w-5 h-5" />}
-        isOpen={openSection === 'certifications'}
+        isOpen={openSection === 'certifications' && isExpanded}
         onToggle={() => handleToggle('certifications')}
       >
         <div className="space-y-4">
@@ -259,7 +271,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       <Accordion 
         title="Projets" 
         icon={<FolderOpen className="w-5 h-5" />}
-        isOpen={openSection === 'projects'}
+        isOpen={openSection === 'projects' && isExpanded}
         onToggle={() => handleToggle('projects')}
       >
         <div className="space-y-4">
@@ -287,7 +299,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       <Accordion 
         title="Langues" 
         icon={<Languages className="w-5 h-5" />}
-        isOpen={openSection === 'languages'}
+        isOpen={openSection === 'languages' && isExpanded}
         onToggle={() => handleToggle('languages')}
       >
         <div className="space-y-3">
@@ -311,7 +323,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       <Accordion 
         title="Centres d'intérêt" 
         icon={<Heart className="w-5 h-5" />}
-        isOpen={openSection === 'hobbies'}
+        isOpen={openSection === 'hobbies' && isExpanded}
         onToggle={() => handleToggle('hobbies')}
       >
         <div className="flex flex-wrap gap-3">
@@ -333,7 +345,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       <Accordion 
         title="Références" 
         icon={<UserCheck className="w-5 h-5" />}
-        isOpen={openSection === 'references'}
+        isOpen={openSection === 'references' && isExpanded}
         onToggle={() => handleToggle('references')}
       >
         <div className="space-y-4">
@@ -357,7 +369,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       <Accordion 
         title="Divers & Signature" 
         icon={<FileText className="w-5 h-5" />}
-        isOpen={openSection === 'divers'}
+        isOpen={openSection === 'divers' && isExpanded}
         onToggle={() => handleToggle('divers')}
       >
         <div className="space-y-6">

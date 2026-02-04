@@ -93,6 +93,7 @@ export interface CVFooter {
 // NEW: CV Settings for customization
 export interface CVSettings {
   accentColor: string; // hex color
+  sidebarColor?: string; // hex color
   fontFamily?: 'sans' | 'serif' | 'mono';
 }
 

@@ -1,4 +1,4 @@
-import jsPDF from 'jspdf';
+// Native browser print solution - no dependencies required
 
 export interface ExportOptions {
   filename?: string;
