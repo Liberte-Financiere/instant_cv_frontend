@@ -41,7 +41,7 @@ export function Hero() {
 
             <div className="flex items-center justify-center lg:justify-start gap-4 pt-2">
               <AvatarGroup count={3} />
-              <p className="text-sm text-slate-400">Rejoint par <span className="text-white font-bold">10,000+</span> professionnels</p>
+              <p className="text-sm text-slate-400">Rejoint par <span className="text-white font-bold">500+</span> personnes</p>
             </div>
           </div>
 
