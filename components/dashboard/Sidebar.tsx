@@ -20,8 +20,8 @@ const navigation = [
   { name: 'Mes CV (Liste)', href: '/dashboard/list', icon: LayoutList },
   { name: 'Mes lettres', href: '/cover-letters', icon: FileText },
   { name: 'Modèles', href: '/templates', icon: LayoutTemplate },
-  { name: 'Signature', href: '/signature', icon: PenTool },
-  { name: 'Compte', href: '/settings', icon: Settings },
+  { name: 'Signature', href: '/dashboard/signature', icon: PenTool },
+  { name: 'Compte', href: '/dashboard/settings', icon: Settings },
 ];
 
 export function Sidebar() {
