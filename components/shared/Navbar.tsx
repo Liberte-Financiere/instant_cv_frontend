@@ -45,7 +45,7 @@ export function Navbar() {
                 {link.label}
               </Button>
             ))}
-            <Link href="/auth">
+            <Link href="/dashboard">
               <Button className="rounded-full shadow-lg shadow-blue-500/25">
                 Se connecter
               </Button>
@@ -85,7 +85,7 @@ export function Navbar() {
               </Link>
             ))}
             <Link
-              href="/auth"
+              href="/dashboard"
               onClick={() => setIsOpen(false)}
               className="block"
             >

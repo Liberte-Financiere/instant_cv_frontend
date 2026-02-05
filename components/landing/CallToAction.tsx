@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 export function CallToAction() {
   return (
     <div className="relative py-24 bg-[#0F172A] overflow-hidden">
@@ -12,9 +14,11 @@ export function CallToAction() {
         <p className="text-slate-400 text-lg mb-10 max-w-2xl mx-auto">Ne laissez pas un mauvais CV vous fermer des portes. Rejoignez Optijob aujourd'hui et prenez le contrôle de votre avenir professionnel.</p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button className="w-full sm:w-auto flex cursor-pointer items-center justify-center rounded-full h-14 px-8 bg-[#2463eb] hover:bg-[#1d4ed8] text-white text-lg font-bold shadow-lg shadow-[#2463eb]/25 transition-all hover:scale-105">
-             Commencer gratuitement
-          </button>
+          <Link href="/dashboard">
+            <button className="w-full sm:w-auto flex cursor-pointer items-center justify-center rounded-full h-14 px-8 bg-[#2463eb] hover:bg-[#1d4ed8] text-white text-lg font-bold shadow-lg shadow-[#2463eb]/25 transition-all hover:scale-105">
+               Commencer gratuitement
+            </button>
+          </Link>
           <p className="text-slate-500 text-sm mt-4 sm:mt-0">Pas de carte de crédit requise</p>
         </div>
       </div>
