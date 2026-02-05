@@ -18,8 +18,8 @@ import Image from 'next/image';
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Mes CV (Liste)', href: '/dashboard/list', icon: LayoutList },
-  { name: 'Mes lettres', href: '/cover-letters', icon: FileText },
-  { name: 'Modèles', href: '/templates', icon: LayoutTemplate },
+  { name: 'Mes lettres', href: '/dashboard/cover-letters', icon: FileText },
+  { name: 'Modèles', href: '/dashboard/templates', icon: LayoutTemplate },
   { name: 'Signature', href: '/dashboard/signature', icon: PenTool },
   { name: 'Compte', href: '/dashboard/settings', icon: Settings },
 ];

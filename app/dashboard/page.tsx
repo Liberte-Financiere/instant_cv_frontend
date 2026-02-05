@@ -8,6 +8,7 @@ import { StatCard } from '@/components/dashboard/StatCard';
 import { CVCard } from '@/components/dashboard/CVCard';
 import { TemplateSelector } from '@/components/dashboard/TemplateSelector';
 import { TemplateId } from '@/types/cv';
+import { Pagination } from '@/components/ui/Pagination';
 
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -20,6 +21,39 @@ export default function DashboardPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>('modern');
   const [newTitle, setNewTitle] = useState('');
   
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+  
+  // Calculate Pagination - Adjust for the "New CV" card taking up one slot on page 1
+  // Actually "New CV" card is distinct.
+  // Logic: 
+  // Page 1: "New CV" Card + 7 CVs
+  // Page 2+: 8 CVs
+  
+  // Let's simplify: "New CV" card is always first visual element.
+  // Wait, if I have 20 CVs.
+  // Page 1: NewCV Card + CV[0..6] (Total 8 items visually)
+  // Page 2: CV[7..14] (Total 8 items)
+  
+  // Simplified implementation from the previous replace call:
+  // I rendered "New CV" card only if currentPage === 1.
+  // So on Page 1 we have (ItemsPerPage - 1) slots for CVs if we want to keep grid consistent? 
+  // Or just 8 CVs + 1 New Card = 9 items? Grid is varying.
+  // Let's stick to: Page 1 shows "New CV" + 7 CVs. Page 2 shows 8 CVs.
+  
+  const itemsOnFirstPage = itemsPerPage - 1;
+  const totalCVs = cvList.length;
+  
+  // Calculation is tricky if page 1 has different capacity.
+  // Let's keep it simple: Just paginate the cvList by 8.
+  // And render "New CV" card additionally on top of the list on Page 1.
+  // So Page 1: New Card + 8 CVs (9 items). Page 2: 8 CVs.
+  // This is fine. Grid flow handles it.
+  
+  const totalPages = Math.ceil(totalCVs / itemsPerPage);
+  const paginatedCVs = cvList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   // Analysis State
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
@@ -165,30 +199,43 @@ export default function DashboardPage() {
 
       {/* CV Grid or Empty State */}
       {cvList.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {/* Create New Card (Visual) */}
-            <motion.div 
-               whileHover={{ scale: 1.02 }}
-               onClick={handleOpenModal}
-               className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors h-[320px]"
-            >
-               <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                 <Plus className="w-8 h-8 text-slate-400 group-hover:text-blue-500" />
-               </div>
-               <p className="font-bold text-slate-600 group-hover:text-blue-600">Nouveau CV</p>
-               <p className="text-xs text-slate-400 mt-1">Choisir un modèle</p>
-            </motion.div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {/* Create New Card (Visual) - Only on first page */}
+              {currentPage === 1 && (
+                <motion.div 
+                  whileHover={{ scale: 1.02 }}
+                  onClick={handleOpenModal}
+                  className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors h-[320px]"
+                >
+                  <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <Plus className="w-8 h-8 text-slate-400 group-hover:text-blue-500" />
+                  </div>
+                  <p className="font-bold text-slate-600 group-hover:text-blue-600">Nouveau CV</p>
+                  <p className="text-xs text-slate-400 mt-1">Choisir un modèle</p>
+                </motion.div>
+              )}
 
-            {/* Existing CVs */}
-            {cvList.map((cv) => (
-              <CVCard 
-                key={cv.id} 
-                cv={cv}
-                onDelete={deleteCV}
-                score={Math.floor(Math.random() * (98 - 70) + 70)}
+              {/* Existing CVs */}
+              {paginatedCVs.map((cv) => (
+                <CVCard 
+                  key={cv.id} 
+                  cv={cv}
+                  onDelete={deleteCV}
+                  score={Math.floor(Math.random() * (98 - 70) + 70)}
+                />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
               />
-            ))}
-          </div>
+            )}
+          </>
         ) : (
           <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center">
              <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">

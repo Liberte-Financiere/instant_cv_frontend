@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { indexedDBStorage } from '@/lib/storage';
 import { CVService } from '@/services/cvService';
 import { toast } from 'sonner';
 import type { 
@@ -533,6 +534,7 @@ export const useCVStore = create<CVState>()(
     }),
     {
       name: 'optijob-cv-storage',
+      storage: createJSONStorage(() => indexedDBStorage),
     }
   )
 );
