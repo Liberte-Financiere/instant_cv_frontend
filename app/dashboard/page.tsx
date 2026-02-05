@@ -164,13 +164,6 @@ export default function DashboardPage() {
         className="mb-12 rounded-3xl border-2 border-dashed border-purple-200 bg-purple-50/50 p-8 text-center hover:bg-purple-50 transition-colors cursor-pointer group relative overflow-hidden"
         onClick={() => document.getElementById('cv-upload')?.click()}
       >
-         {isAnalyzing && (
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
-              <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4" />
-              <p className="text-purple-700 font-bold animate-pulse">L'IA analyse votre CV...</p>
-            </div>
-         )}
-         
          <input 
            type="file" 
            id="cv-upload"
@@ -326,6 +319,19 @@ export default function DashboardPage() {
                   </>
                 )}
              </motion.div>
+          </div>
+        )}
+
+        {/* Full Screen Analysis Loader */}
+        {isAnalyzing && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex flex-col items-center justify-center cursor-wait">
+             <div className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center animate-in fade-in zoom-in duration-300">
+                <div className="w-20 h-20 border-[6px] border-purple-100 border-t-purple-600 rounded-full animate-spin mb-6" />
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Analyse en cours...</h3>
+                <p className="text-slate-500 text-center max-w-xs">
+                  Notre IA étudie votre CV pour détecter vos points forts et axes d'amélioration.
+                </p>
+             </div>
           </div>
         )}
     </div>

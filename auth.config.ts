@@ -29,18 +29,27 @@ export const authConfig = {
       
       const isProtected = protectedPaths.some(path => pathname.startsWith(path))
       const isOnLogin = pathname.startsWith('/login')
+      const isRoot = pathname === '/'
 
+      // 1. Protected Routes: Block if not logged in
       if (isProtected) {
         if (isLoggedIn) return true
         return false // Redirect to login
       }
 
+      // 2. Login Page: Redirect to Dashboard if already logged in
       if (isOnLogin) {
         if (isLoggedIn) {
           return Response.redirect(new URL('/dashboard', nextUrl))
         }
         return true
       }
+      
+      // 3. Landing Page: Redirect to Dashboard if already logged in
+      if (isRoot && isLoggedIn) {
+         return Response.redirect(new URL('/dashboard', nextUrl))
+      }
+
       return true
     },
     session({ session, user, token }) {
