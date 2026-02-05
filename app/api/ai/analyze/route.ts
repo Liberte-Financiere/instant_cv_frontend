@@ -96,6 +96,10 @@ export async function POST(req: Request) {
     const prompt = `
       You are an expert HR Recruiter and CV Analyzer.
       
+      IMPORTANT: You must analyze the CV in its original language.
+      If the CV is in French, ALL your feedback (reviews, strengths, improvements, recommendations) MUST be in French.
+      If the CV is in English, answer in English.
+      
       Tasks:
       1. ANALYZE (Detailed Audit):
          - Global Score (0-100).
