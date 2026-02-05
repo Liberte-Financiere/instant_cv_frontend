@@ -14,7 +14,8 @@ interface TemplateProps {
 }
 
 export function TechStack({ cv }: TemplateProps) {
-  const { personalInfo, experiences, education, skills, languages } = cv;
+  const personalInfo = cv.personalInfo || {};
+  const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const hobbies = cv.hobbies || [];
   const qualities = cv.qualities || [];
   const certifications = cv.certifications || [];
@@ -32,7 +33,7 @@ export function TechStack({ cv }: TemplateProps) {
         {/* Header */}
         <header className="border-b border-gray-700 pb-6 mb-8 flex justify-between items-end">
           <div>
-            <p className="text-green-500 text-xs mb-1">// developer profile</p>
+            <p className="text-green-500 text-xs mb-1">{'// developer profile'}</p>
             <h1 className="text-3xl font-bold text-white">
               {personalInfo.firstName} {personalInfo.lastName}
             </h1>

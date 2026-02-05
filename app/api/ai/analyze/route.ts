@@ -14,7 +14,12 @@ const model = genAI.getGenerativeModel({
 export const dynamic = 'force-dynamic'; // Prevent static optimization
 export const runtime = 'nodejs'; // Ensure Node.js runtime for pdf-parse
 
+import { auth } from '@/auth';
+
 export async function POST(req: Request) {
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   console.log('[API] Analyze Request Started');
   
   // Lazy load pdf-parse strictly inside handler
@@ -42,6 +47,10 @@ export async function POST(req: Request) {
 
     if (!file) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ error: 'Le fichier est trop volumineux (max 5MB)' }, { status: 400 });
     }
 
     let extractedText = '';

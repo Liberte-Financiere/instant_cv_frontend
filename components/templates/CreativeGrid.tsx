@@ -14,7 +14,8 @@ interface TemplateProps {
 }
 
 export function CreativeGrid({ cv }: TemplateProps) {
-  const { personalInfo, experiences, education, skills, languages } = cv;
+  const personalInfo = cv.personalInfo || {};
+  const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const hobbies = cv.hobbies || [];
   const certifications = cv.certifications || [];
   const projects = cv.projects || [];

@@ -1,4 +1,4 @@
-import { CVSectionId } from '@/types/cv';
+
 
 export const SECTION_TITLES: Record<string, string> = {
   education: "ÉDUCATION",

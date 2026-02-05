@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'sonner';
+import { Providers } from '@/components/Providers';
 
 
 const manrope = Manrope({
@@ -36,7 +37,9 @@ export default function RootLayout({
   return (
     <html lang="fr" className="scroll-smooth">
       <body className={`${manrope.variable} font-sans antialiased bg-[#0F172A] text-slate-900 dark:text-white`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -60,3 +63,4 @@ export default function RootLayout({
     </html>
   );
 }
+

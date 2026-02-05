@@ -18,7 +18,8 @@ interface TemplateProps {
  * - Contact info at top
  */
 export function ATSFriendlyTemplate({ cv }: TemplateProps) {
-  const { personalInfo, experiences, education, skills, languages } = cv;
+  const personalInfo = cv.personalInfo || {};
+  const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const certifications = cv.certifications || [];
   const projects = cv.projects || [];
   const references = cv.references || [];

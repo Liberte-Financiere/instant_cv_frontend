@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Check, Star, ArrowRight, Loader2 } from 'lucide-react';
+import { X, Check, Star, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { CVThumbnail } from '@/components/dashboard/CVThumbnail';
 import { TemplateOption } from '@/lib/templates';
 import { MOCK_PREVIEW_CV } from '@/lib/mock-cv';
-import Link from 'next/link';
 import { useCVStore } from '@/store/useCVStore';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/Input';
@@ -27,10 +26,11 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
 
   // Reset title when template changes
   useEffect(() => {
-    if (template) {
+    if (template && !cvTitle) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCvTitle(`Mon CV ${template.name}`);
     }
-  }, [template]);
+  }, [template, cvTitle]);
 
   // Close on Escape key
   useEffect(() => {

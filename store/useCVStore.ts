@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { CVService } from '@/services/cvService';
+import { toast } from 'sonner';
 import type { 
   CV, PersonalInfo, Experience, Education, Skill, Language, Quality,
   Hobby, CVFooter, EditorStep, Certification, Project, Reference, SocialLink, CVSettings, CVSectionId 
@@ -41,12 +43,16 @@ interface CVState {
   lastAnalysis: { analysis: DetailedAnalysis, cvData: Partial<CV> } | null;
   setAnalysisData: (data: { analysis: DetailedAnalysis, cvData: Partial<CV> } | null) => void;
   
+  // API Sync
+  fetchUserCVs: () => Promise<void>;
+  saveCurrentCV: () => Promise<void>;
+  
   // Core Actions
   setCurrentStep: (step: EditorStep) => void;
   createNewCV: (title: string, templateId?: string) => string;
   createImportedCV: (data: Partial<CV>) => string;
   loadCV: (id: string) => void;
-  deleteCV: (id: string) => void;
+  deleteCV: (id: string) => Promise<void>;
   
   // Personal Info
   updatePersonalInfo: (info: Partial<PersonalInfo>) => void;
@@ -177,6 +183,38 @@ export const useCVStore = create<CVState>()(
       lastAnalysis: null,
       setAnalysisData: (data) => set({ lastAnalysis: data }),
 
+      // API Sync
+      fetchUserCVs: async () => {
+        try {
+          const serverCVs = await CVService.getAll();
+          const { cvList: localCVs } = get();
+          
+          // Create a map of server CVs by ID (server is source of truth)
+          const serverCVMap = new Map(serverCVs.map(cv => [cv.id, cv]));
+          
+          // For any local CVs not on server yet, keep them (they might be unsaved)
+          const unsavedLocalCVs = localCVs.filter(cv => !serverCVMap.has(cv.id));
+          
+          // Merge: server CVs first, then unsaved local CVs
+          const mergedCVs = [...serverCVs, ...unsavedLocalCVs];
+          
+          set({ cvList: mergedCVs });
+        } catch (error) {
+          console.error('Failed to fetch CVs', error);
+        }
+      },
+
+      saveCurrentCV: async () => {
+        const { currentCV } = get();
+        if (!currentCV) return;
+        try {
+           await CVService.update(currentCV.id, currentCV);
+        } catch (error) {
+           console.error('Failed to save CV', error);
+           toast.error('Échec de la sauvegarde. Vérifiez votre connexion.');
+        }
+      },
+
       setCurrentStep: (step) => set({ currentStep: step }),
 
       createNewCV: (title, templateId = 'modern') => {
@@ -186,6 +224,13 @@ export const useCVStore = create<CVState>()(
           currentCV: newCV,
           currentStep: 'personal',
         }));
+        
+        // Sync with server (fire and forget)
+        CVService.create(newCV).catch(err => {
+          console.error('Failed to create CV on server', err);
+          toast.error('Échec de création du CV sur le serveur.');
+        });
+        
         return newCV.id;
       },
 
@@ -193,9 +238,10 @@ export const useCVStore = create<CVState>()(
         const newCV = createEmptyCV(`CV Importé ${new Date().toLocaleDateString()}`, 'modern');
         
         // Helper to ensure all items in an array have an ID
-        const ensureIds = (arr: any[]) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const ensureIds = (arr: unknown[]): any => {
             if (!Array.isArray(arr)) return [];
-            return arr.map(item => ({ ...item, id: item.id || generateId() }));
+            return arr.map(item => ({ ...(item as Record<string, any>), id: (item as any).id || generateId() }));
         };
 
         // Merge imported data with default structure AND ensure IDs
@@ -226,6 +272,13 @@ export const useCVStore = create<CVState>()(
           currentCV: mergedCV,
           currentStep: 'personal',
         }));
+        
+        // Sync with server (fire and forget)
+        CVService.create(mergedCV).catch(err => {
+          console.error('Failed to save imported CV on server', err);
+          toast.error('Échec de sauvegarde du CV importé.');
+        });
+        
         return newCV.id;
       },
 
@@ -251,11 +304,20 @@ export const useCVStore = create<CVState>()(
         }
       },
 
-      deleteCV: (id) => {
+      deleteCV: async (id) => {
+        // Delete locally first for instant feedback
         set((state) => ({
           cvList: state.cvList.filter((c) => c.id !== id),
           currentCV: state.currentCV?.id === id ? null : state.currentCV,
         }));
+        
+        // Then sync with server
+        try {
+          await CVService.delete(id);
+        } catch (error) {
+          console.error('Failed to delete CV from server', error);
+          toast.error('Échec de suppression du CV sur le serveur.');
+        }
       },
 
       // Personal Info
@@ -437,7 +499,8 @@ export const useCVStore = create<CVState>()(
         };
       }),
 
-      togglePublic: (cvId) => set((state) => updateCV(state, (cv) => ({
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      togglePublic: (_cvId) => set((state) => updateCV(state, (cv) => ({
         ...cv,
         isPublic: !cv.isPublic,
       }))),

@@ -25,8 +25,8 @@ export function CVExperience({ experiences, variant, title = 'Expérience Profes
         {title}
       </h2>
       <div className="space-y-6">
-        {experiences.map((exp) => (
-          <div key={exp.id} className="cv-item relative pl-2">
+        {experiences.map((exp, index) => (
+          <div key={exp.id || index} className="cv-item relative pl-2">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-2">
               <h3 className={`font-bold text-lg ${variant === 'tech' ? 'text-white' : 'text-slate-800'}`}>
                 {exp.position}

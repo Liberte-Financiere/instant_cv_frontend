@@ -3,7 +3,7 @@
 import { CV } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
-  CVSkills, CVLanguages, CVHobbies, CVCertifications, 
+  CVCertifications, 
   CVProjects, CVReferences, CVDivers, CVFooter, CVQualities 
 } from '@/components/cv-sections';
 import { getAccentColor } from '@/components/cv-sections/styles';
@@ -15,7 +15,8 @@ interface TemplateProps {
 }
 
 export function ModernSidebar({ cv }: TemplateProps) {
-  const { personalInfo, experiences, education, skills, languages } = cv;
+  const personalInfo = cv.personalInfo || {};
+  const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const hobbies = cv.hobbies || [];
   const certifications = cv.certifications || [];
   const projects = cv.projects || [];

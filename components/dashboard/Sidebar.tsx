@@ -6,6 +6,14 @@ import { motion } from 'framer-motion';
 import { LayoutDashboard, FileText, Settings, LogOut, Plus, User, LayoutTemplate, PenTool, Sparkles, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AvatarGroup } from '@/components/ui/AvatarGroup'; // Re-using for user avatar if needed, or simple img
+import { useRef, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { useCVStore } from '@/store/useCVStore';
+import { handleSignOut } from '@/actions/auth';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+
 
 const navigation = [
   { name: 'Mes CV', href: '/dashboard', icon: LayoutDashboard },
@@ -16,11 +24,27 @@ const navigation = [
 ];
 
 export function Sidebar() {
+
   const pathname = usePathname();
   const router = useRouter();
-  const { setAnalysisData } = useCVStore();
+  const { data: session } = useSession();
+  const { setAnalysisData, fetchUserCVs, saveCurrentCV, currentCV } = useCVStore();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Initial Fetch
+  useEffect(() => {
+    fetchUserCVs();
+  }, [fetchUserCVs]);
+
+  // Auto-save on change (Debounced 4s)
+  useEffect(() => {
+    if (!currentCV) return;
+    const timer = setTimeout(() => {
+      saveCurrentCV();
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [currentCV, saveCurrentCV]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -139,14 +163,30 @@ export function Sidebar() {
       {/* User Profile */}
       <div className="p-4 border-t border-slate-800">
         <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800/50 cursor-pointer transition-colors">
-          <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center border border-slate-600">
-             <User className="w-5 h-5 text-slate-300" />
-          </div>
+          {session?.user?.image ? (
+            <Image
+              src={session.user.image}
+              alt={session.user.name || 'User'}
+              width={40}
+              height={40}
+              className="rounded-full border border-slate-600"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center border border-slate-600">
+               <User className="w-5 h-5 text-slate-300" />
+            </div>
+          )}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">Jean Dupont</p>
-            <p className="text-xs text-slate-400 truncate">Free Plan</p>
+            <p className="text-sm font-medium text-white truncate">
+              {session?.user?.name || 'Utilisateur'}
+            </p>
+            <p className="text-xs text-slate-400 truncate">
+              {session?.user?.email || 'Free Plan'}
+            </p>
           </div>
-          <LogOut className="w-4 h-4 text-slate-500 hover:text-white transition-colors" />
+          <button onClick={() => handleSignOut()} title="Se déconnecter">
+            <LogOut className="w-4 h-4 text-slate-500 hover:text-white transition-colors" />
+          </button>
         </div>
       </div>
     </div>

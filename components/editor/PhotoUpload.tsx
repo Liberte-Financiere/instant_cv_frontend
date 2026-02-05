@@ -12,9 +12,10 @@ interface PhotoUploadProps {
 export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUploadProps) {
   const [preview, setPreview] = useState<string | null>(currentUrl || null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (file: File | null) => {
+  const handleFileChange = async (file: File | null) => {
     if (!file) return;
     
     // Check file type
@@ -23,20 +24,33 @@ export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUpload
       return;
     }
     
-    // Check file size (max 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      alert('L\'image doit faire moins de 2MB');
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('L\'image doit faire moins de 5MB');
       return;
     }
 
-    // Create preview URL
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const result = reader.result as string;
-      setPreview(result);
-      onPhotoChange(result);
-    };
-    reader.readAsDataURL(file);
+    try {
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('Upload failed');
+
+      const data = await res.json();
+      setPreview(data.url);
+      onPhotoChange(data.url);
+    } catch (error) {
+      console.error(error);
+      alert('Erreur lors de l\'upload de l\'image');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -108,12 +122,14 @@ export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUpload
           }`}
         >
           <Upload className="w-6 h-6 text-slate-400 mb-1" />
-          <span className="text-xs text-slate-500 text-center px-2">Photo</span>
+          <span className="text-xs text-slate-500 text-center px-2">
+            {isUploading ? 'Envoi...' : 'Photo'}
+          </span>
         </div>
       )}
 
       <p className="text-xs text-slate-400 text-center">
-        JPG, PNG • Max 2MB
+        JPG, PNG • Max 5MB
       </p>
     </div>
   );
