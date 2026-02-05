@@ -45,6 +45,7 @@ interface CVState {
   
   // API Sync
   fetchUserCVs: () => Promise<void>;
+  fetchCV: (id: string) => Promise<CV | null>;
   saveCurrentCV: () => Promise<void>;
   
   // Core Actions
@@ -201,6 +202,31 @@ export const useCVStore = create<CVState>()(
           set({ cvList: mergedCVs });
         } catch (error) {
           console.error('Failed to fetch CVs', error);
+        }
+      },
+
+      fetchCV: async (id: string) => {
+        try {
+          // Check local first
+          const localCV = get().cvList.find(c => c.id === id);
+          if (localCV) return localCV;
+
+          // Check server
+          const serverCV = await CVService.getById(id);
+          
+          // Add to local list and format if needed
+          // Assuming API returns correct full format due to previous fix
+          if (serverCV) {
+            set(state => ({
+              cvList: [...state.cvList.filter(c => c.id !== id), serverCV],
+              currentCV: serverCV
+            }));
+            return serverCV;
+          }
+          return null;
+        } catch (error) {
+          console.error('Failed to fetch CV', error);
+          return null;
         }
       },
 

@@ -91,6 +91,11 @@ export default function EditorPage() {
            <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
 
            <button 
+             onClick={() => {
+                if (currentCV?.id) {
+                  window.open(`/cv/${currentCV.id}?print=true`, '_blank');
+                }
+             }}
              className="flex items-center gap-2 px-4 py-2 bg-[#2463eb] hover:bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
            >
              <Download className="w-4 h-4" />

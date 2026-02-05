@@ -10,11 +10,12 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, templateId, personalInfo, ...rest } = body;
+    const { id, title, templateId, personalInfo, ...rest } = body;
 
-    // Create CV in DB
+    // Create CV in DB with the same ID as frontend
     const cv = await prisma.cV.create({
       data: {
+        id: id, // Force usage of frontend ID
         title: title || 'Nouveau CV',
         content: body, // Store the full JSON
         userId: session.user.id
@@ -35,20 +36,53 @@ export async function GET(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    const { searchParams } = new URL(req.url);
+    const summary = searchParams.get('summary') === 'true';
+
+    // Retrieve CVs using selection if summary is requested
     const dbCVs = await prisma.cV.findMany({
       where: { userId: session.user.id },
-      orderBy: { updatedAt: 'desc' }
+      orderBy: { updatedAt: 'desc' },
+      select: summary ? {
+         id: true,
+         title: true,
+         createdAt: true,
+         updatedAt: true,
+         isPublic: true,
+         views: true,
+         // content is excluded
+         content: false
+      } : undefined
     });
 
     // Transform DB format to frontend CV format
-    // content contains the full CV data, we merge it with DB metadata
-    const cvs = dbCVs.map(cv => ({
-      ...(cv.content as object), // Spread the stored CV content
-      id: cv.id,                 // Use DB id (source of truth)
-      title: cv.title,           // Use DB title
-      createdAt: cv.createdAt,
-      updatedAt: cv.updatedAt,
-    }));
+    const cvs = dbCVs.map(cv => {
+      if (summary) {
+        return {
+          id: cv.id,
+          title: cv.title,
+          updatedAt: cv.updatedAt,
+          createdAt: cv.createdAt,
+          isPublic: cv.isPublic,
+          views: cv.views,
+          // Minimal mock content to satisfy type if needed, or handle partial type in frontend
+          templateId: 'modern', // Default for summary list
+          personalInfo: {}, 
+        };
+      }
+      
+      // Full fetch
+      const content = cv.content as any || {};
+      return {
+        ...content,
+        id: cv.id,
+        title: cv.title,
+        updatedAt: cv.updatedAt,
+        createdAt: cv.createdAt,
+        isPublic: cv.isPublic,
+        views: cv.views,
+      };
+    });
 
     return NextResponse.json(cvs);
   } catch (error) {

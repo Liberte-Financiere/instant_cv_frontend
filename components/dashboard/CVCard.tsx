@@ -1,6 +1,6 @@
 'use client';
 
-import { Edit, Trash2, Download, Clock, Eye } from 'lucide-react';
+import { Edit, Trash2, Download, Clock, Eye, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -30,16 +30,7 @@ export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
     })}`;
   };
 
-  // Circular Progress Calculation
-  const radius = 18;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
-  
-  const getScoreColor = (s: number) => {
-    if (s >= 80) return 'text-green-500';
-    if (s >= 50) return 'text-orange-500';
-    return 'text-red-500';
-  };
+
 
   return (
     <motion.div
@@ -67,9 +58,9 @@ export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
              href={`/share/${cv.id}`}
              target="_blank"
              className="p-3 bg-white rounded-xl text-slate-600 hover:text-purple-600 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
-             title="Voir le lien public"
+             title="Partager"
            >
-             <Eye className="w-5 h-5" />
+             <Share2 className="w-5 h-5" />
            </Link>
            <button
              onClick={() => onDelete(cv.id)}
@@ -107,33 +98,7 @@ export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
         </div>
 
         {/* Circular Progress */}
-        <div className="relative w-12 h-12 flex items-center justify-center">
-           <svg className="w-full h-full transform -rotate-90">
-             <circle
-               cx="24"
-               cy="24"
-               r={radius}
-               fill="transparent"
-               className="stroke-slate-100"
-               strokeWidth="3"
-             />
-             <circle
-               cx="24"
-               cy="24"
-               r={radius}
-               fill="transparent"
-               className={cn("transition-all duration-1000 ease-out", getScoreColor(score))}
-               strokeWidth="3"
-               strokeDasharray={circumference}
-               strokeDashoffset={strokeDashoffset}
-               strokeLinecap="round"
-               stroke="currentColor"
-             />
-           </svg>
-           <span className={cn("absolute text-[10px] font-bold", getScoreColor(score))}>
-             {score}%
-           </span>
-        </div>
+
       </div>
     </motion.div>
   );

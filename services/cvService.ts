@@ -7,6 +7,12 @@ export const CVService = {
     return res.json();
   },
 
+  async getAllSummaries(): Promise<CV[]> {
+    const res = await fetch('/api/cv?summary=true');
+    if (!res.ok) throw new Error('Failed to fetch CV summaries');
+    return res.json();
+  },
+
   async getById(id: string): Promise<CV> {
     const res = await fetch(`/api/cv/${id}`);
     if (!res.ok) throw new Error('Failed to fetch CV');

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, FileText, Settings, LogOut, Plus, User, LayoutTemplate, PenTool, Sparkles, Loader2 } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, LogOut, Plus, User, LayoutTemplate, PenTool, Sparkles, Loader2, ChevronUp, LayoutList } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AvatarGroup } from '@/components/ui/AvatarGroup'; // Re-using for user avatar if needed, or simple img
 import { useRef, useState, useEffect } from 'react';
@@ -11,12 +11,13 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useCVStore } from '@/store/useCVStore';
 import { handleSignOut } from '@/actions/auth';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 
 
 const navigation = [
-  { name: 'Mes CV', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Mes CV (Liste)', href: '/dashboard/list', icon: LayoutList },
   { name: 'Mes lettres', href: '/cover-letters', icon: FileText },
   { name: 'Modèles', href: '/templates', icon: LayoutTemplate },
   { name: 'Signature', href: '/signature', icon: PenTool },
@@ -30,6 +31,7 @@ export function Sidebar() {
   const { data: session } = useSession();
   const { setAnalysisData, fetchUserCVs, saveCurrentCV, currentCV } = useCVStore();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Initial Fetch
@@ -97,10 +99,7 @@ export function Sidebar() {
 
       {/* Primary Actions */}
       <div className="px-6 pb-6 space-y-3">
-         <button className="w-full flex items-center justify-center gap-2 bg-[#2463eb] hover:bg-blue-600 text-white px-4 py-3 rounded-xl font-medium transition-all shadow-lg shadow-blue-900/20 group">
-           <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
-           <span>Nouveau CV</span>
-         </button>
+
 
          <button 
            onClick={() => fileInputRef.current?.click()}
@@ -161,8 +160,11 @@ export function Sidebar() {
       </div>
 
       {/* User Profile */}
-      <div className="p-4 border-t border-slate-800">
-        <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800/50 cursor-pointer transition-colors">
+      <div className="p-4 border-t border-slate-800 relative">
+        <button 
+          onClick={() => setShowUserMenu(!showUserMenu)}
+          className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800/50 cursor-pointer transition-colors text-left"
+        >
           {session?.user?.image ? (
             <Image
               src={session.user.image}
@@ -181,13 +183,41 @@ export function Sidebar() {
               {session?.user?.name || 'Utilisateur'}
             </p>
             <p className="text-xs text-slate-400 truncate">
-              {session?.user?.email || 'Free Plan'}
+              {session?.user?.email || ''}
             </p>
           </div>
-          <button onClick={() => handleSignOut()} title="Se déconnecter">
-            <LogOut className="w-4 h-4 text-slate-500 hover:text-white transition-colors" />
-          </button>
-        </div>
+          <ChevronUp className={`w-4 h-4 text-slate-500 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
+        </button>
+
+        {/* Menu Dropdown */}
+        {showUserMenu && (
+          <>
+            <div 
+              className="fixed inset-0 z-10" 
+              onClick={() => setShowUserMenu(false)}
+            />
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute bottom-full left-4 right-4 mb-2 bg-slate-800 rounded-xl border border-slate-700 shadow-xl overflow-hidden z-20"
+            >
+              <div className="p-1">
+                <button className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg text-sm transition-colors">
+                  <Settings className="w-4 h-4" />
+                  Paramètres
+                </button>
+                <div className="h-px bg-slate-700/50 my-1" />
+                <button 
+                  onClick={() => signOut()}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg text-sm transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Se déconnecter
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
       </div>
     </div>
   );

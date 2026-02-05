@@ -10,7 +10,6 @@ import { TemplateSelector } from '@/components/dashboard/TemplateSelector';
 import { TemplateId } from '@/types/cv';
 
 import { useRouter } from 'next/navigation';
-import { AnalysisResultModal } from '@/components/dashboard/AnalysisResultModal';
 import { toast } from 'sonner';
 
 export default function DashboardPage() {
@@ -23,7 +22,7 @@ export default function DashboardPage() {
   
   // Analysis State
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<any | null>(null);
+
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -74,14 +73,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleImportCV = () => {
-    if (!analysisResult?.cvData) return;
-    
-    // Create new CV from imported data
-    const id = createImportedCV(analysisResult.cvData);
-    setAnalysisResult(null);
-    window.location.href = `/editor/${id}`;
-  };
+
 
   const handleCreateCV = () => {
     if (newTitle.trim()) {
@@ -216,13 +208,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-      {/* Analysis Result Modal */}
-      <AnalysisResultModal 
-        isOpen={!!analysisResult}
-        result={analysisResult}
-        onClose={() => setAnalysisResult(null)}
-        onImport={handleImportCV}
-      />
+
 
         {/* Modal Creation with Template Selection */}
         {isCreating && (

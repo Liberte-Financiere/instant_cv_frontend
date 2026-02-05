@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useEffect } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
 import { ModernSidebar } from '@/components/templates/ModernSidebar';
 import { ProfessionalClean } from '@/components/templates/ProfessionalClean';
@@ -18,32 +18,41 @@ interface PageProps {
 
 export default function PublicCVPage({ params }: PageProps) {
   const { id } = use(params);
-  const { currentCV, loadCV } = useCVStore();
+  const { currentCV, fetchCV } = useCVStore();
+  const [isLoading, setIsLoading] = useState(true);
 
-  // useSearchParams needs to be wrapped in Suspense boundary properly or used in a separate client component in Next 13+
-  // But for simplicity in this structure we can use window.location search in useEffect if we want to avoid Layout changes
-  // or just use useSearchParams from navigation
-  // Let's use simple window check to avoid Next.js build complexity with Suspense for now
-  
+  // Load CV on mount
   useEffect(() => {
-    if (typeof window !== 'undefined' && currentCV) {
+    const loadData = async () => {
+      if (!currentCV || currentCV.id !== id) {
+        setIsLoading(true);
+        await fetchCV(id);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+      }
+    };
+    loadData();
+  }, [id, fetchCV]); // Remove currentCV from deps to avoid loop found CV
+
+  // Handle auto-print
+  useEffect(() => {
+    if (typeof window !== 'undefined' && currentCV && !isLoading) {
       const searchParams = new URLSearchParams(window.location.search);
       if (searchParams.get('print') === 'true') {
-        // Delay slightly to ensure rendering is complete
         setTimeout(() => {
           window.print();
-        }, 500);
+        }, 800);
       }
     }
-  }, [currentCV]);
+  }, [currentCV, isLoading]);
 
-  // Try to load the CV if not already loaded or different
-  if (!currentCV || currentCV.id !== id) {
-    // In a real app, this would fetch from a backend
-    // For now, we try to load from localStorage
-    if (typeof window !== 'undefined') {
-      loadCV(id);
-    }
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
   if (!currentCV) {
@@ -55,7 +64,7 @@ export default function PublicCVPage({ params }: PageProps) {
           </div>
           <h1 className="text-xl font-bold text-slate-900 mb-2">CV introuvable</h1>
           <p className="text-slate-600 mb-6">
-            Ce CV n'existe pas ou a été supprimé.
+            Ce CV n'existe pas ou vous n'avez pas les droits pour le voir.
           </p>
           <Link 
             href="/"
