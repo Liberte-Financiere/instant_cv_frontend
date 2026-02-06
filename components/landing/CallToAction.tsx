@@ -11,7 +11,7 @@ export function CallToAction() {
       
       <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
         <h2 className="text-white text-4xl md:text-5xl font-bold tracking-tight mb-6">Prêt à transformer votre carrière ?</h2>
-        <p className="text-slate-400 text-lg mb-10 max-w-2xl mx-auto">Ne laissez pas un mauvais CV vous fermer des portes. Rejoignez Optijob aujourd'hui et prenez le contrôle de votre avenir professionnel.</p>
+        <p className="text-slate-400 text-lg mb-10 max-w-2xl mx-auto">Ne laissez pas un mauvais CV vous fermer des portes. Rejoignez Optijob aujourd&apos;hui et prenez le contrôle de votre avenir professionnel.</p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link href="/dashboard">

@@ -11,7 +11,7 @@ export function Features() {
       <div className="max-w-6xl mx-auto">
         <SectionHeader 
           title="Fonctionnalités Intelligentes" 
-          description="Une suite d'outils conçue pour passer les barrières technologiques et humaines du recrutement."
+          description="Une suite d&apos;outils conçue pour passer les barrières technologiques et humaines du recrutement."
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -35,7 +35,7 @@ export function Features() {
                   {/* Analysis Tag */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-xs text-green-300 bg-green-500/10 px-2 py-1 rounded w-fit">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-400" /> "Leadership" détecté
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400" /> &quot;Leadership&quot; détecté
                     </div>
                     <div className="flex items-center gap-1 text-xs font-bold text-white bg-blue-500/20 px-2 py-1 rounded border border-blue-500/30">
                         <Radar className="w-3 h-3" /> ATS: 100%
@@ -43,7 +43,7 @@ export function Features() {
                   </div>
                   {/* Suggestion Tag */}
                   <div className="flex items-center gap-2 text-xs text-red-300 bg-red-500/10 px-2 py-1 rounded w-fit">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-400" /> Retirer : "Microsoft Word"
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-400" /> Retirer : &quot;Microsoft Word&quot;
                   </div>
               </div>
             </div>
@@ -54,11 +54,11 @@ export function Features() {
              className="md:col-span-1 border-slate-100"
              title="Ciblage de Poste"
              icon={Zap}
-             description="Collez une offre d'emploi, et l'IA réécrit votre CV pour qu'il matche parfaitement les mots-clés attendus."
+             description="Collez une offre d&apos;emploi, et l&apos;IA réécrit votre CV pour qu&apos;il matche parfaitement les mots-clés attendus."
           >
             <div className="w-full h-24 rounded-xl bg-slate-50 border border-slate-100 p-3 relative overflow-hidden">
                <div className="text-[10px] text-slate-400 font-mono">
-                  Offre : "Senior Dev React required..."<br/>
+                  Offre : &quot;Senior Dev React required...&quot;<br/>
                   <span className="text-blue-600 font-bold">Matching : 98%</span>
                </div>
             </div>

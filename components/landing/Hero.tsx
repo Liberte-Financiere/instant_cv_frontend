@@ -20,11 +20,11 @@ export function Hero() {
 
 
             <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
-              Votre succès mérite plus qu'un <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#2463eb]">simple PDF</span>
+              Votre succès mérite plus qu&apos;un <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#2463eb]">simple PDF</span>
             </h1>
             
             <p className="text-slate-400 text-lg md:text-xl font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Bien plus qu'un simple éditeur. Notre IA <span className="text-blue-200 font-medium">analyse votre profil</span>, adapte votre CV à <span className="text-blue-200 font-medium">chaque offre d'emploi</span> et rédige votre <span className="text-blue-200 font-medium">lettre de motivation</span> en un clic.
+              Bien plus qu&apos;un simple éditeur. Notre IA <span className="text-blue-200 font-medium">analyse votre profil</span>, adapte votre CV à <span className="text-blue-200 font-medium">chaque offre d&apos;emploi</span> et rédige votre <span className="text-blue-200 font-medium">lettre de motivation</span> en un clic.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">

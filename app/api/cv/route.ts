@@ -50,8 +50,7 @@ export async function GET(req: Request) {
          updatedAt: true,
          isPublic: true,
          views: true,
-         // content is excluded
-         content: false
+         // content is excluded by default when using select
       } : undefined
     });
 

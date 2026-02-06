@@ -185,6 +185,7 @@ export type UserWhereInput = {
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
   cvs?: Prisma.CVListRelationFilter
+  coverLetters?: Prisma.CoverLetterListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -196,6 +197,7 @@ export type UserOrderByWithRelationInput = {
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   cvs?: Prisma.CVOrderByRelationAggregateInput
+  coverLetters?: Prisma.CoverLetterOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -210,6 +212,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
   cvs?: Prisma.CVListRelationFilter
+  coverLetters?: Prisma.CoverLetterListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -243,6 +246,7 @@ export type UserCreateInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -254,6 +258,7 @@ export type UserUncheckedCreateInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -265,6 +270,7 @@ export type UserUpdateInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -276,6 +282,7 @@ export type UserUncheckedUpdateInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -384,6 +391,20 @@ export type UserUpdateOneWithoutCvsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCvsInput, Prisma.UserUpdateWithoutCvsInput>, Prisma.UserUncheckedUpdateWithoutCvsInput>
 }
 
+export type UserCreateNestedOneWithoutCoverLettersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCoverLettersInput, Prisma.UserUncheckedCreateWithoutCoverLettersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCoverLettersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCoverLettersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCoverLettersInput, Prisma.UserUncheckedCreateWithoutCoverLettersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCoverLettersInput
+  upsert?: Prisma.UserUpsertWithoutCoverLettersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCoverLettersInput, Prisma.UserUpdateWithoutCoverLettersInput>, Prisma.UserUncheckedUpdateWithoutCoverLettersInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -392,6 +413,7 @@ export type UserCreateWithoutAccountsInput = {
   image?: string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -402,6 +424,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   image?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -428,6 +451,7 @@ export type UserUpdateWithoutAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -438,6 +462,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -448,6 +473,7 @@ export type UserCreateWithoutSessionsInput = {
   image?: string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -458,6 +484,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   image?: string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -484,6 +511,7 @@ export type UserUpdateWithoutSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -494,6 +522,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCvsInput = {
@@ -504,6 +533,7 @@ export type UserCreateWithoutCvsInput = {
   image?: string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCvsInput = {
@@ -514,6 +544,7 @@ export type UserUncheckedCreateWithoutCvsInput = {
   image?: string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCvsInput = {
@@ -540,6 +571,7 @@ export type UserUpdateWithoutCvsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCvsInput = {
@@ -550,6 +582,67 @@ export type UserUncheckedUpdateWithoutCvsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCoverLettersInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  cvs?: Prisma.CVCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCoverLettersInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCoverLettersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCoverLettersInput, Prisma.UserUncheckedCreateWithoutCoverLettersInput>
+}
+
+export type UserUpsertWithoutCoverLettersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCoverLettersInput, Prisma.UserUncheckedUpdateWithoutCoverLettersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCoverLettersInput, Prisma.UserUncheckedCreateWithoutCoverLettersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCoverLettersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCoverLettersInput, Prisma.UserUncheckedUpdateWithoutCoverLettersInput>
+}
+
+export type UserUpdateWithoutCoverLettersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCoverLettersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -561,12 +654,14 @@ export type UserCountOutputType = {
   accounts: number
   sessions: number
   cvs: number
+  coverLetters: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   cvs?: boolean | UserCountOutputTypeCountCvsArgs
+  coverLetters?: boolean | UserCountOutputTypeCountCoverLettersArgs
 }
 
 /**
@@ -600,6 +695,13 @@ export type UserCountOutputTypeCountCvsArgs<ExtArgs extends runtime.Types.Extens
   where?: Prisma.CVWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCoverLettersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CoverLetterWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -610,6 +712,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   cvs?: boolean | Prisma.User$cvsArgs<ExtArgs>
+  coverLetters?: boolean | Prisma.User$coverLettersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -642,6 +745,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   cvs?: boolean | Prisma.User$cvsArgs<ExtArgs>
+  coverLetters?: boolean | Prisma.User$coverLettersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -653,6 +757,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     cvs: Prisma.$CVPayload<ExtArgs>[]
+    coverLetters: Prisma.$CoverLetterPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1057,6 +1162,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cvs<T extends Prisma.User$cvsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cvsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CVPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  coverLetters<T extends Prisma.User$coverLettersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$coverLettersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoverLetterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1548,6 +1654,30 @@ export type User$cvsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   take?: number
   skip?: number
   distinct?: Prisma.CVScalarFieldEnum | Prisma.CVScalarFieldEnum[]
+}
+
+/**
+ * User.coverLetters
+ */
+export type User$coverLettersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CoverLetter
+   */
+  select?: Prisma.CoverLetterSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CoverLetter
+   */
+  omit?: Prisma.CoverLetterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CoverLetterInclude<ExtArgs> | null
+  where?: Prisma.CoverLetterWhereInput
+  orderBy?: Prisma.CoverLetterOrderByWithRelationInput | Prisma.CoverLetterOrderByWithRelationInput[]
+  cursor?: Prisma.CoverLetterWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CoverLetterScalarFieldEnum | Prisma.CoverLetterScalarFieldEnum[]
 }
 
 /**
