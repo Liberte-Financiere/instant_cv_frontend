@@ -1,5 +1,6 @@
 'use client';
 
+import Image from "next/image";
 import { CV } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
@@ -41,9 +42,11 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
             </p>
           </div>
           {personalInfo.photoUrl && (
-            <img 
+            <Image 
               src={personalInfo.photoUrl} 
               alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
+              width={80}
+              height={80}
               className="w-20 h-20 rounded-full object-cover border-2"
               style={{ borderColor: accentColor }}
             />
