@@ -16,7 +16,7 @@ const prismaClientSingleton = () => {
     result: {
       cV: {
         content: {
-          needs: { content: true },
+          needs: { content: true, id: true },
           compute(cv) {
             // Automatically validate and type the content JSON on read
             const validation = cvSchema.safeParse(cv.content);
