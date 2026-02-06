@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
-export const dynamic = 'force-dynamic';
+// Force usage of Node.js runtime for this route
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
@@ -23,57 +24,51 @@ export async function POST(req: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Lazy load pdf-parse strictly inside handler, exactly like analyze route
-    let PDFParse;
-    try {
-      // @ts-ignore
-      const pdfModule = require('pdf-parse');
-      // Attempt to find the class constructor
-      PDFParse = pdfModule.PDFParse || pdfModule.default?.PDFParse;
-      
-      // Fallback: in some environments pdf-parse is just the function itself
-      if (!PDFParse) {
-        // Double check if pdfModule itself is the function (v1 behavior)
-         if (typeof pdfModule === 'function') {
-            const data = await pdfModule(buffer);
-            return NextResponse.json({ text: data.text });
-         } else if (typeof pdfModule.default === 'function') {
-             const data = await pdfModule.default(buffer);
-             return NextResponse.json({ text: data.text });
-         }
-         throw new Error('PDFParse class or function not found in module');
-      }
-    } catch (e) {
-      console.error('[API] Failed to load pdf-parse:', e);
-      return NextResponse.json({ error: 'Server Configuration Error: PDF Parser missing' }, { status: 500 });
-    }
+    // Use pdfjs-dist legacy build for Node.js compatibility (polyfilled environments)
+    // Dynamic import to avoid build-time analysis issues if any
+    // @ts-ignore
+    const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.js');
 
-    // Use Class based approach from analyze route
+    // Configure worker (though often not needed for simple text extraction in legacy mode, 
+    // sometimes required to avoid warnings or fake worker errors)
+    // For Node environment, we typically don't need to load the worker script file via URL,
+    // but pdfjs needs a worker. In legacy node build, it often falls back effectively.
+    // However, explicitly setting verbosity helps debugging.
+    
+    // Load document
+    const loadingTask = pdfjsLib.getDocument({
+      data: new Uint8Array(buffer), // pdfjs expects Uint8Array or ArrayBuffer
+      useSystemFonts: true,
+      disableFontFace: true, // Disable font parsing issues
+    });
+
+    const doc = await loadingTask.promise;
+    const numPages = doc.numPages;
     let extractedText = '';
-    let parser;
-    try {
-        // @ts-ignore
-        parser = new PDFParse({ data: buffer });
-        const data = await parser.getText();
-        extractedText = data.text;
-        
-        // Cleanup if destroy exists
-        if (parser.destroy) await parser.destroy();
-        
-    } catch (pdfError) {
-        console.error('[API] PDF Class Parsing Error:', pdfError);
-        // Try fallback function call if class failed
+
+    // Parallel processing could be faster, but sequential is safer for memory on serverless
+    for (let i = 1; i <= numPages; i++) {
         try {
-             // @ts-ignore
-             const pdfModule = require('pdf-parse');
-             const simpleParse = pdfModule.default || pdfModule;
-             const data = await simpleParse(buffer);
-             extractedText = data.text;
-        } catch (fallbackError) {
-            console.error('[API] PDF Fallback Parsing Error:', fallbackError);
-            return NextResponse.json({ error: 'Failed to read PDF file structure.' }, { status: 400 });
+            const page = await doc.getPage(i);
+            const textContent = await page.getTextContent();
+            
+            // Extract strings and join them
+            const pageText = textContent.items
+                .filter((item: any) => item.str)
+                .map((item: any) => item.str)
+                .join(' ');
+            
+            extractedText += pageText + '\n\n';
+            
+            // Cleanup page resources
+            page.cleanup();
+        } catch (pageError) {
+            console.warn(`[API] Error parsing page ${i}`, pageError);
         }
     }
+    
+    // Cleanup document
+    if (doc.destroy) await doc.destroy(); // destroy exists in newer versions, or cleanup
 
     return NextResponse.json({ text: extractedText });
 
