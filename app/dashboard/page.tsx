@@ -251,65 +251,79 @@ export default function DashboardPage() {
              <motion.div 
                initial={{ opacity: 0, scale: 0.95 }}
                animate={{ opacity: 1, scale: 1 }}
-               className="bg-white rounded-2xl p-8 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
+               className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl h-[85vh] flex flex-col overflow-hidden"
              >
                 {step === 'template' ? (
                   <>
-                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Choisissez un modèle</h2>
-                    <p className="text-slate-500 text-sm mb-6">Sélectionnez le style qui correspond le mieux à votre profil.</p>
+                    <div className="p-8 pb-4 shrink-0">
+                        <h2 className="text-2xl font-bold text-slate-900 mb-2">Choisissez un modèle</h2>
+                        <p className="text-slate-500 text-sm">Sélectionnez le style qui correspond le mieux à votre profil.</p>
+                    </div>
                     
-                    <TemplateSelector 
-                       selectedId={selectedTemplate} 
-                       onSelect={setSelectedTemplate} 
-                    />
+                    <div className="flex-1 overflow-y-auto px-8 py-4 min-h-0">
+                        <TemplateSelector 
+                           selectedId={selectedTemplate} 
+                           onSelect={setSelectedTemplate} 
+                        />
+                    </div>
                     
-                    <div className="flex gap-3 mt-8">
-                       <button 
-                         onClick={() => setIsCreating(false)}
-                         className="flex-1 py-3 font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
-                       >
-                         Annuler
-                       </button>
-                       <button 
-                         onClick={() => setStep('name')}
-                         className="flex-1 py-3 font-bold text-white bg-[#2463eb] rounded-xl hover:bg-blue-700 transition-colors"
-                       >
-                         Continuer
-                       </button>
+                    <div className="p-6 border-t border-slate-100 bg-white shrink-0">
+                        <div className="flex gap-3">
+                           <button 
+                             onClick={() => setIsCreating(false)}
+                             className="flex-1 py-3 font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
+                           >
+                             Annuler
+                           </button>
+                           <button 
+                             onClick={() => setStep('name')}
+                             className="flex-1 py-3 font-bold text-white bg-[#2463eb] rounded-xl hover:bg-blue-700 transition-colors"
+                           >
+                             Continuer
+                           </button>
+                        </div>
                     </div>
                   </>
                 ) : (
                   <>
-                    <button 
-                      onClick={() => setStep('template')}
-                      className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-4"
-                    >
-                       <ArrowLeft className="w-4 h-4" /> Retour
-                    </button>
-                    <h2 className="text-2xl font-bold text-slate-900 mb-6">Nommez votre CV</h2>
-                    <input
-                       autoFocus
-                       type="text"
-                       placeholder="Ex: CV Développeur 2024"
-                       className="w-full px-4 py-3 border border-slate-200 rounded-xl mb-6 focus:ring-2 focus:ring-blue-500 outline-none"
-                       value={newTitle}
-                       onChange={(e) => setNewTitle(e.target.value)}
-                       onKeyDown={(e) => e.key === 'Enter' && handleCreateCV()}
-                    />
-                    <div className="flex gap-3">
-                       <button 
-                         onClick={() => setIsCreating(false)}
-                         className="flex-1 py-3 font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
-                       >
-                         Annuler
-                       </button>
-                       <button 
-                         onClick={handleCreateCV}
-                         disabled={!newTitle.trim()}
-                         className="flex-1 py-3 font-bold text-white bg-[#2463eb] rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                       >
-                         Créer
-                       </button>
+                    <div className="p-8 pb-4 shrink-0">
+                        <button 
+                          onClick={() => setStep('template')}
+                          className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-4"
+                        >
+                           <ArrowLeft className="w-4 h-4" /> Retour
+                        </button>
+                        <h2 className="text-2xl font-bold text-slate-900 mb-6">Nommez votre CV</h2>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto px-8 min-h-0">
+                        <input
+                           autoFocus
+                           type="text"
+                           placeholder="Ex: CV Développeur 2024"
+                           className="w-full px-4 py-3 border border-slate-200 rounded-xl mb-6 focus:ring-2 focus:ring-blue-500 outline-none"
+                           value={newTitle}
+                           onChange={(e) => setNewTitle(e.target.value)}
+                           onKeyDown={(e) => e.key === 'Enter' && handleCreateCV()}
+                        />
+                    </div>
+
+                    <div className="p-6 border-t border-slate-100 bg-white shrink-0">
+                        <div className="flex gap-3">
+                           <button 
+                             onClick={() => setIsCreating(false)}
+                             className="flex-1 py-3 font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
+                           >
+                             Annuler
+                           </button>
+                           <button 
+                             onClick={handleCreateCV}
+                             disabled={!newTitle.trim()}
+                             className="flex-1 py-3 font-bold text-white bg-[#2463eb] rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                           >
+                             Créer
+                           </button>
+                        </div>
                     </div>
                   </>
                 )}

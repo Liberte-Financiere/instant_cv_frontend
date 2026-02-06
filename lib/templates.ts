@@ -27,6 +27,18 @@ export const TEMPLATES: TemplateOption[] = [
     color: 'bg-white border-2 border-black text-black font-serif' 
   },
   { 
+    id: 'ats-glacier', 
+    name: 'Glacier (ATS)', 
+    description: 'Design épuré et vertical. Profils Seniors.', 
+    color: 'bg-white text-slate-800 border' 
+  },
+  { 
+    id: 'ats-iron', 
+    name: 'Iron (ATS)', 
+    description: 'Structure forte, Serif. Finance/Légal.', 
+    color: 'bg-white text-black border-4 border-double border-slate-200' 
+  },
+  { 
     id: 'creative', 
     name: 'Créatif', 
     description: 'Accents audacieux. Marketing/Design.', 
