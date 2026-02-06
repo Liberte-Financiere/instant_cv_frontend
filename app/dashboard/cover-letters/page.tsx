@@ -42,6 +42,7 @@ export default function CoverLettersPage() {
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
   const [newLetterTitle, setNewLetterTitle] = useState('');
+  const [city, setCity] = useState('');
   
   // AI Flow States
   const [aiStep, setAiStep] = useState<'details' | 'generating'>('details');
@@ -136,6 +137,11 @@ export default function CoverLettersPage() {
       return;
     }
 
+    if (!city.trim()) {
+      toast.error('Veuillez entrer une ville.');
+      return;
+    }
+
     const cvData = cvSourceType === 'select' ? cvList.find(c => c.id === selectedCVId) : null;
     
     setAiStep('generating');
@@ -156,8 +162,11 @@ export default function CoverLettersPage() {
       });
 
       if (!res.ok) {
+        if (res.status === 503) {
+          throw new Error('Le service IA est momentanément surchargé. Veuillez réessayer dans une minute.');
+        }
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.details || errorData.error || 'Erreur generation');
+        throw new Error(errorData.details || errorData.error || 'Erreur lors de la génération');
       }
 
       const data = await res.json();
@@ -173,7 +182,7 @@ export default function CoverLettersPage() {
             body: data.body,
             closing: data.closing,
             date: new Date().toLocaleDateString('fr-FR'),
-            location: 'Ville', // Placeholder or add input for it
+            location: city, // Use user city
         }
       });
 
@@ -184,9 +193,14 @@ export default function CoverLettersPage() {
       // Redirect to editor
       router.push(`/cover-letter/editor/${id}`);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error('Erreur lors de la génération IA.');
+      // Show user friendly message
+      const message = error.message.includes('503') || error.message.includes('surchargé')
+        ? "L'IA est très sollicitée. Veuillez réessayer dans quelques instants."
+        : "Une erreur est survenue lors de la génération. Veuillez réessayer.";
+      
+      toast.error(message, { duration: 5000 });
       setAiStep('details');
       // Ideally we might delete the CL if it failed, but let's keep it safe.
     }
@@ -430,7 +444,7 @@ export default function CoverLettersPage() {
                        />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        {/* Column 1: CV Source */}
                        <div className="space-y-3">
                           <label className="block text-sm font-bold text-slate-700">2. CV Source</label>
@@ -452,9 +466,9 @@ export default function CoverLettersPage() {
 
                           {cvSourceType === 'select' ? (
                             <select 
-                              value={selectedCVId}
-                              onChange={(e) => setSelectedCVId(e.target.value)}
-                              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none bg-white cursor-pointer"
+                               value={selectedCVId}
+                               onChange={(e) => setSelectedCVId(e.target.value)}
+                               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none bg-white cursor-pointer"
                             >
                                <option value="">-- Sélectionner --</option>
                                {cvList.map(cv => (
@@ -536,6 +550,18 @@ export default function CoverLettersPage() {
                             </div>
                           )}
                        </div>
+                    </div>
+                
+                    {/* City Input */}
+                    <div>
+                         <label className="block text-sm font-bold text-slate-700 mb-2">4. Ville (pour la date)</label>
+                         <input 
+                           type="text" 
+                           value={city}
+                           onChange={(e) => setCity(e.target.value)}
+                           placeholder="Ex: Ouagadougou"
+                           className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                         />
                     </div>
 
                     <div className="flex justify-end pt-4">
