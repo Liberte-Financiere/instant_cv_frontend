@@ -1,5 +1,5 @@
 import React from 'react';
-import { CoverLetter } from '@/store/useCoverLetterStore';
+import { CoverLetter } from '@/types/cover-letter';
 
 interface LetterPreviewProps {
   coverLetter: CoverLetter;
