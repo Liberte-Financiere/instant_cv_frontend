@@ -1,9 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Plus, FileText, Eye, Download, Search, ArrowLeft } from 'lucide-react';
+import { Plus, FileText, Eye, Download, Search, ArrowLeft, ArrowRight, Edit } from 'lucide-react';
+import Link from 'next/link';
 import { useCVStore } from '@/store/useCVStore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { CVCard } from '@/components/dashboard/CVCard';
 import { TemplateSelector } from '@/components/dashboard/TemplateSelector';
@@ -12,50 +13,23 @@ import { Pagination } from '@/components/ui/Pagination';
 
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useCoverLetterStore } from '@/store/useCoverLetterStore';
+import { CoverLetterService } from '@/services/coverLetterService';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { createNewCV, cvList, createImportedCV, setAnalysisData, deleteCV } = useCVStore();
+  const { createNewCV, cvList, setAnalysisData, deleteCV } = useCVStore();
+  const { clList, createNewCL, deleteCL } = useCoverLetterStore();
   const [isCreating, setIsCreating] = useState(false);
   const [step, setStep] = useState<'template' | 'name'>('template');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>('modern');
   const [newTitle, setNewTitle] = useState('');
-  
-  // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
-  
-  // Calculate Pagination - Adjust for the "New CV" card taking up one slot on page 1
-  // Actually "New CV" card is distinct.
-  // Logic: 
-  // Page 1: "New CV" Card + 7 CVs
-  // Page 2+: 8 CVs
-  
-  // Let's simplify: "New CV" card is always first visual element.
-  // Wait, if I have 20 CVs.
-  // Page 1: NewCV Card + CV[0..6] (Total 8 items visually)
-  // Page 2: CV[7..14] (Total 8 items)
-  
-  // Simplified implementation from the previous replace call:
-  // I rendered "New CV" card only if currentPage === 1.
-  // So on Page 1 we have (ItemsPerPage - 1) slots for CVs if we want to keep grid consistent? 
-  // Or just 8 CVs + 1 New Card = 9 items? Grid is varying.
-  // Let's stick to: Page 1 shows "New CV" + 7 CVs. Page 2 shows 8 CVs.
-  
-  const itemsOnFirstPage = itemsPerPage - 1;
-  const totalCVs = cvList.length;
-  
-  // Calculation is tricky if page 1 has different capacity.
-  // Let's keep it simple: Just paginate the cvList by 8.
-  // And render "New CV" card additionally on top of the list on Page 1.
-  // So Page 1: New Card + 8 CVs (9 items). Page 2: 8 CVs.
-  // This is fine. Grid flow handles it.
-  
-  const totalPages = Math.ceil(totalCVs / itemsPerPage);
-  const paginatedCVs = cvList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-  // Analysis State
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  
+  const recentCVs = cvList.slice(0, 3);
+  const recentCLs = clList.slice(0, 3);
+  
+  // No local pagination, just "recent" slice
 
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,6 +103,11 @@ export default function DashboardPage() {
 
   const totalViews = cvList.reduce((acc, cv) => acc + (cv.views || 0), 0);
 
+  // Fetch CLs on dashboard mount
+  useEffect(() => {
+    CoverLetterService.getAll().then(data => useCoverLetterStore.setState({ clList: data }));
+  }, []);
+
   return (
     <div className="p-8 max-w-7xl mx-auto">
       {/* ... (header) ... */}
@@ -176,36 +155,37 @@ export default function DashboardPage() {
          </p>
       </motion.div>
 
+
       {/* Main Content */}
-      <div className="mb-6 flex items-center justify-between">
-         <h2 className="text-xl font-bold text-slate-900">Vos CVs récents</h2>
-         <button className="flex items-center gap-1 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors">
-            Voir tout 
-            <span className="text-xs">→</span>
-         </button>
-      </div>
+      <div className="space-y-12">
+        {/* CV Section */}
+        <section>
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-slate-900">Vos CVs récents</h2>
+            <Link 
+              href="/dashboard/list" 
+              className="flex items-center gap-1 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors"
+            >
+                Voir tout 
+                <span className="text-xs">→</span>
+            </Link>
+          </div>
 
-      {/* CV Grid or Empty State */}
-      {cvList.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {/* Create New Card (Visual) - Only on first page */}
-              {currentPage === 1 && (
-                <motion.div 
-                  whileHover={{ scale: 1.02 }}
-                  onClick={handleOpenModal}
-                  className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors h-[320px]"
-                >
-                  <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Plus className="w-8 h-8 text-slate-400 group-hover:text-blue-500" />
-                  </div>
-                  <p className="font-bold text-slate-600 group-hover:text-blue-600">Nouveau CV</p>
-                  <p className="text-xs text-slate-400 mt-1">Choisir un modèle</p>
-                </motion.div>
-              )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+             {/* New CV Card - Always first */}
+             <motion.div 
+                whileHover={{ scale: 1.02 }}
+                onClick={handleOpenModal}
+                className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors h-[320px]"
+              >
+                <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <Plus className="w-8 h-8 text-slate-400 group-hover:text-blue-500" />
+                </div>
+                <p className="font-bold text-slate-600 group-hover:text-blue-600">Nouveau CV</p>
+                <p className="text-xs text-slate-400 mt-1">Choisir un modèle</p>
+              </motion.div>
 
-              {/* Existing CVs */}
-              {paginatedCVs.map((cv) => (
+              {recentCVs.map((cv) => (
                 <CVCard 
                   key={cv.id} 
                   cv={cv}
@@ -213,35 +193,91 @@ export default function DashboardPage() {
                   score={Math.floor(Math.random() * (98 - 70) + 70)}
                 />
               ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <Pagination 
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            )}
-          </>
-        ) : (
-          <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center">
-             <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <FileText className="w-10 h-10 text-blue-600" />
-             </div>
-             <h3 className="text-2xl font-bold text-slate-900 mb-2">Vous n'avez aucun CV</h3>
-             <p className="text-slate-500 max-w-md mx-auto mb-8">
-               Créez votre premier CV professionnel en quelques minutes grâce à notre assistant IA.
-             </p>
-             <button
-               onClick={handleOpenModal}
-               className="inline-flex items-center gap-2 px-8 py-4 bg-[#2463eb] text-white rounded-xl font-bold hover:shadow-xl hover:shadow-blue-600/20 transition-all"
-             >
-               <Plus className="w-5 h-5" />
-               Créer mon premier CV
-             </button>
           </div>
-        )}
+        </section>
+
+        {/* Cover Letters Section */}
+        <section>
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-slate-900">Vos Lettres récentes</h2>
+            <Link 
+              href="/dashboard/cover-letters" 
+              className="flex items-center gap-1 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors"
+            >
+                Voir tout 
+                <span className="text-xs">→</span>
+            </Link>
+          </div>
+
+          {recentCLs.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+               {recentCLs.map((cl) => (
+                <motion.div
+                  key={cl.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-white p-6 rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-xl transition-all group relative flex flex-col justify-between h-[200px]"
+                >
+                  <div>
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="p-3 bg-blue-50 rounded-xl">
+                        <FileText className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 p-1 rounded-lg shadow-sm">
+                        <Link 
+                           href={`/cover-letter/editor/${cl.id}`}
+                           className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        >
+                           <Edit className="w-4 h-4" />
+                        </Link>
+                         <a 
+                          href={`/cover-letter/${cl.id}?print=true`}
+                          target="_blank"
+                          onClick={(e) => e.stopPropagation()}
+                          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Télécharger / Imprimer"
+                        >
+                          <Download className="w-4 h-4" />
+                        </a>
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 mb-1 truncate">{cl.title}</h3>
+                    <p className="text-sm text-slate-500">
+                      Modifié le {new Date(cl.updatedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  
+                  <Link 
+                    href={`/cover-letter/editor/${cl.id}`}
+                    className="mt-4 flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 group/link"
+                  >
+                    Ouvrir l&apos;éditeur
+                    <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
+               ))}
+               
+               {/* Add New CL Card (Mini) */}
+               <Link 
+                  href="/dashboard/cover-letters"
+                  className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center p-6 hover:bg-slate-100 transition-all group h-[200px]"
+               >
+                  <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                      <Plus className="w-6 h-6 text-slate-400" />
+                  </div>
+                  <span className="font-bold text-slate-600">Nouvelle Lettre</span>
+               </Link>
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                <p className="text-slate-500 mb-4">Vous n&apos;avez pas encore de lettre de motivation.</p>
+                <Link href="/dashboard/cover-letters" className="text-blue-600 font-bold hover:underline">
+                  Commencer à rédiger
+                </Link>
+            </div>
+          )}
+        </section>
+      </div>
 
 
 
