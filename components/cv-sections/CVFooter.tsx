@@ -1,5 +1,4 @@
-'use client';
-
+import Image from "next/image";
 import { CVFooter as CVFooterType, CVVariant } from '@/types/cv';
 import { variantStyles } from './styles';
 
@@ -31,10 +30,12 @@ export function CVFooter({ footer, variant }: CVFooterProps) {
         {footer.madeDate && `le ${formattedDate}`}
       </div>
       {footer.signatureUrl && (
-        <img 
-          src={footer.signatureUrl} 
-          alt="Signature" 
-          className="h-12 object-contain" 
+        <Image
+          src={footer.signatureUrl}
+          alt="Signature"
+          width={200}
+          height={48}
+          className="h-12 w-auto object-contain"
         />
       )}
     </div>

@@ -12,14 +12,14 @@ export const LetterPreview: React.FC<LetterPreviewProps> = ({ coverLetter, class
       className={`bg-white p-[16mm] flex flex-col font-serif text-slate-800 text-[11pt] leading-relaxed relative z-10 ${className || ''}`}
     >
       {/* Header Info */}
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between mb-6">
           <div className="text-sm space-y-1">
              <p className="font-bold text-lg text-slate-900 tracking-tight">{coverLetter.content.sender.firstName} {coverLetter.content.sender.lastName}</p>
              <p className="text-slate-600 whitespace-pre-line">{coverLetter.content.sender.address}</p>
              <p className="text-slate-600">{coverLetter.content.sender.phone}</p>
              <p className="text-slate-600">{coverLetter.content.sender.email}</p>
           </div>
-          <div className="text-sm text-right mt-28 space-y-1">
+          <div className="text-sm text-right mt-26 space-y-1">
              <p className="font-bold text-slate-900">{coverLetter.content.recipient.company}</p>
              <p className="text-slate-600">{coverLetter.content.recipient.name}</p>
              <p className="whitespace-pre-line text-slate-600">{coverLetter.content.recipient.address}</p>

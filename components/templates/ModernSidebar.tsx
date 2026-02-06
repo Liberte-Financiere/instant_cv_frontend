@@ -1,5 +1,6 @@
 'use client';
 
+import Image from "next/image";
 import { CV } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
@@ -41,9 +42,11 @@ export function ModernSidebar({ cv }: TemplateProps) {
         >          {/* Avatar & Name */}
           <div className="text-center sm:text-left">
              {personalInfo.photoUrl ? (
-               <img 
+               <Image 
                  src={personalInfo.photoUrl} 
                  alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
+                 width={96}
+                 height={96}
                  className="w-24 h-24 mx-auto sm:mx-0 rounded-full object-cover mb-6 ring-4 ring-slate-800 ring-offset-2 ring-offset-slate-900"
                />
              ) : (

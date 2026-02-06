@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { FileText, Plus, ArrowRight, Wand2, Search, Edit, Trash2, Loader2, Sparkles } from 'lucide-react';
+import { FileText, Plus, ArrowRight, Wand2, Search, Edit, Trash2, Loader2, Sparkles, Download } from 'lucide-react';
 import Link from 'next/link';
 import { CoverLetter } from '@/types/cover-letter';
 import { CoverLetterService } from '@/services/coverLetterService';
@@ -34,14 +34,34 @@ export default function CoverLettersPage() {
 
   useEffect(() => {
     fetchCLs();
-    // Also fetch CVs for the AI modal choice
-    fetchUserCVs();
-  }, [fetchUserCVs]);
+    useCVStore.getState().fetchUserCVs();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette lettre ?')) return;
+    
+    // Optimistic update
+    const previousCls = cls;
+    setCls(prev => prev.filter(c => c.id !== id));
+    
+    try {
+      await CoverLetterService.delete(id);
+      toast.success('Lettre supprimée.');
+      // Also update global store if needed
+      useCoverLetterStore.getState().deleteCL(id);
+    } catch (error) {
+      console.error(error);
+      toast.error('Erreur lors de la suppression.');
+      setCls(previousCls); // Revert
+    }
+  };
 
   // Modal States
+  const [isChoiceModalOpen, setIsChoiceModalOpen] = useState(false);
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
   const [newLetterTitle, setNewLetterTitle] = useState('');
+  const [city, setCity] = useState('');
   
   // AI Flow States
   const [aiStep, setAiStep] = useState<'details' | 'generating'>('details');
@@ -59,12 +79,18 @@ export default function CoverLettersPage() {
   const [isParsingJob, setIsParsingJob] = useState(false);
 
   // Handlers
+  const openUnifiedModal = () => {
+    setIsChoiceModalOpen(true);
+  };
+  
   const openManualModal = () => {
+    setIsChoiceModalOpen(false); // Close choice
     setNewLetterTitle('');
     setIsManualModalOpen(true);
   };
 
   const openAIModal = () => {
+    setIsChoiceModalOpen(false); // Close choice
     setNewLetterTitle('');
     setSelectedCVId('');
     setJobDesc('');
@@ -81,8 +107,9 @@ export default function CoverLettersPage() {
       toast.error('Veuillez entrer un titre.');
       return;
     }
+    // Prevent double invocation if called rapidly
+    setIsManualModalOpen(false); 
     const id = createNewCL(newLetterTitle);
-    setIsManualModalOpen(false);
     router.push(`/cover-letter/editor/${id}`);
   };
 
@@ -136,6 +163,11 @@ export default function CoverLettersPage() {
       return;
     }
 
+    if (!city.trim()) {
+      toast.error('Veuillez entrer une ville.');
+      return;
+    }
+
     const cvData = cvSourceType === 'select' ? cvList.find(c => c.id === selectedCVId) : null;
     
     setAiStep('generating');
@@ -156,8 +188,11 @@ export default function CoverLettersPage() {
       });
 
       if (!res.ok) {
+        if (res.status === 503) {
+          throw new Error('Le service IA est momentanément surchargé. Veuillez réessayer dans une minute.');
+        }
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.details || errorData.error || 'Erreur generation');
+        throw new Error(errorData.details || errorData.error || 'Erreur lors de la génération');
       }
 
       const data = await res.json();
@@ -173,7 +208,7 @@ export default function CoverLettersPage() {
             body: data.body,
             closing: data.closing,
             date: new Date().toLocaleDateString('fr-FR'),
-            location: 'Ville', // Placeholder or add input for it
+            location: city, // Use user city
         }
       });
 
@@ -184,23 +219,16 @@ export default function CoverLettersPage() {
       // Redirect to editor
       router.push(`/cover-letter/editor/${id}`);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error('Erreur lors de la génération IA.');
+      // Show user friendly message
+      const message = error.message.includes('503') || error.message.includes('surchargé')
+        ? "L'IA est très sollicitée. Veuillez réessayer dans quelques instants."
+        : "Une erreur est survenue lors de la génération. Veuillez réessayer.";
+      
+      toast.error(message, { duration: 5000 });
       setAiStep('details');
       // Ideally we might delete the CL if it failed, but let's keep it safe.
-    }
-  };
-
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Supprimer cette lettre ?')) return;
-    try {
-      await CoverLetterService.delete(id);
-      setCls(prev => prev.filter(cl => cl.id !== id));
-      toast.success('Lettre supprimée.');
-    } catch (e) {
-      toast.error('Erreur lors de la suppression.');
     }
   };
 
@@ -236,7 +264,7 @@ export default function CoverLettersPage() {
           </div>
           {/* Main New Button */}
           <button 
-            onClick={openManualModal}
+            onClick={openUnifiedModal}
             className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap"
           >
             <Plus className="w-5 h-5" />
@@ -250,59 +278,33 @@ export default function CoverLettersPage() {
           <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
         </div>
       ) : filteredCLs.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-dashed border-slate-300 p-12 flex flex-col items-center justify-center text-center min-h-[400px]">
-          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6 animate-pulse">
-            <Wand2 className="w-10 h-10 text-blue-400" />
-          </div>
-          <h3 className="text-2xl font-bold text-slate-900 mb-3">Aucune lettre créée</h3>
-          <p className="text-slate-500 max-w-md mx-auto mb-8 text-lg">
-            Choisissez votre mode de création pour démarrer.
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
-            {/* AI Option */}
-            <div 
-              onClick={openAIModal}
-              className="p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 hover:border-blue-300 hover:shadow-lg transition-all cursor-pointer group text-left relative overflow-hidden"
-            >
-               <div className="absolute top-0 right-0 p-3">
-                  <span className="px-2 py-1 bg-blue-600 text-white text-[10px] font-bold rounded-full uppercase tracking-wide">Recommandé</span>
-               </div>
-               <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-6 border border-blue-100">
-                 <Wand2 className="w-6 h-6 text-blue-600" />
-               </div>
-               <h4 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">Générer avec l&apos;IA</h4>
-               <p className="text-sm text-slate-600 leading-relaxed">
-                 L&apos;IA analyse votre CV et l&apos;offre d&apos;emploi pour rédiger une lettre parfaitement ciblée en quelques secondes.
-               </p>
+        <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+            <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-6">
+                <FileText className="w-10 h-10 text-blue-400" />
             </div>
-            
-            {/* Manual Option */}
-            <div 
-              onClick={openManualModal}
-              className="p-8 bg-white rounded-2xl border border-slate-200 hover:border-slate-400 hover:shadow-lg transition-all cursor-pointer group text-left"
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">Aucune lettre créée</h3>
+            <p className="text-slate-500 max-w-sm mb-8">
+                Commencez par créer votre première lettre de motivation pour augmenter vos chances.
+            </p>
+            <button 
+                onClick={openUnifiedModal}
+                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-blue-500/20 transition-all active:scale-95 flex items-center gap-3"
             >
-               <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center shadow-sm mb-6 border border-slate-100">
-                 <Edit className="w-6 h-6 text-slate-600" />
-               </div>
-               <h4 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-slate-700 transition-colors">Rédiger manuellement</h4>
-               <p className="text-sm text-slate-600 leading-relaxed">
-                 Partez d&apos;une page blanche ou de nos modèles.
-               </p>
-            </div>
-          </div>
+                <Plus className="w-6 h-6" />
+                Créer ma première lettre
+            </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Card to add new (visible when list is not empty) */}
           <div 
-            onClick={openAIModal}
+            onClick={openUnifiedModal}
             className="bg-blue-50/50 border-2 border-dashed border-blue-200 rounded-2xl flex flex-col items-center justify-center p-6 hover:bg-blue-50 hover:border-blue-300 transition-all cursor-pointer group min-h-[200px]"
           >
              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform">
-                <Wand2 className="w-6 h-6 text-blue-600" />
+                <Plus className="w-6 h-6 text-blue-600" />
              </div>
-             <p className="font-bold text-blue-700">Générer une nouvelle lettre</p>
+             <p className="font-bold text-blue-700">Créer une lettre</p>
           </div>
 
           {filteredCLs.map((cl) => (
@@ -317,9 +319,19 @@ export default function CoverLettersPage() {
                   <FileText className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <a 
+                    href={`/cover-letter/${cl.id}?print=true`}
+                    target="_blank"
+                    onClick={(e) => e.stopPropagation()}
+                    className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    title="Télécharger / Imprimer"
+                  >
+                    <Download className="w-4 h-4" />
+                  </a>
                   <button 
                     onClick={(e) => { e.stopPropagation(); handleDelete(cl.id); }}
                     className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Supprimer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -340,6 +352,54 @@ export default function CoverLettersPage() {
             </motion.div>
           ))}
         </div>
+      )}
+
+      {/* Choice Modal */}
+      {isChoiceModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsChoiceModalOpen(false)}>
+              <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden p-8"
+              >
+                  <div className="text-center mb-8">
+                       <h2 className="text-2xl font-bold text-slate-900 mb-2">Comment souhaitez-vous créer votre lettre ?</h2>
+                       <p className="text-slate-500">Choisissez la méthode qui vous correspond le mieux.</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* AI Choice */}
+                      <button 
+                          onClick={openAIModal}
+                          className="flex flex-col items-center p-8 rounded-2xl border-2 border-blue-100 bg-gradient-to-b from-blue-50 to-white hover:border-blue-500 hover:shadow-xl transition-all group text-center"
+                      >
+                           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-md border border-blue-50 group-hover:scale-110 transition-transform duration-300">
+                               <Wand2 className="w-10 h-10 text-blue-600" />
+                           </div>
+                           <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600">Générer avec l&apos;IA</h3>
+                           <p className="text-sm text-slate-500 leading-relaxed">
+                               L&apos;IA analyse votre CV et l&apos;offre pour rédiger une lettre <span className="font-bold text-blue-600">sur-mesure</span> en 30 secondes.
+                           </p>
+                           <span className="mt-6 px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">Recommandé</span>
+                      </button>
+
+                      {/* Manual Choice */}
+                      <button 
+                          onClick={openManualModal}
+                          className="flex flex-col items-center p-8 rounded-2xl border-2 border-slate-100 bg-white hover:border-slate-400 hover:shadow-xl transition-all group text-center"
+                      >
+                           <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6 shadow-sm border border-slate-100 group-hover:scale-110 transition-transform duration-300">
+                               <Edit className="w-10 h-10 text-slate-600" />
+                           </div>
+                           <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-slate-700">Rédiger manuellement</h3>
+                           <p className="text-sm text-slate-500 leading-relaxed">
+                               Partez d&apos;une feuille blanche et utilisez nos outils de mise en forme pour écrire votre lettre.
+                           </p>
+                      </button>
+                  </div>
+              </motion.div>
+          </div>
       )}
 
       {/* Manual Creation Modal */}
@@ -376,9 +436,10 @@ export default function CoverLettersPage() {
                 </button>
                 <button 
                   onClick={handleManualCreate}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Créer
+                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Créer'}
                 </button>
               </div>
             </div>
@@ -430,7 +491,7 @@ export default function CoverLettersPage() {
                        />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        {/* Column 1: CV Source */}
                        <div className="space-y-3">
                           <label className="block text-sm font-bold text-slate-700">2. CV Source</label>
@@ -452,9 +513,9 @@ export default function CoverLettersPage() {
 
                           {cvSourceType === 'select' ? (
                             <select 
-                              value={selectedCVId}
-                              onChange={(e) => setSelectedCVId(e.target.value)}
-                              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none bg-white cursor-pointer"
+                               value={selectedCVId}
+                               onChange={(e) => setSelectedCVId(e.target.value)}
+                               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none bg-white cursor-pointer"
                             >
                                <option value="">-- Sélectionner --</option>
                                {cvList.map(cv => (
@@ -536,6 +597,18 @@ export default function CoverLettersPage() {
                             </div>
                           )}
                        </div>
+                    </div>
+                
+                    {/* City Input */}
+                    <div>
+                         <label className="block text-sm font-bold text-slate-700 mb-2">4. Ville (pour la date)</label>
+                         <input 
+                           type="text" 
+                           value={city}
+                           onChange={(e) => setCity(e.target.value)}
+                           placeholder="Ex: Ouagadougou"
+                           className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                         />
                     </div>
 
                     <div className="flex justify-end pt-4">

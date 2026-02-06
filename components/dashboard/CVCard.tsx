@@ -54,14 +54,24 @@ export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
            >
              <Edit className="w-5 h-5" />
            </Link>
-           <Link
+             <Link
              href={`/share/${cv.id}`}
              target="_blank"
              className="p-3 bg-white rounded-xl text-slate-600 hover:text-purple-600 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
              title="Partager"
+             onClick={(e) => e.stopPropagation()}
            >
              <Share2 className="w-5 h-5" />
            </Link>
+           <a
+             href={`/cv/${cv.id}?print=true`}
+             target="_blank"
+             className="p-3 bg-white rounded-xl text-slate-600 hover:text-green-600 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
+             title="Télécharger"
+             onClick={(e) => e.stopPropagation()}
+           >
+             <Download className="w-5 h-5" />
+           </a>
            <button
              onClick={() => onDelete(cv.id)}
              className="p-3 bg-white rounded-xl text-slate-600 hover:text-red-500 hover:scale-110 shadow-lg shadow-slate-200 transition-all"

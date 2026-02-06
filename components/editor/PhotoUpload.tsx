@@ -1,5 +1,4 @@
-'use client';
-
+import Image from "next/image";
 import { useState, useRef } from 'react';
 import { Camera, X, Upload } from 'lucide-react';
 
@@ -89,9 +88,11 @@ export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUpload
 
       {preview ? (
         <div className="relative group">
-          <img
+          <Image
             src={preview}
             alt="Photo de profil"
+            width={112}
+            height={112}
             className="w-28 h-28 rounded-full object-cover border-4 border-slate-100 shadow-lg"
           />
           <button

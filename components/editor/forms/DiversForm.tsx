@@ -1,5 +1,4 @@
-'use client';
-
+import Image from "next/image";
 import { useCVStore } from '@/store/useCVStore';
 import { Input } from '@/components/ui/Input';
 import { PenTool } from 'lucide-react';
@@ -57,7 +56,7 @@ export function DiversForm() {
               <label className="block text-sm font-medium text-slate-700 mb-2">Signature</label>
               <div className="flex items-center gap-4 p-4 bg-white rounded-xl border border-dashed border-slate-300">
                 {footer.signatureUrl ? (
-                  <img src={footer.signatureUrl} alt="Signature" className="h-16 object-contain" />
+                  <Image src={footer.signatureUrl} alt="Signature" width={200} height={64} className="h-16 w-auto object-contain" />
                 ) : (
                   <div className="w-24 h-16 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400">
                     <PenTool className="w-6 h-6" />

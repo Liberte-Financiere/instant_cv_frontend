@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { signIn } from "@/auth"
 import { Button } from "@/components/ui/Button"
 
@@ -17,7 +18,13 @@ export default function LoginPage() {
           }}
         >
           <Button className="w-full flex items-center justify-center gap-2" size="lg">
-            <img src="https://authjs.dev/img/providers/google.svg" className="w-5 h-5" alt="Google" />
+            <Image 
+              src="https://authjs.dev/img/providers/google.svg" 
+              alt="Google" 
+              width={20} 
+              height={20} 
+              className="w-5 h-5" 
+            />
             Continuer avec Google
           </Button>
         </form>

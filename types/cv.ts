@@ -103,7 +103,7 @@ export interface CVSettings {
   fontFamily?: 'sans' | 'serif' | 'mono';
 }
 
-export type TemplateId = 'modern' | 'professional' | 'executive' | 'creative' | 'tech' | 'minimalist' | 'ats';
+export type TemplateId = 'modern' | 'professional' | 'executive' | 'creative' | 'tech' | 'minimalist' | 'ats' | 'ats-glacier' | 'ats-iron';
 
 export type CVSectionId = 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'hobbies' | 'certifications' | 'projects' | 'references' | 'qualities' | 'divers';
 

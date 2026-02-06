@@ -12,6 +12,8 @@ const CreativeGrid = dynamic(() => import('@/components/templates/CreativeGrid')
 const TechStack = dynamic(() => import('@/components/templates/TechStack').then(mod => mod.TechStack));
 const MinimalistTemplate = dynamic(() => import('@/components/templates/MinimalistTemplate').then(mod => mod.MinimalistTemplate));
 const ATSFriendlyTemplate = dynamic(() => import('@/components/templates/ATSFriendlyTemplate').then(mod => mod.ATSFriendlyTemplate));
+const ATSGlacier = dynamic(() => import('@/components/templates/ATSGlacier').then(mod => mod.ATSGlacier));
+const ATSIron = dynamic(() => import('@/components/templates/ATSIron').then(mod => mod.ATSIron));
 
 interface CVThumbnailProps {
   cv: CV;
@@ -28,6 +30,8 @@ export const CVThumbnail = memo(function CVThumbnail({ cv, scale = 0.15 }: CVThu
       case 'tech': return <TechStack cv={cv} />;
       case 'minimalist': return <MinimalistTemplate cv={cv} />;
       case 'ats': return <ATSFriendlyTemplate cv={cv} />;
+      case 'ats-glacier': return <ATSGlacier cv={cv} />;
+      case 'ats-iron': return <ATSIron cv={cv} />;
       default: return <ModernSidebar cv={cv} />;
     }
   };
