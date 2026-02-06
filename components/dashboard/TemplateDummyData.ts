@@ -2,7 +2,6 @@ import { CV, DEFAULT_SECTION_ORDER } from '@/types/cv';
 
 export const DUMMY_CV: CV = {
   id: 'preview',
-  userId: 'preview', // userId usually matches a user ID string
   title: 'Preview',
   templateId: 'modern',
   isPublic: false,
