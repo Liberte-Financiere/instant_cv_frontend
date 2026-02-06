@@ -59,6 +59,4 @@ export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-  // Hides source maps from generated client bundles
-  hideSourceMaps: true,
 });
