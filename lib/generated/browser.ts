@@ -42,3 +42,8 @@ export type User = Prisma.UserModel
  * 
  */
 export type CV = Prisma.CVModel
+/**
+ * Model CoverLetter
+ * 
+ */
+export type CoverLetter = Prisma.CoverLetterModel

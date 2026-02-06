@@ -6,7 +6,7 @@ import { GraduationCap, Briefcase, RefreshCw, ArrowRight } from 'lucide-react';
 const targets = [
   {
     title: 'Étudiants & Diplômés',
-    description: 'Pas encore d\'expérience ? Notre IA valorise vos projets académiques et stages pour vous rendre irrésistible.',
+    description: 'Pas encore d&apos;expérience ? Notre IA valorise vos projets académiques et stages pour vous rendre irrésistible.',
     icon: GraduationCap,
     gradient: 'from-blue-400 to-cyan-300',
     tag: 'Stage & Premier Emploi'
@@ -39,7 +39,7 @@ export function TargetAudience() {
         <SectionHeader
           theme="dark"
           title="Pour qui est fait OptiJob ?"
-          description={<p>Peu importe où vous en êtes dans votre parcours, notre technologie s'adapte à <span className="text-white font-medium">vos enjeux spécifiques</span>.</p>}
+          description={<p>Peu importe où vous en êtes dans votre parcours, notre technologie s&apos;adapte à <span className="text-white font-medium">vos enjeux spécifiques</span>.</p>}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -58,7 +58,7 @@ export function TargetAudience() {
               </div>
               <h3 className="text-3xl font-bold text-[#064e3b] mb-4">Étudiants</h3>
               <p className="text-[#065f46] leading-relaxed">
-                Décrochez votre premier stage ou emploi. Notre IA valorise votre formation et vos projets académiques pour combler le manque d'expérience.
+                Décrochez votre premier stage ou emploi. Notre IA valorise votre formation et vos projets académiques pour combler le manque d&apos;expérience.
               </p>
             </div>
             <button className="flex items-center gap-2 text-[#059669] font-bold mt-8 group-hover:gap-3 transition-all">
