@@ -5,6 +5,7 @@ import { Check } from 'lucide-react';
 import { TemplateId } from '@/types/cv';
 import { cn } from '@/lib/utils';
 import { TEMPLATES, TemplateOption } from '@/lib/templates';
+import { TemplatePreview } from './TemplatePreview';
 
 interface TemplateSelectorProps {
   selectedId: TemplateId;
@@ -25,15 +26,9 @@ export function TemplateSelector({ selectedId, onSelect }: TemplateSelectorProps
               : "border-slate-100 hover:border-blue-300 hover:shadow-md bg-white"
           )}
         >
-          {/* Visual Preview (Abstract) */}
-          <div className={cn("h-32 mb-4 rounded-lg shadow-sm flex flex-col p-3 overflow-hidden", template.color)}>
-             <div className="w-1/2 h-2 bg-current opacity-20 rounded mb-2" />
-             <div className="w-3/4 h-2 bg-current opacity-20 rounded mb-4" />
-             <div className="space-y-1">
-               <div className="w-full h-1 bg-current opacity-10 rounded" />
-               <div className="w-full h-1 bg-current opacity-10 rounded" />
-               <div className="w-2/3 h-1 bg-current opacity-10 rounded" />
-             </div>
+          {/* Real Template Preview */}
+          <div className="h-48 mb-4 rounded-lg shadow-sm border border-slate-100 overflow-hidden bg-slate-50 relative">
+             <TemplatePreview templateId={template.id} />
           </div>
 
           <div className="flex justify-between items-start">

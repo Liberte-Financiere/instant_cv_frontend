@@ -41,15 +41,40 @@ export async function POST(req: Request) {
       }
     `;
 
+    console.log(`[AI_GEN] Starting generation at ${new Date().toISOString()}`);
+    const startTime = Date.now();
+
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
     
-    // Extract JSON from response (sometimes Gemini adds markdown blocks)
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error("Failed to parse AI response as JSON");
+    const duration = Date.now() - startTime;
+    console.log(`[AI_GEN] Generation completed in ${duration}ms at ${new Date().toISOString()}`);
     
-    const letterData = JSON.parse(jsonMatch[0]);
+    // Robust JSON extraction
+    // 1. Remove markdown code blocks
+    let cleanText = text.replace(/```json/g, '').replace(/```/g, '');
+    
+    // 2. Find the first '{' and last '}' to handle any preamble text
+    const firstOpen = cleanText.indexOf('{');
+    const lastClose = cleanText.lastIndexOf('}');
+    
+    if (firstOpen !== -1 && lastClose !== -1) {
+      cleanText = cleanText.substring(firstOpen, lastClose + 1);
+    } else {
+      console.error('[AI_GEN] No JSON object found in response:', text);
+      throw new Error("Invalid AI response format (No JSON found)");
+    }
+
+    let letterData;
+    try {
+      letterData = JSON.parse(cleanText);
+    } catch (e) {
+      console.error('[AI_GEN] JSON Parse Error:', e);
+      console.error('[AI_GEN] Raw Text was:', text);
+      console.error('[AI_GEN] Cleaned Text was:', cleanText);
+      throw new Error("Failed to parse AI response JSON");
+    }
 
     return NextResponse.json(letterData);
 

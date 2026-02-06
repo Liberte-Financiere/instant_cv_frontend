@@ -77,7 +77,8 @@ export const useCoverLetterStore = create<CoverLetterState>()(
           try {
             const serverCL = await CoverLetterService.getById(id);
             set(state => ({
-                clList: [...state.clList, serverCL],
+                // Ensure no duplicates
+                clList: [...state.clList.filter(c => c.id !== serverCL.id), serverCL],
                 currentCL: serverCL,
                 currentStep: 'info'
             }));
@@ -93,6 +94,10 @@ export const useCoverLetterStore = create<CoverLetterState>()(
         try {
           await CoverLetterService.update(currentCL.id, currentCL);
           toast.success('Lettre sauvegardée !');
+          // Update list
+          set(state => ({
+            clList: state.clList.map(c => c.id === currentCL.id ? currentCL : c)
+          }));
         } catch (error) {
           console.error('Failed to save CL', error);
           toast.error('Erreur lors de la sauvegarde');

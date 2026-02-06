@@ -9,6 +9,7 @@ import {
   ChevronRight, Printer, AlertCircle, FileType
 } from 'lucide-react';
 import { LetterPreview } from '@/components/cover-letter/LetterPreview';
+import { AIToolbar } from '@/components/editor/AIToolbar';
 import Link from 'next/link';
 import { useCoverLetterStore } from '@/store/useCoverLetterStore';
 import { useCVStore } from '@/store/useCVStore';
@@ -311,7 +312,7 @@ export default function CoverLetterEditorPage() {
                       </div>
                     )}
 
-                    {currentStep === 'content' && (
+                     {currentStep === 'content' && (
                       <div className="space-y-6">
                          <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-slate-900">Rédaction</h2>
@@ -336,6 +337,13 @@ export default function CoverLetterEditorPage() {
                                <label className="text-xs font-bold text-slate-500 uppercase">Corps du texte</label>
                                <span className="text-[10px] text-slate-400">{currentCL.content.details.body.length} caractères</span>
                             </div>
+                            
+                            {/* AI Toolbar */}
+                            <AIToolbar 
+                              text={currentCL.content.details.body} 
+                              onRefine={(newText) => updateContent({ details: { ...currentCL.content.details, body: newText }})} 
+                            />
+
                             <textarea 
                               className="w-full px-5 py-4 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none resize-none text-sm leading-7 min-h-[400px] shadow-inner"
                               value={currentCL.content.details.body}
