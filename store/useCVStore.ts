@@ -265,10 +265,15 @@ export const useCVStore = create<CVState>()(
         const newCV = createEmptyCV(`CV Importé ${new Date().toLocaleDateString()}`, 'modern');
         
         // Helper to ensure all items in an array have an ID
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const ensureIds = (arr: unknown[]): any => {
-            if (!Array.isArray(arr)) return [];
-            return arr.map(item => ({ ...(item as Record<string, any>), id: (item as any).id || generateId() }));
+        const ensureIds = <T>(arr: unknown[]): T[] => {
+            if (!Array.isArray(arr)) return [] as T[];
+            return arr.map(item => {
+                const record = item as Record<string, unknown>;
+                return { 
+                    ...record, 
+                    id: (record.id as string) || generateId() 
+                } as unknown as T;
+            });
         };
 
         // Merge imported data with default structure AND ensure IDs

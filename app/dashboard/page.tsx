@@ -134,27 +134,22 @@ export default function DashboardPage() {
       {/* ... (header) ... */}
       
       {/* Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         <StatCard 
            title="CV Créés" 
            value={cvList.length.toString()} 
            icon={FileText} 
            color="blue"
-           trend="+2 cette semaine"
+           trend=""
         />
         <StatCard 
            title="Profils Consultés" 
            value={totalViews.toString()} 
            icon={Eye} 
            color="purple"
-           trend="+15%"
+           trend=""
         />
-        <StatCard 
-           title="Téléchargements" 
-           value="8" 
-           icon={Download} 
-           color="green"
-        />
+
       </div>
 
       {/* Magic Analyzer Section */}
