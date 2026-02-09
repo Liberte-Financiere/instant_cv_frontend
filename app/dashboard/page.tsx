@@ -15,6 +15,8 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useCoverLetterStore } from '@/store/useCoverLetterStore';
 import { CoverLetterService } from '@/services/coverLetterService';
+import { ReferralSection } from '@/components/dashboard/ReferralSection';
+import { useProcessReferral } from '@/hooks/useProcessReferral';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -108,6 +110,9 @@ export default function DashboardPage() {
     CoverLetterService.getAll().then(data => useCoverLetterStore.setState({ clList: data }));
   }, []);
 
+  // Process referral code if present in URL
+  useProcessReferral();
+
   return (
     <div className="p-8 max-w-7xl mx-auto">
       {/* ... (header) ... */}
@@ -128,7 +133,11 @@ export default function DashboardPage() {
            color="purple"
            trend=""
         />
+      </div>
 
+      {/* Referral Section */}
+      <div className="mb-12">
+        <ReferralSection />
       </div>
 
       {/* Magic Analyzer Section */}

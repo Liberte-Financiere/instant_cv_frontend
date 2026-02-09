@@ -2,9 +2,14 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { handleGoogleSignIn } from '@/actions/auth';
 
-export default function AuthPage() {
+function AuthContent() {
+  const searchParams = useSearchParams();
+  const referralCode = searchParams.get('ref');
+
   return (
     <div className="min-h-screen w-full flex bg-slate-50">
       
@@ -84,7 +89,7 @@ export default function AuthPage() {
               transition={{ delay: 0.2 }}
             >
               <button 
-                onClick={() => handleGoogleSignIn()}
+                onClick={() => handleGoogleSignIn(referralCode || undefined)}
                 className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-slate-200 rounded-2xl hover:bg-slate-50 hover:border-slate-300 hover:shadow-lg transition-all duration-300 text-slate-700 font-semibold text-lg group"
               >
                 <svg className="w-6 h-6" viewBox="0 0 24 24">
@@ -136,5 +141,14 @@ export default function AuthPage() {
          </div>
       </div>
     </div>
+  );
+}
+
+// Wrap in Suspense because useSearchParams needs it
+export default function AuthPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" /></div>}>
+      <AuthContent />
+    </Suspense>
   );
 }
