@@ -44,14 +44,14 @@ export async function GET() {
 
       // Update user with new code
       user = await prisma.user.update({
-        where: { id: session.user.id },
+        where: { id: currentUserId },
         data: { referralCode: code },
       });
     }
 
     // Fetch referred users separately (users who have this user as referrer)
     const referredUsers = await prisma.user.findMany({
-      where: { referredById: session.user.id },
+      where: { referredById: currentUserId },
       select: {
         id: true,
         name: true,
@@ -89,6 +89,7 @@ export async function POST(request: Request) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+    const currentUserId = session.user.id;
 
     const { referralCode } = await request.json();
 
@@ -98,7 +99,7 @@ export async function POST(request: Request) {
 
     // Check if user was already referred
     const currentUser = await prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: currentUserId },
       select: { referredById: true },
     });
 
@@ -116,7 +117,7 @@ export async function POST(request: Request) {
     }
 
     // Prevent self-referral
-    if (referrer.id === session.user.id) {
+    if (referrer.id === currentUserId) {
       return NextResponse.json({ error: 'Auto-parrainage interdit' }, { status: 400 });
     }
 
@@ -124,7 +125,7 @@ export async function POST(request: Request) {
     await prisma.$transaction(async (tx) => {
       // Link the new user to referrer
       await tx.user.update({
-        where: { id: session.user.id },
+        where: { id: currentUserId },
         data: { referredById: referrer.id },
       });
 

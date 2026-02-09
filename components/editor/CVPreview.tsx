@@ -2,7 +2,7 @@
 
 import { useCVStore } from '@/store/useCVStore';
 import dynamic from 'next/dynamic';
-import { ZoomIn, ZoomOut, Download, Printer, Loader2, FileText, ChevronDown } from 'lucide-react';
+import { ZoomIn, ZoomOut, Download, Loader2, FileText, ChevronDown } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 import { printCV } from '@/lib/pdf-export';
@@ -114,10 +114,7 @@ export function CVPreview({ data }: CVPreviewProps) {
     }
   };
 
-  const handlePrint = () => {
-    if (!cvRef.current) return;
-    printCV(cvRef.current);
-  };
+
 
   return (
     <div className="h-full flex flex-col bg-slate-200/50">
@@ -144,16 +141,6 @@ export function CVPreview({ data }: CVPreviewProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={handlePrint} 
-            className="text-slate-600 rounded-lg hover:bg-slate-100"
-            title="Imprimer"
-          >
-             <Printer className="w-4 h-4" />
-          </Button>
-          
           {/* Export Dropdown */}
           <div className="relative">
             <Button

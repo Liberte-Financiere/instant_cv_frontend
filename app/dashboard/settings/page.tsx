@@ -5,6 +5,7 @@ import { User, Check, ChevronDown, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { ReferralSection } from '@/components/dashboard/ReferralSection';
 
 export default function SettingsPage() {
   const { data: session } = useSession();
@@ -174,6 +175,12 @@ export default function SettingsPage() {
               </button>
             </div>
           </div>
+        </section>
+
+        {/* Referral Section */}
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden p-6">
+          <h3 className="font-bold text-slate-900 mb-4">Programme de Parrainage</h3>
+          <ReferralSection />
         </section>
 
         {/* Subscription Banner */}

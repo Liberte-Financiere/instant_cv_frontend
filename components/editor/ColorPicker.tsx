@@ -75,7 +75,7 @@ export function ColorPicker({ onColorChange }: ColorPickerProps) {
           />
         </div>
         <Palette className="w-4 h-4 text-slate-500" />
-        <span className="text-sm text-slate-700 font-medium">Couleurs</span>
+        <span className="text-sm text-slate-700 font-medium hidden sm:inline">Couleurs</span>
       </button>
 
       {isOpen && (
@@ -84,7 +84,9 @@ export function ColorPicker({ onColorChange }: ColorPickerProps) {
             className="fixed inset-0 z-40" 
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute top-full left-0 mt-2 p-4 bg-white rounded-xl shadow-xl border border-slate-100 z-50 w-72">
+          <div 
+            className="fixed left-1/2 top-20 -translate-x-1/2 w-[90vw] max-w-[300px] md:absolute md:top-full md:left-0 md:translate-x-0 md:w-72 md:max-w-none mt-2 p-4 bg-white rounded-xl shadow-xl border border-slate-100 z-50 transform origin-top"
+          >
             
             {/* Tabs */}
             <div className="flex mb-4 bg-slate-100 p-1 rounded-lg">
