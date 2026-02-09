@@ -6,6 +6,10 @@ export async function handleSignOut() {
   await signOut({ redirectTo: "/login" })
 }
 
-export async function handleGoogleSignIn() {
-  await signIn("google", { redirectTo: "/dashboard" })
+export async function handleGoogleSignIn(referralCode?: string) {
+  // If referral code exists, append it to redirect URL so we can process it after login
+  const redirectTo = referralCode 
+    ? `/dashboard?ref=${referralCode}` 
+    : "/dashboard"
+  await signIn("google", { redirectTo })
 }
