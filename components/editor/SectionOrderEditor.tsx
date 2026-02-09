@@ -115,7 +115,7 @@ export function SectionOrderEditor() {
         className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-colors text-sm font-medium text-slate-700"
       >
         <Settings2 className="w-4 h-4" />
-        <span>Ordre des sections</span>
+        <span className="hidden sm:inline">Ordre des sections</span>
       </button>
 
       {isOpen && (

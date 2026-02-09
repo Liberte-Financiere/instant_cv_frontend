@@ -12,12 +12,14 @@ import { CVPreview } from '@/components/editor/CVPreview';
 import { ColorPicker } from '@/components/editor/ColorPicker';
 import { ShareButton } from '@/components/editor/ShareButton';
 import { SectionOrderEditor } from '@/components/editor/SectionOrderEditor';
+import { MobilePreviewModal } from '@/components/editor/MobilePreviewModal';
 import { EDITOR_STEPS } from '@/types/cv';
 
 export default function EditorPage() {
   const params = useParams();
   const { currentCV, currentStep, loadCV, setCurrentStep } = useCVStore();
   const [zoom, setZoom] = useState(1);
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
 
   const id = params.id as string;
 
@@ -55,8 +57,8 @@ export default function EditorPage() {
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col">
       {/* Editor Header */}
-      <header className="bg-white border-b border-slate-200 h-16 sticky top-0 z-50 px-4 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-4">
+      <header className="bg-white border-b border-slate-200 h-16 sticky top-0 z-50 px-2 sm:px-4 flex items-center justify-between shadow-sm gap-2">
+        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
           <Link
             href="/dashboard"
             className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
@@ -64,19 +66,31 @@ export default function EditorPage() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <div className="h-8 w-px bg-slate-200 mx-2 hidden sm:block" />
-          <div>
-            <h1 className="font-bold text-slate-900 text-sm sm:text-base truncate max-w-[200px] sm:max-w-xs">
+          <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
+          <div className="min-w-0">
+            <h1 className="font-bold text-slate-900 text-sm sm:text-base truncate max-w-[120px] sm:max-w-xs block">
               {currentCV.title}
             </h1>
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-               <span className="w-2 h-2 rounded-full bg-green-500" />
-               <span>Sauvegardé</span>
+            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+               <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
+               <span className="hidden sm:inline">Sauvegardé</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
+           {/* Mobile Preview Button */}
+           <button
+             onClick={() => setShowMobilePreview(true)}
+             className="flex lg:hidden items-center justify-center w-9 h-9 sm:w-auto sm:h-auto sm:px-3 sm:py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors"
+             title="Aperçu"
+           >
+             <Eye className="w-4 h-4" />
+             <span className="hidden sm:inline ml-2 text-sm font-medium">Aperçu</span>
+           </button>
+
+           <div className="h-6 w-px bg-slate-200 mx-1 lg:hidden" />
+
            <ColorPicker />
            <SectionOrderEditor />
            <ShareButton />           
@@ -85,7 +99,7 @@ export default function EditorPage() {
              title="Changer de modèle"
            >
              <LayoutTemplate className="w-4 h-4" />
-             <span>Modèle</span>
+             <span className="hidden md:inline">Modèle</span>
            </button>
            
            <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
@@ -96,7 +110,8 @@ export default function EditorPage() {
                   window.open(`/cv/${currentCV.id}?print=true`, '_blank');
                 }
              }}
-             className="flex items-center gap-2 px-4 py-2 bg-[#2463eb] hover:bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+             className="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto gap-2 sm:px-4 sm:py-2 bg-[#2463eb] hover:bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+             title="Exporter PDF"
            >
              <Download className="w-4 h-4" />
              <span className="hidden sm:inline">Exporter PDF</span>
@@ -152,6 +167,10 @@ export default function EditorPage() {
            </div>
         </div>
       </div>
+      <MobilePreviewModal 
+        isOpen={showMobilePreview} 
+        onClose={() => setShowMobilePreview(false)} 
+      />
     </div>
   );
 }

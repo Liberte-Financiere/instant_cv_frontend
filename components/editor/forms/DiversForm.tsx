@@ -1,10 +1,13 @@
 import Image from "next/image";
 import { useCVStore } from '@/store/useCVStore';
 import { Input } from '@/components/ui/Input';
-import { PenTool } from 'lucide-react';
+import { PenTool, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { SignatureModal } from '../SignatureModal';
 
 export function DiversForm() {
   const { currentCV, updateDivers, updateFooter } = useCVStore();
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   if (!currentCV) return null;
   const divers = currentCV.divers || '';
@@ -63,16 +66,40 @@ export function DiversForm() {
                   </div>
                 )}
                 <div>
-                  <button className="text-sm font-bold text-blue-600 hover:underline">
-                    Choisir une signature
+                  <button 
+                    onClick={() => setShowSignatureModal(true)}
+                    className="text-sm font-bold text-blue-600 hover:underline"
+                  >
+                    {footer.signatureUrl ? 'Changer la signature' : 'Choisir une signature'}
                   </button>
-                  <p className="text-xs text-slate-500">Gérez vos signatures dans l&apos;onglet Signature</p>
+                  <p className="text-xs text-slate-500">
+                    {footer.signatureUrl 
+                      ? 'Cliquez pour modifier ou remplacer' 
+                      : 'Ajoutez une touche personnelle à votre CV'
+                    }
+                  </p>
+                  {footer.signatureUrl && (
+                    <button
+                      onClick={() => updateFooter({ signatureUrl: '' })}
+                      className="text-xs text-red-500 hover:text-red-700 mt-1 flex items-center gap-1"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      Supprimer
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         )}
       </div>
+
+      <SignatureModal
+        isOpen={showSignatureModal}
+        onClose={() => setShowSignatureModal(false)}
+        onSave={(url) => updateFooter({ signatureUrl: url })}
+        currentSignature={footer.signatureUrl}
+      />
     </div>
   );
 }

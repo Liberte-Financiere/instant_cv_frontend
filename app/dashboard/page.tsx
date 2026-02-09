@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Plus, FileText, Eye, Download, Search, ArrowLeft, ArrowRight, Edit } from 'lucide-react';
+import { Plus, FileText, Download, Search, ArrowLeft, ArrowRight, Edit } from 'lucide-react';
 import Link from 'next/link';
 import { useCVStore } from '@/store/useCVStore';
 import { useState, useEffect } from 'react';
@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useCoverLetterStore } from '@/store/useCoverLetterStore';
 import { CoverLetterService } from '@/services/coverLetterService';
-import { ReferralSection } from '@/components/dashboard/ReferralSection';
+import { ReferralCodeCard } from '@/components/dashboard/ReferralCodeCard';
 import { useProcessReferral } from '@/hooks/useProcessReferral';
 
 export default function DashboardPage() {
@@ -103,8 +103,6 @@ export default function DashboardPage() {
     setNewTitle('');
   };
 
-  const totalViews = cvList.reduce((acc, cv) => acc + (cv.views || 0), 0);
-
   // Fetch CLs on dashboard mount
   useEffect(() => {
     CoverLetterService.getAll().then(data => useCoverLetterStore.setState({ clList: data }));
@@ -114,53 +112,43 @@ export default function DashboardPage() {
   useProcessReferral();
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto">
       {/* ... (header) ... */}
       
       {/* Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+      <div className="grid grid-cols-2 gap-3 md:gap-6 mb-8 md:mb-12">
         <StatCard 
            title="CV Créés" 
            value={cvList.length.toString()} 
            icon={FileText} 
            color="blue"
            trend=""
+           href="/dashboard/list"
         />
-        <StatCard 
-           title="Profils Consultés" 
-           value={totalViews.toString()} 
-           icon={Eye} 
-           color="purple"
-           trend=""
-        />
-      </div>
-
-      {/* Referral Section */}
-      <div className="mb-12">
-        <ReferralSection />
+        <ReferralCodeCard />
       </div>
 
       {/* Magic Analyzer Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-12 rounded-3xl border-2 border-dashed border-purple-200 bg-purple-50/50 p-8 text-center hover:bg-purple-50 transition-colors cursor-pointer group relative overflow-hidden"
+        className="mb-8 md:mb-12 rounded-2xl md:rounded-3xl border-2 border-dashed border-purple-200 bg-purple-50/50 p-4 md:p-8 text-center hover:bg-purple-50 transition-colors cursor-pointer group relative overflow-hidden"
         onClick={() => document.getElementById('cv-upload')?.click()}
       >
          <input 
            type="file" 
            id="cv-upload"
-           accept=".pdf" // Add .txt later if needed
+           accept=".pdf"
            className="hidden" 
            onChange={handleFileUpload}
          />
 
-         <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-            <span className="text-2xl">✨</span>
+         <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-3 md:mb-4 group-hover:scale-110 transition-transform">
+            <span className="text-xl md:text-2xl">✨</span>
          </div>
-         <h2 className="text-xl font-bold text-slate-900 mb-2">Magic Analyzer</h2>
-         <p className="text-slate-500 max-w-lg mx-auto text-sm">
-           Glissez votre ancien CV (PDF) ici pour une analyse instantanée par l&apos;IA et découvrez comment l&apos;améliorer.
+         <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-1 md:mb-2">Magic Analyzer</h2>
+         <p className="text-slate-500 max-w-lg mx-auto text-xs md:text-sm">
+           Glissez votre ancien CV (PDF) ici pour une analyse instantanée par l&apos;IA.
          </p>
       </motion.div>
 
@@ -180,12 +168,12 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
              {/* New CV Card - Always first */}
              <motion.div 
                 whileHover={{ scale: 1.02 }}
                 onClick={handleOpenModal}
-                className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors h-[320px]"
+                className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors min-h-[200px] md:h-[320px]"
               >
                 <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <Plus className="w-8 h-8 text-slate-400 group-hover:text-blue-500" />
@@ -194,13 +182,14 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-400 mt-1">Choisir un modèle</p>
               </motion.div>
 
-              {recentCVs.map((cv) => (
-                <CVCard 
-                  key={cv.id} 
-                  cv={cv}
-                  onDelete={deleteCV}
-                  score={Math.floor(Math.random() * (98 - 70) + 70)}
-                />
+              {recentCVs.map((cv, index) => (
+                <div key={cv.id} className={index === 0 ? '' : 'hidden md:block'}>
+                  <CVCard 
+                    cv={cv}
+                    onDelete={deleteCV}
+                    score={Math.floor(Math.random() * (98 - 70) + 70)}
+                  />
+                </div>
               ))}
           </div>
         </section>
@@ -219,13 +208,13 @@ export default function DashboardPage() {
           </div>
 
           {recentCLs.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-               {recentCLs.map((cl) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+               {recentCLs.map((cl, index) => (
                 <motion.div
                   key={cl.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white p-6 rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-xl transition-all group relative flex flex-col justify-between h-[200px]"
+                  className={`bg-white p-4 md:p-6 rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-xl transition-all group relative flex flex-col justify-between min-h-[160px] md:h-[200px] ${index === 0 ? '' : 'hidden md:flex'}`}
                 >
                   <div>
                     <div className="flex items-start justify-between mb-4">
@@ -269,7 +258,7 @@ export default function DashboardPage() {
                {/* Add New CL Card (Mini) */}
                <Link 
                   href="/dashboard/cover-letters"
-                  className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center p-6 hover:bg-slate-100 transition-all group h-[200px]"
+                  className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 hover:bg-slate-100 transition-all group min-h-[160px] md:h-[200px]"
                >
                   <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                       <Plus className="w-6 h-6 text-slate-400" />
@@ -378,12 +367,12 @@ export default function DashboardPage() {
 
         {/* Full Screen Analysis Loader */}
         {isAnalyzing && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex flex-col items-center justify-center cursor-wait">
-             <div className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center animate-in fade-in zoom-in duration-300">
-                <div className="w-20 h-20 border-[6px] border-purple-100 border-t-purple-600 rounded-full animate-spin mb-6" />
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Analyse en cours...</h3>
-                <p className="text-slate-500 text-center max-w-xs">
-                  Notre IA étudie votre CV pour détecter vos points forts et axes d'amélioration.
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex flex-col items-center justify-center cursor-wait p-4">
+             <div className="bg-white p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-2xl flex flex-col items-center animate-in fade-in zoom-in duration-300 max-w-[280px] md:max-w-none">
+                <div className="w-14 h-14 md:w-20 md:h-20 border-4 md:border-[6px] border-purple-100 border-t-purple-600 rounded-full animate-spin mb-4 md:mb-6" />
+                <h3 className="text-base md:text-xl font-bold text-slate-900 mb-1 md:mb-2">Analyse en cours...</h3>
+                <p className="text-slate-500 text-center text-xs md:text-base max-w-xs">
+                  Notre IA étudie votre CV pour détecter vos points forts.
                 </p>
              </div>
           </div>
