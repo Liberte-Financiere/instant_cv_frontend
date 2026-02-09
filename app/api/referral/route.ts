@@ -17,6 +17,7 @@ export async function GET() {
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+    const currentUserId = session.user.id;
 
     // Get user with referral data
     let user = await prisma.user.findUnique({
