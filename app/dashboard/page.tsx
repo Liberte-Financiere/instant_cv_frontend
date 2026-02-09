@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 import { useCoverLetterStore } from '@/store/useCoverLetterStore';
 import { CoverLetterService } from '@/services/coverLetterService';
 import { ReferralCodeCard } from '@/components/dashboard/ReferralCodeCard';
-import { useProcessReferral } from '@/hooks/useProcessReferral';
+import { ReferralProcessor } from '@/components/dashboard/ReferralProcessor';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -108,11 +108,12 @@ export default function DashboardPage() {
     CoverLetterService.getAll().then(data => useCoverLetterStore.setState({ clList: data }));
   }, []);
 
-  // Process referral code if present in URL
-  useProcessReferral();
+  // Process referral code via Suspense component
+  // useProcessReferral removed here
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto">
+      <ReferralProcessor />
       {/* ... (header) ... */}
       
       {/* Stats Row */}
