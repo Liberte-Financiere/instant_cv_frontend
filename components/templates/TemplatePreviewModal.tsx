@@ -66,7 +66,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -81,7 +81,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative bg-white w-full max-w-5xl max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
+          className="relative bg-white w-full max-w-5xl max-h-[95vh] md:max-h-[90vh] rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
         >
           {/* Close Button */}
           <button
@@ -92,9 +92,9 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
           </button>
 
           {/* Left Side: Large Preview */}
-          <div className="flex-1 bg-slate-100 p-8 flex items-center justify-center overflow-auto min-h-[400px] md:min-h-full relative">
+          <div className="flex-shrink-0 md:flex-1 bg-slate-100 p-4 md:p-8 flex items-center justify-center overflow-auto h-[35vh] md:h-auto md:min-h-full relative">
              <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#444cf7_1px,transparent_1px)] [background-size:16px_16px]"></div>
-             <div className="relative shadow-2xl rounded transition-transform">
+             <div className="relative shadow-2xl rounded transition-transform scale-[0.35] md:scale-100 origin-center">
                <CVThumbnail
                  cv={{ ...MOCK_PREVIEW_CV, templateId: template.id }}
                  scale={0.55}
@@ -103,7 +103,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
           </div>
 
           {/* Right Side: Details & Actions */}
-          <div className="w-full md:w-[400px] p-8 flex flex-col bg-white overflow-y-auto">
+          <div className="w-full md:w-[400px] p-4 md:p-8 flex flex-col bg-white overflow-y-auto flex-1 md:flex-none">
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-2">
                  <span className="px-2.5 py-0.5 bg-blue-50 text-blue-700 text-xs font-bold rounded-full uppercase tracking-wide">
@@ -113,7 +113,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
                     <Check className="w-3 h-3" /> ATS Friendly
                  </span>
               </div>
-              <h2 className="text-3xl font-extrabold text-slate-900 mb-2 leading-tight">
+              <h2 className="text-xl md:text-3xl font-extrabold text-slate-900 mb-2 leading-tight">
                 {template.name}
               </h2>
               <p className="text-slate-500">
@@ -122,7 +122,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
             </div>
 
             {/* Features List */}
-            <div className="space-y-4 mb-8 flex-1">
+            <div className="space-y-3 md:space-y-4 mb-4 md:mb-8 flex-1 hidden md:block">
                <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider border-b pb-2">Pourquoi ce modèle ?</h3>
                <ul className="space-y-3">
                  <li className="flex items-start gap-3 text-sm text-slate-600">
@@ -147,7 +147,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
             </div>
 
             {/* CTA & Input */}
-            <div className="mt-auto pt-6 border-t border-slate-100 space-y-4">
+            <div className="mt-auto pt-4 md:pt-6 border-t border-slate-100 space-y-3 md:space-y-4">
               <div>
                 <Label htmlFor="cv-title" className="text-slate-700 mb-1.5 block">Nom de votre CV</Label>
                 <Input 
@@ -164,7 +164,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
                 size="lg" 
                 onClick={handleUseTemplate}
                 disabled={isLoading || !cvTitle.trim()}
-                className="w-full bg-[#6366f1] hover:bg-[#4f46e5] text-white shadow-lg shadow-indigo-200 gap-2 h-14 text-lg"
+                className="w-full bg-[#6366f1] hover:bg-[#4f46e5] text-white shadow-lg shadow-indigo-200 gap-2 h-12 md:h-14 text-base md:text-lg"
               >
                 {isLoading ? (
                   <>
