@@ -117,7 +117,11 @@ export const UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   emailVerified: 'emailVerified',
-  image: 'image'
+  image: 'image',
+  referralCode: 'referralCode',
+  referredById: 'referredById',
+  referralCount: 'referralCount',
+  premiumUntil: 'premiumUntil'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
