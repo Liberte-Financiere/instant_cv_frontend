@@ -47,3 +47,8 @@ export type CV = Prisma.CVModel
  * 
  */
 export type CoverLetter = Prisma.CoverLetterModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel

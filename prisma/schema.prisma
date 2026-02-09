@@ -58,10 +58,17 @@ model User {
   referralCount  Int       @default(0)  // Count of successful referrals
   premiumUntil   DateTime?             // Premium access expiry date (reward)
   
+  // Payment System (LigdiCash)
+  subscriptionStatus String?   // 'active' | 'expired' | 'canceled'
+  lastPaymentId      String?   // Last successful payment transaction ID
+  lastPaymentDate    DateTime? // Date of last payment
+  phone              String?   // Phone number for Mobile Money
+  
   accounts      Account[]
   sessions      Session[]
   cvs           CV[]
   coverLetters  CoverLetter[]
+  payments      Payment[]
 }
 
 model CV {
@@ -90,4 +97,34 @@ model CoverLetter {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+// Payment System
+model Payment {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Transaction Details
+  transactionId   String   @unique // LigdiCash transaction ID
+  amount          Int      // Amount in FCFA
+  currency        String   @default("XOF")
+  status          String   // 'pending' | 'completed' | 'failed' | 'canceled'
+  
+  // Payment Method
+  provider        String   @default("ligdicash") // 'ligdicash' | 'pawapay'
+  paymentMethod   String?  // 'orange_money' | 'moov_money' | 'visa' | 'mastercard'
+  phoneNumber     String?  // Phone used for payment
+  
+  // Plan Details
+  planType        String   // 'monthly' | 'yearly' | 'lifetime'
+  planDuration    Int?     // Duration in days
+  
+  // Metadata
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  completedAt     DateTime?
+  
+  @@index([userId])
+  @@index([transactionId])
 }
