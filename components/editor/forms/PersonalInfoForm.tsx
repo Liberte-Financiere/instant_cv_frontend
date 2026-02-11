@@ -53,7 +53,7 @@ export function PersonalInfoForm() {
               <Select 
                 value={link.platform} 
                 onChange={(e) => updateSocialLink(link.id, { platform: e.target.value as any })}
-                className="w-32"
+                className="w-full sm:w-32"
               >
                 <option value="linkedin">LinkedIn</option>
                 <option value="github">GitHub</option>

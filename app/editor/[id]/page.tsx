@@ -129,7 +129,7 @@ export default function EditorPage() {
            </div>
            
            {/* Scrollable Form Area */}
-           <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar">
+           <div className="flex-1 overflow-y-auto p-3 sm:p-6 lg:p-10 custom-scrollbar">
               <div className="max-w-2xl mx-auto">
                  <FormSection 
                    currentStep={currentStep} 

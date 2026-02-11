@@ -27,7 +27,7 @@ export function EducationForm() {
     <div className="space-y-6">
       {education.map((edu) => (
         <div key={edu.id} className="p-5 bg-white border border-slate-200 rounded-xl relative group hover:border-blue-300 transition-all">
-          <button onClick={() => handleRemove(edu.id)} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"><Trash2 className="w-4 h-4" /></button>
+          <button onClick={() => handleRemove(edu.id)} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors sm:opacity-0 sm:group-hover:opacity-100"><Trash2 className="w-4 h-4" /></button>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="col-span-full"><Input label="École / Université" value={edu.institution} onChange={(e) => handleUpdate(edu.id, 'institution', e.target.value)} placeholder="Ex: HEC Paris" /></div>
             <Input label="Diplôme" value={edu.degree} onChange={(e) => handleUpdate(edu.id, 'degree', e.target.value)} placeholder="Ex: Master 2" />

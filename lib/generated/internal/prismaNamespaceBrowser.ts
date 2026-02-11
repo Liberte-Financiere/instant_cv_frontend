@@ -56,8 +56,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   User: 'User',
   CV: 'CV',
-  CoverLetter: 'CoverLetter',
-  Payment: 'Payment'
+  CoverLetter: 'CoverLetter'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -122,11 +121,7 @@ export const UserScalarFieldEnum = {
   referralCode: 'referralCode',
   referredById: 'referredById',
   referralCount: 'referralCount',
-  premiumUntil: 'premiumUntil',
-  subscriptionStatus: 'subscriptionStatus',
-  lastPaymentId: 'lastPaymentId',
-  lastPaymentDate: 'lastPaymentDate',
-  phone: 'phone'
+  premiumUntil: 'premiumUntil'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -156,26 +151,6 @@ export const CoverLetterScalarFieldEnum = {
 } as const
 
 export type CoverLetterScalarFieldEnum = (typeof CoverLetterScalarFieldEnum)[keyof typeof CoverLetterScalarFieldEnum]
-
-
-export const PaymentScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  transactionId: 'transactionId',
-  amount: 'amount',
-  currency: 'currency',
-  status: 'status',
-  provider: 'provider',
-  paymentMethod: 'paymentMethod',
-  phoneNumber: 'phoneNumber',
-  planType: 'planType',
-  planDuration: 'planDuration',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  completedAt: 'completedAt'
-} as const
-
-export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
 export const SortOrder = {
