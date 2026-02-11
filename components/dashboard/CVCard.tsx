@@ -1,11 +1,12 @@
 'use client';
 
-import { Edit, Trash2, Download, Clock, Eye, Share2 } from 'lucide-react';
+import { Edit, Trash2, Download, Clock, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { CV } from '@/types/cv';
 import { CVThumbnail } from './CVThumbnail';
+import { ShareButton } from '@/components/ui/ShareButton';
 
 interface CVCardProps {
   cv: CV;
@@ -45,8 +46,8 @@ export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
            <CVThumbnail cv={cv} scale={0.25} />
         </div>
 
-        {/* Overlay Actions */}
-        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/60 backdrop-blur-[2px] transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 gap-2 z-10">
+        {/* Overlay Actions — always visible on mobile, hover on desktop */}
+        <div className="absolute inset-0 bg-white/60 lg:bg-white/0 lg:group-hover:bg-white/60 backdrop-blur-[2px] transition-all duration-300 flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 gap-2 z-10">
            <Link
              href={`/editor/${cv.id}`}
              className="p-3 bg-white rounded-xl text-slate-600 hover:text-blue-600 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
@@ -54,15 +55,11 @@ export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
            >
              <Edit className="w-5 h-5" />
            </Link>
-             <Link
-             href={`/share/${cv.id}`}
-             target="_blank"
-             className="p-3 bg-white rounded-xl text-slate-600 hover:text-purple-600 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
-             title="Partager"
-             onClick={(e) => e.stopPropagation()}
-           >
-             <Share2 className="w-5 h-5" />
-           </Link>
+             <ShareButton 
+               url={`/share/${cv.id}`}
+               title={cv.title || 'Mon CV OptiJob'}
+               text={`Découvrez mon CV "${cv.title}" créé avec OptiJob`}
+             />
            <a
              href={`/cv/${cv.id}?print=true`}
              target="_blank"

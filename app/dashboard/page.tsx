@@ -239,7 +239,7 @@ export default function DashboardPage() {
                       <div className="p-3 bg-blue-50 rounded-xl">
                         <FileText className="w-6 h-6 text-blue-600" />
                       </div>
-                      <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 p-1 rounded-lg shadow-sm">
+                      <div className="absolute top-4 right-4 flex gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity bg-white/90 p-1 rounded-lg shadow-sm">
                         <Link 
                            href={`/cover-letter/editor/${cl.id}`}
                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
@@ -307,12 +307,12 @@ export default function DashboardPage() {
              >
                 {step === 'template' ? (
                   <>
-                    <div className="p-8 pb-4 shrink-0">
+                    <div className="p-4 sm:p-8 pb-4 shrink-0">
                         <h2 className="text-2xl font-bold text-slate-900 mb-2">Choisissez un modèle</h2>
                         <p className="text-slate-500 text-sm">Sélectionnez le style qui correspond le mieux à votre profil.</p>
                     </div>
                     
-                    <div className="flex-1 overflow-y-auto px-8 py-4 min-h-0">
+                    <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 min-h-0">
                         <TemplateSelector 
                            selectedId={selectedTemplate} 
                            onSelect={setSelectedTemplate} 
@@ -338,7 +338,7 @@ export default function DashboardPage() {
                   </>
                 ) : (
                   <>
-                    <div className="p-8 pb-4 shrink-0">
+                    <div className="p-4 sm:p-8 pb-4 shrink-0">
                         <button 
                           onClick={() => setStep('template')}
                           className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-4"
