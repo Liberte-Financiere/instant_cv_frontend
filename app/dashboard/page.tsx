@@ -190,12 +190,12 @@ export default function DashboardPage() {
               <motion.div 
                 whileHover={{ scale: 1.02 }}
                 onClick={() => setIsLinkedInModalOpen(true)}
-                className="group cursor-pointer border-2 border-dashed border-[#0077B5]/30 rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 bg-[#0077B5]/5 hover:bg-[#0077B5]/10 hover:border-[#0077B5] transition-colors min-h-[200px] md:h-[320px]"
+                className="group cursor-pointer border-2 border-dashed border-linkedin/30 rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 bg-linkedin/5 hover:bg-linkedin/10 hover:border-linkedin transition-colors min-h-[200px] md:h-[320px]"
               >
                 <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Linkedin className="w-8 h-8 text-[#0077B5]" />
+                  <Linkedin className="w-8 h-8 text-linkedin" />
                 </div>
-                <p className="font-bold text-[#0077B5]">Importer de LinkedIn</p>
+                <p className="font-bold text-linkedin">Importer de LinkedIn</p>
                 <p className="text-xs text-slate-400 mt-1 text-center">Collez votre URL de profil</p>
               </motion.div>
               */}
@@ -329,7 +329,7 @@ export default function DashboardPage() {
                            </button>
                            <button 
                              onClick={() => setStep('name')}
-                             className="flex-1 py-3 font-bold text-white bg-[#2463eb] rounded-xl hover:bg-blue-700 transition-colors"
+                             className="flex-1 py-3 font-bold text-white bg-primary rounded-xl hover:bg-blue-700 transition-colors"
                            >
                              Continuer
                            </button>
@@ -371,7 +371,7 @@ export default function DashboardPage() {
                            <button 
                              onClick={handleCreateCV}
                              disabled={!newTitle.trim()}
-                             className="flex-1 py-3 font-bold text-white bg-[#2463eb] rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                             className="flex-1 py-3 font-bold text-white bg-primary rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                            >
                              Créer
                            </button>

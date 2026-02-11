@@ -266,7 +266,7 @@ export function SignaturePad({ onSave, initialData }: SignaturePadProps) {
         <div className="pt-6 mt-6 border-t border-slate-100 flex justify-end gap-3">
           <button 
             onClick={handleSave}
-            className="flex items-center gap-2 px-6 py-2.5 bg-[#2463eb] hover:bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+            className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
           >
             <Check className="w-4 h-4" />
             Enregistrer ma signature

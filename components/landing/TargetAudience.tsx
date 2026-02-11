@@ -31,9 +31,9 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 
 export function TargetAudience() {
   return (
-    <div className="bg-[#0F172A] py-24 px-4 border-t border-white/5 relative overflow-hidden">
+    <div className="bg-bg-dark py-24 px-4 border-t border-white/5 relative overflow-hidden">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#2463eb]/10 rounded-full blur-[100px] pointer-events-none translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none translate-x-1/2 -translate-y-1/2" />
       
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionHeader

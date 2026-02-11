@@ -86,7 +86,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-72 bg-[#0F172A] border-r border-slate-800 text-white fixed left-0 top-0 z-50">
+    <div className="flex flex-col h-screen w-72 bg-bg-dark border-r border-slate-800 text-white fixed left-0 top-0 z-50">
       {/* Brand */}
       <div className="p-8 pb-4">
         <div className="flex items-center gap-2">

@@ -23,7 +23,7 @@ export function SectionHeader({
     )}>
       <h2 className={cn(
         "text-3xl md:text-4xl font-bold mb-4",
-        theme === 'dark' ? 'text-white' : 'text-[#0F172A]'
+        theme === 'dark' ? 'text-white' : 'text-bg-dark'
       )}>
         {title}
       </h2>

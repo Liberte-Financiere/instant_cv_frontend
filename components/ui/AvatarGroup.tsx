@@ -11,7 +11,7 @@ interface AvatarGroupProps {
 export function AvatarGroup({
   count = 3,
   size = 'md',
-  borderColor = 'border-[#0F172A]',
+  borderColor = 'border-bg-dark',
   className
 }: AvatarGroupProps) {
   const sizes = {

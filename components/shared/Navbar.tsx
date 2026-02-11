@@ -20,13 +20,13 @@ export function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="fixed top-0 left-0 right-0 z-50 bg-[#0F172A]/80 backdrop-blur-md border-b border-white/10"
+      className="fixed top-0 left-0 right-0 z-50 bg-bg-dark/80 backdrop-blur-md border-b border-white/10"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="size-10 flex items-center justify-center bg-[#2463eb] rounded-xl text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
+            <div className="size-10 flex items-center justify-center bg-primary rounded-xl text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
                <FileText className="w-5 h-5" />
             </div>
             <span className="text-xl font-bold text-white tracking-tight">
@@ -68,7 +68,7 @@ export function Navbar() {
           initial={false}
           animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
           className={cn(
-            'md:hidden overflow-hidden bg-[#0F172A] border-b border-white/10',
+            'md:hidden overflow-hidden bg-bg-dark border-b border-white/10',
             !isOpen && 'pointer-events-none'
           )}
         >

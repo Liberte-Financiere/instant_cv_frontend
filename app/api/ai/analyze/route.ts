@@ -15,12 +15,22 @@ export const dynamic = 'force-dynamic'; // Prevent static optimization
 export const runtime = 'nodejs'; // Ensure Node.js runtime for pdf-parse
 
 import { auth } from '@/auth';
+import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  console.log('[API] Analyze Request Started');
+  // Rate limiting: 5 requests per minute
+  const rateCheck = checkRateLimit(`${session.user.id}:ai-analyze`, RATE_LIMITS.AI_ANALYZE);
+  if (!rateCheck.allowed) {
+    return NextResponse.json(
+      { error: 'Trop de requêtes. Veuillez réessayer dans quelques secondes.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil(rateCheck.resetIn / 1000)) } }
+    );
+  }
+
+
   
   // Lazy load pdf-parse strictly inside handler
   let PDFParse;
@@ -57,7 +67,7 @@ export async function POST(req: Request) {
 
     // Extract text based on file type
     if (file.type === 'application/pdf') {
-      console.log('[API] Processing PDF with v2 Parser...');
+
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       
@@ -70,7 +80,7 @@ export async function POST(req: Request) {
         extractedText = data.text;
         await parser.destroy();
         
-        console.log('[API] PDF extracted. Length:', extractedText.length);
+
       } catch (pdfError) {
         console.error('[API] PDF Parsing Error:', pdfError);
         if (parser) {
@@ -89,7 +99,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Could not extract enough text from file.' }, { status: 400 });
     }
 
-    console.log('[API] Sending to Gemini...');
+
 
     // ... (Prompt definition kept same, assume it's fine) ...
     // Prepare Prompt for Detailed Analysis & Extraction
@@ -155,7 +165,7 @@ export async function POST(req: Request) {
     const response = await result.response;
     const jsonString = response.text();
     
-    console.log('[API] Gemini Response received. Length:', jsonString.length);
+
 
     // Sanitize JSON string (remove markdown code blocks if present)
     const cleanJson = jsonString.replace(/```json/g, '').replace(/```/g, '').trim();
