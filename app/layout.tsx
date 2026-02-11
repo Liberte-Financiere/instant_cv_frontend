@@ -27,6 +27,14 @@ export const metadata: Metadata = {
     title: "Optijob - Votre Coach Carrière IA",
     description: "Créez un CV parfait en quelques clics.",
   },
+  other: {
+    'theme-color': '#0f172a',
+  },
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/icons/icon.svg',
+    apple: '/icons/icon.svg',
+  },
 };
 
 export default function RootLayout({
@@ -69,7 +77,7 @@ export default function RootLayout({
             })
           }}
         />
-        <Toaster position="top-center" />
+        <Toaster position="bottom-center" />
       </body>
     </html>
   );

@@ -29,6 +29,15 @@ body {
   border-radius: 4px;
 }
 
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Improve contrast for muted text (a11y: WCAG 4.5:1 ratio) */
 .text-slate-400 {
   color: #64748b; /* slate-500 — better contrast than slate-400 */
@@ -43,6 +52,18 @@ body {
   word-wrap: break-word;
   word-break: break-word;
   hyphens: auto;
+}
+
+/* Safe area support for iOS notch and home bar */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  .fixed.bottom-0 {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
 /* Print styles for PDF export */

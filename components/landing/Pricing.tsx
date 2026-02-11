@@ -76,7 +76,7 @@ export function Pricing() {
               transition={{ delay: index * 0.1 }}
               className={`relative rounded-2xl p-8 ${
                 plan.dark 
-                  ? 'bg-bg-dark text-white shadow-2xl scale-105 z-10' 
+                  ? 'bg-bg-dark text-white shadow-2xl md:scale-105 z-10' 
                   : 'bg-white text-slate-900 shadow-xl border border-slate-100'
               }`}
             >
