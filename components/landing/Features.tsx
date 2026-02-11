@@ -115,9 +115,9 @@ export function Features() {
               <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-50 text-yellow-700 text-xs font-bold uppercase tracking-wider mb-4">
                 <Star className="w-3 h-3 fill-current" /> Premium
               </div>
-              <h3 className="text-[#0F172A] text-2xl font-bold mb-3">Templates de Classe Mondiale</h3>
+              <h3 className="text-bg-dark text-2xl font-bold mb-3">Templates de Classe Mondiale</h3>
               <p className="text-slate-500 mb-6">Modernes, Créatifs ou Exécutifs. Choisissez parmi une galerie conçue par des experts en recrutement.</p>
-              <button className="text-[#2463eb] font-bold hover:underline flex items-center gap-1">
+              <button className="text-primary font-bold hover:underline flex items-center gap-1">
                 Voir la galerie <ArrowRight className="w-4 h-4" />
               </button>
             </div>

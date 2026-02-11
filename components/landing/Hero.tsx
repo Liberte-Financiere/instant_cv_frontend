@@ -8,9 +8,9 @@ import { AvatarGroup } from '@/components/ui/AvatarGroup';
 
 export function Hero() {
   return (
-    <div className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden bg-[#0F172A]">
+    <div className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden bg-bg-dark">
       {/* Glowing mesh gradient effect */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-[#2463eb]/20 rounded-full blur-[100px] pointer-events-none opacity-50"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-primary/20 rounded-full blur-[100px] pointer-events-none opacity-50"></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -20,7 +20,7 @@ export function Hero() {
 
 
             <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
-              Votre succès mérite plus qu&apos;un <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#2463eb]">simple PDF</span>
+              Votre succès mérite plus qu&apos;un <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-primary">simple PDF</span>
             </h1>
             
             <p className="text-slate-400 text-lg md:text-xl font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
@@ -30,7 +30,7 @@ export function Hero() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
               <Link
                 href="/dashboard"
-                className="flex min-w-[160px] cursor-pointer items-center justify-center rounded-full h-12 px-6 bg-[#2463eb] hover:bg-[#1d4ed8] shadow-[0_0_20px_rgba(36,99,235,0.3)] text-white text-base font-bold transition-all hover:scale-105"
+                className="flex min-w-[160px] cursor-pointer items-center justify-center rounded-full h-12 px-6 bg-primary hover:bg-primary-dark shadow-[0_0_20px_rgba(36,99,235,0.3)] text-white text-base font-bold transition-all hover:scale-105"
               >
                 Commencer gratuitement
               </Link>

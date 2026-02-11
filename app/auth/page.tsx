@@ -14,9 +14,9 @@ function AuthContent() {
     <div className="min-h-screen w-full flex bg-slate-50">
       
       {/* LEFT SIDE: Visual & Testimonial (Hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#0F172A] relative overflow-hidden items-center justify-center p-12">
+      <div className="hidden lg:flex lg:w-1/2 bg-bg-dark relative overflow-hidden items-center justify-center p-12">
         {/* Abstract Background */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#2463eb]/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
         
         <div className="relative z-10 max-w-lg">
@@ -27,7 +27,7 @@ function AuthContent() {
              className="mb-12"
           >
              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-               Votre carrière mérite <span className="text-[#2463eb]">l&apos;excellence.</span>
+               Votre carrière mérite <span className="text-primary">l&apos;excellence.</span>
              </h1>
              <p className="text-slate-400 text-lg">
                Rejoignez plus de 10,000 professionnels qui ont décroché le job de leurs rêves grâce à OptiJob.

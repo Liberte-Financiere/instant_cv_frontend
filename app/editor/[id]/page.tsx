@@ -47,7 +47,7 @@ export default function EditorPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#2463eb] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-slate-600 font-medium">Chargement de votre espace de travail...</p>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default function EditorPage() {
                   window.open(`/cv/${currentCV.id}?print=true`, '_blank');
                 }
              }}
-             className="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto gap-2 sm:px-4 sm:py-2 bg-[#2463eb] hover:bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+             className="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto gap-2 sm:px-4 sm:py-2 bg-primary hover:bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
              title="Exporter PDF"
            >
              <Download className="w-4 h-4" />

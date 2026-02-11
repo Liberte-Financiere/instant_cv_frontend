@@ -7,7 +7,7 @@ export function CVStackMockup() {
   return (
     <div className="relative h-[500px] w-full flex items-center justify-center">
       {/* Background Glow */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#2463eb]/20 to-purple-600/20 blur-3xl opacity-30 transform -rotate-12 rounded-full pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-600/20 blur-3xl opacity-30 transform -rotate-12 rounded-full pointer-events-none" />
 
       {/* CV Model 3 (Bottom) */}
       <motion.div
@@ -103,7 +103,7 @@ export function CVStackMockup() {
            initial={{ opacity: 0, x: 20 }}
            animate={{ opacity: 1, x: 0 }}
            transition={{ delay: 1 }}
-           className="absolute -right-6 bottom-12 bg-[#2463eb] text-white p-4 rounded-2xl shadow-xl border border-white/10"
+           className="absolute -right-6 bottom-12 bg-primary text-white p-4 rounded-2xl shadow-xl border border-white/10"
          >
             <Star className="w-6 h-6 fill-white" />
          </motion.div>

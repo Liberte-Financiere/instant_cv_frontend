@@ -37,11 +37,19 @@ export default function RootLayout({
   return (
     <html lang="fr" className="scroll-smooth" suppressHydrationWarning>
       <body 
-        className={`${manrope.variable} font-sans antialiased bg-[#0F172A] text-slate-900 dark:text-white`}
+        className={`${manrope.variable} font-sans antialiased bg-bg-dark text-slate-900 dark:text-white`}
         suppressHydrationWarning
       >
         <Providers>
-          {children}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium focus:shadow-lg"
+          >
+            Aller au contenu principal
+          </a>
+          <main id="main-content">
+            {children}
+          </main>
         </Providers>
         <script
           type="application/ld+json"

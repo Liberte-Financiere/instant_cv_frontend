@@ -26,7 +26,7 @@ export function MobileHeader() {
   return (
     <>
       {/* Fixed Header Bar - only on mobile */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#0F172A] z-50 flex items-center justify-between px-4">
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-bg-dark z-50 flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center">
             <FileText className="w-4 h-4 text-white" />
@@ -62,7 +62,7 @@ export function MobileHeader() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="lg:hidden fixed top-0 right-0 bottom-0 w-72 bg-[#0F172A] z-[70] flex flex-col"
+              className="lg:hidden fixed top-0 right-0 bottom-0 w-72 bg-bg-dark z-[70] flex flex-col"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-4 border-b border-slate-800">

@@ -55,7 +55,7 @@ export function FAQ() {
                 className="flex items-center justify-between w-full p-6 text-left focus:outline-none"
               >
                 <span className={`text-lg font-bold transition-colors ${
-                  openIndex === index ? 'text-[#2463eb]' : 'text-slate-800'
+                  openIndex === index ? 'text-primary' : 'text-slate-800'
                 }`}>
                   {faq.question}
                 </span>

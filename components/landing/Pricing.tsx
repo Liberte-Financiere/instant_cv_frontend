@@ -76,13 +76,13 @@ export function Pricing() {
               transition={{ delay: index * 0.1 }}
               className={`relative rounded-2xl p-8 ${
                 plan.dark 
-                  ? 'bg-[#0F172A] text-white shadow-2xl scale-105 z-10' 
+                  ? 'bg-bg-dark text-white shadow-2xl scale-105 z-10' 
                   : 'bg-white text-slate-900 shadow-xl border border-slate-100'
               }`}
             >
               {plan.popular && (
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-4">
-                  <span className="bg-[#2463eb] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1">
+                  <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1">
                     <Star className="w-3 h-3 fill-white" /> Populaire
                   </span>
                 </div>
@@ -102,7 +102,7 @@ export function Pricing() {
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3 text-sm">
                     <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                      plan.dark ? 'bg-[#2463eb]/20 text-[#2463eb]' : 'bg-green-100 text-green-600'
+                      plan.dark ? 'bg-primary/20 text-primary' : 'bg-green-100 text-green-600'
                     }`}>
                       <Check className="w-3 h-3" />
                     </div>
@@ -113,7 +113,7 @@ export function Pricing() {
 
               <button className={`w-full py-4 rounded-xl font-bold transition-all ${
                 plan.dark 
-                  ? 'bg-[#2463eb] hover:bg-[#1d4ed8] text-white shadow-lg shadow-blue-500/25' 
+                  ? 'bg-primary hover:bg-primary-dark text-white shadow-lg shadow-blue-500/25' 
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-900'
               }`}>
                 {plan.cta}
