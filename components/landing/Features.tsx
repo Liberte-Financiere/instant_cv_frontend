@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Radar, Zap, FileText, Star, ArrowRight, Download } from 'lucide-react';
+import { Radar, Zap, FileText, Star, ArrowRight, Download, WifiOff } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { FeatureCard } from '@/components/landing/FeatureCard';
 
@@ -109,7 +109,24 @@ export function Features() {
              </div>
           </FeatureCard>
 
-          {/* Card 6: Templates Premium (Full Width) */}
+          {/* Card 6: Offline / PWA */}
+          <FeatureCard
+            className="md:col-span-1 border-slate-100"
+            title="Disponible Hors-ligne"
+            icon={WifiOff}
+            description="Installez OptiJob sur votre téléphone. Même sans internet, continuez à éditer votre CV."
+          >
+             <div className="w-full h-24 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 p-4 relative overflow-hidden flex items-center justify-center">
+                <div className="flex items-center gap-3">
+                   <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                     <WifiOff className="w-5 h-5 text-emerald-600" />
+                   </div>
+                   <div className="text-xs font-bold text-emerald-600 uppercase tracking-wider">Mode<br/>Offline</div>
+                </div>
+             </div>
+          </FeatureCard>
+
+          {/* Card 7: Templates Premium (Full Width) */}
           <div className="md:col-span-3 bg-white rounded-2xl p-8 shadow-lg border border-slate-100 flex flex-col md:flex-row items-center gap-8 hover:-translate-y-1 transition-transform">
             <div className="flex-1">
               <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-50 text-yellow-700 text-xs font-bold uppercase tracking-wider mb-4">

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { PlayCircle, Star } from 'lucide-react';
+import { PlayCircle, Star, WifiOff, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 import { CVStackMockup } from './CVStackMockup';
 import { AvatarGroup } from '@/components/ui/AvatarGroup';
@@ -42,6 +42,16 @@ export function Hero() {
             <div className="flex items-center justify-center lg:justify-start gap-4 pt-2">
               <AvatarGroup count={2} />
               <p className="text-sm text-slate-400">Rejoint par <span className="text-white font-bold">500+</span> personnes</p>
+            </div>
+
+            {/* PWA Badges */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
+              <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
+                <WifiOff className="w-3 h-3" /> Fonctionne hors-ligne
+              </span>
+              <span className="flex items-center gap-1.5 text-xs font-medium text-blue-300 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-full">
+                <Smartphone className="w-3 h-3" /> Installable sur mobile
+              </span>
             </div>
           </div>
 
