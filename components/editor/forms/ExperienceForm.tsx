@@ -37,7 +37,7 @@ export function ExperienceForm() {
       ) : (
         experiences.map((exp) => (
           <div key={exp.id} className="p-5 bg-white border border-slate-200 rounded-xl relative group hover:border-blue-300 transition-all">
-            <button onClick={() => handleRemove(exp.id)} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100" title="Supprimer"><Trash2 className="w-4 h-4" /></button>
+            <button onClick={() => handleRemove(exp.id)} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors sm:opacity-0 sm:group-hover:opacity-100" title="Supprimer"><Trash2 className="w-4 h-4" /></button>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div className="col-span-full"><Input label="Poste occupé" value={exp.position} onChange={(e) => handleUpdate(exp.id, 'position', e.target.value)} placeholder="Ex: Chef de projet marketing" /></div>
               <Input label="Entreprise" value={exp.company} onChange={(e) => handleUpdate(exp.id, 'company', e.target.value)} placeholder="Ex: Google" />
@@ -56,25 +56,25 @@ export function ExperienceForm() {
                     onChange={(e) => handleUpdate(exp.id, 'endDate', e.target.value)} 
                     disabled={exp.current} 
                   />
-                  <div className="absolute -bottom-6 left-0 flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id={`current-${exp.id}`}
-                      checked={exp.current}
-                      onChange={(e) => {
-                        const isCurrent = e.target.checked;
-                        updateExperience(exp.id, { 
-                          current: isCurrent,
-                          endDate: isCurrent ? '' : exp.endDate 
-                        });
-                      }}
-                      className="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
-                    />
-                    <label htmlFor={`current-${exp.id}`} className="text-xs text-slate-500 cursor-pointer select-none">
-                      Poste actuel
-                    </label>
-                  </div>
                 </div>
+              </div>
+              <div className="col-span-full flex items-center gap-2 -mt-2">
+                <input
+                  type="checkbox"
+                  id={`current-${exp.id}`}
+                  checked={exp.current}
+                  onChange={(e) => {
+                    const isCurrent = e.target.checked;
+                    updateExperience(exp.id, { 
+                      current: isCurrent,
+                      endDate: isCurrent ? '' : exp.endDate 
+                    });
+                  }}
+                  className="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                />
+                <label htmlFor={`current-${exp.id}`} className="text-xs text-slate-500 cursor-pointer select-none">
+                  Poste actuel
+                </label>
               </div>
             </div>
             <div>

@@ -14,7 +14,7 @@ export function CertificationsForm() {
     <div className="space-y-4">
       {certifications.map((cert) => (
         <div key={cert.id} className="p-4 bg-white border border-slate-200 rounded-xl relative group hover:border-blue-300 transition-all">
-          <button onClick={() => removeCertification(cert.id)} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100"><Trash2 className="w-4 h-4" /></button>
+          <button onClick={() => removeCertification(cert.id)} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg sm:opacity-0 sm:group-hover:opacity-100"><Trash2 className="w-4 h-4" /></button>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Input label="Intitulé de la formation" value={cert.name} onChange={(e) => updateCertification(cert.id, { name: e.target.value })} placeholder="Ex: Bootcamp Fullstack, Certification AWS..." />
             <Input label="Organisme" value={cert.organization} onChange={(e) => updateCertification(cert.id, { organization: e.target.value })} placeholder="Ex: OpenClassrooms, Amazon..." />

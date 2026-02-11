@@ -46,7 +46,7 @@ export function Accordion({
       >
         <div className="flex items-center gap-3">
           {icon && <span className="text-blue-600">{icon}</span>}
-          <span className="font-bold text-slate-800 text-lg">{title}</span>
+          <span className="font-bold text-slate-800 text-base sm:text-lg">{title}</span>
         </div>
         <motion.div
            animate={{ rotate: isOpen ? 180 : 0 }}
@@ -64,7 +64,7 @@ export function Accordion({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
-            <div className="p-6 border-t border-slate-100">
+            <div className="p-4 sm:p-6 border-t border-slate-100">
                {children}
             </div>
           </motion.div>
