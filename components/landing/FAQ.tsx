@@ -25,6 +25,10 @@ const faqs = [
   {
     question: "L'IA redactrice fonctionne-t-elle pour tous les secteurs ?",
     answer: "Oui, notre IA a été entraînée sur des millions de descriptions de postes variés (Tech, Santé, Commerce, BTP...). Elle adapte le vocabulaire et le ton en fonction du poste visé."
+  },
+  {
+    question: "OptiJob fonctionne-t-il sans connexion internet ?",
+    answer: "Oui ! OptiJob est une application web installable (PWA). Ajoutez-la à votre écran d'accueil depuis votre navigateur, et vous pourrez continuer à consulter et éditer vos CV même hors-ligne. Les modifications seront synchronisées dès que vous retrouverez une connexion."
   }
 ];
 

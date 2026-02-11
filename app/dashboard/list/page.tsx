@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { CV } from '@/types/cv';
-import { CVService } from '@/services/cvService';
+import { useCVStore } from '@/store/useCVStore';
 import { formatDate } from '@/lib/utils';
 import { Edit, Eye, Trash2, Search, FileText, ArrowRight, Loader2, Share2, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
@@ -10,39 +10,26 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
 export default function CVListPage() {
-  const [cvs, setCvs] = useState<CV[]>([]);
+  const { cvList, fetchUserCVs, deleteCV } = useCVStore();
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchCVs = async () => {
-    setIsLoading(true);
-    try {
-      const data = await CVService.getAllSummaries();
-      setCvs(data);
-    } catch (error) {
-      console.error(error);
-      toast.error('Erreur lors du chargement de la liste.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchCVs();
-  }, []);
+    setIsLoading(true);
+    fetchUserCVs().finally(() => setIsLoading(false));
+  }, [fetchUserCVs]);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce CV ?')) return;
     try {
-      await CVService.delete(id);
-      setCvs(prev => prev.filter(c => c.id !== id));
+      await deleteCV(id);
       toast.success('CV supprimé.');
     } catch (e) {
       toast.error('Erreur de suppression.');
     }
   };
 
-  const filteredCVs = cvs.filter(cv => 
+  const filteredCVs = cvList.filter(cv => 
     cv.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 

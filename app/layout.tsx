@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'sonner';
 import { Providers } from '@/components/Providers';
+import { ServiceWorkerRegister } from '@/components/ServiceWorkerRegister';
 
 
 const manrope = Manrope({
@@ -78,6 +79,7 @@ export default function RootLayout({
           }}
         />
         <Toaster position="bottom-center" />
+        <ServiceWorkerRegister />
       </body>
     </html>
   );
