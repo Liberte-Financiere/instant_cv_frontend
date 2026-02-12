@@ -1,33 +1,33 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Upload, Sparkles, Download, ArrowRight } from 'lucide-react';
+import { LayoutTemplate, PenLine, Eye, ArrowRight } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 
 const steps = [
   {
     number: '01',
-    title: 'Importez votre profil',
-    description: 'Collez votre ancien CV ou remplissez vos informations. Notre éditeur intelligent pré-remplit les champs pour vous.',
-    icon: Upload,
+    title: 'Choisissez un modèle ou importez votre CV',
+    description: 'Parcourez nos templates professionnels ou importez votre ancien CV. L\'IA pré-remplit vos informations pour gagner du temps.',
+    icon: LayoutTemplate,
     color: 'from-blue-500 to-cyan-400',
     bgLight: 'bg-blue-50',
     textColor: 'text-blue-600',
   },
   {
     number: '02',
-    title: "L'IA optimise tout",
-    description: "Notre coach IA réécrit vos descriptions, ajoute les bons mots-clés ATS et adapte le ton au poste visé.",
-    icon: Sparkles,
+    title: 'Remplissez & l\'IA vous assiste',
+    description: 'Saisissez vos informations. L\'IA vous aide à reformuler, traduire, corriger et optimiser chaque section de votre CV.',
+    icon: PenLine,
     color: 'from-purple-500 to-pink-400',
     bgLight: 'bg-purple-50',
     textColor: 'text-purple-600',
   },
   {
     number: '03',
-    title: 'Téléchargez & Postulez',
-    description: "Exportez un PDF HD professionnel en un clic. Votre lettre de motivation est prête aussi.",
-    icon: Download,
+    title: 'Prévisualisez & Téléchargez',
+    description: 'Vérifiez le rendu en temps réel, ajustez les détails, puis exportez un PDF HD prêt à envoyer aux recruteurs.',
+    icon: Eye,
     color: 'from-green-500 to-emerald-400',
     bgLight: 'bg-green-50',
     textColor: 'text-green-600',
