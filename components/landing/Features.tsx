@@ -24,8 +24,8 @@ export function Features() {
             icon={Radar}
             description={
               <>
-                Notre algorithme analyse votre parcours pour maximiser votre impact, tout en garantissant un format 
-                <span className="text-white font-medium"> 100% compatible avec les robots recruteurs (ATS)</span>.
+                Importez votre CV : notre algorithme analyse votre parcours pour maximiser vos points forts, identifier les axes d&apos;amélioration et cibler les postes idéaux. Le tout en garantissant un format 
+                <span className="text-white font-medium"> 100% compatible ATS</span>.
               </>
             }
           >
@@ -43,8 +43,13 @@ export function Features() {
                   </div>
                   {/* Suggestion Tag */}
                   <div className="flex items-center gap-2 text-xs text-red-300 bg-red-500/10 px-2 py-1 rounded w-fit">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-400" /> Retirer : &quot;Microsoft Word&quot;
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-400" /> Retirer : &quot;Microsoft Word&quot;
                   </div>
+                  {/* Job Match Tag */}
+                  <div className="flex items-center gap-2 text-xs text-purple-300 bg-purple-500/10 px-2 py-1 rounded w-fit">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-400" /> Poste suggéré : Chef de Projet
+                  </div>
+
               </div>
             </div>
           </FeatureCard>
