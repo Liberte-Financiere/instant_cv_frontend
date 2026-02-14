@@ -103,4 +103,4 @@ npm run dev
 
 ---
 
-*© 2026 InstantCV - Créé avec ❤️*
+*© 2026 InstantCV
