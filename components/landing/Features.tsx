@@ -7,7 +7,7 @@ import { FeatureCard } from '@/components/landing/FeatureCard';
 
 export function Features() {
   return (
-    <div className="bg-[#f6f6f8] py-20 px-4">
+    <div id="features" className="bg-[#f6f6f8] py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <SectionHeader 
           title="Fonctionnalités Intelligentes" 

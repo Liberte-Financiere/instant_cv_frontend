@@ -1,6 +1,7 @@
 'use client';
 
 import { FileText } from 'lucide-react';
+import Link from 'next/link';
 
 export function Footer() {
   return (
@@ -11,9 +12,9 @@ export function Footer() {
           <span className="font-bold text-lg">Optijob</span>
         </div>
         <div className="flex gap-8">
-          <a className="hover:text-white transition-colors" href="#">Confidentialité</a>
-          <a className="hover:text-white transition-colors" href="#">Conditions</a>
-          <a className="hover:text-white transition-colors" href="#">Support</a>
+          <Link className="hover:text-white transition-colors" href="/terms">Confidentialité</Link>
+          <Link className="hover:text-white transition-colors" href="/terms">Conditions</Link>
+          <a className="hover:text-white transition-colors" href="mailto:support@optijob.com">Support</a>
         </div>
         <div>
            © 2026 Optijob Inc.

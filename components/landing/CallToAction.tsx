@@ -14,7 +14,7 @@ export function CallToAction() {
         <p className="text-slate-400 text-lg mb-10 max-w-2xl mx-auto">Ne laissez pas un mauvais CV vous fermer des portes. Rejoignez Optijob aujourd&apos;hui et prenez le contrôle de votre avenir professionnel.</p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/dashboard">
+          <Link href="/auth">
             <button className="w-full sm:w-auto flex cursor-pointer items-center justify-center rounded-full h-14 px-8 bg-primary hover:bg-primary-dark text-white text-lg font-bold shadow-lg shadow-primary/25 transition-all hover:scale-105">
                Commencer gratuitement
             </button>

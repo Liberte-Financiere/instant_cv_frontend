@@ -29,7 +29,7 @@ export function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
               <Link
-                href="/dashboard"
+                href="/auth"
                 className="flex min-w-[160px] cursor-pointer items-center justify-center rounded-full h-12 px-6 bg-primary hover:bg-primary-dark shadow-[0_0_20px_rgba(36,99,235,0.3)] text-white text-base font-bold transition-all hover:scale-105"
               >
                 Commencer gratuitement
