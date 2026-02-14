@@ -2,6 +2,7 @@
 
 import { Check, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const plans = [
   {
@@ -59,7 +60,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 
 export function Pricing() {
   return (
-    <div className="bg-[#f6f6f8] py-20 px-4 border-t border-slate-200">
+    <div id="pricing" className="bg-[#f6f6f8] py-20 px-4 border-t border-slate-200">
       <div className="max-w-7xl mx-auto">
         <SectionHeader
           title="Investissez dans votre avenir"
@@ -111,13 +112,15 @@ export function Pricing() {
                 ))}
               </ul>
 
-              <button className={`w-full py-4 rounded-xl font-bold transition-all ${
-                plan.dark 
-                  ? 'bg-primary hover:bg-primary-dark text-white shadow-lg shadow-blue-500/25' 
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-900'
-              }`}>
-                {plan.cta}
-              </button>
+              <Link href="/auth">
+                <button className={`w-full py-4 rounded-xl font-bold transition-all ${
+                  plan.dark 
+                    ? 'bg-primary hover:bg-primary-dark text-white shadow-lg shadow-blue-500/25' 
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-900'
+                }`}>
+                  {plan.cta}
+                </button>
+              </Link>
             </motion.div>
           ))}
         </div>

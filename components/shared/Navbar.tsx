@@ -37,15 +37,16 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <Button
-                key={link.href}
-                variant="ghost"
-                className="text-slate-300 hover:text-white transition-colors font-medium text-sm hover:bg-white/5"
-              >
-                {link.label}
-              </Button>
+              <Link key={link.href} href={link.href}>
+                <Button
+                  variant="ghost"
+                  className="text-slate-300 hover:text-white transition-colors font-medium text-sm hover:bg-white/5"
+                >
+                  {link.label}
+                </Button>
+              </Link>
             ))}
-            <Link href="/dashboard">
+            <Link href="/auth">
               <Button className="rounded-full shadow-lg shadow-blue-500/25">
                 Se connecter
               </Button>
@@ -85,7 +86,7 @@ export function Navbar() {
               </Link>
             ))}
             <Link
-              href="/dashboard"
+              href="/auth"
               onClick={() => setIsOpen(false)}
               className="block"
             >
