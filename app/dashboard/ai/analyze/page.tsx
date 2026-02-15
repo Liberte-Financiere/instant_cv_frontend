@@ -156,7 +156,7 @@ export default function AIAnalyzePage() {
         </motion.div>
 
       <div className="mt-12">
-        <HistoryList />
+        <HistoryList type="analysis" />
       </div>
     </div>
   );

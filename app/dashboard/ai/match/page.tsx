@@ -211,7 +211,7 @@ export default function AIMatchPage() {
       </motion.div>
 
       <div className="mt-12">
-        <HistoryList /> 
+        <HistoryList type="match" /> 
       </div>
     </div>
     
