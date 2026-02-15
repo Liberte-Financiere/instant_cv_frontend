@@ -54,6 +54,7 @@ export const ModelName = {
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
+  AnalysisHistory: 'AnalysisHistory',
   User: 'User',
   CV: 'CV',
   CoverLetter: 'CoverLetter'
@@ -112,12 +113,27 @@ export const VerificationTokenScalarFieldEnum = {
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
 
 
+export const AnalysisHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  score: 'score',
+  data: 'data',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AnalysisHistoryScalarFieldEnum = (typeof AnalysisHistoryScalarFieldEnum)[keyof typeof AnalysisHistoryScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
+  credits: 'credits',
   referralCode: 'referralCode',
   referredById: 'referredById',
   referralCount: 'referralCount',

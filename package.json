@@ -20,6 +20,7 @@
     "ai": "^6.0.69",
     "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "docx": "^9.5.1",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.31.0",

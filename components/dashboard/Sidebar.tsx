@@ -3,14 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, FileText, Settings, LogOut, Plus, User, LayoutTemplate, PenTool, Sparkles, Loader2, ChevronUp, LayoutList } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, PenTool, Sparkles, ChevronUp, LayoutList, Target, Brain } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AvatarGroup } from '@/components/ui/AvatarGroup'; // Re-using for user avatar if needed, or simple img
-import { useRef, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
-import { handleSignOut } from '@/actions/auth';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 
@@ -24,15 +20,17 @@ const navigation = [
   { name: 'Compte', href: '/dashboard/settings', icon: Settings },
 ];
 
+const aiNavigation = [
+  { name: 'Analyser mon CV', href: '/dashboard/ai/analyze', icon: Sparkles },
+  { name: 'Matcher une offre', href: '/dashboard/ai/match', icon: Target },
+];
+
 export function Sidebar() {
 
   const pathname = usePathname();
-  const router = useRouter();
   const { data: session } = useSession();
-  const { setAnalysisData, fetchUserCVs, saveCurrentCV, currentCV } = useCVStore();
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const { fetchUserCVs, saveCurrentCV, currentCV } = useCVStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Initial Fetch
   useEffect(() => {
@@ -48,41 +46,33 @@ export function Sidebar() {
     return () => clearTimeout(timer);
   }, [currentCV, saveCurrentCV]);
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const NavLink = ({ item }: { item: { name: string; href: string; icon: any } }) => {
+    const isActive = pathname === item.href;
+    const Icon = item.icon;
 
-    if (file.type !== 'application/pdf') {
-      toast.error('Veuillez uploader un fichier PDF.');
-      return;
-    }
-
-    setIsAnalyzing(true);
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await fetch('/api/ai/analyze', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de l\'analyse');
-      }
-      
-      const data = await response.json();
-      setAnalysisData(data);
-      toast.success("Analyse terminée !");
-      router.push('/analysis');
-      
-    } catch (error: any) {
-      toast.error(error.message || 'Une erreur est survenue');
-    } finally {
-      setIsAnalyzing(false);
-      // Reset input
-      event.target.value = '';
-    }
+    return (
+      <Link
+        href={item.href}
+        className={cn(
+          "relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group",
+          isActive 
+            ? "bg-slate-800 text-white shadow-lg shadow-black/20" 
+            : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+        )}
+      >
+        {isActive && (
+          <motion.div
+            layoutId="activeTab"
+            className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-500 rounded-r-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          />
+        )}
+        <Icon className={cn("w-5 h-5 transition-colors", isActive ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")} />
+        <span className="relative z-10">{item.name}</span>
+      </Link>
+    );
   };
 
   return (
@@ -97,66 +87,27 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Primary Actions */}
-      <div className="px-6 pb-6 space-y-3">
-
-
-         <button 
-           onClick={() => fileInputRef.current?.click()}
-           disabled={isAnalyzing}
-           className="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-xl font-medium transition-all shadow-lg shadow-purple-900/20 group relative overflow-hidden"
-         >
-           {isAnalyzing ? (
-             <Loader2 className="w-5 h-5 animate-spin" />
-           ) : (
-             <>
-               <Sparkles className="w-5 h-5 group-hover:scale-110 transition-transform text-yellow-300" />
-               <span>Analyser avec IA</span>
-             </>
-           )}
-           <input 
-             ref={fileInputRef}
-             type="file" 
-             accept=".pdf" 
-             className="hidden" 
-             onChange={handleFileUpload}
-           />
-         </button>
-      </div>
-
       {/* Navigation */}
-      <div className="flex-1 px-4 space-y-2 overflow-y-auto">
+      <div className="flex-1 px-4 space-y-6 overflow-y-auto">
+        {/* Main Nav */}
         <nav className="space-y-1">
-          {navigation.map((item) => {
-            const isActive = pathname === item.href;
-            const Icon = item.icon;
-            
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group",
-                  isActive 
-                    ? "bg-slate-800 text-white shadow-lg shadow-black/20" 
-                    : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-                )}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-500 rounded-r-full"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.2 }}
-                  />
-                )}
-                <Icon className={cn("w-5 h-5 transition-colors", isActive ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")} />
-                <span className="relative z-10">{item.name}</span>
-              </Link>
-            );
-          })}
+          {navigation.map((item) => (
+            <NavLink key={item.name} item={item} />
+          ))}
         </nav>
+
+        {/* AI Section */}
+        <div>
+          <div className="flex items-center gap-2 px-4 mb-2">
+            <Brain className="w-4 h-4 text-blue-400" />
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Intelligence IA</span>
+          </div>
+          <nav className="space-y-1">
+            {aiNavigation.map((item) => (
+              <NavLink key={item.name} item={item} />
+            ))}
+          </nav>
+        </div>
       </div>
 
       {/* User Profile */}

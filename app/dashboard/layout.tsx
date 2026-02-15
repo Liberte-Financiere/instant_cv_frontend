@@ -10,6 +10,9 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Fixed background layer to cover dark body */}
+      <div className="fixed inset-0 bg-slate-50 -z-50" aria-hidden="true" />
+
       {/* Desktop Sidebar - hidden on mobile */}
       <div className="hidden lg:block">
         <Sidebar />
@@ -19,7 +22,7 @@ export default function DashboardLayout({
       <MobileHeader />
       
       {/* Main content - no left padding on mobile */}
-      <main className="lg:pl-72 w-full min-h-screen pt-14 lg:pt-0">
+      <main className="lg:pl-72 w-full min-h-screen pt-14 lg:pt-0 bg-slate-50">
         {children}
       </main>
     </div>
