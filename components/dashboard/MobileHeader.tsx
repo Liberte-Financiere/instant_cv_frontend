@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, FileText, LayoutDashboard, LayoutList, LayoutTemplate, PenTool, Settings, LogOut, User } from 'lucide-react';
+import { Menu, X, FileText, LayoutDashboard, LayoutList, LayoutTemplate, PenTool, Settings, LogOut, User, Sparkles, Target, Brain } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -16,6 +16,11 @@ const navigation = [
   { name: 'Modèles', href: '/dashboard/templates', icon: LayoutTemplate },
   { name: 'Signature', href: '/dashboard/signature', icon: PenTool },
   { name: 'Compte', href: '/dashboard/settings', icon: Settings },
+];
+
+const aiNavigation = [
+  { name: 'Analyser mon CV', href: '/dashboard/ai/analyze', icon: Sparkles },
+  { name: 'Matcher une offre', href: '/dashboard/ai/match', icon: Target },
 ];
 
 export function MobileHeader() {
@@ -82,7 +87,8 @@ export function MobileHeader() {
               </div>
 
               {/* Navigation */}
-              <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+              <nav className="flex-1 p-4 space-y-6 overflow-y-auto">
+                <div className="space-y-1">
                 {navigation.map((item) => {
                   const isActive = pathname === item.href;
                   const Icon = item.icon;
@@ -104,6 +110,38 @@ export function MobileHeader() {
                     </Link>
                   );
                 })}
+                </div>
+
+                {/* AI Section Mobile */}
+                <div>
+                  <div className="flex items-center gap-2 px-4 mb-2">
+                    <Brain className="w-4 h-4 text-blue-400" />
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Intelligence IA</span>
+                  </div>
+                  <div className="space-y-1">
+                    {aiNavigation.map((item) => {
+                      const isActive = pathname === item.href;
+                      const Icon = item.icon;
+                      
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className={cn(
+                            "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                            isActive 
+                              ? "bg-slate-800 text-white" 
+                              : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                          )}
+                        >
+                          <Icon className={cn("w-5 h-5", isActive ? "text-blue-400" : "text-slate-500")} />
+                          <span>{item.name}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
               </nav>
 
               {/* User Profile */}
