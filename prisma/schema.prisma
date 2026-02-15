@@ -43,12 +43,27 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model AnalysisHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // 'analysis' | 'match'
+  title     String
+  score     Float
+  data      Json     // Full result data
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  credits       Int       @default(3)
   
   // Referral System
   referralCode   String?   @unique  // Unique 8-char code for sharing
@@ -62,6 +77,7 @@ model User {
   sessions      Session[]
   cvs           CV[]
   coverLetters  CoverLetter[]
+  analyses      AnalysisHistory[] // Relation
 }
 
 model CV {

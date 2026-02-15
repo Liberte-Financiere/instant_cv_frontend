@@ -81,6 +81,8 @@ export const RATE_LIMITS = {
   AI_COVER_LETTER: { limit: 10, windowMs: 60_000 },
   /** AI optimization: 10 requests per minute */
   AI_OPTIMIZE: { limit: 10, windowMs: 60_000 },
+  /** AI job matching: 5 requests per minute */
+  AI_MATCH: { limit: 5, windowMs: 60_000 },
   /** File upload: 15 requests per minute */
   UPLOAD: { limit: 15, windowMs: 60_000 },
   /** LinkedIn import: 5 requests per minute */

@@ -11,6 +11,7 @@
 export type * from './models/Account'
 export type * from './models/Session'
 export type * from './models/VerificationToken'
+export type * from './models/AnalysisHistory'
 export type * from './models/User'
 export type * from './models/CV'
 export type * from './models/CoverLetter'

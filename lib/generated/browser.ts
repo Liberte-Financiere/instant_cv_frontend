@@ -33,6 +33,11 @@ export type Session = Prisma.SessionModel
  */
 export type VerificationToken = Prisma.VerificationTokenModel
 /**
+ * Model AnalysisHistory
+ * 
+ */
+export type AnalysisHistory = Prisma.AnalysisHistoryModel
+/**
  * Model User
  * 
  */
