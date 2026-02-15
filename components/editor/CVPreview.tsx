@@ -34,9 +34,10 @@ const ATSFriendlyTemplate = dynamic(() => import('@/components/templates/ATSFrie
 
 interface CVPreviewProps {
   data?: CV; // Optional prop for read-only mode (e.g., share page)
+  hideToolbar?: boolean; // Hide zoom/export controls (e.g., when embedded)
 }
 
-export function CVPreview({ data }: CVPreviewProps) {
+export function CVPreview({ data, hideToolbar }: CVPreviewProps) {
   const { currentCV } = useCVStore();
   const [zoom, setZoom] = useState(0.8);
   const [isExporting, setIsExporting] = useState(false);
@@ -115,6 +116,15 @@ export function CVPreview({ data }: CVPreviewProps) {
   };
 
 
+
+  // Read-only / embedded mode: no toolbar, no internal zoom
+  if (hideToolbar || data) {
+    return (
+      <div className="bg-white">
+        {renderTemplate()}
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col bg-slate-200/50">
