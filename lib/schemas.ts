@@ -105,9 +105,10 @@ export const sectionIdSchema = z.enum([
   'hobbies', 'certifications', 'projects', 'references', 'qualities', 'divers'
 ]);
 
-export const templateIdSchema = z.enum([
-  'modern', 'professional', 'executive', 'creative', 'tech', 'minimalist', 'ats', 'ats-glacier', 'ats-iron'
-]);
+import { TEMPLATE_IDS } from '@/lib/templates';
+
+// Derived automatically from TEMPLATES — no manual sync needed!
+export const templateIdSchema = z.enum(TEMPLATE_IDS as unknown as [string, ...string[]]);
 
 export const cvSchema = z.object({
   id: z.string(),

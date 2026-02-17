@@ -23,7 +23,7 @@ export function CVDivers({ divers, variant, title = 'Informations Complémentair
       >
         {title}
       </h2>
-      <p className={`text-sm leading-relaxed whitespace-pre-wrap break-words ${
+      <p className={`text-sm leading-relaxed  break-words ${
         variant === 'tech' ? 'text-gray-300' : 'text-slate-600'
       }`}>
         {divers}
