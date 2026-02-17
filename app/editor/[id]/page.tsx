@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Download, Save, Eye, LayoutTemplate } from 'lucide-react';
@@ -17,9 +17,12 @@ import { EDITOR_STEPS } from '@/types/cv';
 
 export default function EditorPage() {
   const params = useParams();
-  const { currentCV, currentStep, loadCV, setCurrentStep } = useCVStore();
+  const { currentCV, currentStep, loadCV, setCurrentStep, saveCurrentCV } = useCVStore();
   const [zoom, setZoom] = useState(1);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSavedRef = useRef<string>('');
 
   const id = params.id as string;
 
@@ -28,6 +31,64 @@ export default function EditorPage() {
       loadCV(id);
     }
   }, [id, loadCV]);
+
+  // ─── AUTO-SAVE with debounce ───
+  const doSave = useCallback(async () => {
+    const cv = useCVStore.getState().currentCV;
+    if (!cv) return;
+    
+    const snapshot = JSON.stringify(cv);
+    if (snapshot === lastSavedRef.current) return; // No changes
+    
+    setSaveStatus('saving');
+    try {
+      await saveCurrentCV();
+      lastSavedRef.current = snapshot;
+      setSaveStatus('saved');
+    } catch {
+      setSaveStatus('error');
+    }
+  }, [saveCurrentCV]);
+
+  useEffect(() => {
+    if (!currentCV) return;
+    
+    // Debounce: save 3s after last change
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      doSave();
+    }, 3000);
+
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, [currentCV, doSave]);
+
+  // Save on page leave
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      // Flush any pending debounced save
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+      const cv = useCVStore.getState().currentCV;
+      if (cv) {
+        const payload = JSON.stringify(cv);
+        if (payload !== lastSavedRef.current) {
+          // Use fetch with keepalive for reliable save on close
+          fetch(`/api/cv/${cv.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: payload,
+            keepalive: true,
+          }).catch(() => {/* best effort */});
+        }
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   const handleNext = () => {
     const currentIndex = EDITOR_STEPS.findIndex((s) => s.key === currentStep);
@@ -72,8 +133,22 @@ export default function EditorPage() {
               {currentCV.title}
             </h1>
             <div className="flex items-center gap-1.5 text-xs text-slate-500">
-               <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
-               <span className="hidden sm:inline">Sauvegardé</span>
+               {saveStatus === 'saving' ? (
+                 <>
+                   <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse flex-shrink-0" />
+                   <span className="hidden sm:inline">Sauvegarde...</span>
+                 </>
+               ) : saveStatus === 'error' ? (
+                 <>
+                   <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0" />
+                   <span className="hidden sm:inline text-red-500">Erreur de sauvegarde</span>
+                 </>
+               ) : (
+                 <>
+                   <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
+                   <span className="hidden sm:inline">Sauvegardé</span>
+                 </>
+               )}
             </div>
           </div>
         </div>
@@ -94,13 +169,7 @@ export default function EditorPage() {
            <ColorPicker />
            <SectionOrderEditor />
            <ShareButton />           
-           <button 
-             className="hidden sm:flex items-center gap-2 px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors"
-             title="Changer de modèle"
-           >
-             <LayoutTemplate className="w-4 h-4" />
-             <span className="hidden md:inline">Modèle</span>
-           </button>
+
            
            <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
 

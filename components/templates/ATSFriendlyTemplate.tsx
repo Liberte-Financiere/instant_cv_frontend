@@ -76,7 +76,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
                 </div>
                 <p className="italic">{exp.company}</p>
                 {exp.description && (
-                  <p className="mt-1 whitespace-pre-wrap">{exp.description}</p>
+                  <p className="mt-1 ">{exp.description}</p>
                 )}
               </div>
             ))}
@@ -200,7 +200,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
           <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">
             INFORMATIONS COMPLÉMENTAIRES
           </h2>
-          <p className="whitespace-pre-wrap">{divers}</p>
+          <p className="">{divers}</p>
         </section>
       )}
 

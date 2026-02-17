@@ -84,7 +84,7 @@ export function ATSGlacier({ cv }: TemplateProps) {
                 </div>
                 <div className="text-blue-600 font-medium mb-2">{exp.company}</div>
                 {exp.description && (
-                  <p className="text-slate-600 whitespace-pre-wrap">{exp.description}</p>
+                  <p className="text-slate-600 ">{exp.description}</p>
                 )}
               </div>
             ))}

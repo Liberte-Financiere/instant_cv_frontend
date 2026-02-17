@@ -42,7 +42,7 @@ export function CVExperience({ experiences, variant, title = 'Expérience Profes
               {exp.company}
             </div>
             {exp.description && (
-              <div className={`text-sm leading-relaxed whitespace-pre-wrap break-words ${variant === 'tech' ? 'text-gray-400' : 'text-slate-600'}`}>
+              <div className={`text-sm leading-relaxed  break-words ${variant === 'tech' ? 'text-gray-400' : 'text-slate-600'}`}>
                 {exp.description}
               </div>
             )}

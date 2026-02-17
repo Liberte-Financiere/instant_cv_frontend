@@ -2,15 +2,34 @@
 
 import { use, useEffect, useState, useRef, useCallback } from 'react';
 import { useCVStore } from '@/store/useCVStore';
-import { ModernSidebar } from '@/components/templates/ModernSidebar';
-import { ProfessionalClean } from '@/components/templates/ProfessionalClean';
-import { ExecutiveCorporate } from '@/components/templates/ExecutiveCorporate';
-import { CreativeGrid } from '@/components/templates/CreativeGrid';
-import { TechStack } from '@/components/templates/TechStack';
-import { MinimalistTemplate } from '@/components/templates/MinimalistTemplate';
-import { ATSFriendlyTemplate } from '@/components/templates/ATSFriendlyTemplate';
+import dynamic from 'next/dynamic';
 import { Download, Printer, Home } from 'lucide-react';
 import Link from 'next/link';
+
+// Dynamic imports for ALL templates
+const ModernSidebar = dynamic(() => import('@/components/templates/ModernSidebar').then(m => m.ModernSidebar));
+const ProfessionalClean = dynamic(() => import('@/components/templates/ProfessionalClean').then(m => m.ProfessionalClean));
+const ExecutiveCorporate = dynamic(() => import('@/components/templates/ExecutiveCorporate').then(m => m.ExecutiveCorporate));
+const CreativeGrid = dynamic(() => import('@/components/templates/CreativeGrid').then(m => m.CreativeGrid));
+const TechStack = dynamic(() => import('@/components/templates/TechStack').then(m => m.TechStack));
+const MinimalistTemplate = dynamic(() => import('@/components/templates/MinimalistTemplate').then(m => m.MinimalistTemplate));
+const ATSFriendlyTemplate = dynamic(() => import('@/components/templates/ATSFriendlyTemplate').then(m => m.ATSFriendlyTemplate));
+const ATSGlacier = dynamic(() => import('@/components/templates/ATSGlacier').then(m => m.ATSGlacier));
+const ATSIron = dynamic(() => import('@/components/templates/ATSIron').then(m => m.ATSIron));
+const ElegantPhoto = dynamic(() => import('@/components/templates/ElegantPhoto').then(m => m.ElegantPhoto));
+const CorporateBlue = dynamic(() => import('@/components/templates/CorporateBlue').then(m => m.CorporateBlue));
+const CleanGrid = dynamic(() => import('@/components/templates/CleanGrid').then(m => m.CleanGrid));
+const Swiss = dynamic(() => import('@/components/templates/Swiss').then(m => m.Swiss));
+const GradientHeader = dynamic(() => import('@/components/templates/GradientHeader').then(m => m.GradientHeader));
+const TimelinePro = dynamic(() => import('@/components/templates/TimelinePro').then(m => m.TimelinePro));
+const CompactSingle = dynamic(() => import('@/components/templates/CompactSingle').then(m => m.CompactSingle));
+const BoldHeader = dynamic(() => import('@/components/templates/BoldHeader').then(m => m.BoldHeader));
+const TwoTone = dynamic(() => import('@/components/templates/TwoTone').then(m => m.TwoTone));
+const Infographic = dynamic(() => import('@/components/templates/Infographic').then(m => m.Infographic));
+const ClassicSerif = dynamic(() => import('@/components/templates/ClassicSerif').then(m => m.ClassicSerif));
+const Nordic = dynamic(() => import('@/components/templates/Nordic').then(m => m.Nordic));
+const PastelModern = dynamic(() => import('@/components/templates/PastelModern').then(m => m.PastelModern));
+const BlueprintPremium = dynamic(() => import('@/components/templates/BlueprintPremium').then(m => m.BlueprintPremium));
 
 const A4_WIDTH_PX = 794; // 210mm in pixels at 96dpi
 
@@ -83,14 +102,14 @@ export default function PublicCVPage({ params }: PageProps) {
           </div>
           <h1 className="text-xl font-bold text-slate-900 mb-2">CV introuvable</h1>
           <p className="text-slate-600 mb-6">
-            Ce CV n'existe pas ou vous n'avez pas les droits pour le voir.
+            Ce CV n&apos;existe pas ou vous n&apos;avez pas les droits pour le voir.
           </p>
           <Link 
             href="/"
             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             <Home className="w-4 h-4" />
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Link>
         </div>
       </div>
@@ -99,22 +118,30 @@ export default function PublicCVPage({ params }: PageProps) {
 
   const renderTemplate = () => {
     switch (currentCV.templateId) {
-      case 'modern':
-        return <ModernSidebar cv={currentCV} />;
-      case 'professional':
-        return <ProfessionalClean cv={currentCV} />;
-      case 'executive':
-        return <ExecutiveCorporate cv={currentCV} />;
-      case 'creative':
-        return <CreativeGrid cv={currentCV} />;
-      case 'tech':
-        return <TechStack cv={currentCV} />;
-      case 'minimalist':
-        return <MinimalistTemplate cv={currentCV} />;
-      case 'ats':
-        return <ATSFriendlyTemplate cv={currentCV} />;
-      default:
-        return <ModernSidebar cv={currentCV} />;
+      case 'modern': return <ModernSidebar cv={currentCV} />;
+      case 'professional': return <ProfessionalClean cv={currentCV} />;
+      case 'executive': return <ExecutiveCorporate cv={currentCV} />;
+      case 'creative': return <CreativeGrid cv={currentCV} />;
+      case 'tech': return <TechStack cv={currentCV} />;
+      case 'minimalist': return <MinimalistTemplate cv={currentCV} />;
+      case 'ats': return <ATSFriendlyTemplate cv={currentCV} />;
+      case 'ats-glacier': return <ATSGlacier cv={currentCV} />;
+      case 'ats-iron': return <ATSIron cv={currentCV} />;
+      case 'elegant-photo': return <ElegantPhoto cv={currentCV} />;
+      case 'corporate-blue': return <CorporateBlue cv={currentCV} />;
+      case 'clean-grid': return <CleanGrid cv={currentCV} />;
+      case 'swiss': return <Swiss cv={currentCV} />;
+      case 'gradient': return <GradientHeader cv={currentCV} />;
+      case 'timeline': return <TimelinePro cv={currentCV} />;
+      case 'compact': return <CompactSingle cv={currentCV} />;
+      case 'bold-header': return <BoldHeader cv={currentCV} />;
+      case 'two-tone': return <TwoTone cv={currentCV} />;
+      case 'infographic': return <Infographic cv={currentCV} />;
+      case 'classic-serif': return <ClassicSerif cv={currentCV} />;
+      case 'nordic': return <Nordic cv={currentCV} />;
+      case 'pastel': return <PastelModern cv={currentCV} />;
+      case 'blueprint-premium': return <BlueprintPremium cv={currentCV} />;
+      default: return <ModernSidebar cv={currentCV} />;
     }
   };
 
