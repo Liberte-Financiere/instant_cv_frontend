@@ -100,14 +100,14 @@ export function Sidebar() {
         <div>
           <div className="flex items-center gap-2 px-4 mb-2">
             <Brain className="w-4 h-4 text-blue-400" />
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Intelligence IA</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Section IA</span>
           </div>
           <nav className="space-y-1">
             {aiNavigation.map((item) => (
               <NavLink key={item.name} item={item} />
             ))}
           </nav>
-        </div>
+        </div> 
       </div>
 
       {/* User Profile */}
