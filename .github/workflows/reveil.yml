@@ -1,0 +1,10 @@
+name: Reveiller mon site
+on:
+  schedule:
+    - cron: '*/35 */2 * * *'
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Faire un GET sur le site
+        run: curl -I https://instant-cv-frontend.onrender.com/
