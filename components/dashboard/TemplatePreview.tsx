@@ -21,7 +21,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ templateId }) 
            We use a slightly larger scale here (0.16) for the selector cards.
            We absolutely position it to match the previous layout.
        */}
-       <div className="absolute top-0 left-0 w-full h-full">
+       <div className="absolute top-0 left-0 w-full h-full flex justify-center">
             <CVThumbnail cv={previewCV} scale={0.16} />
        </div>
     </div>

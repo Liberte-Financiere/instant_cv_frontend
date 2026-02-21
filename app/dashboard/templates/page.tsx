@@ -32,7 +32,7 @@ export default function DashboardTemplatesPage() {
           >
             {/* Preview Header */}
             <div className="bg-slate-50 relative h-[180px] md:h-[320px] overflow-hidden flex justify-center pt-4 md:pt-8 border-b border-slate-100">
-               <div className="transform group-hover:scale-105 group-hover:-translate-y-2 transition-transform duration-500 shadow-lg scale-75 md:scale-100 origin-top">
+               <div className="transform group-hover:scale-105 group-hover:-translate-y-2 transition-transform duration-500 shadow-lg scale-[0.6] md:scale-[0.85] lg:scale-100 origin-top flex justify-center">
                  <CVThumbnail 
                     cv={{ ...MOCK_PREVIEW_CV, templateId: template.id }} 
                     scale={0.25} 
