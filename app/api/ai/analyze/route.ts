@@ -44,18 +44,6 @@ export async function POST(req: Request) {
       extractedText = typeof cvData === 'string' ? cvData : JSON.stringify(cvData);
     } else {
       // FormData mode: file upload (PDF/TXT)
-      // Lazy load pdf-parse
-      let PDFParse;
-      try {
-        // @ts-ignore
-        const pdfModule = require('pdf-parse');
-        PDFParse = pdfModule.PDFParse || pdfModule.default?.PDFParse;
-        if (!PDFParse) throw new Error('PDFParse class not found');
-      } catch (e) {
-        console.error('[API] Failed to load pdf-parse:', e);
-        return NextResponse.json({ error: 'Server Configuration Error: PDF Parser missing' }, { status: 500 });
-      }
-
       const formData = await req.formData();
       const file = formData.get('file') as File;
 
@@ -68,20 +56,10 @@ export async function POST(req: Request) {
       }
 
       if (file.type === 'application/pdf') {
+        const { extractText } = await import('unpdf');
         const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        let parser;
-        try {
-          // @ts-ignore
-          parser = new PDFParse({ data: buffer });
-          const data = await parser.getText();
-          extractedText = data.text;
-          await parser.destroy();
-        } catch (pdfError) {
-          console.error('[API] PDF Parsing Error:', pdfError);
-          if (parser) { try { await parser.destroy(); } catch(e) {} }
-          return NextResponse.json({ error: 'Failed to read PDF file structure.' }, { status: 400 });
-        }
+        const { text } = await extractText(new Uint8Array(arrayBuffer));
+        extractedText = text.join('\n');
       } else if (file.type === 'text/plain') {
         extractedText = await file.text();
       } else {

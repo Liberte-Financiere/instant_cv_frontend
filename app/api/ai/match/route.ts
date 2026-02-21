@@ -14,19 +14,10 @@ export const runtime = 'nodejs';
 
 async function extractTextFromFile(file: File): Promise<string> {
   if (file.type === 'application/pdf') {
-    // @ts-ignore
-    const pdfModule = require('pdf-parse');
-    const PDFParse = pdfModule.PDFParse || pdfModule.default?.PDFParse;
-    if (!PDFParse) throw new Error('PDF Parser not available');
-
+    const { extractText } = await import('unpdf');
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    // @ts-ignore
-    const parser = new PDFParse({ data: buffer });
-    const data = await parser.getText();
-    const text = data.text;
-    await parser.destroy();
-    return text;
+    const { text } = await extractText(new Uint8Array(arrayBuffer));
+    return text.join('\n');
   } else if (file.type === 'text/plain') {
     return await file.text();
   }
