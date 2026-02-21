@@ -174,17 +174,16 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
              {/* New CV Card - Always first */}
-             <motion.div 
-                whileHover={{ scale: 1.02 }}
-                onClick={handleOpenModal}
-                className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors min-h-[200px] md:h-[320px]"
+             <Link 
+                href="/dashboard/templates"
+                className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors min-h-[200px] md:h-[320px] relative overflow-hidden"
               >
-                <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Plus className="w-8 h-8 text-slate-400 group-hover:text-blue-500" />
+                <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
+                  <Plus className="w-8 h-8 text-slate-400 group-hover:text-blue-500 transition-colors" />
                 </div>
-                <p className="font-bold text-slate-600 group-hover:text-blue-600">Nouveau CV</p>
-                <p className="text-xs text-slate-400 mt-1">Choisir un modèle</p>
-              </motion.div>
+                <p className="font-bold text-slate-600 group-hover:text-blue-600 transition-colors relative z-10">Nouveau CV</p>
+                <p className="text-xs text-slate-400 mt-1 relative z-10">Choisir un modèle</p>
+              </Link>
 
               {/* LinkedIn Import Card - HIDDEN (API is paid)
               <motion.div 
@@ -297,91 +296,7 @@ export default function DashboardPage() {
 
 
 
-        {/* Modal Creation with Template Selection */}
-        {isCreating && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-             <motion.div 
-               initial={{ opacity: 0, scale: 0.95 }}
-               animate={{ opacity: 1, scale: 1 }}
-               className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl h-[85vh] flex flex-col overflow-hidden"
-             >
-                {step === 'template' ? (
-                  <>
-                    <div className="p-4 sm:p-8 pb-4 shrink-0">
-                        <h2 className="text-2xl font-bold text-slate-900 mb-2">Choisissez un modèle</h2>
-                        <p className="text-slate-500 text-sm">Sélectionnez le style qui correspond le mieux à votre profil.</p>
-                    </div>
-                    
-                    <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 min-h-0">
-                        <TemplateSelector 
-                           selectedId={selectedTemplate} 
-                           onSelect={setSelectedTemplate} 
-                        />
-                    </div>
-                    
-                    <div className="p-6 border-t border-slate-100 bg-white shrink-0">
-                        <div className="flex gap-3">
-                           <button 
-                             onClick={() => setIsCreating(false)}
-                             className="flex-1 py-3 font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
-                           >
-                             Annuler
-                           </button>
-                           <button 
-                             onClick={() => setStep('name')}
-                             className="flex-1 py-3 font-bold text-white bg-primary rounded-xl hover:bg-blue-700 transition-colors"
-                           >
-                             Continuer
-                           </button>
-                        </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="p-4 sm:p-8 pb-4 shrink-0">
-                        <button 
-                          onClick={() => setStep('template')}
-                          className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-4"
-                        >
-                           <ArrowLeft className="w-4 h-4" /> Retour
-                        </button>
-                        <h2 className="text-2xl font-bold text-slate-900 mb-6">Nommez votre CV</h2>
-                    </div>
-
-                    <div className="flex-1 overflow-y-auto px-8 min-h-0">
-                        <input
-                           autoFocus
-                           type="text"
-                           placeholder="Ex: CV Développeur 2024"
-                           className="w-full px-4 py-3 border border-slate-200 rounded-xl mb-6 focus:ring-2 focus:ring-blue-500 outline-none"
-                           value={newTitle}
-                           onChange={(e) => setNewTitle(e.target.value)}
-                           onKeyDown={(e) => e.key === 'Enter' && handleCreateCV()}
-                        />
-                    </div>
-
-                    <div className="p-6 border-t border-slate-100 bg-white shrink-0">
-                        <div className="flex gap-3">
-                           <button 
-                             onClick={() => setIsCreating(false)}
-                             className="flex-1 py-3 font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
-                           >
-                             Annuler
-                           </button>
-                           <button 
-                             onClick={handleCreateCV}
-                             disabled={!newTitle.trim()}
-                             className="flex-1 py-3 font-bold text-white bg-primary rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                           >
-                             Créer
-                           </button>
-                        </div>
-                    </div>
-                  </>
-                )}
-             </motion.div>
-          </div>
-        )}
+        {/* Modal Creation removed per user request - Redirection directly to /dashboard/templates */}
 
         {/* Full Screen Analysis Loader */}
         {isAnalyzing && (
