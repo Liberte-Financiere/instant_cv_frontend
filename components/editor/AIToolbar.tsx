@@ -45,7 +45,7 @@ export function AIToolbar({ text, onRefine, disabled }: AIToolbarProps) {
   };
 
   return (
-    <div className="flex items-center gap-2 mb-3 overflow-x-auto pb-2 custom-scrollbar">
+    <div className="flex items-center gap-2 mb-3 flex-wrap">
       {/* Rewrite Dropdown */}
       <div className="relative">
         <button

@@ -109,7 +109,7 @@ export default function CoverLettersPage() {
     }
     // Prevent double invocation if called rapidly
     setIsManualModalOpen(false); 
-    const id = createNewCL(newLetterTitle);
+    const id = createNewCL(newLetterTitle, 'manual');
     router.push(`/cover-letter/editor/${id}`);
   };
 
@@ -173,7 +173,7 @@ export default function CoverLettersPage() {
     setAiStep('generating');
     
     // 1. Create empty CL locally & on server
-    const id = createNewCL(newLetterTitle);
+    const id = createNewCL(newLetterTitle, 'ai');
 
     try {
       // 2. Call AI Generation
@@ -201,8 +201,11 @@ export default function CoverLettersPage() {
       // createNewCL sets 'currentCL' to the new one.
       // updateContent updates 'currentCL'.
       
+      const currentDetails = useCoverLetterStore.getState().currentCL?.content.details || {};
+      
       updateContent({
         details: {
+            ...currentDetails,
             subject: data.subject,
             salutation: data.salutation,
             body: data.body,
