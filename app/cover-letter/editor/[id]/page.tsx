@@ -325,13 +325,15 @@ export default function CoverLetterEditorPage() {
                       <div className="space-y-6">
                          <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-slate-900">Rédaction</h2>
-                            <button 
-                              onClick={() => setShowAIModal(true)}
-                              className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all active:scale-95"
-                            >
-                               <Sparkles className="w-3.5 h-3.5" />
-                               Magic Wand
-                            </button>
+                            {currentCL.content.details.creationMethod !== 'ai' && (
+                              <button 
+                                onClick={() => setShowAIModal(true)}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all active:scale-95"
+                              >
+                                 <Sparkles className="w-3.5 h-3.5" />
+                                 Continuer avec l'IA
+                              </button>
+                            )}
                          </div>
 
                          <FloatingInput 
