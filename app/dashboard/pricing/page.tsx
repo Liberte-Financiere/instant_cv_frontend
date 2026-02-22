@@ -2,28 +2,16 @@
 
 import { useCreditStore } from '@/store/useCreditStore';
 import { useSession } from 'next-auth/react';
-import { Sparkles, Check, Star, Zap, MessageCircle, Gift, Download, Palette, Clock, Brain } from 'lucide-react';
+import { Sparkles, Check, Star, Zap, MessageCircle, Gift } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { SectionHeader } from '@/components/ui/SectionHeader';
-
-const freePlanFeatures = [
-  { icon: Brain, text: 'IA incluse mais limitée (25 cr.)' },
-  { icon: Sparkles, text: 'Générer des CV' },
-  { icon: MessageCircle, text: 'Lettres de motivation' },
-  { icon: Zap, text: 'Analyse de CV' },
-  { icon: Star, text: 'Matching CV / Offre' },
-  { icon: Download, text: 'Export PDF Pro illimité' },
-  { icon: Palette, text: 'Design et couleurs illimités' },
-  { icon: Gift, text: 'Large choix de templates CV & LM gratuits' },
-  { icon: Clock, text: 'Crédits sans expiration' },
-];
 
 const creditPacks = [
   {
     name: 'Pack Standard',
     credits: 35,
     price: '1 000',
-    currency: 'FCFA / achat unique',
+    priceNum: 1000,
+    currency: 'FCFA',
     description: 'L\'essentiel pour postuler.',
     features: [
       'Valable à vie',
@@ -38,7 +26,8 @@ const creditPacks = [
     name: 'Pack Premium',
     credits: 80,
     price: '2 000',
-    currency: 'FCFA / achat unique',
+    priceNum: 2000,
+    currency: 'FCFA',
     description: 'Pour postuler activement.',
     features: [
       'Valable à vie',
@@ -53,7 +42,8 @@ const creditPacks = [
     name: 'Pack Pro',
     credits: 250,
     price: '5 000',
-    currency: 'FCFA / achat unique',
+    priceNum: 5000,
+    currency: 'FCFA',
     description: 'La tranquillité ultime.',
     features: [
       'Valable à vie',
@@ -83,142 +73,133 @@ export default function DashboardPricingPage() {
   };
 
   return (
-    <div className="p-4 lg:p-8 max-w-7xl mx-auto space-y-12">
-      {/* Solde actuel */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div className="p-4 lg:p-8 max-w-6xl mx-auto space-y-8">
+      
+      {/* Header + Solde */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Recharger vos Crédits IA</h1>
-          <p className="text-slate-500 mt-1">Achetez des crédits uniquement lorsque vous en avez besoin. Pas d&apos;abonnement.</p>
+          <p className="text-slate-500 mt-1 text-sm">Achetez des crédits uniquement lorsque vous en avez besoin. Pas d&apos;abonnement.</p>
         </div>
-        <div className="bg-slate-50 rounded-xl px-6 py-4 border border-slate-100 flex items-center gap-4 shrink-0">
-          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-blue-600" />
+        <div className="bg-white rounded-2xl px-5 py-3 border border-slate-200 shadow-sm flex items-center gap-3 shrink-0">
+          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-amber-600" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Votre solde actuel</p>
-            <p className="text-2xl font-black text-slate-900">
-              {isLoading ? '...' : credits} <span className="text-sm font-bold text-slate-400">CRÉDITS</span>
+            <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Solde</p>
+            <p className="text-xl font-black text-slate-900">
+              {isLoading ? '...' : credits} <span className="text-xs font-bold text-slate-400">crédits</span>
             </p>
           </div>
         </div>
       </div>
 
-      {/* Grille : Free + 3 Packs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch pt-4">
-
-        {/* === CARTE GRATUITE === */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0 }}
-          className="relative rounded-2xl p-8 flex flex-col h-full bg-gradient-to-br from-slate-50 to-blue-50 text-slate-900 border-2 border-dashed border-blue-200"
-        >
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Gift className="w-5 h-5 text-emerald-500" />
-              <h3 className="text-xl font-bold text-slate-900">Essai Gratuit</h3>
+      {/* Bandeau Gratuit */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-6"
+      >
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center shrink-0">
+              <Gift className="w-6 h-6 text-emerald-600" />
             </div>
-
-            <div className="flex items-baseline gap-1">
-              <span className="text-4xl font-black text-emerald-600">0</span>
-              <span className="text-sm font-bold text-slate-500">FCFA</span>
+            <div>
+              <h3 className="font-bold text-emerald-900">Essai Gratuit — 25 crédits offerts</h3>
+              <p className="text-sm text-emerald-700/70 mt-0.5">
+                Export PDF illimité · Design illimité · Templates gratuits · Crédits sans expiration
+              </p>
             </div>
-
-            <div className="mt-3 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 inline-block">
-              <p className="text-sm font-bold text-emerald-600">25 Crédits offerts</p>
-            </div>
-
-            <p className="mt-3 text-sm text-slate-500">Dès l&apos;inscription, découvrez tout le potentiel de l&apos;IA.</p>
           </div>
-
-          <ul className="space-y-3 mb-8 flex-1">
-            {freePlanFeatures.map((feature) => (
-              <li key={feature.text} className="flex items-start gap-2.5 text-sm">
-                <div className="mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 bg-emerald-100 text-emerald-600">
-                  <feature.icon className="w-3 h-3" />
-                </div>
-                <span className="text-slate-700">{feature.text}</span>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-auto py-3 px-4 rounded-xl bg-emerald-50 border border-emerald-200 text-center">
+          <div className="bg-emerald-100/80 border border-emerald-200 rounded-xl px-4 py-2 text-center shrink-0">
             <p className="text-sm font-semibold text-emerald-700">✓ Déjà inclus dans votre compte</p>
           </div>
-        </motion.div>
+        </div>
+      </motion.div>
 
-        {/* === PACKS PAYANTS === */}
-        {creditPacks.map((pack, index) => (
-          <motion.div
-            key={pack.name}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: (index + 1) * 0.1 }}
-            className={`relative rounded-2xl p-8 flex flex-col h-full ${
-              pack.dark 
-                ? 'bg-slate-900 text-white shadow-2xl border border-slate-800' 
-                : 'bg-white text-slate-900 shadow-xl border border-slate-100'
-            }`}
-          >
-            {pack.popular && (
-              <div className="absolute top-0 left-1/2 -translate-y-1/2 -translate-x-1/2">
-                <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1 whitespace-nowrap">
-                  <Star className="w-3 h-3 fill-white" /> Populaire
-                </span>
-              </div>
-            )}
+      {/* Packs Payants */}
+      <div>
+        <h2 className="text-lg font-bold text-slate-900 mb-1">Besoin de plus de crédits ?</h2>
+        <p className="text-sm text-slate-500 mb-6">Choisissez le pack qui vous convient. Paiement unique, crédits valables à vie.</p>
 
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <Zap className={`w-5 h-5 ${pack.dark ? 'text-amber-400' : 'text-blue-500'}`} />
-                <h3 className={`text-xl font-bold ${pack.dark ? 'text-white' : 'text-slate-900'}`}>{pack.name}</h3>
-              </div>
-              
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-black">{pack.price}</span>
-                <span className={`text-sm font-bold ${pack.dark ? 'text-slate-400' : 'text-slate-500'}`}>{pack.currency}</span>
-              </div>
-              
-              <div className="mt-3 p-2.5 rounded-lg bg-blue-500/10 border border-blue-500/20 inline-block">
-                <p className={`text-sm font-bold ${pack.dark ? 'text-blue-400' : 'text-blue-600'}`}>+{pack.credits} Crédits</p>
-              </div>
-              
-              <p className={`mt-3 text-sm ${pack.dark ? 'text-slate-400' : 'text-slate-500'}`}>{pack.description}</p>
-            </div>
-
-            <ul className="space-y-3 mb-8 flex-1">
-              {pack.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2.5 text-sm">
-                  <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                    pack.dark ? 'bg-blue-500/20 text-blue-400' : 'bg-green-100 text-green-600'
-                  }`}>
-                    <Check className="w-3 h-3" />
-                  </div>
-                  <span className={pack.dark ? 'text-slate-300' : 'text-slate-600'}>{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button 
-              onClick={() => handlePurchase(pack.name, pack.price, pack.credits)}
-              className={`w-full py-4 px-2 flex items-center justify-center gap-2 rounded-xl font-bold transition-all mt-auto ${
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {creditPacks.map((pack, index) => (
+            <motion.div
+              key={pack.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className={`relative rounded-2xl p-6 flex flex-col ${
                 pack.dark 
-                  ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/25' 
-                  : 'bg-slate-100 hover:bg-green-50 hover:text-green-700 text-slate-900 border border-transparent hover:border-green-200'
+                  ? 'bg-slate-900 text-white shadow-2xl ring-2 ring-blue-500/50' 
+                  : 'bg-white text-slate-900 shadow-lg border border-slate-100'
               }`}
             >
-              <MessageCircle className="w-5 h-5" />
-              Contacter via WhatsApp
-            </button>
-          </motion.div>
-        ))}
+              {pack.popular && (
+                <div className="absolute top-0 left-1/2 -translate-y-1/2 -translate-x-1/2">
+                  <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1 whitespace-nowrap">
+                    <Star className="w-3 h-3 fill-white" /> Populaire
+                  </span>
+                </div>
+              )}
+
+              {/* Header */}
+              <div className="mb-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <Zap className={`w-5 h-5 ${pack.dark ? 'text-amber-400' : 'text-blue-500'}`} />
+                  <h3 className={`text-lg font-bold ${pack.dark ? 'text-white' : 'text-slate-900'}`}>{pack.name}</h3>
+                </div>
+                
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-4xl font-black">{pack.price}</span>
+                  <span className={`text-sm font-medium ${pack.dark ? 'text-slate-400' : 'text-slate-500'}`}>{pack.currency}</span>
+                </div>
+                
+                <div className="mt-3 inline-block px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                  <p className={`text-sm font-bold ${pack.dark ? 'text-blue-400' : 'text-blue-600'}`}>+{pack.credits} crédits</p>
+                </div>
+
+                <p className={`mt-3 text-sm ${pack.dark ? 'text-slate-400' : 'text-slate-500'}`}>{pack.description}</p>
+              </div>
+
+              {/* Features */}
+              <ul className="space-y-3 mb-6 flex-1">
+                {pack.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2.5 text-sm">
+                    <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
+                      pack.dark ? 'bg-blue-500/20 text-blue-400' : 'bg-green-100 text-green-600'
+                    }`}>
+                      <Check className="w-3 h-3" />
+                    </div>
+                    <span className={pack.dark ? 'text-slate-300' : 'text-slate-600'}>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <button 
+                onClick={() => handlePurchase(pack.name, pack.price, pack.credits)}
+                className={`w-full py-3.5 flex items-center justify-center gap-2 rounded-xl font-bold transition-all mt-auto text-sm ${
+                  pack.dark 
+                    ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/25' 
+                    : 'bg-slate-900 hover:bg-slate-800 text-white'
+                }`}
+              >
+                <MessageCircle className="w-4 h-4" />
+                Contacter via WhatsApp
+              </button>
+            </motion.div>
+          ))}
+        </div>
       </div>
-      
-      <div className="text-center bg-blue-50 p-6 rounded-2xl border border-blue-100">
-         <h4 className="font-bold text-blue-900 mb-2">Comment se passe la recharge manuelle ?</h4>
-         <p className="text-sm text-blue-700 max-w-2xl mx-auto">
+
+      {/* Info */}
+      <div className="text-center bg-blue-50 p-5 rounded-2xl border border-blue-100">
+         <h4 className="font-bold text-blue-900 mb-1.5 text-sm">Comment se passe la recharge ?</h4>
+         <p className="text-sm text-blue-700/80 max-w-2xl mx-auto">
             Sélectionnez votre pack ci-dessus, ce qui ouvrira une conversation WhatsApp avec notre équipe. 
-            Une fois le paiement mobile (Wave, Orange Money...) effectué, vos crédits seront ajoutés instantanément sur votre compte.
+            Une fois le paiement mobile (Wave, Orange Money...) effectué, vos crédits seront ajoutés instantanément.
          </p>
       </div>
     </div>
