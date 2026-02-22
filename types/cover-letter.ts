@@ -15,6 +15,7 @@ export interface CoverLetterContent {
     salutation: string;
     body: string;
     closing: string;
+    creationMethod?: 'ai' | 'manual';
   };
 }
 

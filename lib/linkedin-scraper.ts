@@ -309,7 +309,7 @@ export async function scrapeLinkedInProfile(urlOrUsername: string): Promise<Link
       };
     }
 
-    console.log('[LinkedIn Scraper] Fetching profile for:', username);
+
 
     // Fetch from configured provider (default: RapidAPI)
     const provider = process.env.LINKEDIN_SCRAPER_PROVIDER || 'rapidapi';
@@ -333,7 +333,7 @@ export async function scrapeLinkedInProfile(urlOrUsername: string): Promise<Link
     // Transform to CV format
     const cvData = transformToCV(profileData, linkedInUrl);
 
-    console.log('[LinkedIn Scraper] Successfully transformed profile data');
+
 
     return {
       success: true,

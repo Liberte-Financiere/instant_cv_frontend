@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
@@ -10,10 +11,38 @@ export async function POST(req: Request) {
     const session = await auth();
     if (!session?.user?.id) return new NextResponse("Unauthorized", { status: 401 });
 
+    // Rate limiting: 10 requests per minute
+    const rateCheck = checkRateLimit(`${session.user.id}:ai-refine`, RATE_LIMITS.AI_COVER_LETTER);
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Trop de requêtes. Veuillez réessayer dans quelques secondes.' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil(rateCheck.resetIn / 1000)) } }
+      );
+    }
+
     const { text, action, option } = await req.json();
 
     if (!text || !action) {
       return NextResponse.json({ error: 'Text and action are required' }, { status: 400 });
+    }
+
+    // Determine cost and label based on action
+    const { checkAndConsumeCredits } = await import('@/lib/credits');
+    let creditAction: any = 'AI_REWRITE';
+    let label = 'Reformulation de texte (IA)';
+    
+    if (action === 'correct') {
+        creditAction = 'AI_CORRECT';
+        label = 'Correction orthographique (IA)';
+    } else if (action === 'translate') {
+        creditAction = 'AI_TRANSLATE';
+        label = 'Traduction de texte (IA)';
+    }
+
+    try {
+      await checkAndConsumeCredits(session.user.id, creditAction, label);
+    } catch (e: any) {
+      return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
     }
 
     let prompt = '';

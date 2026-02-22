@@ -16,12 +16,12 @@ interface CoverLetterState {
   loadCL: (id: string) => Promise<void>;
   saveCurrentCL: () => Promise<void>;
   setCurrentStep: (step: CoverLetterStep) => void;
-  createNewCL: (title: string) => string;
+  createNewCL: (title: string, method?: 'ai' | 'manual') => string;
   updateContent: (content: Partial<CoverLetterContent>) => void;
   deleteCL: (id: string) => Promise<void>;
 }
 
-const createEmptyCL = (title: string): CoverLetter => ({
+const createEmptyCL = (title: string, method: 'ai' | 'manual' = 'manual'): CoverLetter => ({
   id: generateId(),
   title,
   content: {
@@ -46,6 +46,7 @@ const createEmptyCL = (title: string): CoverLetter => ({
       salutation: 'Madame, Monsieur,',
       body: '',
       closing: 'Cordialement,',
+      creationMethod: method,
     }
   },
   createdAt: new Date(),
@@ -106,8 +107,8 @@ export const useCoverLetterStore = create<CoverLetterState>()(
 
       setCurrentStep: (step) => set({ currentStep: step }),
 
-      createNewCL: (title) => {
-        const newCL = createEmptyCL(title);
+      createNewCL: (title, method = 'manual') => {
+        const newCL = createEmptyCL(title, method);
         set(state => ({
           clList: [...state.clList, newCL],
           currentCL: newCL,
@@ -147,7 +148,7 @@ export const useCoverLetterStore = create<CoverLetterState>()(
       }
     }),
     {
-      name: 'optijob-cl-storage',
+      name: 'jobsira-cl-storage',
       storage: createJSONStorage(() => indexedDBStorage),
     }
   )

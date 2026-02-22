@@ -14,7 +14,7 @@ export function ReferencesForm() {
     <div className="space-y-4">
       {references.map((ref) => (
         <div key={ref.id} className="p-4 bg-white border border-slate-200 rounded-xl relative group hover:border-blue-300 transition-all">
-          <button onClick={() => removeReference(ref.id)} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100"><Trash2 className="w-4 h-4" /></button>
+          <button onClick={() => removeReference(ref.id)} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg sm:opacity-0 sm:group-hover:opacity-100"><Trash2 className="w-4 h-4" /></button>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Input label="Nom complet" value={ref.name} onChange={(e) => updateReference(ref.id, { name: e.target.value })} placeholder="Ex: Marie Martin" />
             <Input label="Poste" value={ref.position} onChange={(e) => updateReference(ref.id, { position: e.target.value })} placeholder="Ex: Directrice Marketing" />

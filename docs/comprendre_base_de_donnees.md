@@ -1,6 +1,6 @@
 # 🗄️ Comprendre l'Architecture de la Base de Données
 
-> Guide détaillé sur comment les données sont organisées et stockées dans l'application Instant CV.
+> Guide détaillé sur comment les données sont organisées et stockées dans l'application JobSira.
 
 ---
 
@@ -80,7 +80,7 @@ Imagine un **énorme classeur de bureau** avec plusieurs tiroirs :
 | **PostgreSQL** ✅ | **Relationnelle + JSON** | **Le meilleur des deux mondes** |
 | SQLite | Fichier local | Apps mobiles/desktop |
 
-PostgreSQL est parfait pour Instant CV car :
+PostgreSQL est parfait pour JobSira car :
 - ✅ Supporte les relations (User → CVs)
 - ✅ Supporte le JSON natif (contenu du CV)
 - ✅ Très performant
@@ -213,7 +213,7 @@ Utilisé pour les "Magic Links" (connexion par email sans mot de passe).
 
 ### 📄 Tables Métier (Ton application)
 
-Ces tables contiennent les données spécifiques à Instant CV.
+Ces tables contiennent les données spécifiques à JobSira.
 
 #### Table `CV` (Les CV créés)
 
@@ -659,4 +659,4 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 ---
 
-*Document créé pour expliquer l'architecture de la base de données Instant CV*
+*Document créé pour expliquer l'architecture de la base de données JobSira*

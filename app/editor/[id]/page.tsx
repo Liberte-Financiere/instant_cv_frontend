@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Download, Save, Eye, LayoutTemplate } from 'lucide-react';
@@ -17,9 +17,12 @@ import { EDITOR_STEPS } from '@/types/cv';
 
 export default function EditorPage() {
   const params = useParams();
-  const { currentCV, currentStep, loadCV, setCurrentStep } = useCVStore();
+  const { currentCV, currentStep, loadCV, setCurrentStep, saveCurrentCV } = useCVStore();
   const [zoom, setZoom] = useState(1);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSavedRef = useRef<string>('');
 
   const id = params.id as string;
 
@@ -28,6 +31,64 @@ export default function EditorPage() {
       loadCV(id);
     }
   }, [id, loadCV]);
+
+  // ─── AUTO-SAVE with debounce ───
+  const doSave = useCallback(async () => {
+    const cv = useCVStore.getState().currentCV;
+    if (!cv) return;
+    
+    const snapshot = JSON.stringify(cv);
+    if (snapshot === lastSavedRef.current) return; // No changes
+    
+    setSaveStatus('saving');
+    try {
+      await saveCurrentCV();
+      lastSavedRef.current = snapshot;
+      setSaveStatus('saved');
+    } catch {
+      setSaveStatus('error');
+    }
+  }, [saveCurrentCV]);
+
+  useEffect(() => {
+    if (!currentCV) return;
+    
+    // Debounce: save 3s after last change
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      doSave();
+    }, 3000);
+
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, [currentCV, doSave]);
+
+  // Save on page leave
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      // Flush any pending debounced save
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+      const cv = useCVStore.getState().currentCV;
+      if (cv) {
+        const payload = JSON.stringify(cv);
+        if (payload !== lastSavedRef.current) {
+          // Use fetch with keepalive for reliable save on close
+          fetch(`/api/cv/${cv.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: payload,
+            keepalive: true,
+          }).catch(() => {/* best effort */});
+        }
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   const handleNext = () => {
     const currentIndex = EDITOR_STEPS.findIndex((s) => s.key === currentStep);
@@ -47,7 +108,7 @@ export default function EditorPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#2463eb] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-slate-600 font-medium">Chargement de votre espace de travail...</p>
         </div>
       </div>
@@ -72,8 +133,22 @@ export default function EditorPage() {
               {currentCV.title}
             </h1>
             <div className="flex items-center gap-1.5 text-xs text-slate-500">
-               <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
-               <span className="hidden sm:inline">Sauvegardé</span>
+               {saveStatus === 'saving' ? (
+                 <>
+                   <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse flex-shrink-0" />
+                   <span className="hidden sm:inline">Sauvegarde...</span>
+                 </>
+               ) : saveStatus === 'error' ? (
+                 <>
+                   <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0" />
+                   <span className="hidden sm:inline text-red-500">Erreur de sauvegarde</span>
+                 </>
+               ) : (
+                 <>
+                   <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
+                   <span className="hidden sm:inline">Sauvegardé</span>
+                 </>
+               )}
             </div>
           </div>
         </div>
@@ -94,13 +169,7 @@ export default function EditorPage() {
            <ColorPicker />
            <SectionOrderEditor />
            <ShareButton />           
-           <button 
-             className="hidden sm:flex items-center gap-2 px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors"
-             title="Changer de modèle"
-           >
-             <LayoutTemplate className="w-4 h-4" />
-             <span className="hidden md:inline">Modèle</span>
-           </button>
+
            
            <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
 
@@ -110,7 +179,7 @@ export default function EditorPage() {
                   window.open(`/cv/${currentCV.id}?print=true`, '_blank');
                 }
              }}
-             className="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto gap-2 sm:px-4 sm:py-2 bg-[#2463eb] hover:bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+             className="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto gap-2 sm:px-4 sm:py-2 bg-primary hover:bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
              title="Exporter PDF"
            >
              <Download className="w-4 h-4" />
@@ -129,7 +198,7 @@ export default function EditorPage() {
            </div>
            
            {/* Scrollable Form Area */}
-           <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar">
+           <div className="flex-1 overflow-y-auto p-3 sm:p-6 lg:p-10 custom-scrollbar">
               <div className="max-w-2xl mx-auto">
                  <FormSection 
                    currentStep={currentStep} 

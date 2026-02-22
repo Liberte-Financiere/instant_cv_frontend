@@ -109,7 +109,7 @@ export default function CoverLettersPage() {
     }
     // Prevent double invocation if called rapidly
     setIsManualModalOpen(false); 
-    const id = createNewCL(newLetterTitle);
+    const id = createNewCL(newLetterTitle, 'manual');
     router.push(`/cover-letter/editor/${id}`);
   };
 
@@ -173,7 +173,7 @@ export default function CoverLettersPage() {
     setAiStep('generating');
     
     // 1. Create empty CL locally & on server
-    const id = createNewCL(newLetterTitle);
+    const id = createNewCL(newLetterTitle, 'ai');
 
     try {
       // 2. Call AI Generation
@@ -188,6 +188,12 @@ export default function CoverLettersPage() {
       });
 
       if (!res.ok) {
+        if (res.status === 403) {
+            const { useCreditStore } = await import('@/store/useCreditStore');
+            useCreditStore.getState().setOutOfCreditsModalOpen(true);
+            setAiStep('details');
+            return;
+        }
         if (res.status === 503) {
           throw new Error('Le service IA est momentanément surchargé. Veuillez réessayer dans une minute.');
         }
@@ -201,8 +207,11 @@ export default function CoverLettersPage() {
       // createNewCL sets 'currentCL' to the new one.
       // updateContent updates 'currentCL'.
       
+      const currentDetails = useCoverLetterStore.getState().currentCL?.content.details || {};
+      
       updateContent({
         details: {
+            ...currentDetails,
             subject: data.subject,
             salutation: data.salutation,
             body: data.body,
@@ -361,39 +370,39 @@ export default function CoverLettersPage() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   onClick={(e) => e.stopPropagation()}
-                  className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden p-8"
+                  className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden p-6 md:p-8 max-h-[90vh] overflow-y-auto"
               >
-                  <div className="text-center mb-8">
-                       <h2 className="text-2xl font-bold text-slate-900 mb-2">Comment souhaitez-vous créer votre lettre ?</h2>
-                       <p className="text-slate-500">Choisissez la méthode qui vous correspond le mieux.</p>
+                  <div className="text-center mb-6 md:mb-8">
+                       <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-2">Comment souhaitez-vous créer votre lettre ?</h2>
+                       <p className="text-sm md:text-base text-slate-500">Choisissez la méthode qui vous correspond le mieux.</p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                       {/* AI Choice */}
                       <button 
                           onClick={openAIModal}
-                          className="flex flex-col items-center p-8 rounded-2xl border-2 border-blue-100 bg-gradient-to-b from-blue-50 to-white hover:border-blue-500 hover:shadow-xl transition-all group text-center"
+                          className="flex flex-col items-center p-6 md:p-8 rounded-2xl border-2 border-blue-100 bg-gradient-to-b from-blue-50 to-white hover:border-blue-500 hover:shadow-xl transition-all group text-center"
                       >
-                           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-md border border-blue-50 group-hover:scale-110 transition-transform duration-300">
-                               <Wand2 className="w-10 h-10 text-blue-600" />
+                           <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center mb-4 md:mb-6 shadow-md border border-blue-50 group-hover:scale-110 transition-transform duration-300">
+                               <Wand2 className="w-8 h-8 md:w-10 md:h-10 text-blue-600" />
                            </div>
-                           <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600">Générer avec l&apos;IA</h3>
-                           <p className="text-sm text-slate-500 leading-relaxed">
+                           <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-2 md:mb-3 group-hover:text-blue-600">Générer avec l&apos;IA</h3>
+                           <p className="text-xs md:text-sm text-slate-500 leading-relaxed">
                                L&apos;IA analyse votre CV et l&apos;offre pour rédiger une lettre <span className="font-bold text-blue-600">sur-mesure</span> en 30 secondes.
                            </p>
-                           <span className="mt-6 px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">Recommandé</span>
+                           <span className="mt-4 md:mt-6 px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white text-[10px] md:text-xs font-bold rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity transform md:translate-y-2 md:group-hover:translate-y-0">Recommandé</span>
                       </button>
 
                       {/* Manual Choice */}
                       <button 
                           onClick={openManualModal}
-                          className="flex flex-col items-center p-8 rounded-2xl border-2 border-slate-100 bg-white hover:border-slate-400 hover:shadow-xl transition-all group text-center"
+                          className="flex flex-col items-center p-6 md:p-8 rounded-2xl border-2 border-slate-100 bg-white hover:border-slate-400 hover:shadow-xl transition-all group text-center"
                       >
-                           <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6 shadow-sm border border-slate-100 group-hover:scale-110 transition-transform duration-300">
-                               <Edit className="w-10 h-10 text-slate-600" />
+                           <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 md:mb-6 shadow-sm border border-slate-100 group-hover:scale-110 transition-transform duration-300">
+                               <Edit className="w-8 h-8 md:w-10 md:h-10 text-slate-600" />
                            </div>
-                           <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-slate-700">Rédiger manuellement</h3>
-                           <p className="text-sm text-slate-500 leading-relaxed">
+                           <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-2 md:mb-3 group-hover:text-slate-700">Rédiger manuellement</h3>
+                           <p className="text-xs md:text-sm text-slate-500 leading-relaxed">
                                Partez d&apos;une feuille blanche et utilisez nos outils de mise en forme pour écrire votre lettre.
                            </p>
                       </button>
@@ -456,8 +465,8 @@ export default function CoverLettersPage() {
             className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden relative" 
           >
              {/* Header */}
-             <div className="px-8 py-6 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white flex justify-between items-center">
-                <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+             <div className="px-6 py-4 md:px-8 md:py-6 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white flex justify-between items-center">
+                <h2 className="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2">
                    <Wand2 className="w-5 h-5 text-blue-600" />
                    Générateur IA
                 </h2>
@@ -466,7 +475,7 @@ export default function CoverLettersPage() {
                 </button>
              </div>
 
-             <div className="p-8">
+             <div className="p-6 md:p-8 max-h-[85vh] overflow-y-auto">
                {aiStep === 'generating' ? (
                  <div className="flex flex-col items-center justify-center py-12 space-y-6 text-center">
                     <div className="relative">

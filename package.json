@@ -1,5 +1,5 @@
 {
-  "name": "instant_cv",
+  "name": "jobsira",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,9 +17,11 @@
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "@sentry/nextjs": "^10.38.0",
+    "@vercel/speed-insights": "^1.3.1",
     "ai": "^6.0.69",
     "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "docx": "^9.5.1",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.31.0",
@@ -27,7 +29,6 @@
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
     "next-auth": "^5.0.0-beta.30",
-    "pdf-parse": "^2.4.5",
     "pg": "^8.18.0",
     "postcss": "^8.5.6",
     "react": "19.2.3",
@@ -35,6 +36,7 @@
     "sonner": "^2.0.7",
     "stripe": "^20.3.1",
     "tailwind-merge": "^3.4.0",
+    "unpdf": "^1.4.0",
     "zod": "^4.3.6",
     "zustand": "^5.0.11"
   },
@@ -42,7 +44,6 @@
     "@tailwindcss/postcss": "^4.1.18",
     "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
-    "@types/pdf-parse": "^1.1.5",
     "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",

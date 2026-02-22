@@ -1,5 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
+import { auth } from '@/auth';
+import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 
 // Initialize Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
@@ -7,10 +9,44 @@ const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
 export async function POST(req: Request) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    // Rate limiting: 10 requests per minute
+    const rateCheck = checkRateLimit(`${session.user.id}:ai-optimize`, RATE_LIMITS.AI_OPTIMIZE);
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Trop de requêtes. Veuillez réessayer dans quelques secondes.' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil(rateCheck.resetIn / 1000)) } }
+      );
+    }
+
     const { text, type, context } = await req.json();
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
+    }
+
+    // Determine cost and label based on type
+    const { checkAndConsumeCredits } = await import('@/lib/credits');
+    let creditAction: any = 'AI_OPTIMIZE';
+    let label = 'Amélioration / Optimisation CV (IA)';
+    
+    if (type === 'fix') {
+        creditAction = 'AI_CORRECT';
+        label = 'Correction orthographique CV (IA)';
+    } else if (type === 'translate') {
+        creditAction = 'AI_TRANSLATE';
+        label = 'Traduction CV (IA)';
+    } else if (type === 'expand') {
+        creditAction = 'AI_CONTINUE';
+        label = 'Développement CV (IA)';
+    }
+
+    try {
+      await checkAndConsumeCredits(session.user.id, creditAction, label);
+    } catch (e: any) {
+      return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
     }
 
     if (!process.env.GOOGLE_API_KEY) {

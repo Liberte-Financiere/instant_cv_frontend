@@ -8,9 +8,14 @@ import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { TemplatePreviewModal } from '@/components/templates/TemplatePreviewModal';
+import { LazyMount } from '@/components/ui/LazyMount';
 
 export default function DashboardTemplatesPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateOption | null>(null);
+  const [visibleCount, setVisibleCount] = useState(8);
+
+  const visibleTemplates = TEMPLATES.slice(0, visibleCount);
+  const hasMore = visibleCount < TEMPLATES.length;
 
   return (
     <div className="p-4 md:p-8 max-w-[1600px] mx-auto">
@@ -24,7 +29,7 @@ export default function DashboardTemplatesPage() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-8">
-        {TEMPLATES.map((template) => (
+        {visibleTemplates.map((template) => (
           <div 
             key={template.id} 
             onClick={() => setSelectedTemplate(template)}
@@ -32,12 +37,14 @@ export default function DashboardTemplatesPage() {
           >
             {/* Preview Header */}
             <div className="bg-slate-50 relative h-[180px] md:h-[320px] overflow-hidden flex justify-center pt-4 md:pt-8 border-b border-slate-100">
-               <div className="transform group-hover:scale-105 group-hover:-translate-y-2 transition-transform duration-500 shadow-lg scale-75 md:scale-100 origin-top">
-                 <CVThumbnail 
-                    cv={{ ...MOCK_PREVIEW_CV, templateId: template.id }} 
-                    scale={0.25} 
-                 />
-               </div>
+               <LazyMount className="w-full h-full">
+                 <div className="transform group-hover:scale-105 group-hover:-translate-y-2 transition-transform duration-500 shadow-lg scale-[0.6] md:scale-[0.85] lg:scale-100 origin-top flex justify-center">
+                   <CVThumbnail 
+                      cv={{ ...MOCK_PREVIEW_CV, templateId: template.id }} 
+                      scale={0.25} 
+                   />
+                 </div>
+               </LazyMount>
                
                {/* Overlay Button */}
                <div className="absolute inset-0 bg-black/0 group-hover:bg-slate-900/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100 backdrop-blur-[1px]">
@@ -67,6 +74,18 @@ export default function DashboardTemplatesPage() {
           </div>
         ))}
       </div>
+      
+      {hasMore && (
+        <div className="mt-8 flex justify-center">
+          <Button 
+            size="lg" 
+            onClick={() => setVisibleCount(prev => prev + 12)}
+            className="rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 shadow-md transition-colors"
+          >
+            Charger plus de modèles
+          </Button>
+        </div>
+      )}
       
       {/* Preview Modal */}
       <TemplatePreviewModal 

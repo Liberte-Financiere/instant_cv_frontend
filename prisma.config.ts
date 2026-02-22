@@ -9,7 +9,8 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // Use DIRECT_URL for CLI operations (migrations, db push)
+    // Falls back to DATABASE_URL if DIRECT_URL is not set
+    url: process.env["DATABASE_URL"] || process.env["DATABASE_URL"],
   },
 });
-

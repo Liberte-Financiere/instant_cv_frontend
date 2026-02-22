@@ -1,22 +1,46 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { handleGoogleSignIn } from '@/actions/auth';
+
+const testimonials = [
+  {
+    quote: "Avant, je passais des heures à mettre en page mon CV sur Word. Avec JobSira, je choisis un template pro, l'IA m'aide à formuler mes expériences, et j'exporte un PDF propre en quelques minutes.",
+    name: 'Hassan BIKIENGA',
+    role: 'Développeur Fullstack',
+    initials: 'HB',
+  },
+  {
+    quote: "Ce que j'apprécie le plus, c'est la lettre de motivation générée automatiquement pour chaque offre. Ça me fait gagner un temps fou au lieu de repartir de zéro à chaque candidature.",
+    name: 'Traore Adama',
+    role: 'Entrepreneur',
+    initials: 'TA',
+  },
+];
 
 function AuthContent() {
   const searchParams = useSearchParams();
   const referralCode = searchParams.get('ref');
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % testimonials.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const t = testimonials[current];
 
   return (
     <div className="min-h-screen w-full flex bg-slate-50">
       
-      {/* LEFT SIDE: Visual & Testimonial (Hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#0F172A] relative overflow-hidden items-center justify-center p-12">
+      {/* LEFT SIDE: Avantages + Témoignage (Hidden on mobile) */}
+      <div className="hidden lg:flex lg:w-1/2 bg-bg-dark relative overflow-hidden items-center justify-center p-12">
         {/* Abstract Background */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#2463eb]/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
         
         <div className="relative z-10 max-w-lg">
@@ -27,40 +51,50 @@ function AuthContent() {
              className="mb-12"
           >
              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-               Votre carrière mérite <span className="text-[#2463eb]">l&apos;excellence.</span>
+               Un bon CV, c&apos;est la <span className="text-primary">première impression</span> qui compte.
              </h1>
              <p className="text-slate-400 text-lg">
-               Rejoignez plus de 10,000 professionnels qui ont décroché le job de leurs rêves grâce à OptiJob.
+               JobSira vous aide à créer un CV professionnel et ciblé grâce à l&apos;intelligence artificielle.
              </p>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4 }}
-            className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md"
-          >
-            <div className="flex gap-1 mb-4">
-              {[1,2,3,4,5].map(i => <div key={i} className="w-5 h-5 text-yellow-500 fill-current">★</div>)}
-            </div>
-            <p className="text-slate-200 text-lg italic mb-6">
-              &quot;J&apos;ai refait mon CV en 10 minutes. Le lendemain, j&apos;avais 3 entretiens. L&apos;analyse IA est tout simplement bluffante.&quot;
-            </p>
-            <div className="flex items-center gap-4">
-               <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden relative">
-                 <Image 
-                   src="/avatars/avatar1.png" 
-                   alt="User" 
-                   fill
-                   className="object-cover"
-                 />
-               </div>
-               <div>
-                 <div className="text-white font-bold">Sarah K.</div>
-                 <div className="text-blue-400 text-sm">Product Designer</div>
-               </div>
-            </div>
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md"
+            >
+              <div className="flex gap-1 mb-4">
+                {[1,2,3,4,5].map(i => <div key={i} className="w-5 h-5 text-yellow-500 fill-current">★</div>)}
+              </div>
+              <p className="text-slate-200 text-lg italic mb-6">
+                &quot;{t.quote}&quot;
+              </p>
+              <div className="flex items-center gap-4">
+                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">
+                   {t.initials}
+                 </div>
+                 <div>
+                   <div className="text-white font-bold">{t.name}</div>
+                   <div className="text-blue-400 text-sm">{t.role}</div>
+                 </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Dots indicateurs */}
+          <div className="flex justify-center gap-2 mt-6">
+            {testimonials.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className={`w-2 h-2 rounded-full transition-all ${i === current ? 'bg-blue-500 w-6' : 'bg-slate-600'}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -75,7 +109,7 @@ function AuthContent() {
               className="mb-10"
             >
                <h2 className="text-3xl font-bold text-slate-900 mb-2">
-                 Bienvenue sur OptiJob
+                 Bienvenue sur JobSira
                </h2>
                <p className="text-slate-500">
                  Créez des CVs professionnels en quelques clics

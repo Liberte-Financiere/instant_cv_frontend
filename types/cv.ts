@@ -103,7 +103,9 @@ export interface CVSettings {
   fontFamily?: 'sans' | 'serif' | 'mono';
 }
 
-export type TemplateId = 'modern' | 'professional' | 'executive' | 'creative' | 'tech' | 'minimalist' | 'ats' | 'ats-glacier' | 'ats-iron';
+// TemplateId is derived from TEMPLATES in lib/templates.ts (single source of truth)
+import type { TemplateId } from '@/lib/templates';
+export type { TemplateId };
 
 export type CVSectionId = 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'hobbies' | 'certifications' | 'projects' | 'references' | 'qualities' | 'divers';
 

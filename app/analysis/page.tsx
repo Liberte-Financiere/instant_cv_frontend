@@ -15,7 +15,7 @@ export default function AnalysisResultPage() {
   const { lastAnalysis, createImportedCV } = useCVStore();
 
   useEffect(() => {
-    console.log('[AnalysisPage] lastAnalysis state:', lastAnalysis);
+
     if (!lastAnalysis) {
       console.warn('[AnalysisPage] No analysis found, redirecting...');
       router.push("/dashboard");

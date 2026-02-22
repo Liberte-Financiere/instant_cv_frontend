@@ -80,7 +80,7 @@ export default function PublicCoverLetterPage({ params }: PageProps) {
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="text-xl font-bold text-indigo-600">
-              InstantCV
+              JobSira
             </Link>
             <span className="text-slate-400">|</span>
             <span className="text-sm text-slate-600 flex items-center gap-2">

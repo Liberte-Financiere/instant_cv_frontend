@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { GraduationCap, Briefcase, RefreshCw, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 const targets = [
   {
@@ -31,14 +32,14 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 
 export function TargetAudience() {
   return (
-    <div className="bg-[#0F172A] py-24 px-4 border-t border-white/5 relative overflow-hidden">
+    <div className="bg-bg-dark py-24 px-4 border-t border-white/5 relative overflow-hidden">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#2463eb]/10 rounded-full blur-[100px] pointer-events-none translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none translate-x-1/2 -translate-y-1/2" />
       
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionHeader
           theme="dark"
-          title="Pour qui est fait OptiJob ?"
+          title="Pour qui est fait JobSira ?"
           description={<p>Peu importe où vous en êtes dans votre parcours, notre technologie s&apos;adapte à <span className="text-white font-medium">vos enjeux spécifiques</span>.</p>}
         />
 
@@ -61,9 +62,9 @@ export function TargetAudience() {
                 Décrochez votre premier stage ou emploi. Notre IA valorise votre formation et vos projets académiques pour combler le manque d&apos;expérience.
               </p>
             </div>
-            <button className="flex items-center gap-2 text-[#059669] font-bold mt-8 group-hover:gap-3 transition-all">
+            <Link href="/etudiants" className="flex items-center gap-2 text-[#059669] font-bold mt-8 group-hover:gap-3 transition-all">
               En savoir plus <ArrowRight className="w-5 h-5" />
-            </button>
+            </Link>
           </motion.div>
 
           {/* Card 2: Professionnels (Deep Dark Blue) */}
@@ -83,9 +84,9 @@ export function TargetAudience() {
                 Visez plus haut. Optimisez votre profil pour des postes de direction en mettant en avant vos résultats, votre leadership et votre expertise.
               </p>
             </div>
-            <button className="flex items-center gap-2 text-white font-bold mt-8 group-hover:gap-3 transition-all">
+            <Link href="/professionnels" className="flex items-center gap-2 text-white font-bold mt-8 group-hover:gap-3 transition-all">
               En savoir plus <ArrowRight className="w-5 h-5" />
-            </button>
+            </Link>
           </motion.div>
 
           {/* Card 3: Reconversion (Vibrant Gradient) */}
@@ -105,9 +106,9 @@ export function TargetAudience() {
                 Changez de vie. Identifiez vos compétences transférables et traduisez votre expérience passée dans le langage de votre futur secteur.
               </p>
             </div>
-            <button className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-6 py-3 rounded-full font-bold mt-8 w-fit backdrop-blur-md transition-all">
+            <Link href="/reconversion" className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-6 py-3 rounded-full font-bold mt-8 w-fit backdrop-blur-md transition-all">
               En savoir plus <ArrowRight className="w-5 h-5" />
-            </button>
+            </Link>
           </motion.div>
           
         </div>

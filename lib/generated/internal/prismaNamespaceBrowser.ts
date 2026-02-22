@@ -54,10 +54,11 @@ export const ModelName = {
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
+  AnalysisHistory: 'AnalysisHistory',
   User: 'User',
   CV: 'CV',
   CoverLetter: 'CoverLetter',
-  Payment: 'Payment'
+  CreditTransaction: 'CreditTransaction'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -113,20 +114,31 @@ export const VerificationTokenScalarFieldEnum = {
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
 
 
+export const AnalysisHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  score: 'score',
+  data: 'data',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AnalysisHistoryScalarFieldEnum = (typeof AnalysisHistoryScalarFieldEnum)[keyof typeof AnalysisHistoryScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
+  credits: 'credits',
   referralCode: 'referralCode',
   referredById: 'referredById',
   referralCount: 'referralCount',
-  premiumUntil: 'premiumUntil',
-  subscriptionStatus: 'subscriptionStatus',
-  lastPaymentId: 'lastPaymentId',
-  lastPaymentDate: 'lastPaymentDate',
-  phone: 'phone'
+  premiumUntil: 'premiumUntil'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -158,24 +170,16 @@ export const CoverLetterScalarFieldEnum = {
 export type CoverLetterScalarFieldEnum = (typeof CoverLetterScalarFieldEnum)[keyof typeof CoverLetterScalarFieldEnum]
 
 
-export const PaymentScalarFieldEnum = {
+export const CreditTransactionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  transactionId: 'transactionId',
   amount: 'amount',
-  currency: 'currency',
-  status: 'status',
-  provider: 'provider',
-  paymentMethod: 'paymentMethod',
-  phoneNumber: 'phoneNumber',
-  planType: 'planType',
-  planDuration: 'planDuration',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  completedAt: 'completedAt'
+  type: 'type',
+  description: 'description',
+  createdAt: 'createdAt'
 } as const
 
-export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+export type CreditTransactionScalarFieldEnum = (typeof CreditTransactionScalarFieldEnum)[keyof typeof CreditTransactionScalarFieldEnum]
 
 
 export const SortOrder = {
