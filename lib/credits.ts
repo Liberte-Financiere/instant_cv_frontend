@@ -15,10 +15,19 @@ export const CREDIT_COSTS = {
 
 export type ActionType = keyof typeof CREDIT_COSTS;
 
+export class InsufficientCreditsError extends Error {
+  constructor(cost: number, balance: number) {
+    const missing = cost - balance;
+    super(`Crédits insuffisants. Vous avez besoin de ${cost} crédits pour cette action. Il vous manque ${missing} crédits.`);
+    this.name = 'InsufficientCreditsError';
+  }
+}
+
 /**
  * Checks if a user has enough credits and consumes them if they do.
  * Logs the transaction in the database.
- * Throws an error if insufficient credits.
+ * Throws InsufficientCreditsError if insufficient credits.
+ * Throws generic Error for database issues.
  */
 export async function checkAndConsumeCredits(
   userId: string,
@@ -27,42 +36,53 @@ export async function checkAndConsumeCredits(
 ): Promise<{ success: boolean; newBalance: number }> {
   const cost = CREDIT_COSTS[actionType];
 
-  // We use a transaction to ensure atomic operations (read-check-update-log)
-  return await prisma.$transaction(async (tx) => {
-    const user = await tx.user.findUnique({
-      where: { id: userId },
-      select: { credits: true },
-    });
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({
+        where: { id: userId },
+        select: { credits: true },
+      });
 
-    if (!user) {
-      throw new Error("Utilisateur introuvable");
+      if (!user) {
+        throw new InsufficientCreditsError(cost, 0);
+      }
+
+      if (user.credits < cost) {
+        throw new InsufficientCreditsError(cost, user.credits);
+      }
+
+      const newBalance = user.credits - cost;
+
+      // 1. Decrement user balance
+      await tx.user.update({
+        where: { id: userId },
+        data: { credits: newBalance },
+      });
+
+      // 2. Log transaction (non-blocking — if this fails, don't block the action)
+      try {
+        await tx.creditTransaction.create({
+          data: {
+            userId,
+            amount: -cost,
+            type: 'USAGE',
+            description,
+          },
+        });
+      } catch (logError) {
+        console.warn('[CREDITS] Failed to log transaction, but credits were deducted:', logError);
+      }
+
+      return { success: true, newBalance };
+    });
+  } catch (error) {
+    if (error instanceof InsufficientCreditsError) {
+      throw error; // re-throw credit errors as-is
     }
-
-    if (user.credits < cost) {
-      let remainingCost = cost - user.credits;
-      throw new Error(`Crédits insuffisants. Vous avez besoin de ${cost} crédits pour cette action. Il vous manque ${remainingCost} crédits.`);
-    }
-
-    const newBalance = user.credits - cost;
-
-    // 1. Decrement user balance
-    await tx.user.update({
-      where: { id: userId },
-      data: { credits: newBalance },
-    });
-
-    // 2. Log transaction
-    await tx.creditTransaction.create({
-      data: {
-        userId,
-        amount: -cost,
-        type: 'USAGE',
-        description,
-      },
-    });
-
-    return { success: true, newBalance };
-  });
+    // Log the actual DB error for debugging
+    console.error('[CREDITS] Database error in checkAndConsumeCredits:', error);
+    throw error;
+  }
 }
 
 /**
