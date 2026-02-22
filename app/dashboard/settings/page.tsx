@@ -183,23 +183,23 @@ export default function SettingsPage() {
 
         {/* Crédits IA */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4 min-w-0">
+              <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center shrink-0">
                 <Sparkles className="w-6 h-6 text-amber-600" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-bold text-slate-900">Crédits IA</h3>
-                <p className="text-slate-500 text-sm">Solde actuel de vos crédits pour les fonctionnalités IA</p>
+                <p className="text-slate-500 text-sm truncate">Solde actuel de vos crédits IA</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 shrink-0">
               <span className="text-3xl font-black text-amber-600">
                 {creditsLoading ? '...' : creditsCount}
               </span>
               <Link 
                 href="/dashboard/pricing" 
-                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg transition-colors"
+                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap"
               >
                 Recharger
               </Link>
