@@ -43,12 +43,35 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model AnalysisHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // 'analysis' | 'match'
+  title     String
+  score     Float
+  data      Json     // Full result data
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  role          Role      @default(USER)
+  credits       Float     @default(25) // Utilisation de Float pour supporter les retraits de 0.5
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   
   // Referral System
   referralCode   String?   @unique  // Unique 8-char code for sharing
@@ -58,17 +81,12 @@ model User {
   referralCount  Int       @default(0)  // Count of successful referrals
   premiumUntil   DateTime?             // Premium access expiry date (reward)
   
-  // Payment System (LigdiCash)
-  subscriptionStatus String?   // 'active' | 'expired' | 'canceled'
-  lastPaymentId      String?   // Last successful payment transaction ID
-  lastPaymentDate    DateTime? // Date of last payment
-  phone              String?   // Phone number for Mobile Money
-  
   accounts      Account[]
   sessions      Session[]
   cvs           CV[]
   coverLetters  CoverLetter[]
-  payments      Payment[]
+  analyses      AnalysisHistory[] // Relation
+  creditTransactions CreditTransaction[]
 }
 
 model CV {
@@ -99,32 +117,14 @@ model CoverLetter {
   @@index([userId])
 }
 
-// Payment System
-model Payment {
-  id              String   @id @default(cuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Transaction Details
-  transactionId   String   @unique // LigdiCash transaction ID
-  amount          Int      // Amount in FCFA
-  currency        String   @default("XOF")
-  status          String   // 'pending' | 'completed' | 'failed' | 'canceled'
-  
-  // Payment Method
-  provider        String   @default("ligdicash") // 'ligdicash' | 'pawapay'
-  paymentMethod   String?  // 'orange_money' | 'moov_money' | 'visa' | 'mastercard'
-  phoneNumber     String?  // Phone used for payment
-  
-  // Plan Details
-  planType        String   // 'monthly' | 'yearly' | 'lifetime'
-  planDuration    Int?     // Duration in days
-  
-  // Metadata
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  completedAt     DateTime?
-  
+model CreditTransaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount      Float    // Montant de la transaction (négatif pour retrait, positif pour ajout)
+  type        String   // e.g., 'USAGE', 'PURCHASE', 'BONUS_REFERRAL', 'SIGNUP'
+  description String   // e.g., 'Génération Lettre Motivation IA'
+  createdAt   DateTime @default(now())
+
   @@index([userId])
-  @@index([transactionId])
 }

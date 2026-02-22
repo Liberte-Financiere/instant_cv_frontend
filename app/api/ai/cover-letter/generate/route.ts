@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
@@ -10,10 +11,27 @@ export async function POST(req: Request) {
     const session = await auth();
     if (!session?.user?.id) return new NextResponse("Unauthorized", { status: 401 });
 
+    // Rate limiting: 10 requests per minute
+    const rateCheck = checkRateLimit(`${session.user.id}:ai-cover-letter`, RATE_LIMITS.AI_COVER_LETTER);
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Trop de requêtes. Veuillez réessayer dans quelques secondes.' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil(rateCheck.resetIn / 1000)) } }
+      );
+    }
+
     const { cvData, cvText, jobDescription } = await req.json();
 
     if ((!cvData && !cvText) || !jobDescription) {
       return NextResponse.json({ error: 'CV data/text and Job Description are required' }, { status: 400 });
+    }
+
+    // Check and consume 2 credits
+    const { checkAndConsumeCredits } = await import('@/lib/credits');
+    try {
+      await checkAndConsumeCredits(session.user.id, 'AI_GENERATE_LETTER', 'Génération d\'une lettre de motivation par IA');
+    } catch (e: any) {
+      return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
     }
 
     const cvContent = cvText || JSON.stringify(cvData);
@@ -41,15 +59,13 @@ export async function POST(req: Request) {
       }
     `;
 
-    console.log(`[AI_GEN] Starting generation at ${new Date().toISOString()}`);
     const startTime = Date.now();
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
     
-    const duration = Date.now() - startTime;
-    console.log(`[AI_GEN] Generation completed in ${duration}ms at ${new Date().toISOString()}`);
+
     
     // Robust JSON extraction
     // 1. Remove markdown code blocks

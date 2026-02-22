@@ -59,7 +59,7 @@ Si le vrai videur accepte les demandes venant de **n'importe quelle adresse**, l
 
 Pour se protéger, le videur (Auth.js) vérifie l'**adresse d'origine** de chaque requête :
 
-> "Hey, cette requête vient de `instant-cv-frontend.onrender.com`... Est-ce une adresse que je connais et en qui j'ai confiance ?"
+> "Hey, cette requête vient de `jobsira-frontend.onrender.com`... Est-ce une adresse que je connais et en qui j'ai confiance ?"
 
 ---
 
@@ -75,7 +75,7 @@ LISTE DE CONFIANCE PAR DÉFAUT :
 │ ✅ localhost                │  ← Automatiquement OK
 │ ✅ localhost:3000           │  ← Automatiquement OK
 │                             │
-│ ❌ instant-cv-frontend...   │  ← PAS dans la liste !
+│ ❌ jobsira-frontend...   │  ← PAS dans la liste !
 │ ❌ monsite.vercel.app       │  ← PAS dans la liste !
 │ ❌ exemple.com              │  ← PAS dans la liste !
 └─────────────────────────────┘
@@ -208,7 +208,7 @@ C'est un **OU** logique : si l'une ou l'autre condition est vraie, ça passe.
 ### Le flux complet d'une requête
 
 ```
-UTILISATEUR VISITE: instant-cv-frontend.onrender.com/dashboard
+UTILISATEUR VISITE: jobsira-frontend.onrender.com/dashboard
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -220,7 +220,7 @@ UTILISATEUR VISITE: instant-cv-frontend.onrender.com/dashboard
 │                                                                  │
 │  Vérification de confiance :                                    │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │  Domaine: instant-cv-frontend.onrender.com               │   │
+│  │  Domaine: jobsira-frontend.onrender.com               │   │
 │  │                                                           │   │
 │  │  ❓ trustHost dans auth.config.ts ?                      │   │
 │  │     → NON (absent)                                        │   │
@@ -245,7 +245,7 @@ UTILISATEUR VISITE: instant-cv-frontend.onrender.com/dashboard
 ### Après la correction
 
 ```
-UTILISATEUR VISITE: instant-cv-frontend.onrender.com/dashboard
+UTILISATEUR VISITE: jobsira-frontend.onrender.com/dashboard
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐

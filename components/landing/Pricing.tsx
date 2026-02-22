@@ -2,54 +2,73 @@
 
 import { Check, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const plans = [
   {
-    name: 'Découverte',
+    name: 'Essai Gratuit',
     price: '0',
     currency: 'FCFA',
-    description: 'Pour tester et créer votre premier CV.',
+    description: '25 crédits offerts dès l\'inscription.',
     features: [
-      '1 CV Gratuit',
-      'Modèles Basiques',
-      'Export PDF avec filigrane',
-      'Suggestions IA limitées'
+      'IA incluse mais limitée (25 cr.)',
+      'Générer des CV',
+      'Lettres de motivation',
+      'Analyse de CV',
+      'Export PDF Pro illimité',
+      'Design et couleurs illimités',
+      'Templates CV & LM gratuits',
+      'Crédits sans expiration'
     ],
-    cta: 'Commencer',
+    cta: 'Créer mon compte',
     popular: false,
     dark: false
   },
   {
-    name: 'Pro',
-    price: '3 500',
+    name: 'Pack Standard',
+    price: '1 000',
     currency: 'FCFA',
-    period: '/mois',
-    description: 'L\'essentiel pour décrocher un job.',
+    period: ' / achat unique',
+    description: '35 crédits - L\'essentiel pour postuler.',
     features: [
-      'CV Illimités',
-      'Modèles Premium & Design',
-      'Coach IA & Anti-Rejet ATS',
-      'Lettres de Motivation Illimitées',
-      'Export PDF HD sans filigrane',
-      'Ciblage de poste (Job Match)'
+      'Valable à vie',
+      'Création et modifications libres',
+      'Refonte IA de votre CV',
+      'Lettres pour chaque offre'
     ],
-    cta: 'Démarrer (Essai gratuit)',
+    cta: 'Explorer',
     popular: true,
     dark: true // Highlighted styling
   },
   {
-    name: 'Annuel',
-    price: '25 000',
+    name: 'Pack Premium',
+    price: '2 000',
     currency: 'FCFA',
-    period: '/an',
-    description: 'Économisez 40% sur l\'année.',
+    period: ' / achat unique',
+    description: '80 crédits - Pour postuler activement.',
     features: [
-      'Tout inclus (Pack Pro)',
-      'Support Prioritaire',
-      'Accès aux futurs features',
-      'Revue de CV par un Expert (1/an)'
+      'Valable à vie',
+      'Correction et traduction',
+      'Analyse CV vs Offre IA',
+      'Multiples versions de CV'
     ],
-    cta: 'Devenir Membre',
+    cta: 'En savoir plus',
+    popular: false,
+    dark: false
+  },
+  {
+    name: 'Pack Pro',
+    price: '5 000',
+    currency: 'FCFA',
+    period: ' / achat unique',
+    description: '250 crédits - La tranquillité ultime.',
+    features: [
+      'Valable à vie',
+      'Création sans limite',
+      'Coach IA complet à disposition',
+      'Toutes les options débloquées'
+    ],
+    cta: 'Voir l\'offre',
     popular: false,
     dark: false
   }
@@ -59,14 +78,14 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 
 export function Pricing() {
   return (
-    <div className="bg-[#f6f6f8] py-20 px-4 border-t border-slate-200">
+    <div id="pricing" className="bg-[#f6f6f8] py-20 px-4 border-t border-slate-200">
       <div className="max-w-7xl mx-auto">
         <SectionHeader
-          title="Investissez dans votre avenir"
-          description="Des tarifs adaptés à votre réussite. Annulez à tout moment."
+          title="Finis les abonnements mensuels"
+          description="Achetez uniquement les crédits IA dont vous avez besoin."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto items-center">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
@@ -74,15 +93,15 @@ export function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className={`relative rounded-2xl p-8 ${
+              className={`relative rounded-2xl p-6 ${
                 plan.dark 
-                  ? 'bg-[#0F172A] text-white shadow-2xl scale-105 z-10' 
+                  ? 'bg-bg-dark text-white shadow-2xl md:scale-105 z-10' 
                   : 'bg-white text-slate-900 shadow-xl border border-slate-100'
               }`}
             >
               {plan.popular && (
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-4">
-                  <span className="bg-[#2463eb] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1">
+                  <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1">
                     <Star className="w-3 h-3 fill-white" /> Populaire
                   </span>
                 </div>
@@ -102,7 +121,7 @@ export function Pricing() {
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3 text-sm">
                     <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                      plan.dark ? 'bg-[#2463eb]/20 text-[#2463eb]' : 'bg-green-100 text-green-600'
+                      plan.dark ? 'bg-primary/20 text-primary' : 'bg-green-100 text-green-600'
                     }`}>
                       <Check className="w-3 h-3" />
                     </div>
@@ -111,13 +130,15 @@ export function Pricing() {
                 ))}
               </ul>
 
-              <button className={`w-full py-4 rounded-xl font-bold transition-all ${
-                plan.dark 
-                  ? 'bg-[#2463eb] hover:bg-[#1d4ed8] text-white shadow-lg shadow-blue-500/25' 
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-900'
-              }`}>
-                {plan.cta}
-              </button>
+              <Link href="/auth">
+                <button className={`w-full py-4 rounded-xl font-bold transition-all ${
+                  plan.dark 
+                    ? 'bg-primary hover:bg-primary-dark text-white shadow-lg shadow-blue-500/25' 
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-900'
+                }`}>
+                  {plan.cta}
+                </button>
+              </Link>
             </motion.div>
           ))}
         </div>

@@ -1,98 +1,84 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
-// @ts-ignore
-// const pdf = require('pdf-parse');
 
 // Initialize Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-// Use a model capable of handling larger context if possible, but flash-lite is fast
 const model = genAI.getGenerativeModel({ 
-  model: 'gemini-2.5-flash', // Upgrading model for better extraction capabilities
+  model: 'gemini-2.5-flash',
   generationConfig: { responseMimeType: "application/json" }
 });
 
-export const dynamic = 'force-dynamic'; // Prevent static optimization
-export const runtime = 'nodejs'; // Ensure Node.js runtime for pdf-parse
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 import { auth } from '@/auth';
+import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  console.log('[API] Analyze Request Started');
-  
-  // Lazy load pdf-parse strictly inside handler
-  let PDFParse;
-  try {
-    // @ts-ignore
-    const pdfModule = require('pdf-parse');
-    PDFParse = pdfModule.PDFParse || pdfModule.default?.PDFParse;
-    
-    if (!PDFParse) {
-        throw new Error('PDFParse class not found in module');
-    }
-  } catch (e) {
-    console.error('[API] Failed to load pdf-parse:', e);
-    return NextResponse.json({ error: 'Server Configuration Error: PDF Parser missing' }, { status: 500 });
+  // Rate limiting: 5 requests per minute
+  const rateCheck = checkRateLimit(`${session.user.id}:ai-analyze`, RATE_LIMITS.AI_ANALYZE);
+  if (!rateCheck.allowed) {
+    return NextResponse.json(
+      { error: 'Trop de requêtes. Veuillez réessayer dans quelques secondes.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil(rateCheck.resetIn / 1000)) } }
+    );
   }
 
   try {
+    // Check and consume 2 credits
+    const { checkAndConsumeCredits } = await import('@/lib/credits');
+    try {
+      await checkAndConsumeCredits(session.user.id, 'AI_ANALYZE', 'Analyse magique du CV par IA');
+    } catch (e: any) {
+      return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
+    }
+
     if (!process.env.GOOGLE_API_KEY) {
       return NextResponse.json({ error: 'API Key missing' }, { status: 500 });
     }
 
-    const formData = await req.formData();
-    const file = formData.get('file') as File;
-
-    if (!file) {
-      return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json({ error: 'Le fichier est trop volumineux (max 5MB)' }, { status: 400 });
-    }
-
     let extractedText = '';
+    const contentType = req.headers.get('content-type') || '';
 
-    // Extract text based on file type
-    if (file.type === 'application/pdf') {
-      console.log('[API] Processing PDF with v2 Parser...');
-      const arrayBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      
-      let parser;
-      try {
-        // Initialize parser with buffer data
-        // @ts-ignore
-        parser = new PDFParse({ data: buffer });
-        const data = await parser.getText();
-        extractedText = data.text;
-        await parser.destroy();
-        
-        console.log('[API] PDF extracted. Length:', extractedText.length);
-      } catch (pdfError) {
-        console.error('[API] PDF Parsing Error:', pdfError);
-        if (parser) {
-            try { await parser.destroy(); } catch(e) {}
-        }
-        return NextResponse.json({ error: 'Failed to read PDF file structure.' }, { status: 400 });
+    if (contentType.includes('application/json')) {
+      // JSON mode: CV data from the platform
+      const { cvData } = await req.json();
+      if (!cvData) {
+        return NextResponse.json({ error: 'CV data is required' }, { status: 400 });
       }
-    } else if (file.type === 'text/plain') {
-      extractedText = await file.text();
+      extractedText = typeof cvData === 'string' ? cvData : JSON.stringify(cvData);
     } else {
-      // TODO: Add support for Docx if needed via mammoth
-      return NextResponse.json({ error: 'Unsupported file type. Please upload PDF or TXT.' }, { status: 400 });
+      // FormData mode: file upload (PDF/TXT)
+      const formData = await req.formData();
+      const file = formData.get('file') as File;
+
+      if (!file) {
+        return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        return NextResponse.json({ error: 'Le fichier est trop volumineux (max 5MB)' }, { status: 400 });
+      }
+
+      if (file.type === 'application/pdf') {
+        const { extractText } = await import('unpdf');
+        const arrayBuffer = await file.arrayBuffer();
+        const { text } = await extractText(new Uint8Array(arrayBuffer));
+        extractedText = text.join('\n');
+      } else if (file.type === 'text/plain') {
+        extractedText = await file.text();
+      } else {
+        return NextResponse.json({ error: 'Unsupported file type. Please upload PDF or TXT.' }, { status: 400 });
+      }
     }
 
-    if (!extractedText || extractedText.trim().length < 50) {
-      return NextResponse.json({ error: 'Could not extract enough text from file.' }, { status: 400 });
+    if (!extractedText || extractedText.trim().length < 30) {
+      return NextResponse.json({ error: 'Contenu du CV insuffisant.' }, { status: 400 });
     }
 
-    console.log('[API] Sending to Gemini...');
-
-    // ... (Prompt definition kept same, assume it's fine) ...
-    // Prepare Prompt for Detailed Analysis & Extraction
     const prompt = `
       You are an expert HR Recruiter and CV Analyzer.
       
@@ -154,8 +140,6 @@ export async function POST(req: Request) {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const jsonString = response.text();
-    
-    console.log('[API] Gemini Response received. Length:', jsonString.length);
 
     // Sanitize JSON string (remove markdown code blocks if present)
     const cleanJson = jsonString.replace(/```json/g, '').replace(/```/g, '').trim();
@@ -171,7 +155,6 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error('[API] Global Catch Error:', error);
     
-    // Handle Rate Limiting specifically
     if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
         return NextResponse.json({ 
             error: 'Le quota de l\'IA est dépassé. Veuillez réessayer dans une minute.', 

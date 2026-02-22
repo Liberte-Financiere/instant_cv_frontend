@@ -3,9 +3,6 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { 
   generateReferralCode, 
-  calculatePremiumDays, 
-  getNextRewardTier,
-  isPremiumActive,
   getReferralLink 
 } from '@/lib/referral';
 
@@ -63,17 +60,12 @@ export async function GET() {
 
     const referralLink = getReferralLink(user.referralCode!, process.env.NEXTAUTH_URL);
     const referralCount = user.referralCount ?? 0;
-    const nextTier = getNextRewardTier(referralCount);
-    const hasPremium = isPremiumActive(user.premiumUntil);
 
     return NextResponse.json({
       referralCode: user.referralCode,
       referralLink,
       referralCount,
       referredUsers,
-      premiumUntil: user.premiumUntil,
-      hasPremium,
-      nextTier,
     });
   } catch (error) {
     console.error('[REFERRAL_GET]', error);
@@ -98,7 +90,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Code de parrainage manquant' }, { status: 400 });
     }
 
-    // Check if user was already referred
+    // Fetch user and check if already referred
     const currentUser = await prisma.user.findUnique({
       where: { id: currentUserId },
       select: { referredById: true },
@@ -122,7 +114,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Auto-parrainage interdit' }, { status: 400 });
     }
 
-    // Update both users in a transaction
+    // Dynamic import to avoid circular dependencies and top level await issues
+    const { addCredits } = await import('@/lib/credits');
+    const { REFERRAL_REWARDS } = await import('@/lib/referral');
+
+    // 1. Link the new user to referrer and increment referrer count
     await prisma.$transaction(async (tx) => {
       // Link the new user to referrer
       await tx.user.update({
@@ -131,32 +127,32 @@ export async function POST(request: Request) {
       });
 
       // Increment referrer's count
-      const newCount = referrer.referralCount + 1;
-      const premiumDays = calculatePremiumDays(newCount);
-      
-      // Calculate new premium end date
-      let premiumUntil: Date | null = null;
-      if (premiumDays > 0) {
-        const now = new Date();
-        const currentPremium = referrer.premiumUntil && new Date(referrer.premiumUntil) > now 
-          ? new Date(referrer.premiumUntil) 
-          : now;
-        premiumUntil = new Date(currentPremium);
-        premiumUntil.setDate(premiumUntil.getDate() + premiumDays);
-      }
-
       await tx.user.update({
         where: { id: referrer.id },
-        data: { 
-          referralCount: newCount,
-          premiumUntil,
-        },
+        data: { referralCount: referrer.referralCount + 1 },
       });
     });
+    
+    // 2. Add Credits securely via the Credits module (outside the main user tx to use its inner generic tx)
+    // Reward for the Referrer
+    await addCredits(
+        referrer.id, 
+        REFERRAL_REWARDS.CREDITS_PER_REFERRAL, 
+        'BONUS_REFERRAL', 
+        `Bonus parrainage suite à l'inscription de testeur`
+    );
+     
+    // Welcome Bonus for the new User
+    await addCredits(
+        currentUserId, 
+        REFERRAL_REWARDS.CREDITS_FOR_NEW_USER, 
+        'BONUS_REFERRAL', 
+        `Bonus de bienvenue (code parrain)`
+    );
 
     return NextResponse.json({ 
       success: true, 
-      message: 'Parrainage enregistré avec succès' 
+      message: 'Parrainage enregistré avec succès ! Crédits ajoutés.' 
     });
   } catch (error) {
     console.error('[REFERRAL_POST]', error);

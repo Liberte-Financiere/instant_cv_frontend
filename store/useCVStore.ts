@@ -35,14 +35,40 @@ export interface DetailedAnalysis {
   };
 }
 
+// Match Result State
+export interface MatchResultState {
+  result: any; // Using any to avoid circular dependency, or import MatchResultData if possible
+  cvSourceMode: 'select' | 'upload';
+  selectedCVId: string;
+}
+
+// History State
+export interface AnalysisHistoryItem {
+  id: string;
+  type: 'analysis' | 'match';
+  date: string; // ISO string
+  score: number;
+  title: string;
+  data: any; // Full result data
+}
+
 interface CVState {
   currentCV: CV | null;
   currentStep: EditorStep;
   cvList: CV[];
+  
+  // History
+  history: AnalysisHistoryItem[];
+  addToHistory: (item: AnalysisHistoryItem) => void;
+  clearHistory: () => void;
 
   // Analysis State
   lastAnalysis: { analysis: DetailedAnalysis, cvData: Partial<CV> } | null;
   setAnalysisData: (data: { analysis: DetailedAnalysis, cvData: Partial<CV> } | null) => void;
+
+  // Match State
+  lastMatch: MatchResultState | null;
+  setMatchData: (data: MatchResultState | null) => void;
   
   // API Sync
   fetchUserCVs: () => Promise<void>;
@@ -181,28 +207,68 @@ export const useCVStore = create<CVState>()(
       currentCV: null,
       currentStep: 'personal',
       cvList: [],
+      history: [],
+      
+      addToHistory: (item) => {
+        // Optimistic update
+        set((state) => ({ 
+          history: [item, ...state.history].slice(0, 50) 
+        }));
+
+        // Sync with API
+        fetch('/api/ai/history', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(item)
+        }).catch(err => console.error('Failed to sync history item:', err));
+      },
+      
+      clearHistory: () => set({ history: [] }),
       
       lastAnalysis: null,
       setAnalysisData: (data) => set({ lastAnalysis: data }),
 
+      lastMatch: null,
+      setMatchData: (data) => set({ lastMatch: data }),
+
       // API Sync
       fetchUserCVs: async () => {
         try {
-          const serverCVs = await CVService.getAll();
-          const { cvList: localCVs } = get();
+          // Fetch CVs and History in parallel
+          const [cvsRes, historyRes] = await Promise.all([
+            CVService.getAll(),
+            fetch('/api/ai/history').then(res => res.ok ? res.json() : [])
+          ]);
+
+          const { cvList: localCVs, history: localHistory } = get();
           
-          // Create a map of server CVs by ID (server is source of truth)
-          const serverCVMap = new Map(serverCVs.map(cv => [cv.id, cv]));
-          
-          // For any local CVs not on server yet, keep them (they might be unsaved)
+          // --- Sync CVs ---
+          const serverCVMap = new Map(cvsRes.map(cv => [cv.id, cv]));
           const unsavedLocalCVs = localCVs.filter(cv => !serverCVMap.has(cv.id));
+          const mergedCVs = [...cvsRes, ...unsavedLocalCVs];
           
-          // Merge: server CVs first, then unsaved local CVs
-          const mergedCVs = [...serverCVs, ...unsavedLocalCVs];
+          // --- Sync History ---
+          // Server returns createdAt, client uses date. Map it.
+          const formattedHistoryRes = historyRes.map((h: any) => ({
+             ...h,
+             date: h.createdAt || h.date // Handle both cases for robustness
+          }));
+
+          const serverHistoryIds = new Set(formattedHistoryRes.map((h: any) => h.id));
+          const unsavedLocalHistory = localHistory.filter(h => !serverHistoryIds.has(h.id));
           
-          set({ cvList: mergedCVs });
+          // Combine and sort
+          const mergedHistory = [...formattedHistoryRes, ...unsavedLocalHistory].sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          ).slice(0, 50);
+
+          set({ 
+            cvList: mergedCVs, 
+            history: mergedHistory as AnalysisHistoryItem[] 
+          });
+
         } catch (error) {
-          console.error('Failed to fetch CVs', error);
+          console.error('Failed to sync user data', error);
         }
       },
 
@@ -538,7 +604,7 @@ export const useCVStore = create<CVState>()(
       }))),
     }),
     {
-      name: 'optijob-cv-storage',
+      name: 'jobsira-cv-storage',
       storage: createJSONStorage(() => indexedDBStorage),
     }
   )

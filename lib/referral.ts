@@ -13,62 +13,24 @@ export function generateReferralCode(): string {
   return code;
 }
 
-// Reward tiers based on referral count
+// Reward constants
 export const REFERRAL_REWARDS = {
-  TIER_1: { count: 3, premiumDays: 30 },   // 3 referrals = 1 month premium
-  TIER_2: { count: 10, premiumDays: 90 },  // 10 referrals = 3 months premium
-  TIER_3: { count: 25, premiumDays: 180 }, // 25 referrals = 6 months premium
-  TIER_4: { count: 50, premiumDays: 365 }, // 50 referrals = 1 year premium
+  CREDITS_PER_REFERRAL: 30, // The referrer gets 30 credits
+  CREDITS_FOR_NEW_USER: 15, // The new user gets 15 bonus credits
 } as const;
 
-// Calculate total premium days earned based on referral count
-export function calculatePremiumDays(referralCount: number): number {
-  let totalDays = 0;
-  
-  if (referralCount >= REFERRAL_REWARDS.TIER_4.count) {
-    totalDays = REFERRAL_REWARDS.TIER_4.premiumDays;
-  } else if (referralCount >= REFERRAL_REWARDS.TIER_3.count) {
-    totalDays = REFERRAL_REWARDS.TIER_3.premiumDays;
-  } else if (referralCount >= REFERRAL_REWARDS.TIER_2.count) {
-    totalDays = REFERRAL_REWARDS.TIER_2.premiumDays;
-  } else if (referralCount >= REFERRAL_REWARDS.TIER_1.count) {
-    totalDays = REFERRAL_REWARDS.TIER_1.premiumDays;
-  }
-  
-  return totalDays;
+// Calculate total credits earned based on referral count
+export function calculateEarnedCredits(referralCount: number): number {
+  return referralCount * REFERRAL_REWARDS.CREDITS_PER_REFERRAL;
 }
 
-// Get next reward tier information
-export function getNextRewardTier(referralCount: number): { 
-  needed: number; 
-  premiumDays: number;
-  progress: number;
-} | null {
-  const tiers = [
-    REFERRAL_REWARDS.TIER_1,
-    REFERRAL_REWARDS.TIER_2,
-    REFERRAL_REWARDS.TIER_3,
-    REFERRAL_REWARDS.TIER_4,
-  ];
-  
-  for (const tier of tiers) {
-    if (referralCount < tier.count) {
-      return {
-        needed: tier.count - referralCount,
-        premiumDays: tier.premiumDays,
-        progress: Math.round((referralCount / tier.count) * 100),
-      };
-    }
-  }
-  
-  return null; // All tiers unlocked
-}
-
-// Check if user has active premium
+// Check if user has active premium (Deprecated, kept for type safety on old accounts)
 export function isPremiumActive(premiumUntil: Date | null): boolean {
   if (!premiumUntil) return false;
   return new Date(premiumUntil) > new Date();
 }
+
+
 
 // Get referral link for a user
 export function getReferralLink(referralCode: string, baseUrl?: string): string {

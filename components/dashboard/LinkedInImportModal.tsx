@@ -108,7 +108,7 @@ export function LinkedInImportModal({ isOpen, onClose }: LinkedInImportModalProp
             className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#0077B5] to-[#0A66C2] p-6">
+            <div className="bg-gradient-to-r from-linkedin to-[#0A66C2] p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
@@ -157,7 +157,7 @@ export function LinkedInImportModal({ isOpen, onClose }: LinkedInImportModalProp
                     setError(null);
                   }}
                   placeholder="https://linkedin.com/in/votre-profil ou votre-profil"
-                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0077B5] focus:border-[#0077B5] outline-none transition-all text-slate-900 placeholder:text-slate-400"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-linkedin focus:border-linkedin outline-none transition-all text-slate-900 placeholder:text-slate-400"
                   disabled={isLoading}
                   onKeyDown={(e) => e.key === 'Enter' && handleImport()}
                 />
@@ -193,7 +193,7 @@ export function LinkedInImportModal({ isOpen, onClose }: LinkedInImportModalProp
                 <button
                   onClick={handleImport}
                   disabled={isLoading || !linkedInUrl.trim()}
-                  className="flex-1 py-3 font-bold text-white bg-[#0077B5] rounded-xl hover:bg-[#006097] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 py-3 font-bold text-white bg-linkedin rounded-xl hover:bg-linkedin-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isLoading ? (
                     <>

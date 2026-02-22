@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --font-manrope: 'Manrope', sans-serif;
+  --font-manrope: "Manrope", sans-serif;
   --primary: #2463eb;
   --primary-dark: #1d4ed8;
-  --background-dark: #0F172A;
+  --background-dark: #0f172a;
   --background-light: #f6f6f8;
 }
 
@@ -12,10 +12,35 @@
   --font-sans: var(--font-manrope);
   --color-primary: var(--primary);
   --color-primary-dark: var(--primary-dark);
+  --color-bg-dark: var(--background-dark);
+  --color-bg-light: var(--background-light);
+  --color-linkedin: #0077b5;
+  --color-linkedin-dark: #006097;
 }
 
 body {
   font-family: var(--font-sans);
+}
+
+/* Global focus-visible styles for keyboard navigation (a11y) */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Improve contrast for muted text (a11y: WCAG 4.5:1 ratio) */
+.text-slate-400 {
+  color: #64748b; /* slate-500 — better contrast than slate-400 */
 }
 
 /* Force text wrapping in CV templates */
@@ -29,18 +54,30 @@ body {
   hyphens: auto;
 }
 
+/* Safe area support for iOS notch and home bar */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  .fixed.bottom-0 {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 /* Print styles for PDF export */
 @media print {
   body {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-  
+
   /* Page setup */
   @page {
     size: A4;
     /* Add space on top/bottom for pages 2, 3... */
-    margin: 15mm 0; 
+    margin: 15mm 0;
   }
 
   /* Page 1 often has full-bleed header/sidebar, so remove margins except bottom */
@@ -50,26 +87,26 @@ body {
     margin-right: 0;
     margin-bottom: 15mm;
   }
-  
+
   /* CV Template sizing */
   .cv-template {
     width: 210mm !important;
     min-height: auto !important;
   }
-  
+
   /* SECTIONS CAN BREAK - permet aux sections de se couper */
   .cv-template section {
     break-inside: auto;
     page-break-inside: auto;
   }
-  
+
   /* Keep headings with at least some content after them */
   .cv-template h2,
   .cv-template h3 {
     break-after: avoid;
     page-break-after: avoid;
   }
-  
+
   /* INDIVIDUAL ITEMS stay together (experience, education, certification, etc.) */
   /* These are the direct children divs inside sections - typically each entry */
   .cv-template .cv-item,
@@ -77,7 +114,7 @@ body {
     break-inside: avoid;
     page-break-inside: avoid;
   }
-  
+
   /* Avoid orphan lines */
   .cv-template p {
     orphans: 2;
@@ -102,7 +139,7 @@ body {
 
   /* Add a text hint for page breaks on screen */
   .cv-template::before {
-    content: 'Fin de page (A4)';
+    content: "Fin de page (A4)";
     position: absolute;
     right: -120px;
     top: 295mm;

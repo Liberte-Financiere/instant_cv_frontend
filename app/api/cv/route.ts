@@ -4,6 +4,8 @@ import { auth } from '@/auth';
 
 import { cvSchema } from '@/lib/schemas';
 
+import { checkAndConsumeCredits } from '@/lib/credits';
+
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -13,12 +15,6 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    // Validate body (we use partial because helper IDs or extra UI states might not be in schema, 
-    // or we can use .passthrough() if we want to allow extras. 
-    // Ideally we strictly validate key structure.)
-    // Note: dates are strings in JSON, schema allows string | date.
-    
-    // For creation, we expect at least a title and some structure.
     const validation = cvSchema.safeParse(body);
 
     if (!validation.success) {
@@ -28,12 +24,29 @@ export async function POST(req: Request) {
     const validData = validation.data;
     const { id, title, ...rest } = validData;
 
+    // Check if CV already exists (meaning it's an update, not a creation)
+    // We only consume credits ON CREATION
+    let isNew = false;
+    if (id) {
+       const existing = await prisma.cV.findUnique({ where: { id } });
+       if (!existing) isNew = true;
+    } else {
+       isNew = true;
+    }
+
+    if (isNew) {
+      try {
+        await checkAndConsumeCredits(session.user.id, 'CREATE_CV', 'Création d\'un nouveau CV');
+      } catch (e: any) {
+        return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
+      }
+    }
+
     // Create CV in DB with the same ID as frontend
     const cv = await prisma.cV.create({
       data: {
         id: id, 
         title: title || 'Nouveau CV',
-        // Zod validated data is a strict object, satisfying InputJsonValue
         content: validData, 
         userId: session.user.id
       }

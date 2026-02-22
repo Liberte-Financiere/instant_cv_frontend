@@ -55,6 +55,11 @@ export type Session = Prisma.SessionModel
  */
 export type VerificationToken = Prisma.VerificationTokenModel
 /**
+ * Model AnalysisHistory
+ * 
+ */
+export type AnalysisHistory = Prisma.AnalysisHistoryModel
+/**
  * Model User
  * 
  */
@@ -70,7 +75,7 @@ export type CV = Prisma.CVModel
  */
 export type CoverLetter = Prisma.CoverLetterModel
 /**
- * Model Payment
+ * Model CreditTransaction
  * 
  */
-export type Payment = Prisma.PaymentModel
+export type CreditTransaction = Prisma.CreditTransactionModel

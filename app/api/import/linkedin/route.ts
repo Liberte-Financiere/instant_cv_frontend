@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { scrapeLinkedInProfile, extractLinkedInUsername } from '@/lib/linkedin-scraper';
 import { z } from 'zod';
+import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 
 // Request validation schema
 const requestSchema = z.object({
@@ -15,6 +16,15 @@ export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Rate limiting: 5 requests per minute
+  const rateCheck = checkRateLimit(`${session.user.id}:linkedin-import`, RATE_LIMITS.LINKEDIN_IMPORT);
+  if (!rateCheck.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again in a few minutes.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil(rateCheck.resetIn / 1000)) } }
+    );
   }
 
   try {
@@ -52,8 +62,6 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log('[LinkedIn Import] Processing URL:', linkedInUrl, '-> username:', username);
-
     // Scrape the profile
     const result = await scrapeLinkedInProfile(linkedInUrl);
 
@@ -64,7 +72,7 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log('[LinkedIn Import] Successfully fetched profile data');
+
 
     return NextResponse.json({
       success: true,

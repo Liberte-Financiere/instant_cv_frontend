@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 
+import { checkAndConsumeCredits } from '@/lib/credits';
+
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -11,6 +13,22 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const { id, title, content } = body;
+
+    let isNew = false;
+    if (id) {
+       const existing = await prisma.coverLetter.findUnique({ where: { id } });
+       if (!existing) isNew = true;
+    } else {
+       isNew = true;
+    }
+
+    if (isNew) {
+      try {
+        await checkAndConsumeCredits(session.user.id, 'CREATE_LETTER', 'Création d\'une lettre de motivation');
+      } catch (e: any) {
+        return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
+      }
+    }
 
     const cl = await prisma.coverLetter.create({
       data: {

@@ -36,7 +36,7 @@ export function FeatureCard({
         <div>
           <div className={cn(
             "w-12 h-12 md:w-14 md:h-14 rounded-full md:rounded-lg flex items-center justify-center mb-6",
-            isDark ? "bg-white/10 text-blue-300 backdrop-blur-sm" : "bg-blue-50 text-[#2463eb]",
+            isDark ? "bg-white/10 text-blue-300 backdrop-blur-sm" : "bg-blue-50 text-primary",
              // Specific color overrides if needed can be handled by className or prop extension, 
              // but keeping it simple for now or using the classes passed from parent if strictly necessary.
              // Actually, the white cards had individual colors (red, purple). Let's make the wrapper flexible.
@@ -44,7 +44,7 @@ export function FeatureCard({
             <Icon className="w-8 h-8" />
           </div>
           
-          <h3 className={cn("text-xl md:text-2xl font-bold mb-2", !isDark && "text-[#0F172A]")}>
+          <h3 className={cn("text-xl md:text-2xl font-bold mb-2", !isDark && "text-bg-dark")}>
             {title}
           </h3>
           

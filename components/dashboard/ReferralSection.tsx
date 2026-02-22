@@ -2,20 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Copy, Gift, Users, Share2, Check, Loader2 } from 'lucide-react';
+import { Copy, Gift, Users, Share2, Check, Loader2, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ReferralData {
   referralCode: string;
   referralLink: string;
   referralCount: number;
-  hasPremium: boolean;
-  premiumUntil: string | null;
-  nextTier: {
-    needed: number;
-    premiumDays: number;
-    progress: number;
-  } | null;
   referredUsers: Array<{
     id: string;
     name: string | null;
@@ -62,12 +55,12 @@ export function ReferralSection() {
   const shareLink = async () => {
     if (!data?.referralLink) return;
     
-    const shareText = `🚀 Crée ton CV pro GRATUITEMENT avec Instant CV ! 👉 ${data.referralLink}`;
+    const shareText = `🚀 Crée ton CV pro avec l'IA JobSira ! Inscris-toi avec mon lien et reçois un bonus de 15 crédits gratuits 👉 ${data.referralLink}`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Instant CV',
+          title: 'JobSira',
           text: shareText,
           url: data.referralLink,
         });
@@ -100,12 +93,10 @@ export function ReferralSection() {
         <div className="flex-1 space-y-2">
           <div className="flex items-center gap-2">
             <Gift className="w-4 h-4 text-blue-600" />
-            <h3 className="text-sm font-semibold text-slate-800">Parrainage</h3>
-            {data.hasPremium && (
-              <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-medium">
-                Premium
-              </span>
-            )}
+            <h3 className="text-sm font-semibold text-slate-800">Parrainage (Gagnez des Crédits)</h3>
+            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+              +30 Cr. / Filleul
+            </span>
           </div>
           
           <div className="flex items-center gap-2">
@@ -139,17 +130,16 @@ export function ReferralSection() {
               <Users className="w-4 h-4" />
               <span className="text-lg font-bold">{data.referralCount}</span>
             </div>
-            <p className="text-xs text-slate-500">Filleuls</p>
+            <p className="text-xs text-slate-500">Amis parrainés</p>
           </div>
           
-          {data.nextTier && (
-            <div className="text-center">
-              <p className="text-xs text-slate-500">Prochain palier</p>
-              <p className="text-sm font-medium text-blue-600">
-                +{data.nextTier.premiumDays}j ({data.nextTier.needed} restant{data.nextTier.needed > 1 ? 's' : ''})
-              </p>
-            </div>
-          )}
+          <div className="text-center">
+             <div className="flex items-center justify-center gap-1 text-amber-500">
+               <Sparkles className="w-4 h-4" />
+               <span className="text-lg font-bold">{data.referralCount * 30}</span>
+             </div>
+             <p className="text-xs text-slate-500">Crédits générés</p>
+          </div>
         </div>
       </div>
     </motion.div>

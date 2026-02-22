@@ -31,7 +31,6 @@ export function useProcessReferral() {
           } else {
             const data = await res.json();
             // Silent fail for already referred or invalid codes
-            console.log('Referral processing:', data.error);
           }
         })
         .catch((err) => {

@@ -1,16 +1,24 @@
-# 📏 Règles de Développement & Standards - Instant CV
+# 📏 Règles de Développement & Standards — JobSira
 
-Ce document recense les règles d'or à respecter pour maintenir la qualité, la sécurité et la performance du projet **Instant CV**.
+Ce document recense les règles à respecter pour maintenir la qualité, la sécurité et la performance du projet **JobSira**.
 
 Tout nouveau développeur doit lire et appliquer ces directives.
 
 ---
 
-## 1. 🛡️ TypeScript & Typage (Non Négociable)
+## 1. 🏷️ Branding
+
+*   **Nom de l'application** : `JobSira` — Ne pas utiliser les anciens noms (InstantCV, OptiJob).
+*   **Configuration centralisée** : Toutes les informations de branding sont dans `lib/config.ts` (`APP_CONFIG`). Toujours y référer pour le nom, tagline, emails, URL.
+*   **Rebranding** : Si le nom doit changer, modifier uniquement `lib/config.ts`.
+
+---
+
+## 2. 🛡️ TypeScript & Typage (Non Négociable)
 
 *   **Zéro `any`** : L'utilisation de `any` est **strictement interdite**. Si vous ne connaissez pas le type, cherchez-le ou créez-le.
 *   **Validation Zod** : Toutes les données entrant ou sortant de l'API doivent être validées via les schémas définis dans `lib/schemas.ts`.
-*   **Extension Prisma** : Ne jamais caster manuellement le contenu JSON (`as any`). Le client Prisma est étendu pour retourner automatiquement des objets typés `CV`.
+*   **Extension Prisma** : Ne jamais caster manuellement le contenu JSON (`as any`). Le client Prisma est étendu pour retourner des objets typés.
 
 ```typescript
 // ❌ MAUVAIS
@@ -25,36 +33,51 @@ if (!result.success) throw new Error("Invalid Data");
 
 ---
 
-## 2. ⚡ Performance Frontend
+## 3. ⚡ Performance Frontend
 
-*   **Images Next.js** : Ne **JAMAIS** utiliser la balise HTML `<img>` standard. Utilisez toujours le composant `<Image />` de Next.js pour bénéficier du lazy loading et du format WebP.
-    ```tsx
-    // ❌ MAUVAIS
-    <img src="/photo.jpg" alt="Photo" />
+*   **Images Next.js** : Ne **JAMAIS** utiliser `<img>`. Toujours utiliser `<Image />` de Next.js.
+*   **Polices** : Utiliser `next/font` uniquement (configuré avec `Manrope` dans `app/layout.tsx`).
+*   **Hooks React** : Ne **JAMAIS** appeler un hook conditionnellement (dans un ternaire, un `if`, etc.). Extraire les appels Zustand en variables au-dessus du `return`.
 
-    // ✅ BON
-    <Image src="/photo.jpg" alt="Photo" width={100} height={100} />
-    ```
-*   **Polices** : Utilisez toujours `next/font` (configuré dans `app/layout.tsx` avec `Manrope`). N'importez pas de polices via CSS ou Google Fonts CDN.
+```tsx
+// ❌ MAUVAIS — hook conditionnel
+{useStore(s => s.loading) ? '...' : useStore(s => s.data)}
 
----
-
-## 3. 🔒 Sécurité
-
-*   **Input Validation** : Ne faites jamais confiance au client. Validez tout côté serveur.
-*   **Headers** : Les en-têtes de sécurité (CSP, X-Frame-Options) sont configurés dans `next.config.ts`. Ne les désactivez pas sans une excellente raison validée par le lead.
-*   **Auth** : Vérifiez toujours la session (`await auth()`) au début de chaque Server Action ou Route Handler.
+// ✅ BON — variables extraites
+const loading = useStore(s => s.loading);
+const data = useStore(s => s.data);
+// ...
+{loading ? '...' : data}
+```
 
 ---
 
-## 4. 🧹 Bonnes Pratiques & Review
+## 4. 🔒 Sécurité
 
-*   **Relire deux fois** : Avant de commit, relisez votre code. Supprimez les `console.log` de debug.
-*   **Monitoring** : En cas de doute sur une erreur possible, utilisez `Sentry.captureException(error)`.
+*   **Input Validation** : Ne faites jamais confiance au client. Validez tout côté serveur avec Zod.
+*   **Headers** : Les en-têtes de sécurité (CSP, HSTS, X-Frame-Options) sont dans `next.config.ts`. Ne pas les désactiver.
+*   **Auth** : Vérifier la session (`await auth()`) au début de chaque Route Handler.
+*   **Rate Limiting** : Utiliser `lib/rate-limit.ts` sur toutes les routes IA pour protéger contre le spam.
+*   **Rôles** : Les rôles `USER` et `ADMIN` sont définis dans le schema Prisma. Vérifier le rôle pour les routes admin.
+
+---
+
+## 5. 💰 Système de Crédits
+
+*   **Vérification avant action** : Tout appel IA doit vérifier que l'utilisateur a assez de crédits **avant** d'appeler l'API Gemini.
+*   **Déduction atomique** : Utiliser `prisma.user.update({ credits: { decrement: X } })` dans une transaction.
+*   **Store Zustand** : Le `useCreditStore` gère le state client. Le mettre à jour après chaque appel API.
+
+---
+
+## 6. 🧹 Bonnes Pratiques
+
+*   **Pas de `console.log`** en production : Utiliser Sentry pour le monitoring (`Sentry.captureException`).
 *   **Linting** : Le code ne doit produire aucun warning ESLint au build.
+*   **Contenu honnête** : Les témoignages, descriptions de features et textes marketing doivent être **véridiques**. Pas de faux noms, pas de promesses non vérifiées.
 
 > *"Un code propre est un code qui se lit comme de la prose."*
 
 ---
 
-**Dernière mise à jour :** 06 Février 2026
+**Dernière mise à jour :** 22 Février 2026

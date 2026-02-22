@@ -94,6 +94,12 @@ export function MagicButton({ section, currentText, onApply, className = '', com
       });
 
       if (!response.ok) {
+        if (response.status === 403) {
+          const { useCreditStore } = await import('@/store/useCreditStore');
+          useCreditStore.getState().setOutOfCreditsModalOpen(true);
+          setIsOpen(false);
+          return;
+        }
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || 'Failed to generate');
       }

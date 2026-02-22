@@ -3,13 +3,36 @@
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CVPreview } from './CVPreview';
+import { useRef, useState, useEffect } from 'react';
 
 interface MobilePreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+const A4_WIDTH_PX = 794; // 210mm in pixels at 96dpi
+
 export function MobilePreviewModal({ isOpen, onClose }: MobilePreviewModalProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    if (!isOpen || !containerRef.current) return;
+
+    const updateScale = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth - 16; // minus padding
+        const newScale = Math.min(containerWidth / A4_WIDTH_PX, 1);
+        setScale(newScale);
+      }
+    };
+
+    // Calculate on mount and resize
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, [isOpen]);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -17,7 +40,7 @@ export function MobilePreviewModal({ isOpen, onClose }: MobilePreviewModalProps)
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm lg:hidden flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm lg:hidden flex items-center justify-center p-2"
         >
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
@@ -38,8 +61,16 @@ export function MobilePreviewModal({ isOpen, onClose }: MobilePreviewModalProps)
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-auto p-4 custom-scrollbar bg-slate-200 flex justify-center">
-              <div className="w-full max-w-[210mm] bg-white shadow-lg min-h-[297mm]">
+            <div ref={containerRef} className="flex-1 overflow-auto p-2 custom-scrollbar bg-slate-200 flex justify-center">
+              <div 
+                style={{
+                  transform: `scale(${scale})`,
+                  transformOrigin: 'top center',
+                  width: `${A4_WIDTH_PX}px`,
+                  minHeight: '1123px', // 297mm in px
+                }}
+                className="bg-white shadow-lg"
+              >
                  <CVPreview />
               </div>
             </div>

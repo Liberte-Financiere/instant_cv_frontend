@@ -33,15 +33,15 @@ export function PersonalInfoForm() {
         />
       </div>
 
-      <Input label="Prénom" value={personalInfo.firstName} onChange={(e) => updatePersonalInfo({ firstName: e.target.value })} placeholder="Ex: Jean" />
-      <Input label="Nom" value={personalInfo.lastName} onChange={(e) => updatePersonalInfo({ lastName: e.target.value })} placeholder="Ex: Dupont" />
+      <Input label="Prénom" value={personalInfo.firstName} onChange={(e) => updatePersonalInfo({ firstName: e.target.value })} placeholder="Ex: Jean" autoComplete="given-name" />
+      <Input label="Nom" value={personalInfo.lastName} onChange={(e) => updatePersonalInfo({ lastName: e.target.value })} placeholder="Ex: Dupont" autoComplete="family-name" />
       <div className="col-span-full">
         <Input label="Titre du poste" value={personalInfo.title} onChange={(e) => updatePersonalInfo({ title: e.target.value })} placeholder="Ex: Développeur Fullstack Senior" helpText="Le poste que vous visez ou votre titre actuel." />
       </div>
-      <Input label="Email" type="email" value={personalInfo.email} onChange={(e) => updatePersonalInfo({ email: e.target.value })} placeholder="jean.dupont@email.com" />
-      <Input label="Téléphone" type="tel" value={personalInfo.phone} onChange={(e) => updatePersonalInfo({ phone: e.target.value })} placeholder="+33 6 12 34 56 78" />
+      <Input label="Email" type="email" value={personalInfo.email} onChange={(e) => updatePersonalInfo({ email: e.target.value })} placeholder="jean.dupont@email.com" autoComplete="email" />
+      <Input label="Téléphone" type="tel" value={personalInfo.phone} onChange={(e) => updatePersonalInfo({ phone: e.target.value })} placeholder="+33 6 12 34 56 78" autoComplete="tel" />
       <div className="col-span-full">
-        <Input label="Adresse" value={personalInfo.address} onChange={(e) => updatePersonalInfo({ address: e.target.value })} placeholder="Ex: Paris, France" />
+        <Input label="Adresse" value={personalInfo.address} onChange={(e) => updatePersonalInfo({ address: e.target.value })} placeholder="Ex: Paris, France" autoComplete="street-address" />
       </div>
 
       {/* Social Links */}
@@ -49,11 +49,11 @@ export function PersonalInfoForm() {
         <Label className="mb-3">Réseaux sociaux</Label>
         <div className="space-y-2">
           {socialLinks.map((link) => (
-            <div key={link.id} className="flex items-center gap-2">
+            <div key={link.id} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <Select 
                 value={link.platform} 
                 onChange={(e) => updateSocialLink(link.id, { platform: e.target.value as any })}
-                className="w-32"
+                className="w-full sm:w-32"
               >
                 <option value="linkedin">LinkedIn</option>
                 <option value="github">GitHub</option>
