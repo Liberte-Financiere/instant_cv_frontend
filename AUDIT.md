@@ -1,7 +1,7 @@
-# 🔍 Audit Exhaustif — InstantCV
+# 🔍 Audit Exhaustif — JobSira
 
 **Date :** 10 Février 2026  
-**Application :** InstantCV (OptiJob) — Next.js 16 + Tailwind CSS v4  
+**Application :** JobSira (JobSira) — Next.js 16 + Tailwind CSS v4  
 **Auditeur :** Senior Full-Stack Audit
 
 ---

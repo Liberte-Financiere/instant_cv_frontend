@@ -1,6 +1,6 @@
 # 🎨 How to Create a New CV Template
 
-This guide explains how to create a new CV template in **Instant CV** using the modular architecture.
+This guide explains how to create a new CV template in **JobSira** using the modular architecture.
 
 ## 1. Concepts
 
