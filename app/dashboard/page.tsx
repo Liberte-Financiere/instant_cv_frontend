@@ -27,6 +27,7 @@ export default function DashboardPage() {
   const { clList, createNewCL, deleteCL } = useCoverLetterStore();
   const creditsLoading = useCreditStore((state) => state.isLoading);
   const creditsCount = useCreditStore((state) => state.credits);
+  const fetchCredits = useCreditStore((state) => state.fetchCredits);
   const [isCreating, setIsCreating] = useState(false);
   const [step, setStep] = useState<'template' | 'name'>('template');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>('modern');
@@ -113,6 +114,11 @@ export default function DashboardPage() {
     setSelectedTemplate('modern');
     setNewTitle('');
   };
+
+  // Fetch credits on mount
+  useEffect(() => {
+    fetchCredits();
+  }, [fetchCredits]);
 
   // Fetch CLs on dashboard mount
   useEffect(() => {
