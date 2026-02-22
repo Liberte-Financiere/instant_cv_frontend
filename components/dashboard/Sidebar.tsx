@@ -76,6 +76,9 @@ export function Sidebar() {
     );
   };
 
+  const creditsLoading = useCreditStore((state) => state.isLoading);
+  const creditsCount = useCreditStore((state) => state.credits);
+
   return (
     <div className="flex flex-col h-screen w-72 bg-bg-dark border-r border-slate-800 text-white fixed left-0 top-0 z-50">
       {/* Brand */}
@@ -117,7 +120,7 @@ export function Sidebar() {
               <span className="text-sm font-medium text-slate-300">Crédits IA</span>
            </div>
            <span className="text-sm font-bold text-amber-400">
-             {useCreditStore((state) => state.isLoading) ? '...' : useCreditStore((state) => state.credits)}
+             {creditsLoading ? '...' : creditsCount}
            </span>
         </div>
 
