@@ -57,7 +57,8 @@ export const ModelName = {
   AnalysisHistory: 'AnalysisHistory',
   User: 'User',
   CV: 'CV',
-  CoverLetter: 'CoverLetter'
+  CoverLetter: 'CoverLetter',
+  CreditTransaction: 'CreditTransaction'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -167,6 +168,18 @@ export const CoverLetterScalarFieldEnum = {
 } as const
 
 export type CoverLetterScalarFieldEnum = (typeof CoverLetterScalarFieldEnum)[keyof typeof CoverLetterScalarFieldEnum]
+
+
+export const CreditTransactionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  amount: 'amount',
+  type: 'type',
+  description: 'description',
+  createdAt: 'createdAt'
+} as const
+
+export type CreditTransactionScalarFieldEnum = (typeof CreditTransactionScalarFieldEnum)[keyof typeof CreditTransactionScalarFieldEnum]
 
 
 export const SortOrder = {

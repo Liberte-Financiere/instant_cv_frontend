@@ -27,6 +27,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
     }
 
+    // Determine cost and label based on type
+    const { checkAndConsumeCredits } = await import('@/lib/credits');
+    let creditAction: any = 'AI_OPTIMIZE';
+    let label = 'Amélioration / Optimisation CV (IA)';
+    
+    if (type === 'fix') {
+        creditAction = 'AI_CORRECT';
+        label = 'Correction orthographique CV (IA)';
+    } else if (type === 'translate') {
+        creditAction = 'AI_TRANSLATE';
+        label = 'Traduction CV (IA)';
+    } else if (type === 'expand') {
+        creditAction = 'AI_CONTINUE';
+        label = 'Développement CV (IA)';
+    }
+
+    try {
+      await checkAndConsumeCredits(session.user.id, creditAction, label);
+    } catch (e: any) {
+      return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
+    }
+
     if (!process.env.GOOGLE_API_KEY) {
       return NextResponse.json({ error: 'API Key missing' }, { status: 500 });
     }

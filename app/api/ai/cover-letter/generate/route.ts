@@ -26,6 +26,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'CV data/text and Job Description are required' }, { status: 400 });
     }
 
+    // Check and consume 2 credits
+    const { checkAndConsumeCredits } = await import('@/lib/credits');
+    try {
+      await checkAndConsumeCredits(session.user.id, 'AI_GENERATE_LETTER', 'Génération d\'une lettre de motivation par IA');
+    } catch (e: any) {
+      return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
+    }
+
     const cvContent = cvText || JSON.stringify(cvData);
 
     const prompt = `

@@ -26,6 +26,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Text and action are required' }, { status: 400 });
     }
 
+    // Determine cost and label based on action
+    const { checkAndConsumeCredits } = await import('@/lib/credits');
+    let creditAction: any = 'AI_REWRITE';
+    let label = 'Reformulation de texte (IA)';
+    
+    if (action === 'correct') {
+        creditAction = 'AI_CORRECT';
+        label = 'Correction orthographique (IA)';
+    } else if (action === 'translate') {
+        creditAction = 'AI_TRANSLATE';
+        label = 'Traduction de texte (IA)';
+    }
+
+    try {
+      await checkAndConsumeCredits(session.user.id, creditAction, label);
+    } catch (e: any) {
+      return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
+    }
+
     let prompt = '';
 
     switch (action) {

@@ -104,6 +104,11 @@ export default function AIMatchPage() {
       });
 
       if (!res.ok) {
+        if (res.status === 403) {
+          const { useCreditStore } = await import('@/store/useCreditStore');
+          useCreditStore.getState().setOutOfCreditsModalOpen(true);
+          return;
+        }
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error || 'Erreur lors de l\'analyse');
       }

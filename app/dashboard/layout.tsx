@@ -2,6 +2,7 @@
 
 import { Sidebar } from '@/components/dashboard/Sidebar';
 import { MobileHeader } from '@/components/dashboard/MobileHeader';
+import { OutOfCreditsModal } from '@/components/shared/OutOfCreditsModal';
 
 export default function DashboardLayout({
   children,
@@ -25,6 +26,9 @@ export default function DashboardLayout({
       <main className="lg:pl-72 w-full min-h-screen pt-14 lg:pt-0 bg-slate-50">
         {children}
       </main>
+      
+      {/* Global Modals */}
+      <OutOfCreditsModal />
     </div>
   );
 }

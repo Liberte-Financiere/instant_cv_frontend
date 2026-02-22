@@ -188,6 +188,12 @@ export default function CoverLettersPage() {
       });
 
       if (!res.ok) {
+        if (res.status === 403) {
+            const { useCreditStore } = await import('@/store/useCreditStore');
+            useCreditStore.getState().setOutOfCreditsModalOpen(true);
+            setAiStep('details');
+            return;
+        }
         if (res.status === 503) {
           throw new Error('Le service IA est momentanément surchargé. Veuillez réessayer dans une minute.');
         }
