@@ -28,6 +28,14 @@ export async function POST(req: Request) {
   }
 
   try {
+    // Check and consume 2 credits
+    const { checkAndConsumeCredits } = await import('@/lib/credits');
+    try {
+      await checkAndConsumeCredits(session.user.id, 'AI_ANALYZE', 'Analyse magique du CV par IA');
+    } catch (e: any) {
+      return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
+    }
+
     if (!process.env.GOOGLE_API_KEY) {
       return NextResponse.json({ error: 'API Key missing' }, { status: 500 });
     }

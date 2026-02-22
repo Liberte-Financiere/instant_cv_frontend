@@ -255,7 +255,7 @@ export type UserWhereInput = {
   email?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
-  credits?: Prisma.IntFilter<"User"> | number
+  credits?: Prisma.FloatFilter<"User"> | number
   referralCode?: Prisma.StringNullableFilter<"User"> | string | null
   referredById?: Prisma.StringNullableFilter<"User"> | string | null
   referralCount?: Prisma.IntFilter<"User"> | number
@@ -267,6 +267,7 @@ export type UserWhereInput = {
   cvs?: Prisma.CVListRelationFilter
   coverLetters?: Prisma.CoverLetterListRelationFilter
   analyses?: Prisma.AnalysisHistoryListRelationFilter
+  creditTransactions?: Prisma.CreditTransactionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -287,6 +288,7 @@ export type UserOrderByWithRelationInput = {
   cvs?: Prisma.CVOrderByRelationAggregateInput
   coverLetters?: Prisma.CoverLetterOrderByRelationAggregateInput
   analyses?: Prisma.AnalysisHistoryOrderByRelationAggregateInput
+  creditTransactions?: Prisma.CreditTransactionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -299,7 +301,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
-  credits?: Prisma.IntFilter<"User"> | number
+  credits?: Prisma.FloatFilter<"User"> | number
   referredById?: Prisma.StringNullableFilter<"User"> | string | null
   referralCount?: Prisma.IntFilter<"User"> | number
   premiumUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -310,6 +312,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   cvs?: Prisma.CVListRelationFilter
   coverLetters?: Prisma.CoverLetterListRelationFilter
   analyses?: Prisma.AnalysisHistoryListRelationFilter
+  creditTransactions?: Prisma.CreditTransactionListRelationFilter
 }, "id" | "email" | "referralCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -339,7 +342,7 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   emailVerified?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  credits?: Prisma.IntWithAggregatesFilter<"User"> | number
+  credits?: Prisma.FloatWithAggregatesFilter<"User"> | number
   referralCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   referredById?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   referralCount?: Prisma.IntWithAggregatesFilter<"User"> | number
@@ -363,6 +366,7 @@ export type UserCreateInput = {
   cvs?: Prisma.CVCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -382,6 +386,7 @@ export type UserUncheckedCreateInput = {
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -390,7 +395,7 @@ export type UserUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -401,6 +406,7 @@ export type UserUpdateInput = {
   cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -409,7 +415,7 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -420,6 +426,7 @@ export type UserUncheckedUpdateInput = {
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -441,7 +448,7 @@ export type UserUpdateManyMutationInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -453,7 +460,7 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -671,6 +678,20 @@ export type UserUpdateOneRequiredWithoutCoverLettersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCoverLettersInput, Prisma.UserUpdateWithoutCoverLettersInput>, Prisma.UserUncheckedUpdateWithoutCoverLettersInput>
 }
 
+export type UserCreateNestedOneWithoutCreditTransactionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreditTransactionsInput, Prisma.UserUncheckedCreateWithoutCreditTransactionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreditTransactionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreditTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreditTransactionsInput, Prisma.UserUncheckedCreateWithoutCreditTransactionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreditTransactionsInput
+  upsert?: Prisma.UserUpsertWithoutCreditTransactionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreditTransactionsInput, Prisma.UserUpdateWithoutCreditTransactionsInput>, Prisma.UserUncheckedUpdateWithoutCreditTransactionsInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -687,6 +708,7 @@ export type UserCreateWithoutAccountsInput = {
   cvs?: Prisma.CVCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -705,6 +727,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -729,7 +752,7 @@ export type UserUpdateWithoutAccountsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -739,6 +762,7 @@ export type UserUpdateWithoutAccountsInput = {
   cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -747,7 +771,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -757,6 +781,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -775,6 +800,7 @@ export type UserCreateWithoutSessionsInput = {
   cvs?: Prisma.CVCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -793,6 +819,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -817,7 +844,7 @@ export type UserUpdateWithoutSessionsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -827,6 +854,7 @@ export type UserUpdateWithoutSessionsInput = {
   cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -835,7 +863,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -845,6 +873,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAnalysesInput = {
@@ -863,6 +892,7 @@ export type UserCreateWithoutAnalysesInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAnalysesInput = {
@@ -881,6 +911,7 @@ export type UserUncheckedCreateWithoutAnalysesInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAnalysesInput = {
@@ -905,7 +936,7 @@ export type UserUpdateWithoutAnalysesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -915,6 +946,7 @@ export type UserUpdateWithoutAnalysesInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAnalysesInput = {
@@ -923,7 +955,7 @@ export type UserUncheckedUpdateWithoutAnalysesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -933,6 +965,7 @@ export type UserUncheckedUpdateWithoutAnalysesInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReferredUsersInput = {
@@ -951,6 +984,7 @@ export type UserCreateWithoutReferredUsersInput = {
   cvs?: Prisma.CVCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -969,6 +1003,7 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -992,6 +1027,7 @@ export type UserCreateWithoutReferredByInput = {
   cvs?: Prisma.CVCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredByInput = {
@@ -1010,6 +1046,7 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredByInput = {
@@ -1039,7 +1076,7 @@ export type UserUpdateWithoutReferredUsersInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1049,6 +1086,7 @@ export type UserUpdateWithoutReferredUsersInput = {
   cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -1057,7 +1095,7 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1067,6 +1105,7 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutReferredByInput = {
@@ -1094,7 +1133,7 @@ export type UserScalarWhereInput = {
   email?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
-  credits?: Prisma.IntFilter<"User"> | number
+  credits?: Prisma.FloatFilter<"User"> | number
   referralCode?: Prisma.StringNullableFilter<"User"> | string | null
   referredById?: Prisma.StringNullableFilter<"User"> | string | null
   referralCount?: Prisma.IntFilter<"User"> | number
@@ -1117,6 +1156,7 @@ export type UserCreateWithoutCvsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCvsInput = {
@@ -1135,6 +1175,7 @@ export type UserUncheckedCreateWithoutCvsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCvsInput = {
@@ -1159,7 +1200,7 @@ export type UserUpdateWithoutCvsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1169,6 +1210,7 @@ export type UserUpdateWithoutCvsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCvsInput = {
@@ -1177,7 +1219,7 @@ export type UserUncheckedUpdateWithoutCvsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1187,6 +1229,7 @@ export type UserUncheckedUpdateWithoutCvsInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCoverLettersInput = {
@@ -1205,6 +1248,7 @@ export type UserCreateWithoutCoverLettersInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCoverLettersInput = {
@@ -1223,6 +1267,7 @@ export type UserUncheckedCreateWithoutCoverLettersInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
   analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCoverLettersInput = {
@@ -1247,7 +1292,7 @@ export type UserUpdateWithoutCoverLettersInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1257,6 +1302,7 @@ export type UserUpdateWithoutCoverLettersInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCoverLettersInput = {
@@ -1265,7 +1311,7 @@ export type UserUncheckedUpdateWithoutCoverLettersInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1274,6 +1320,99 @@ export type UserUncheckedUpdateWithoutCoverLettersInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
+  analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCreditTransactionsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  credits?: number
+  referralCode?: string | null
+  referralCount?: number
+  premiumUntil?: Date | string | null
+  referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  cvs?: Prisma.CVCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
+  analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCreditTransactionsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  credits?: number
+  referralCode?: string | null
+  referredById?: string | null
+  referralCount?: number
+  premiumUntil?: Date | string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
+  analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCreditTransactionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreditTransactionsInput, Prisma.UserUncheckedCreateWithoutCreditTransactionsInput>
+}
+
+export type UserUpsertWithoutCreditTransactionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreditTransactionsInput, Prisma.UserUncheckedUpdateWithoutCreditTransactionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreditTransactionsInput, Prisma.UserUncheckedCreateWithoutCreditTransactionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreditTransactionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreditTransactionsInput, Prisma.UserUncheckedUpdateWithoutCreditTransactionsInput>
+}
+
+export type UserUpdateWithoutCreditTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCount?: Prisma.IntFieldUpdateOperationsInput | number
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
+  analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreditTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCount?: Prisma.IntFieldUpdateOperationsInput | number
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1295,7 +1434,7 @@ export type UserUpdateWithoutReferredByInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1305,6 +1444,7 @@ export type UserUpdateWithoutReferredByInput = {
   cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredByInput = {
@@ -1313,7 +1453,7 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1323,6 +1463,7 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
   coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
   analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutReferredByInput = {
@@ -1331,7 +1472,7 @@ export type UserUncheckedUpdateManyWithoutReferredByInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1349,6 +1490,7 @@ export type UserCountOutputType = {
   cvs: number
   coverLetters: number
   analyses: number
+  creditTransactions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1358,6 +1500,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   cvs?: boolean | UserCountOutputTypeCountCvsArgs
   coverLetters?: boolean | UserCountOutputTypeCountCoverLettersArgs
   analyses?: boolean | UserCountOutputTypeCountAnalysesArgs
+  creditTransactions?: boolean | UserCountOutputTypeCountCreditTransactionsArgs
 }
 
 /**
@@ -1412,6 +1555,13 @@ export type UserCountOutputTypeCountAnalysesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.AnalysisHistoryWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreditTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CreditTransactionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1431,6 +1581,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   cvs?: boolean | Prisma.User$cvsArgs<ExtArgs>
   coverLetters?: boolean | Prisma.User$coverLettersArgs<ExtArgs>
   analyses?: boolean | Prisma.User$analysesArgs<ExtArgs>
+  creditTransactions?: boolean | Prisma.User$creditTransactionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1484,6 +1635,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   cvs?: boolean | Prisma.User$cvsArgs<ExtArgs>
   coverLetters?: boolean | Prisma.User$coverLettersArgs<ExtArgs>
   analyses?: boolean | Prisma.User$analysesArgs<ExtArgs>
+  creditTransactions?: boolean | Prisma.User$creditTransactionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1503,6 +1655,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     cvs: Prisma.$CVPayload<ExtArgs>[]
     coverLetters: Prisma.$CoverLetterPayload<ExtArgs>[]
     analyses: Prisma.$AnalysisHistoryPayload<ExtArgs>[]
+    creditTransactions: Prisma.$CreditTransactionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1916,6 +2069,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   cvs<T extends Prisma.User$cvsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cvsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CVPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   coverLetters<T extends Prisma.User$coverLettersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$coverLettersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoverLetterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   analyses<T extends Prisma.User$analysesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$analysesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnalysisHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  creditTransactions<T extends Prisma.User$creditTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$creditTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CreditTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1950,7 +2104,7 @@ export interface UserFieldRefs {
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly emailVerified: Prisma.FieldRef<"User", 'DateTime'>
   readonly image: Prisma.FieldRef<"User", 'String'>
-  readonly credits: Prisma.FieldRef<"User", 'Int'>
+  readonly credits: Prisma.FieldRef<"User", 'Float'>
   readonly referralCode: Prisma.FieldRef<"User", 'String'>
   readonly referredById: Prisma.FieldRef<"User", 'String'>
   readonly referralCount: Prisma.FieldRef<"User", 'Int'>
@@ -2511,6 +2665,30 @@ export type User$analysesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.AnalysisHistoryScalarFieldEnum | Prisma.AnalysisHistoryScalarFieldEnum[]
+}
+
+/**
+ * User.creditTransactions
+ */
+export type User$creditTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CreditTransaction
+   */
+  select?: Prisma.CreditTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CreditTransaction
+   */
+  omit?: Prisma.CreditTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CreditTransactionInclude<ExtArgs> | null
+  where?: Prisma.CreditTransactionWhereInput
+  orderBy?: Prisma.CreditTransactionOrderByWithRelationInput | Prisma.CreditTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.CreditTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CreditTransactionScalarFieldEnum | Prisma.CreditTransactionScalarFieldEnum[]
 }
 
 /**

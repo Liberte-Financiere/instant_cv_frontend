@@ -52,3 +52,8 @@ export type CV = Prisma.CVModel
  * 
  */
 export type CoverLetter = Prisma.CoverLetterModel
+/**
+ * Model CreditTransaction
+ * 
+ */
+export type CreditTransaction = Prisma.CreditTransactionModel

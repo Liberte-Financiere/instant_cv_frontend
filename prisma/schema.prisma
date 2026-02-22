@@ -57,13 +57,21 @@ model AnalysisHistory {
   @@index([userId])
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  credits       Int       @default(3)
+  role          Role      @default(USER)
+  credits       Float     @default(25) // Utilisation de Float pour supporter les retraits de 0.5
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   
   // Referral System
   referralCode   String?   @unique  // Unique 8-char code for sharing
@@ -78,6 +86,7 @@ model User {
   cvs           CV[]
   coverLetters  CoverLetter[]
   analyses      AnalysisHistory[] // Relation
+  creditTransactions CreditTransaction[]
 }
 
 model CV {
@@ -104,6 +113,18 @@ model CoverLetter {
   
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model CreditTransaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount      Float    // Montant de la transaction (négatif pour retrait, positif pour ajout)
+  type        String   // e.g., 'USAGE', 'PURCHASE', 'BONUS_REFERRAL', 'SIGNUP'
+  description String   // e.g., 'Génération Lettre Motivation IA'
+  createdAt   DateTime @default(now())
 
   @@index([userId])
 }

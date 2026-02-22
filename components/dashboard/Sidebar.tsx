@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
+import { useCreditStore } from '@/store/useCreditStore';
 
 
 const navigation = [
@@ -16,7 +17,7 @@ const navigation = [
   { name: 'Mes CV (Liste)', href: '/dashboard/list', icon: LayoutList },
   { name: 'Mes lettres', href: '/dashboard/cover-letters', icon: FileText },
   { name: 'Modèles', href: '/dashboard/templates', icon: LayoutTemplate },
-  { name: 'Signature', href: '/dashboard/signature', icon: PenTool },
+  { name: 'Acheter des Crédits', href: '/dashboard/pricing', icon: Sparkles },
   { name: 'Compte', href: '/dashboard/settings', icon: Settings },
 ];
 
@@ -107,8 +108,21 @@ export function Sidebar() {
         </div> 
       </div>
 
-      {/* User Profile */}
-      <div className="p-4 border-t border-slate-800 relative">
+      {/* User Credits & Profile */}
+      <div className="p-4 border-t border-slate-800 space-y-3">
+        {/* Credits Badge */}
+        <div className="flex items-center justify-between px-3 py-2 bg-slate-800/50 rounded-xl border border-slate-700/50">
+           <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span className="text-sm font-medium text-slate-300">Crédits IA</span>
+           </div>
+           <span className="text-sm font-bold text-amber-400">
+             {useCreditStore((state) => state.isLoading) ? '...' : useCreditStore((state) => state.credits)}
+           </span>
+        </div>
+
+        {/* Profile Button */}
+        <div className="relative">
         <button 
           onClick={() => setShowUserMenu(!showUserMenu)}
           className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800/50 cursor-pointer transition-colors text-left"
@@ -166,6 +180,7 @@ export function Sidebar() {
             </motion.div>
           </>
         )}
+        </div>
       </div>
     </div>
   );

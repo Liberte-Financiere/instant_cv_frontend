@@ -83,7 +83,14 @@ export default function CoverLetterEditorPage() {
         body: JSON.stringify({ cvData: cv, jobDescription: jobDesc }),
       });
 
-      if (!res.ok) throw new Error('Erreur generation');
+      if (!res.ok) {
+        if (res.status === 403) {
+            const { useCreditStore } = await import('@/store/useCreditStore');
+            useCreditStore.getState().setOutOfCreditsModalOpen(true);
+            return;
+        }
+        throw new Error('Erreur generation');
+      }
       
       const data = await res.json();
       updateContent({

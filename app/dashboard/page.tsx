@@ -57,6 +57,11 @@ export default function DashboardPage() {
       });
 
       if (!response.ok) {
+        if (response.status === 403) {
+            const { useCreditStore } = await import('@/store/useCreditStore');
+            useCreditStore.getState().setOutOfCreditsModalOpen(true);
+            return;
+        }
         let errorMessage = 'Erreur lors de l\'analyse';
         try {
           const errorData = await response.json();

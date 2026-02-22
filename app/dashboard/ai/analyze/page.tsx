@@ -69,6 +69,11 @@ export default function AIAnalyzePage() {
       }
 
       if (!response.ok) {
+        if (response.status === 403) {
+          const { useCreditStore } = await import('@/store/useCreditStore');
+          useCreditStore.getState().setOutOfCreditsModalOpen(true);
+          return;
+        }
         const err = await response.json().catch(() => ({}));
         throw new Error(err.error || 'Erreur lors de l\'analyse');
       }

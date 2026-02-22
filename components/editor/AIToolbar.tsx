@@ -29,7 +29,14 @@ export function AIToolbar({ text, onRefine, disabled }: AIToolbarProps) {
         body: JSON.stringify({ text, action, option }),
       });
 
-      if (!res.ok) throw new Error('Erreur lors du traitement');
+      if (!res.ok) {
+        if (res.status === 403) {
+            const { useCreditStore } = await import('@/store/useCreditStore');
+            useCreditStore.getState().setOutOfCreditsModalOpen(true);
+            return;
+        }
+        throw new Error('Erreur lors du traitement');
+      }
       
       const data = await res.json();
       if (data.result) {
