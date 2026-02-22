@@ -8,7 +8,6 @@ import { Menu, X, FileText, LayoutDashboard, LayoutList, LayoutTemplate, PenTool
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { useCreditStore } from '@/store/useCreditStore';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -150,19 +149,8 @@ export function MobileHeader() {
                 </div>
               </nav>
 
-              {/* User Credits & Profile */}
-              <div className="p-4 border-t border-slate-800 space-y-3">
-                {/* Credits Badge */}
-                <div className="flex items-center justify-between px-3 py-2 bg-slate-800/50 rounded-xl border border-slate-700/50">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-amber-400" />
-                    <span className="text-sm font-medium text-slate-300">Crédits IA</span>
-                  </div>
-                  <span className="text-sm font-bold text-amber-400">
-                    {useCreditStore((state) => state.isLoading) ? '...' : useCreditStore((state) => state.credits)}
-                  </span>
-                </div>
-
+              {/* User Profile */}
+              <div className="p-4 border-t border-slate-800">
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50">
                   {session?.user?.image ? (
                     <Image
