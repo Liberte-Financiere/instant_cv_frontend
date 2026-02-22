@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
-import { useCreditStore } from '@/store/useCreditStore';
+
 
 
 const navigation = [
@@ -76,9 +76,6 @@ export function Sidebar() {
     );
   };
 
-  const creditsLoading = useCreditStore((state) => state.isLoading);
-  const creditsCount = useCreditStore((state) => state.credits);
-
   return (
     <div className="flex flex-col h-screen w-72 bg-bg-dark border-r border-slate-800 text-white fixed left-0 top-0 z-50">
       {/* Brand */}
@@ -111,20 +108,8 @@ export function Sidebar() {
         </div> 
       </div>
 
-      {/* User Credits & Profile */}
-      <div className="p-4 border-t border-slate-800 space-y-3">
-        {/* Credits Badge */}
-        <div className="flex items-center justify-between px-3 py-2 bg-slate-800/50 rounded-xl border border-slate-700/50">
-           <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span className="text-sm font-medium text-slate-300">Crédits IA</span>
-           </div>
-           <span className="text-sm font-bold text-amber-400">
-             {creditsLoading ? '...' : creditsCount}
-           </span>
-        </div>
-
-        {/* Profile Button */}
+      {/* User Profile */}
+      <div className="p-4 border-t border-slate-800">
         <div className="relative">
         <button 
           onClick={() => setShowUserMenu(!showUserMenu)}

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Plus, FileText, Download, Search, ArrowLeft, ArrowRight, Edit } from 'lucide-react';
+import { Plus, FileText, Download, Search, ArrowLeft, ArrowRight, Edit, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useCVStore } from '@/store/useCVStore';
 import { useState, useEffect } from 'react';
@@ -17,6 +17,7 @@ import { useCoverLetterStore } from '@/store/useCoverLetterStore';
 import { CoverLetterService } from '@/services/coverLetterService';
 import { ReferralCodeCard } from '@/components/dashboard/ReferralCodeCard';
 import { ReferralProcessor } from '@/components/dashboard/ReferralProcessor';
+import { useCreditStore } from '@/store/useCreditStore';
 import { LinkedInImportModal } from '@/components/dashboard/LinkedInImportModal';
 import { Linkedin } from 'lucide-react';
 
@@ -24,6 +25,8 @@ export default function DashboardPage() {
   const router = useRouter();
   const { createNewCV, cvList, setAnalysisData, deleteCV } = useCVStore();
   const { clList, createNewCL, deleteCL } = useCoverLetterStore();
+  const creditsLoading = useCreditStore((state) => state.isLoading);
+  const creditsCount = useCreditStore((state) => state.credits);
   const [isCreating, setIsCreating] = useState(false);
   const [step, setStep] = useState<'template' | 'name'>('template');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>('modern');
@@ -125,7 +128,15 @@ export default function DashboardPage() {
       {/* ... (header) ... */}
       
       {/* Stats Row */}
-      <div className="grid grid-cols-2 gap-3 md:gap-6 mb-8 md:mb-12">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-8 md:mb-12">
+        <StatCard 
+           title="Crédits IA" 
+           value={creditsLoading ? '...' : creditsCount.toString()} 
+           icon={Sparkles} 
+           color="amber"
+           trend=""
+           href="/dashboard/pricing"
+        />
         <StatCard 
            title="CV Créés" 
            value={cvList.length.toString()} 
