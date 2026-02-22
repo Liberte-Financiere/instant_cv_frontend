@@ -10,7 +10,6 @@ import { Stepper } from '@/components/editor/Stepper';
 import { FormSection } from '@/components/editor/FormSection';
 import { CVPreview } from '@/components/editor/CVPreview';
 import { ColorPicker } from '@/components/editor/ColorPicker';
-import { ShareButton } from '@/components/editor/ShareButton';
 import { SectionOrderEditor } from '@/components/editor/SectionOrderEditor';
 import { MobilePreviewModal } from '@/components/editor/MobilePreviewModal';
 import { EDITOR_STEPS } from '@/types/cv';
@@ -118,18 +117,18 @@ export default function EditorPage() {
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col">
       {/* Editor Header */}
-      <header className="bg-white border-b border-slate-200 h-16 sticky top-0 z-50 px-2 sm:px-4 flex items-center justify-between shadow-sm gap-2">
-        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+      <header className="bg-white border-b border-slate-200 h-16 sticky top-0 z-50 px-2 sm:px-4 flex items-center justify-between shadow-sm gap-2 sm:gap-4">
+        <div className="flex items-center gap-1 sm:gap-4 min-w-0">
           <Link
             href="/dashboard"
-            className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-1 sm:p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
             title="Retour au Dashboard"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
-          <div className="min-w-0">
-            <h1 className="font-bold text-slate-900 text-sm sm:text-base truncate max-w-[120px] sm:max-w-xs block">
+          <div className="min-w-0 flex flex-col justify-center">
+            <h1 className="font-bold text-slate-900 text-sm sm:text-base truncate max-w-[80px] xs:max-w-[120px] sm:max-w-xs block">
               {currentCV.title}
             </h1>
             <div className="flex items-center gap-1.5 text-xs text-slate-500">
@@ -168,8 +167,6 @@ export default function EditorPage() {
 
            <ColorPicker />
            <SectionOrderEditor />
-           <ShareButton />           
-
            
            <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
 

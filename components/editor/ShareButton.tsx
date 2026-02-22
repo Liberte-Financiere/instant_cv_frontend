@@ -42,7 +42,7 @@ export function ShareButton() {
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="flex items-center gap-2 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
+        className="flex items-center justify-center w-9 h-9 p-0 sm:w-auto sm:h-auto sm:px-3 sm:py-2 sm:gap-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
       >
         <Share2 className="w-4 h-4" />
         <span className="hidden sm:inline">Partager</span>
