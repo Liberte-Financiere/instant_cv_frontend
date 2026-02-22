@@ -1,15 +1,19 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { User, Check, ChevronDown, CheckCircle } from 'lucide-react';
+import { User, Check, ChevronDown, CheckCircle, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { ReferralSection } from '@/components/dashboard/ReferralSection';
+import { useCreditStore } from '@/store/useCreditStore';
+import Link from 'next/link';
 
 export default function SettingsPage() {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
+  const creditsLoading = useCreditStore((state) => state.isLoading);
+  const creditsCount = useCreditStore((state) => state.credits);
 
   // Mock state for form
   const [formData, setFormData] = useState({
@@ -173,6 +177,32 @@ export default function SettingsPage() {
               >
                 {loading ? 'Enregistrement...' : 'Enregistrer les modifications'}
               </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Crédits IA */}
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-amber-600" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900">Crédits IA</h3>
+                <p className="text-slate-500 text-sm">Solde actuel de vos crédits pour les fonctionnalités IA</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-3xl font-black text-amber-600">
+                {creditsLoading ? '...' : creditsCount}
+              </span>
+              <Link 
+                href="/dashboard/pricing" 
+                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg transition-colors"
+              >
+                Recharger
+              </Link>
             </div>
           </div>
         </section>
