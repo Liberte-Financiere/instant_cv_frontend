@@ -51,6 +51,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        <meta name="google-site-verification" content="Zom0o3y5NATbqECHnN9eT9TXGaR-QWSAYwOrtrcHVPQ" />
+      </head>
       <body 
         className={`${manrope.variable} font-sans antialiased bg-bg-dark text-slate-900 dark:text-white`}
         suppressHydrationWarning
