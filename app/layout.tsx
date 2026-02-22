@@ -7,6 +7,7 @@ import { ServiceWorkerRegister } from '@/components/ServiceWorkerRegister';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 
+
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
