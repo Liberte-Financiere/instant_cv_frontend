@@ -1,6 +1,6 @@
 {
-  "name": "OptiJob — Coach CV par l'IA",
-  "short_name": "OptiJob",
+  "name": "JobSira — Coach CV par l'IA",
+  "short_name": "JobSira",
   "description": "Créez un CV pro compatible ATS et une lettre de motivation en 2 minutes avec l'IA.",
   "start_url": "/dashboard",
   "display": "standalone",

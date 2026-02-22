@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://optijob.com'; // À remplacer par le vrai domaine
+  const baseUrl = 'https://jobsira.com'; // À remplacer par le vrai domaine
 
   return [
     {

@@ -6,15 +6,19 @@ import Link from 'next/link';
 
 const plans = [
   {
-    name: 'Essai (Dès Inscription)',
+    name: 'Essai Gratuit',
     price: '0',
     currency: 'FCFA',
-    description: '25 crédits offerts pour découvrir l\'outil.',
+    description: '25 crédits offerts dès l\'inscription.',
     features: [
-      'Générer un CV (3 cr.)',
-      'Lettre de motivation (1 cr.)',
-      'Mots-clés / ATS (2 cr.)',
-      'Export PDF Pro'
+      'IA incluse mais limitée (25 cr.)',
+      'Générer des CV',
+      'Lettres de motivation',
+      'Analyse de CV',
+      'Export PDF Pro illimité',
+      'Design et couleurs illimités',
+      'Templates CV & LM gratuits',
+      'Crédits sans expiration'
     ],
     cta: 'Créer mon compte',
     popular: false,

@@ -148,7 +148,7 @@ export const useCoverLetterStore = create<CoverLetterState>()(
       }
     }),
     {
-      name: 'optijob-cl-storage',
+      name: 'jobsira-cl-storage',
       storage: createJSONStorage(() => indexedDBStorage),
     }
   )

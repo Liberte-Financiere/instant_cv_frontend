@@ -57,8 +57,8 @@ export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
            </Link>
              <ShareButton 
                url={`/share/${cv.id}`}
-               title={cv.title || 'Mon CV OptiJob'}
-               text={`Découvrez mon CV "${cv.title}" créé avec OptiJob`}
+               title={cv.title || 'Mon CV JobSira'}
+               text={`Découvrez mon CV "${cv.title}" créé avec JobSira`}
              />
            <a
              href={`/cv/${cv.id}?print=true`}

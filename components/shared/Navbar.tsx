@@ -30,7 +30,7 @@ export function Navbar() {
                <FileText className="w-5 h-5" />
             </div>
             <span className="text-xl font-bold text-white tracking-tight">
-              Optijob
+              JobSira
             </span>
           </Link>
 
