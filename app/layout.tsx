@@ -38,6 +38,10 @@ export const metadata: Metadata = {
     icon: '/icons/icon.svg',
     apple: '/icons/icon.svg',
   },
+  verification : {
+    google: 'Zom0o3y5NATbqECHnN9eT9TXGaR-QWSAYwOrtrcHVPQ',
+  },
+
 };
 
 export default function RootLayout({
