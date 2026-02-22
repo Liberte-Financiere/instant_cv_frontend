@@ -62,7 +62,7 @@ export function ColorPicker({ onColorChange }: ColorPickerProps) {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-colors"
+        className="flex items-center justify-center p-1 sm:px-3 sm:py-2 gap-1 sm:gap-2 bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-colors"
       >
         <div className="flex -space-x-1">
           <div 
