@@ -190,7 +190,7 @@ export default function SettingsPage() {
                <CheckCircle className="w-6 h-6" />
              </div>
              <div>
-               <h3 className="text-lg font-bold text-indigo-900">Optijob Pro</h3>
+               <h3 className="text-lg font-bold text-indigo-900">JobSira Pro</h3>
                <p className="text-indigo-600/80 text-sm">
                  Prochaine facturation le 15 Octobre 2026
                </p>

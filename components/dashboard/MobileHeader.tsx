@@ -42,7 +42,7 @@ export function MobileHeader() {
           <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center">
             <FileText className="w-4 h-4 text-white" />
           </div>
-          <span className="text-lg font-bold text-white">OptiJob</span>
+          <span className="text-lg font-bold text-white">JobSira</span>
         </div>
         
         <button
@@ -81,7 +81,7 @@ export function MobileHeader() {
                   <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center">
                     <FileText className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-lg font-bold text-white">OptiJob</span>
+                  <span className="text-lg font-bold text-white">JobSira</span>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}

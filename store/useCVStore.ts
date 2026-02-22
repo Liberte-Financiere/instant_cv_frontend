@@ -604,7 +604,7 @@ export const useCVStore = create<CVState>()(
       }))),
     }),
     {
-      name: 'optijob-cv-storage',
+      name: 'jobsira-cv-storage',
       storage: createJSONStorage(() => indexedDBStorage),
     }
   )

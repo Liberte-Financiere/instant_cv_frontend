@@ -1,8 +1,8 @@
-// Service Worker for OptiJob PWA
+// Service Worker for JobSira PWA
 // Version-based cache busting
 const CACHE_VERSION = 'v1';
-const STATIC_CACHE = `optijob-static-${CACHE_VERSION}`;
-const DYNAMIC_CACHE = `optijob-dynamic-${CACHE_VERSION}`;
+const STATIC_CACHE = `jobsira-static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `jobsira-dynamic-${CACHE_VERSION}`;
 
 // Assets to pre-cache on install
 const PRECACHE_ASSETS = [

@@ -14,19 +14,19 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Optijob | Le Coach CV par l'IA",
+  title: "JobSira | Le Coach CV par l'IA",
   description: "Créez un CV pro compatible ATS et une lettre de motivation en 2 minutes. Rejoignez 10,000+ candidats qui ont décroché leur job de rêve.",
   keywords: ["CV", "créateur CV", "resume builder", "IA", "ATS", "emploi", "lettre de motivation"],
   openGraph: {
-    title: "Optijob - Décrochez votre job de rêve",
+    title: "JobSira - Décrochez votre job de rêve",
     description: "L'IA qui optimise votre CV pour les recruteurs. Essai gratuit, sans carte bancaire.",
     type: "website",
     locale: "fr_FR",
-    siteName: "OptiJob",
+    siteName: "JobSira",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Optijob - Votre Coach Carrière IA",
+    title: "JobSira - Votre Coach Carrière IA",
     description: "Créez un CV parfait en quelques clics.",
   },
   other: {
@@ -67,7 +67,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
-              "name": "OptiJob",
+              "name": "JobSira",
               "applicationCategory": "BusinessApplication",
               "operatingSystem": "Web",
               "offers": {

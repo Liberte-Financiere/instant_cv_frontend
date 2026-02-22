@@ -27,8 +27,8 @@ const faqs = [
     answer: "Oui, notre IA a été entraînée sur des millions de descriptions de postes variés (Tech, Santé, Commerce, BTP...). Elle adapte le vocabulaire et le ton en fonction du poste visé."
   },
   {
-    question: "OptiJob fonctionne-t-il sans connexion internet ?",
-    answer: "Oui ! OptiJob est une application web installable (PWA). Ajoutez-la à votre écran d'accueil depuis votre navigateur, et vous pourrez continuer à consulter et éditer vos CV même hors-ligne. Les modifications seront synchronisées dès que vous retrouverez une connexion."
+    question: "JobSira fonctionne-t-il sans connexion internet ?",
+    answer: "Oui ! JobSira est une application web installable (PWA). Ajoutez-la à votre écran d'accueil depuis votre navigateur, et vous pourrez continuer à consulter et éditer vos CV même hors-ligne. Les modifications seront synchronisées dès que vous retrouverez une connexion."
   }
 ];
 
@@ -40,7 +40,7 @@ export function FAQ() {
       <div className="max-w-4xl mx-auto">
         <SectionHeader
           title="Questions Fréquentes"
-          description="Tout ce que vous devez savoir pour lancer votre carrière avec OptiJob."
+          description="Tout ce que vous devez savoir pour lancer votre carrière avec JobSira."
           align="center"
         />
 

@@ -6,30 +6,19 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 
 const testimonials = [
   {
-    name: 'Aminata K.',
-    role: 'Développeuse Frontend',
-    company: 'Recrutée chez Orange',
-    quote: "J'ai postulé avec un CV générique pendant 3 mois sans résultat. Avec OptiJob, j'ai eu 4 entretiens en 2 semaines. Le ciblage de poste est magique.",
+    name: 'Hassan BIKIENGA',
+    role: 'Développeur Fullstack',
+    quote: "Avant, je passais des heures à ajuster la mise en page de mon CV sur Word. Avec JobSira, je choisis un template professionnel, l'IA m'aide à reformuler mes expériences, et j'exporte un PDF propre en quelques minutes. C'est un vrai gain de temps.",
     rating: 5,
-    avatar: 'AK',
-    gradient: 'from-pink-500 to-rose-400',
-  },
-  {
-    name: 'Ibrahim S.',
-    role: 'Étudiant en Master',
-    company: 'Stage chez Deloitte',
-    quote: "En tant qu'étudiant, je ne savais pas comment valoriser mon profil. L'IA a transformé mes projets scolaires en compétences concrètes. Résultat : stage décroché du premier coup.",
-    rating: 5,
-    avatar: 'IS',
+    avatar: 'HB',
     gradient: 'from-blue-500 to-indigo-400',
   },
   {
-    name: 'Fatou D.',
-    role: 'Ex-Comptable → UX Designer',
-    company: 'Reconversion réussie',
-    quote: "OptiJob a su traduire 8 ans de comptabilité en compétences UX : rigueur analytique, gestion de données, attention au détail. Mon nouveau CV raconte une vraie histoire.",
+    name: 'Traore Adama',
+    role: 'Entrepreneur',
+    quote: "Ce que j'apprécie le plus, c'est la lettre de motivation générée pour chaque offre. Au lieu de repartir de zéro à chaque candidature, l'IA me propose un texte adapté au poste que je peux personnaliser. C'est simple et efficace.",
     rating: 5,
-    avatar: 'FD',
+    avatar: 'TA',
     gradient: 'from-amber-500 to-orange-400',
   },
 ];
@@ -40,14 +29,14 @@ export function Testimonials() {
       {/* Background glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="max-w-5xl mx-auto relative z-10">
         <SectionHeader
           theme="dark"
-          title="Ils ont décroché le job"
-          description="Des candidats comme vous qui ont transformé leur recherche d'emploi."
+          title="Ce qu'en pensent nos utilisateurs"
+          description="Des retours honnêtes de personnes qui utilisent JobSira au quotidien."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {testimonials.map((t, index) => (
             <motion.div
               key={t.name}
@@ -79,7 +68,7 @@ export function Testimonials() {
                 </div>
                 <div>
                   <p className="text-white font-bold text-sm">{t.name}</p>
-                  <p className="text-slate-400 text-xs">{t.role} — {t.company}</p>
+                  <p className="text-slate-400 text-xs">{t.role}</p>
                 </div>
               </div>
             </motion.div>

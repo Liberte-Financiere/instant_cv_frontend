@@ -55,12 +55,12 @@ export function ReferralSection() {
   const shareLink = async () => {
     if (!data?.referralLink) return;
     
-    const shareText = `🚀 Crée ton CV pro avec l'IA Instant CV ! Inscris-toi avec mon lien et reçois un bonus de 15 crédits gratuits 👉 ${data.referralLink}`;
+    const shareText = `🚀 Crée ton CV pro avec l'IA JobSira ! Inscris-toi avec mon lien et reçois un bonus de 15 crédits gratuits 👉 ${data.referralLink}`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Instant CV',
+          title: 'JobSira',
           text: shareText,
           url: data.referralLink,
         });
