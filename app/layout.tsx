@@ -7,6 +7,7 @@ import { ServiceWorkerRegister } from '@/components/ServiceWorkerRegister';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 
+
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
@@ -37,6 +38,10 @@ export const metadata: Metadata = {
     icon: '/icons/icon.svg',
     apple: '/icons/icon.svg',
   },
+  verification : {
+    google: 'Zom0o3y5NATbqECHnN9eT9TXGaR-QWSAYwOrtrcHVPQ',
+  },
+
 };
 
 export default function RootLayout({
@@ -46,6 +51,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        <meta name="google-site-verification" content="Zom0o3y5NATbqECHnN9eT9TXGaR-QWSAYwOrtrcHVPQ" />
+      </head>
       <body 
         className={`${manrope.variable} font-sans antialiased bg-bg-dark text-slate-900 dark:text-white`}
         suppressHydrationWarning

@@ -133,6 +133,37 @@ CLOUDINARY_API_SECRET=...
 NEXT_PUBLIC_SENTRY_DSN=...
 ```
 
+### SQL Setup (Supabase)
+
+Après `prisma db push`, exécuter ces requêtes dans l'éditeur SQL de Supabase :
+
+```sql
+-- 1. Table de transactions de crédits
+CREATE TABLE IF NOT EXISTS "CreditTransaction" (
+  "id" TEXT NOT NULL DEFAULT gen_random_uuid()::text,
+  "userId" TEXT NOT NULL,
+  "amount" DOUBLE PRECISION NOT NULL,
+  "type" TEXT NOT NULL,
+  "description" TEXT NOT NULL,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "CreditTransaction_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "CreditTransaction_userId_fkey" FOREIGN KEY ("userId") 
+    REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE INDEX IF NOT EXISTS "CreditTransaction_userId_idx" ON "CreditTransaction"("userId");
+
+-- 2. Enum et colonne Role (pour les admins)
+DO $$ BEGIN
+  CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "role" "Role" NOT NULL DEFAULT 'USER';
+
+-- 3. Définir les administrateurs
+UPDATE "User" SET "role" = 'ADMIN' 
+WHERE "email" IN ('m9bikienga@gmail.com', 'optijob18@gmail.com');
+```
+
 ---
 
 ## 📖 Utilisation
@@ -159,10 +190,13 @@ NEXT_PUBLIC_SENTRY_DSN=...
 
 ## 🔐 Administration
 
-- Panel admin (`/dashboard/admin`) pour la gestion des crédits utilisateurs
-- Rechargement manuel via WhatsApp
-- Rôles : `USER` et `ADMIN` (définis dans le schema Prisma)
+- **Panel admin** : `/dashboard/admin` (non visible dans la navigation)
+- **Accès** : rôle `ADMIN` ou emails autorisés (`m9bikienga@gmail.com`, `optijob18@gmail.com`)
+- **Fonctionnalités** : recherche d'utilisateurs, rechargement manuel de crédits
+- **Workflow** : client contacte via WhatsApp → admin recharge manuellement → crédits ajoutés instantanément
+- **Rôles** : `USER` (défaut) et `ADMIN` (défini via SQL dans Supabase)
 
 ---
 
 *© 2026 JobSira — Propulsé par l'IA pour l'Afrique et le monde.*
+
