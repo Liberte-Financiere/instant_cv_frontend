@@ -112,7 +112,7 @@ export function SectionOrderEditor() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-colors text-sm font-medium text-slate-700"
+        className="flex items-center justify-center w-9 h-9 p-0 sm:w-auto sm:h-auto sm:px-3 sm:py-2 sm:gap-2 bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-colors text-sm font-medium text-slate-700"
       >
         <Settings2 className="w-4 h-4" />
         <span className="hidden sm:inline">Ordre des sections</span>
