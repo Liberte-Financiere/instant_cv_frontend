@@ -81,7 +81,7 @@ export default function RootLayout({
               "offers": {
                 "@type": "Offer",
                 "price": "0",
-                "priceCurrency": "EUR"
+                "priceCurrency": "XOF"
               },
               "description": "Créez un CV pro compatible ATS en 2 minutes avec l'IA."
             })
