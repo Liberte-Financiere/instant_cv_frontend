@@ -13,8 +13,9 @@ export const CVService = {
     return res.json();
   },
 
-  async getById(id: string): Promise<CV> {
-    const res = await fetch(`/api/cv/${id}`);
+  async getById(id: string, token?: string): Promise<CV> {
+    const url = token ? `/api/cv/${id}?headlessToken=${token}` : `/api/cv/${id}`;
+    const res = await fetch(url);
     if (!res.ok) throw new Error('Failed to fetch CV');
     return res.json();
   },

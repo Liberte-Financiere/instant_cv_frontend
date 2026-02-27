@@ -41,6 +41,8 @@ export default function PublicCVPage({ params }: PageProps) {
   const { id } = use(params);
   const { currentCV, fetchCV } = useCVStore();
   const [isLoading, setIsLoading] = useState(true);
+  const [serverCV, setServerCV] = useState<any>(null);
+  const [loadError, setLoadError] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
@@ -62,28 +64,51 @@ export default function PublicCVPage({ params }: PageProps) {
   // Load CV on mount
   useEffect(() => {
     const loadData = async () => {
-      if (!currentCV || currentCV.id !== id) {
-        setIsLoading(true);
-        await fetchCV(id);
-        setIsLoading(false);
-      } else {
+      setIsLoading(true);
+      setLoadError(false);
+      try {
+        const searchParams = new URLSearchParams(window.location.search);
+        // If headless, we bypass the local Zustand cache to ensure we get the latest DB version
+        // and we avoid potential CSR network routing issues for the headless browser
+        const forceFetch = searchParams.get('headless') === 'true';
+
+        if (forceFetch || !currentCV || currentCV.id !== id) {
+          const token = searchParams.get('token') || undefined;
+          const fetchedCV = await fetchCV(id, token);
+          if (fetchedCV) {
+            setServerCV(fetchedCV);
+          } else {
+            setLoadError(true);
+          }
+        } else {
+          setServerCV(currentCV);
+        }
+      } catch (e) {
+        console.error("Error loading CV:", e);
+        setLoadError(true);
+      } finally {
         setIsLoading(false);
       }
     };
     loadData();
-  }, [id, fetchCV]); // Remove currentCV from deps to avoid loop found CV
+  }, [id, fetchCV, currentCV?.id]);
+
+  const activeCV = serverCV || currentCV;
 
   // Handle auto-print
   useEffect(() => {
-    if (typeof window !== 'undefined' && currentCV && !isLoading) {
+    if (typeof window !== 'undefined' && activeCV && !isLoading && !loadError) {
       const searchParams = new URLSearchParams(window.location.search);
-      if (searchParams.get('print') === 'true') {
+      const isPrint = searchParams.get('print') === 'true';
+      const isHeadless = searchParams.get('headless') === 'true';
+
+      if (isPrint && !isHeadless) {
         setTimeout(() => {
           window.print();
-        }, 800);
+        }, 1500);
       }
     }
-  }, [currentCV, isLoading]);
+  }, [activeCV, isLoading, loadError]);
 
   if (isLoading) {
     return (
@@ -93,7 +118,7 @@ export default function PublicCVPage({ params }: PageProps) {
     );
   }
 
-  if (!currentCV) {
+  if (loadError || (!activeCV && !isLoading)) {
     return (
       <div className="min-h-screen bg-slate-100 flex items-center justify-center p-8">
         <div className="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md">
@@ -116,32 +141,35 @@ export default function PublicCVPage({ params }: PageProps) {
     );
   }
 
+  // Double check
+  if (!activeCV) return null;
+
   const renderTemplate = () => {
-    switch (currentCV.templateId) {
-      case 'modern': return <ModernSidebar cv={currentCV} />;
-      case 'professional': return <ProfessionalClean cv={currentCV} />;
-      case 'executive': return <ExecutiveCorporate cv={currentCV} />;
-      case 'creative': return <CreativeGrid cv={currentCV} />;
-      case 'tech': return <TechStack cv={currentCV} />;
-      case 'minimalist': return <MinimalistTemplate cv={currentCV} />;
-      case 'ats': return <ATSFriendlyTemplate cv={currentCV} />;
-      case 'ats-glacier': return <ATSGlacier cv={currentCV} />;
-      case 'ats-iron': return <ATSIron cv={currentCV} />;
-      case 'elegant-photo': return <ElegantPhoto cv={currentCV} />;
-      case 'corporate-blue': return <CorporateBlue cv={currentCV} />;
-      case 'clean-grid': return <CleanGrid cv={currentCV} />;
-      case 'swiss': return <Swiss cv={currentCV} />;
-      case 'gradient': return <GradientHeader cv={currentCV} />;
-      case 'timeline': return <TimelinePro cv={currentCV} />;
-      case 'compact': return <CompactSingle cv={currentCV} />;
-      case 'bold-header': return <BoldHeader cv={currentCV} />;
-      case 'two-tone': return <TwoTone cv={currentCV} />;
-      case 'infographic': return <Infographic cv={currentCV} />;
-      case 'classic-serif': return <ClassicSerif cv={currentCV} />;
-      case 'nordic': return <Nordic cv={currentCV} />;
-      case 'pastel': return <PastelModern cv={currentCV} />;
-      case 'blueprint-premium': return <BlueprintPremium cv={currentCV} />;
-      default: return <ModernSidebar cv={currentCV} />;
+    switch (activeCV.templateId) {
+      case 'modern': return <ModernSidebar cv={activeCV} />;
+      case 'professional': return <ProfessionalClean cv={activeCV} />;
+      case 'executive': return <ExecutiveCorporate cv={activeCV} />;
+      case 'creative': return <CreativeGrid cv={activeCV} />;
+      case 'tech': return <TechStack cv={activeCV} />;
+      case 'minimalist': return <MinimalistTemplate cv={activeCV} />;
+      case 'ats': return <ATSFriendlyTemplate cv={activeCV} />;
+      case 'ats-glacier': return <ATSGlacier cv={activeCV} />;
+      case 'ats-iron': return <ATSIron cv={activeCV} />;
+      case 'elegant-photo': return <ElegantPhoto cv={activeCV} />;
+      case 'corporate-blue': return <CorporateBlue cv={activeCV} />;
+      case 'clean-grid': return <CleanGrid cv={activeCV} />;
+      case 'swiss': return <Swiss cv={activeCV} />;
+      case 'gradient': return <GradientHeader cv={activeCV} />;
+      case 'timeline': return <TimelinePro cv={activeCV} />;
+      case 'compact': return <CompactSingle cv={activeCV} />;
+      case 'bold-header': return <BoldHeader cv={activeCV} />;
+      case 'two-tone': return <TwoTone cv={activeCV} />;
+      case 'infographic': return <Infographic cv={activeCV} />;
+      case 'classic-serif': return <ClassicSerif cv={activeCV} />;
+      case 'nordic': return <Nordic cv={activeCV} />;
+      case 'pastel': return <PastelModern cv={activeCV} />;
+      case 'blueprint-premium': return <BlueprintPremium cv={activeCV} />;
+      default: return <ModernSidebar cv={activeCV} />;
     }
   };
 
@@ -160,7 +188,7 @@ export default function PublicCVPage({ params }: PageProps) {
             </Link>
             <span className="text-slate-400 hidden sm:inline">|</span>
             <span className="text-sm text-slate-600 truncate hidden sm:inline">
-              CV de {currentCV.personalInfo.firstName} {currentCV.personalInfo.lastName}
+              CV de {activeCV.personalInfo.firstName} {activeCV.personalInfo.lastName}
             </span>
           </div>
           <div className="flex items-center gap-2 shrink-0">

@@ -115,6 +115,30 @@ export default function DashboardPage() {
     setNewTitle('');
   };
 
+  const handleToggleVisibility = async (id: string, currentIsPublic: boolean) => {
+    try {
+      const response = await fetch(`/api/cv/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isPublic: !currentIsPublic }),
+      });
+
+      if (!response.ok) throw new Error('Erreur réseau');
+      
+      // Update local state via store toggle method
+      useCVStore.getState().togglePublic(id);
+      
+      if (!currentIsPublic) {
+        toast.success("Le CV est maintenant public et partageable !");
+      } else {
+        toast.success("Le CV est redevenu privé.");
+      }
+    } catch (error) {
+       console.error("Erreur toggle visibility:", error);
+       toast.error("Impossible de modifier la visibilité");
+    }
+  };
+
   // Fetch credits on mount
   useEffect(() => {
     fetchCredits();
@@ -226,6 +250,7 @@ export default function DashboardPage() {
                   <CVCard 
                     cv={cv}
                     onDelete={deleteCV}
+                    onToggleVisibility={handleToggleVisibility}
                     score={Math.floor(Math.random() * (98 - 70) + 70)}
                   />
                 </div>
