@@ -29,6 +29,29 @@ export default function CVListPage() {
     }
   };
 
+  const handleToggleVisibility = async (id: string, currentIsPublic: boolean) => {
+    try {
+      const response = await fetch(`/api/cv/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isPublic: !currentIsPublic }),
+      });
+
+      if (!response.ok) throw new Error('Erreur réseau');
+      
+      useCVStore.getState().togglePublic(id);
+      
+      if (!currentIsPublic) {
+        toast.success("Le CV est maintenant public et partageable !");
+      } else {
+        toast.success("Le CV est redevenu privé.");
+      }
+    } catch (error) {
+       console.error("Erreur toggle visibility:", error);
+       toast.error("Impossible de modifier la visibilité");
+    }
+  };
+
   const filteredCVs = cvList.filter(cv => 
     cv.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -96,13 +119,15 @@ export default function CVListPage() {
                       Modifié le {new Date(cv.updatedAt).toLocaleDateString()}
                     </p>
                   </div>
-                  <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${
+                  <button 
+                    onClick={() => handleToggleVisibility(cv.id, cv.isPublic)}
+                    className={`ml-2 px-3 py-1 rounded-full text-xs font-medium flex-shrink-0 transition-all hover:scale-105 active:scale-95 ${
                     cv.isPublic 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-slate-100 text-slate-600'
+                      ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}>
                     {cv.isPublic ? 'Public' : 'Privé'}
-                  </span>
+                  </button>
                 </div>
                 
                 <div className="flex items-center justify-between">
@@ -173,13 +198,15 @@ export default function CVListPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                       <button 
+                         onClick={() => handleToggleVisibility(cv.id, cv.isPublic)}
+                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-all hover:scale-105 active:scale-95 ${
                          cv.isPublic 
-                           ? 'bg-green-100 text-green-800' 
-                           : 'bg-slate-100 text-slate-600'
+                           ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                        }`}>
                          {cv.isPublic ? 'Public' : 'Privé'}
-                       </span>
+                       </button>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">

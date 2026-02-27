@@ -1,127 +1,26 @@
-'use client';
+import { prisma } from '@/lib/prisma';
+import { notFound } from 'next/navigation';
+import { SharePageClient } from './SharePageClient';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { useParams } from 'next/navigation';
-import { useCVStore } from '@/store/useCVStore';
-import { CVPreview } from '@/components/editor/CVPreview';
-import { Button } from '@/components/ui/Button';
-import { ArrowLeft, Check, Copy, Share2, Sparkles } from 'lucide-react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { toast } from 'sonner';
-
-const A4_WIDTH_PX = 794;
-
-export default function PublicCVPage() {
-  const params = useParams();
-  const id = params.id as string;
-  const { cvList, incrementViews } = useCVStore();
+export default async function PublicCVPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   
-  const [cv, setCv] = useState(cvList.find((c) => c.id === id));
-  const [copied, setCopied] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
+  // Server-side fetch from database for public sharing
+  const cv = await prisma.cV.findUnique({
+    where: { id },
+  });
 
-  // Responsive scaling
-  const updateScale = useCallback(() => {
-    if (containerRef.current) {
-      const containerWidth = containerRef.current.clientWidth - 32; // minus padding
-      const newScale = Math.min(containerWidth / A4_WIDTH_PX, 1);
-      setScale(newScale);
-    }
-  }, []);
-
-  useEffect(() => {
-    updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
-  }, [updateScale]);
-
-  // Increment views on mount if CV exists
-  useEffect(() => {
-    if (cv) {
-      incrementViews(id);
-    }
-  }, [id, incrementViews, cv]);
-
-  const handleCopyLink = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    toast.success('Lien copié dans le presse-papier');
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  if (!cv) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-4">
-        <h1 className="text-2xl font-bold text-slate-900 mb-2">CV introuvable</h1>
-        <p className="text-slate-500 mb-6">Ce CV n'existe pas ou a été supprimé.</p>
-        <Link href="/">
-          <Button>Retour à l'accueil</Button>
-        </Link>
-      </div>
-    );
+  if (!cv || !cv.isPublic) {
+    notFound();
   }
 
-  return (
-    <div className="min-h-screen bg-slate-100/50 flex flex-col">
-      {/* Public Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-bold text-lg sm:text-xl tracking-tight text-slate-900">
-             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0">
-                <Sparkles className="w-5 h-5" />
-             </div>
-             <span className="hidden sm:inline">JobSira</span>
-          </Link>
+  // Format prisma CV for frontend
+  const formattedCV = {
+    ...(cv.content as any),
+    id: cv.id,
+    title: cv.title,
+    isPublic: cv.isPublic,
+  };
 
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleCopyLink} className="hidden sm:flex">
-              {copied ? <Check className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
-              {copied ? 'Copié !' : 'Partager'}
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleCopyLink} className="sm:hidden">
-              {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-            </Button>
-            <Link href="/dashboard">
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm">
-                Créer mon CV
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main ref={containerRef} className="flex-1 p-4 md:p-8 overflow-y-auto">
-        <div 
-          className="mx-auto overflow-hidden bg-white shadow-2xl rounded-sm"
-          style={{
-            width: `${A4_WIDTH_PX}px`,
-            transform: `scale(${scale})`,
-            transformOrigin: 'top center',
-            marginBottom: scale < 1 ? `calc((${scale} - 1) * 1123px)` : undefined,
-          }}
-        >
-          <CVPreview data={cv} />
-        </div>
-      </main>
-      
-      {/* Footer Banner */}
-      <motion.div 
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="fixed bottom-0 inset-x-0 bg-slate-900 text-white p-3 sm:p-4 z-40 text-center md:flex md:items-center md:justify-center md:gap-4 shadow-lg"
-      >
-        <span className="font-medium text-sm sm:text-base">Vous aimez ce CV ? Créez le vôtre gratuitement.</span>
-        <Link href="/dashboard">
-          <Button size="sm" variant="secondary" className="mt-2 md:mt-0 font-bold">
-            Commencer maintenant
-          </Button>
-        </Link>
-      </motion.div>
-    </div>
-  );
+  return <SharePageClient cv={formattedCV} />;
 }

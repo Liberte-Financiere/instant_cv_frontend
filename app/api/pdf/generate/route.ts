@@ -1,0 +1,121 @@
+import { NextResponse } from 'next/server';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
+import { auth } from '@/auth';
+
+export const maxDuration = 60; // Allow enough time for Vercel Hobby/Pro to run Chrome
+
+export async function POST(req: Request) {
+  try {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const { id } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID du CV manquant' }, { status: 400 });
+    }
+
+    // Determine base URL dynamically based on environment
+    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+    let host = req.headers.get('host') || process.env.NEXT_PUBLIC_APP_URL || 'localhost:3000';
+    
+    // Fix host parsing to remove protocol if accidentally injected via env variables
+    if (host.startsWith('http')) {
+      host = new URL(host).host;
+    }
+
+    const baseUrl = `${protocol}://${host}`;
+    
+    // Construct the target URL. Add headless=true to skip window.print()
+    const headlessToken = process.env.GOOGLE_API_KEY?.slice(0, 10) || 'fallbackToken';
+    const targetUrl = `${baseUrl}/cv/${id}?print=true&headless=true&token=${headlessToken}`;
+
+    console.log(`[PDF] 🚀 C'est parti mon frère ! Je lance la génération du CV: ${id}`);
+    console.log(`[PDF] 🌐 L'URL cible pour le robot est : ${targetUrl}`);
+
+    // Set Chromium options for serverless
+    chromium.setGraphicsMode = false;
+    
+    // Default to local Chrome/Edge in dev if @sparticuz/chromium fails to find one
+    let executablePath = await chromium.executablePath();
+    if (process.env.NODE_ENV === 'development' && !executablePath) {
+      // Common paths for local dev fallback (macOS/Linux/Windows)
+      executablePath = process.platform === 'win32'
+          ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+          : process.platform === 'linux'
+            ? '/usr/bin/google-chrome'
+            : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+    }
+
+    const browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: { width: 1920, height: 1080 }, // Use static viewport instead of chromium.defaultViewport
+      executablePath: executablePath || await chromium.executablePath(),
+      headless: true,
+    });
+
+    console.log(`[PDF] 🤖 Navigateur Chromium lancé avec succès. J'ouvre un nouvel onglet...`);
+    const page = await browser.newPage();
+
+    // Inject session cookies to authenticate the headless browser
+    const cookiesList = req.headers.get('cookie');
+    if (cookiesList) {
+       const cookieArray = cookiesList.split(';').map(c => {
+         const [name, ...rest] = c.trim().split('=');
+         return {
+           name,
+           value: rest.join('='),
+           domain: new URL(baseUrl).hostname, // Important: matching domain
+           path: '/',
+         };
+       });
+       await page.setCookie(...cookieArray);
+    }
+
+    // Emulate print media type
+    await page.emulateMediaType('print');
+
+    // Go to the target CV page
+    // waitUntil networkidle0 ensures that ALL network requests (fonts, images) are done
+    console.log(`[PDF] ⏳ Navigation en cours... J'attends que la page finisse de charger les images et les polices...`);
+    await page.goto(targetUrl, {
+      waitUntil: 'networkidle0',
+      timeout: 30000,
+    });
+
+    console.log(`[PDF] 📸 Page chargée à 100% ! Je prends le cliché PDF de la page (sans marge)...`);
+    // Generate the PDF
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: '0px',
+        right: '0px',
+        bottom: '0px',
+        left: '0px',
+      },
+    });
+
+    await browser.close();
+
+    console.log(`[PDF] ✅ Bam ! PDF du CV ${id} généré avec succès ! Le robot ferme ses portes.`);
+
+    // Return the generated PDF as a File Blob
+    return new NextResponse(Buffer.from(pdfBuffer), {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="cv-${id}.pdf"`,
+      },
+    });
+
+  } catch (error: any) {
+    console.error('[PDF Generator Error]:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la génération du PDF', details: error.message },
+      { status: 500 }
+    );
+  }
+}

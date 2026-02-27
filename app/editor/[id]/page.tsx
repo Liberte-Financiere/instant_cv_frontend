@@ -20,6 +20,7 @@ export default function EditorPage() {
   const [zoom, setZoom] = useState(1);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedRef = useRef<string>('');
 
@@ -103,6 +104,38 @@ export default function EditorPage() {
     }
   };
 
+  const handleDownloadPDF = async () => {
+    if (!currentCV?.id) return;
+    
+    setIsDownloadingPDF(true);
+    try {
+       const res = await fetch('/api/pdf/generate', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ id: currentCV.id }),
+       });
+
+       if (!res.ok) {
+          throw new Error('Erreur de génération');
+       }
+
+       const blob = await res.blob();
+       const url = window.URL.createObjectURL(blob);
+       const a = document.createElement('a');
+       a.href = url;
+       a.download = `CV_${currentCV.personalInfo.firstName || 'Instant'}_${currentCV.personalInfo.lastName || 'CV'}.pdf`;
+       document.body.appendChild(a);
+       a.click();
+       window.URL.revokeObjectURL(url);
+       document.body.removeChild(a);
+    } catch (error) {
+       console.error(error);
+       alert('Échec du téléchargement du PDF. Veuillez réessayer.');
+    } finally {
+       setIsDownloadingPDF(false);
+    }
+  };
+
   if (!currentCV) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -171,16 +204,23 @@ export default function EditorPage() {
            <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
 
            <button 
-             onClick={() => {
-                if (currentCV?.id) {
-                  window.open(`/cv/${currentCV.id}?print=true`, '_blank');
-                }
-             }}
-             className="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto gap-2 sm:px-4 sm:py-2 bg-primary hover:bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-95"
-             title="Exporter PDF"
+             onClick={handleDownloadPDF}
+             disabled={isDownloadingPDF}
+             className={`flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto gap-2 sm:px-4 sm:py-2 rounded-lg font-bold shadow-lg transition-all active:scale-95 ${
+               isDownloadingPDF 
+                 ? 'bg-slate-400 cursor-not-allowed text-white' 
+                 : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/20'
+             }`}
+             title="Exporter PDF Premium"
            >
-             <Download className="w-4 h-4" />
-             <span className="hidden sm:inline">Exporter PDF</span>
+             {isDownloadingPDF ? (
+               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+             ) : (
+               <Download className="w-4 h-4" />
+             )}
+             <span className="hidden sm:inline">
+               {isDownloadingPDF ? 'Création...' : 'Télécharger PDF'}
+             </span>
            </button>
         </div>
       </header>
@@ -227,7 +267,7 @@ export default function EditorPage() {
               >
                  {/* A4 Wrapper managed by CVPreview or here */}
                  <div className="w-[210mm] min-h-[297mm] origin-top bg-white">
-                    <CVPreview />
+                    <CVPreview hideToolbar />
                  </div>
               </motion.div>
            </div>

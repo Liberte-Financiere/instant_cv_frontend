@@ -56,16 +56,6 @@ export default function CoverLetterEditorPage() {
     window.open(`/cover-letter/${currentCL?.id}?print=true`, '_blank');
   };
 
-  const handleExportWord = async () => {
-    const { exportCoverLetterToWord } = await import('@/lib/cl-word-export');
-    if (currentCL) {
-      toast.promise(exportCoverLetterToWord(currentCL), {
-        loading: 'Génération du fichier Word...',
-        success: 'Fichier Word téléchargé !',
-        error: 'Erreur lors de l\'export Word'
-      });
-    }
-  };
 
   const generateFullLetter = async () => {
     if (!selectedCVId || !jobDesc) {
@@ -154,15 +144,6 @@ export default function CoverLetterEditorPage() {
           </button>
           
           <div className="h-6 w-px bg-slate-200 hidden sm:block" />
-
-          <button 
-            onClick={handleExportWord}
-            className="hidden sm:flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl text-sm font-semibold transition-all"
-            title="Exporter en Word"
-          >
-            <FileType className="w-4 h-4" />
-            <span className="hidden md:inline">Word</span>
-          </button>
 
           <button 
             onClick={handleExportPDF}

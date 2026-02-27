@@ -72,7 +72,7 @@ interface CVState {
   
   // API Sync
   fetchUserCVs: () => Promise<void>;
-  fetchCV: (id: string) => Promise<CV | null>;
+  fetchCV: (id: string, token?: string) => Promise<CV | null>;
   saveCurrentCV: () => Promise<void>;
   
   // Core Actions
@@ -244,8 +244,24 @@ export const useCVStore = create<CVState>()(
           
           // --- Sync CVs ---
           const serverCVMap = new Map(cvsRes.map(cv => [cv.id, cv]));
-          const unsavedLocalCVs = localCVs.filter(cv => !serverCVMap.has(cv.id));
-          const mergedCVs = [...cvsRes, ...unsavedLocalCVs];
+          
+          const mergedCVs = localCVs.map(localCV => {
+            const serverCV = serverCVMap.get(localCV.id);
+            if (!serverCV) return localCV; // Keep local if not on server yet (draft)
+            
+            // If both exist, keep the one with the newest updatedAt date
+            const localDate = new Date(localCV.updatedAt || 0).getTime();
+            const serverDate = new Date(serverCV.updatedAt || 0).getTime();
+            
+            // Mark as handled
+            serverCVMap.delete(localCV.id);
+            
+            return localDate > serverDate ? localCV : serverCV;
+          });
+
+          // Add remaining server CVs that aren't in local storage at all
+          const remainingServerCVs = Array.from(serverCVMap.values());
+          mergedCVs.push(...remainingServerCVs);
           
           // --- Sync History ---
           // Server returns createdAt, client uses date. Map it.
@@ -272,14 +288,20 @@ export const useCVStore = create<CVState>()(
         }
       },
 
-      fetchCV: async (id: string) => {
+      fetchCV: async (id: string, token?: string) => {
         try {
-          // Check local first
-          const localCV = get().cvList.find(c => c.id === id);
-          if (localCV) return localCV;
+          // Check local first (unless we are forcing a token fetch which means SSR bypass)
+          if (!token) {
+            const localCV = get().cvList.find(c => c.id === id);
+            if (localCV) {
+              // CRITICAL FIX: Ensure `currentCV` is updated even if we return from cache
+              set({ currentCV: localCV });
+              return localCV;
+            }
+          }
 
           // Check server
-          const serverCV = await CVService.getById(id);
+          const serverCV = await CVService.getById(id, token);
           
           // Add to local list and format if needed
           // Assuming API returns correct full format due to previous fix
