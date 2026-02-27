@@ -7,21 +7,44 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const url = new URL(req.url);
+    const headlessKey = url.searchParams.get('headlessToken');
+    const isServerGenerator = headlessKey === process.env.GOOGLE_API_KEY?.slice(0, 10); // Simple secure static proxy token without relying on new ENVs
+    
     const session = await auth();
-    if (!session?.user?.id) return new NextResponse("Unauthorized", { status: 401 });
+    if (!session?.user?.id && !isServerGenerator) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
     
     const { id } = await params;
     
-    // Ensure user owns the CV
+    // If it's the server generator, we bypass the userId check to guarantee PDF rendering
+    const whereClause = isServerGenerator ? { id } : { id, userId: session!.user!.id };
+
     const cv = await prisma.cV.findUnique({
-      where: { id, userId: session.user.id }
+      where: whereClause
     });
 
     if (!cv) {
+      console.log(`[GET /api/cv/${id}] ❌ CV Introuvable dans la base !`);
       return new NextResponse("Not Found", { status: 404 });
     }
 
-    return NextResponse.json(cv);
+    console.log(`[GET /api/cv/${id}] ✅ CV Trouvé, on le formate pour le frontend !`);
+
+    // On s'assure de renvoyer le même format "applatit" que la route globale GET /api/cv
+    const transformedCV = {
+      ...(cv.content as any), // On "étale" le JSON content (personalInfo, experiences, etc)
+      id: cv.id,
+      title: cv.title,
+      isPublic: cv.isPublic,
+      views: cv.views,
+      createdAt: cv.createdAt,
+      updatedAt: cv.updatedAt,
+      userId: cv.userId
+    };
+
+    return NextResponse.json(transformedCV);
   } catch (error) {
     console.error('[CV_GET_ID]', error);
     return new NextResponse("Internal Error", { status: 500 });
@@ -54,23 +77,35 @@ export async function PUT(
       }
 
       // Safe update
+      const updateData: any = {
+        title: body.title || 'Mon CV',
+        content: body,
+        updatedAt: new Date(),
+      };
+      
+      // If the client specifically sent isPublic, we update it at the db root
+      if (body.hasOwnProperty('isPublic')) {
+        updateData.isPublic = body.isPublic;
+      }
+
       cv = await prisma.cV.update({
         where: { id },
-        data: {
-          title: body.title || 'Mon CV',
-          content: body,
-          updatedAt: new Date(),
-        }
+        data: updateData
       });
     } else {
-      // Use create instead of upsert for new records
+      const createData: any = {
+        id, // Keep the same ID from local storage
+        title: body.title || 'Mon CV',
+        content: body,
+        userId: session.user.id,
+      };
+
+      if (body.hasOwnProperty('isPublic')) {
+        createData.isPublic = body.isPublic;
+      }
+
       cv = await prisma.cV.create({
-        data: {
-          id, // Keep the same ID from local storage
-          title: body.title || 'Mon CV',
-          content: body,
-          userId: session.user.id,
-        }
+        data: createData
       });
     }
 

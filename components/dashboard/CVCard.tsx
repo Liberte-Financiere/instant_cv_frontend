@@ -11,10 +11,11 @@ import { ShareButton } from '@/components/ui/ShareButton';
 interface CVCardProps {
   cv: CV;
   onDelete: (id: string) => void;
+  onToggleVisibility: (id: string, currentIsPublic: boolean) => void;
   score?: number; // Optional score for the progress circle
 }
 
-export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
+export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardProps) {
   // Calculate relative time or format date
   const formatDate = (date: Date) => {
     const now = new Date();
@@ -80,10 +81,24 @@ export function CVCard({ cv, onDelete, score = 0 }: CVCardProps) {
 
         {/* Status Badge */}
         <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
-           <div className="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100 flex items-center gap-1.5 z-10">
-              <span className={`w-1.5 h-1.5 rounded-full ${cv.isPublic ? 'bg-green-500' : 'bg-slate-300'}`} />
-              {cv.isPublic ? 'Public' : 'Privé'}
-           </div>
+           <button
+             onClick={(e) => {
+                e.stopPropagation();
+                onToggleVisibility(cv.id, cv.isPublic);
+             }}
+             className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100 flex items-center gap-2 z-10 hover:bg-white hover:scale-105 transition-all active:scale-95 group/badge cursor-pointer"
+             title={cv.isPublic ? "Désactiver le partage" : "Rendre public pour partager"}
+           >
+              <div className="relative flex items-center justify-center">
+                 <span className={cn(
+                    "w-2 h-2 rounded-full transition-colors duration-300",
+                    cv.isPublic ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-slate-300 group-hover/badge:bg-slate-400"
+                 )} />
+              </div>
+              <span className="min-w-[40px] text-center font-bold">
+                {cv.isPublic ? 'Public' : 'Privé'}
+              </span>
+           </button>
            {cv.views > 0 && (
              <div className="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-purple-600 shadow-sm border border-slate-100 flex items-center gap-1.5 z-10">
                 <Eye className="w-3 h-3" />
