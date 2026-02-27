@@ -73,6 +73,11 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
+  // Professional Infos
+  phone         String?
+  jobTitle      String?
+  sector        String?
+  
   // Referral System
   referralCode   String?   @unique  // Unique 8-char code for sharing
   referredById   String?             // ID of the user who referred this user

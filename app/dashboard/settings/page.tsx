@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { User, Check, ChevronDown, CheckCircle, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ReferralSection } from '@/components/dashboard/ReferralSection';
 import { useCreditStore } from '@/store/useCreditStore';
 import Link from 'next/link';
@@ -15,22 +15,69 @@ export default function SettingsPage() {
   const creditsLoading = useCreditStore((state) => state.isLoading);
   const creditsCount = useCreditStore((state) => state.credits);
 
-  // Mock state for form
+  // Form state
   const [formData, setFormData] = useState({
-    firstName: session?.user?.name?.split(' ')[0] || 'Jean',
-    lastName: session?.user?.name?.split(' ')[1] || 'Dupont',
-    email: session?.user?.email || 'jean.dupont@email.com',
-    phone: '+33 6 12 34 56 78',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
     jobTitle: '',
     sector: 'Technologie & Informatique'
   });
 
+  // Fetch complete user profile data from DB upon landing
+  useEffect(() => {
+    async function fetchProfileData() {
+      try {
+        const res = await fetch('/api/user/profile');
+        if (res.ok) {
+           const userData = await res.json();
+           // Map fetched user data to form
+           if (userData?.user) {
+              setFormData((prev) => ({
+                 ...prev,
+                 firstName: userData.user.name?.split(' ')[0] || '',
+                 lastName: userData.user.name?.split(' ').slice(1).join(' ') || '',
+                 email: userData.user.email || '',
+                 phone: userData.user.phone || '',
+                 jobTitle: userData.user.jobTitle || '',
+                 sector: userData.user.sector || prev.sector,
+              }));
+           }
+        }
+      } catch (error) {
+         console.error('Error fetching profile', error);
+      }
+    }
+    
+    fetchProfileData();
+  }, []); // Run on mount
+
   const handleSave = async () => {
     setLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setLoading(false);
-    toast.success('Modifications enregistrées');
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+           firstName: formData.firstName,
+           lastName: formData.lastName,
+           phone: formData.phone,
+           jobTitle: formData.jobTitle,
+           sector: formData.sector,
+        }),
+      });
+
+      if (!res.ok) throw new Error('Failed to update');
+      toast.success('Modifications enregistrées');
+      
+      // Force refreshing the session via next-auth could be added here if needed
+      // await update({ name: `${formData.firstName} ${formData.lastName}`.trim() })
+    } catch (error) {
+      toast.error('Erreur lors de la sauvegarde');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -213,23 +260,7 @@ export default function SettingsPage() {
           <ReferralSection />
         </section>
 
-        {/* Subscription Banner */}
-        <section className="bg-indigo-50/50 rounded-2xl border border-indigo-100 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-             <div className="w-12 h-12 bg-[#6366F1] rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
-               <CheckCircle className="w-6 h-6" />
-             </div>
-             <div>
-               <h3 className="text-lg font-bold text-indigo-900">JobSira Pro</h3>
-               <p className="text-indigo-600/80 text-sm">
-                 Prochaine facturation le 15 Octobre 2026
-               </p>
-             </div>
-          </div>
-          <button className="px-6 py-3 bg-[#6366F1] hover:bg-[#4f46e5] text-white text-sm font-bold rounded-lg shadow-lg shadow-indigo-500/20 transition-colors whitespace-nowrap">
-            Gérer l&apos;abonnement
-          </button>
-        </section>
+
 
       </div>
     </div>
