@@ -51,7 +51,7 @@ export const APP_CONFIG = {
         id: 'standard',
         name: 'Pack Standard',
         credits: 35,
-        price: 1_000,
+        price: 10,
         priceLabel: '1 000',
         description: "L'essentiel pour postuler.",
         features: [
