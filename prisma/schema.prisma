@@ -92,6 +92,26 @@ model User {
   coverLetters  CoverLetter[]
   analyses      AnalysisHistory[] // Relation
   creditTransactions CreditTransaction[]
+  paymentTransactions PaymentTransaction[]
+}
+
+model PaymentTransaction {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packId          String                       // "standard" | "premium" | "pro"
+  amount          Int                          // Montant en FCFA
+  credits         Int                          // Crédits à ajouter
+  phone           String                       // Numéro du client (format international)
+  status          String   @default("pending") // pending | completed | failed
+  ligdicashToken  String?                      // Token retourné par LigdiCash
+  transactionId   String?                      // ID transaction LigdiCash
+  operatorName    String?                      // "ORANGE BURKINA", etc.
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([ligdicashToken])
 }
 
 model CV {

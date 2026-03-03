@@ -328,15 +328,40 @@ export default function CoverLettersPage() {
                   <FileText className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <a 
-                    href={`/cover-letter/${cl.id}?print=true`}
-                    target="_blank"
-                    onClick={(e) => e.stopPropagation()}
-                    className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                    title="Télécharger / Imprimer"
+                  <button 
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      const btn = e.currentTarget;
+                      btn.disabled = true;
+                      const tid = toast.loading('Génération du PDF...');
+                      try {
+                        const res = await fetch('/api/pdf/generate', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ id: cl.id, type: 'cover-letter' }),
+                        });
+                        if (!res.ok) throw new Error('Erreur PDF');
+                        const blob = await res.blob();
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `Lettre_${cl.title || 'motivation'}.pdf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        toast.success('PDF téléchargé !', { id: tid });
+                      } catch {
+                        toast.error('Erreur lors du téléchargement.', { id: tid });
+                      } finally {
+                        btn.disabled = false;
+                      }
+                    }}
+                    className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
+                    title="Télécharger PDF"
                   >
                     <Download className="w-4 h-4" />
-                  </a>
+                  </button>
                   <button 
                     onClick={(e) => { e.stopPropagation(); handleDelete(cl.id); }}
                     className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"

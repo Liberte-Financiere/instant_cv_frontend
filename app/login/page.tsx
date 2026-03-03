@@ -1,13 +1,14 @@
 import Image from "next/image"
 import { signIn } from "@/auth"
 import { Button } from "@/components/ui/Button"
+import { APP_CONFIG } from '@/lib/config';
 
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-4">
       <div className="w-full max-w-sm space-y-8 bg-white p-8 rounded-xl shadow-lg text-center">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tighter text-slate-900">JobSira</h1>
+          <h1 className="text-3xl font-bold tracking-tighter text-slate-900">{APP_CONFIG.name}</h1>
           <p className="text-slate-500">Connectez-vous pour sauvegarder vos CVs</p>
         </div>
         

@@ -9,7 +9,7 @@ const plans = [
     name: 'Essai Gratuit',
     price: '0',
     currency: 'FCFA',
-    description: '25 crédits offerts dès l\'inscription.',
+    description: `${APP_CONFIG.credits.signupBonus} crédits offerts dès l'inscription.`,
     features: [
       'IA incluse mais limitée (25 cr.)',
       'Générer des CV',
@@ -75,6 +75,7 @@ const plans = [
 ];
 
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { APP_CONFIG } from '@/lib/config';
 
 export function Pricing() {
   return (

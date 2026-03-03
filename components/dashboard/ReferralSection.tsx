@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Copy, Gift, Users, Share2, Check, Loader2, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { APP_CONFIG } from '@/lib/config';
 
 interface ReferralData {
   referralCode: string;
@@ -55,12 +56,12 @@ export function ReferralSection() {
   const shareLink = async () => {
     if (!data?.referralLink) return;
     
-    const shareText = `🚀 Crée ton CV pro avec l'IA JobSira ! Inscris-toi avec mon lien et reçois un bonus de 15 crédits gratuits 👉 ${data.referralLink}`;
+    const shareText = `🚀 Crée ton CV pro avec l'IA ${APP_CONFIG.name} ! Inscris-toi avec mon lien et reçois un bonus de ${APP_CONFIG.credits.referralBonus} crédits gratuits 👉 ${data.referralLink}`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'JobSira',
+          title: '{APP_CONFIG.name}',
           text: shareText,
           url: data.referralLink,
         });

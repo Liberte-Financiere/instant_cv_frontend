@@ -1,12 +1,15 @@
 'use client';
 
-import { Edit, Trash2, Download, Clock, Eye } from 'lucide-react';
+import { useState } from 'react';
+import { Edit, Trash2, Download, Clock, Eye, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { CV } from '@/types/cv';
 import { CVThumbnail } from './CVThumbnail';
 import { ShareButton } from '@/components/ui/ShareButton';
+import { toast } from 'sonner';
+import { APP_CONFIG } from '@/lib/config';
 
 interface CVCardProps {
   cv: CV;
@@ -16,6 +19,8 @@ interface CVCardProps {
 }
 
 export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardProps) {
+  const [isDownloading, setIsDownloading] = useState(false);
+
   // Calculate relative time or format date
   const formatDate = (date: Date) => {
     const now = new Date();
@@ -32,7 +37,44 @@ export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardPr
     })}`;
   };
 
+  const handleDownloadPDF = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (isDownloading) return;
 
+    setIsDownloading(true);
+    const toastId = toast.loading('Génération du PDF...');
+
+    try {
+      const res = await fetch('/api/pdf/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: cv.id }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Erreur lors de la génération du PDF');
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${cv.personalInfo?.firstName || 'CV'}_${cv.personalInfo?.lastName || ''}_CV.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success('PDF téléchargé !', { id: toastId });
+    } catch (error: any) {
+      console.error('PDF download failed:', error);
+      toast.error(error.message || 'Erreur lors du téléchargement.', { id: toastId });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return (
     <motion.div
@@ -58,18 +100,21 @@ export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardPr
            </Link>
              <ShareButton 
                url={`/share/${cv.id}`}
-               title={cv.title || 'Mon CV JobSira'}
-               text={`Découvrez mon CV "${cv.title}" créé avec JobSira`}
+               title={`Mon CV ${APP_CONFIG.name}`}
+               text={`Découvrez mon CV "${cv.title}" créé avec ${APP_CONFIG.name}`}
              />
-           <a
-             href={`/cv/${cv.id}?print=true`}
-             target="_blank"
-             className="p-3 bg-white rounded-xl text-slate-600 hover:text-green-600 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
-             title="Télécharger"
-             onClick={(e) => e.stopPropagation()}
+           <button
+              onClick={handleDownloadPDF}
+              disabled={isDownloading}
+              className="p-3 bg-white rounded-xl text-slate-600 hover:text-green-600 hover:scale-110 shadow-lg shadow-slate-200 transition-all disabled:opacity-50"
+              title="Télécharger PDF"
            >
-             <Download className="w-5 h-5" />
-           </a>
+              {isDownloading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Download className="w-5 h-5" />
+              )}
+           </button>
            <button
              onClick={() => onDelete(cv.id)}
              className="p-3 bg-white rounded-xl text-slate-600 hover:text-red-500 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
@@ -125,3 +170,4 @@ export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardPr
     </motion.div>
   );
 }
+

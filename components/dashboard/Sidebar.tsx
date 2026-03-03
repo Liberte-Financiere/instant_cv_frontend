@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
+import { APP_CONFIG } from '@/lib/config';
 
 
 
@@ -84,7 +85,7 @@ export function Sidebar() {
            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
              <FileText className="w-5 h-5 text-white" />
            </div>
-           <span className="text-xl font-bold tracking-tight">JobSira</span>
+           <span className="text-xl font-bold tracking-tight">{APP_CONFIG.name}</span>
         </div>
       </div>
 

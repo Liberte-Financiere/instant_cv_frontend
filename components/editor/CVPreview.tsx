@@ -5,9 +5,9 @@ import dynamic from 'next/dynamic';
 import { ZoomIn, ZoomOut, Download, Loader2, FileText, ChevronDown } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
-import { printCV } from '@/lib/pdf-export';
 import { exportToWord } from '@/lib/word-export';
 import { CV } from '@/types/cv';
+import { toast } from 'sonner';
 
 // Dynamic imports for templates
 const ModernSidebar = dynamic(() => import('@/components/templates/ModernSidebar').then(mod => mod.ModernSidebar), { 
@@ -159,14 +159,46 @@ export function CVPreview({ data, hideToolbar }: CVPreviewProps) {
     }
   };
 
-  const handleExportPDF = () => {
-    if (!currentCV) return;
+  const handleExportPDF = async () => {
+    if (!debouncedCV?.id) return;
     
     setShowExportMenu(false);
+    setIsExporting(true);
     
-    // Open public CV page with auto-print trigger
-    if (debouncedCV?.id) {
-       window.open(`/cv/${debouncedCV.id}?print=true`, '_blank');
+    const toastId = toast.loading('Génération du PDF en cours...');
+    
+    try {
+      // Save the CV first to ensure the server has the latest version
+      await useCVStore.getState().saveCurrentCV();
+      
+      const res = await fetch('/api/pdf/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: debouncedCV.id }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Erreur lors de la génération du PDF');
+      }
+
+      // Download the PDF blob
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${debouncedCV.personalInfo?.firstName || 'CV'}_${debouncedCV.personalInfo?.lastName || ''}_CV.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast.success('PDF téléchargé !', { id: toastId });
+    } catch (error: any) {
+      console.error('Export PDF failed:', error);
+      toast.error(error.message || 'Erreur lors de la génération du PDF.', { id: toastId });
+    } finally {
+      setIsExporting(false);
     }
   };
 
