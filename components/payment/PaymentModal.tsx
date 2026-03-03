@@ -2,11 +2,11 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, Shield, CheckCircle, XCircle, Loader2, ArrowLeft } from 'lucide-react';
+import { Phone, Shield, CheckCircle, XCircle, Loader2, ArrowLeft, KeyRound } from 'lucide-react';
 import { toast } from 'sonner';
 import { APP_CONFIG } from '@/lib/config';
 
-type PaymentStep = 'phone' | 'otp' | 'success' | 'error';
+type PaymentStep = 'form' | 'success' | 'error';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -22,68 +22,33 @@ interface PaymentModalProps {
 }
 
 export function PaymentModal({ isOpen, onClose, pack, onCreditsUpdated }: PaymentModalProps) {
-  const [step, setStep] = useState<PaymentStep>('phone');
+  const [step, setStep] = useState<PaymentStep>('form');
   const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const [transactionId, setTransactionId] = useState('');
+  const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [resultData, setResultData] = useState<{ credits: number; newBalance: number; operator: string } | null>(null);
 
-  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
-
   // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
-      setStep('phone');
+      setStep('form');
       setPhone('');
-      setOtp(['', '', '', '', '', '']);
-      setTransactionId('');
+      setOtp('');
       setError('');
       setResultData(null);
     }
   }, [isOpen]);
 
-  // ─── Step 1: Send OTP ─────────────────────────
+  // ─── Step: Validate Payment ───────────────────
 
-  const handleSendOTP = async () => {
+  const handleValidatePayment = async () => {
     if (!phone.trim()) {
       setError('Veuillez entrer votre numéro de téléphone.');
       return;
     }
 
-    setIsLoading(true);
-    setError('');
-
-    try {
-      const res = await fetch('/api/payment/initiate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: phone.trim(), packId: pack.id }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || 'Erreur lors de l\'envoi du code.');
-        return;
-      }
-
-      setTransactionId(data.transactionId);
-      setStep('otp');
-      toast.success('Code OTP envoyé par SMS !');
-    } catch {
-      setError('Erreur de connexion. Vérifiez votre réseau.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // ─── Step 2: Validate OTP ─────────────────────
-
-  const handleValidateOTP = async () => {
-    const otpCode = otp.join('');
-    if (otpCode.length < 4) {
+    if (otp.length < 4) {
       setError('Veuillez entrer le code OTP complet.');
       return;
     }
@@ -95,7 +60,7 @@ export function PaymentModal({ isOpen, onClose, pack, onCreditsUpdated }: Paymen
       const res = await fetch('/api/payment/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ otp: otpCode, transactionId }),
+        body: JSON.stringify({ phone: phone.trim(), otp: otp.trim(), packId: pack.id }),
       });
 
       const data = await res.json();
@@ -131,43 +96,6 @@ export function PaymentModal({ isOpen, onClose, pack, onCreditsUpdated }: Paymen
     }
   };
 
-  // ─── OTP Input Handler ────────────────────────
-
-  const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) value = value.slice(-1);
-    if (!/^\d*$/.test(value)) return;
-
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // Auto-focus next input
-    if (value && index < 5) {
-      otpRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      otpRefs.current[index - 1]?.focus();
-    }
-    if (e.key === 'Enter' && otp.join('').length >= 4) {
-      handleValidateOTP();
-    }
-  };
-
-  const handleOtpPaste = (e: React.ClipboardEvent) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-    const newOtp = [...otp];
-    for (let i = 0; i < pasted.length; i++) {
-      newOtp[i] = pasted[i];
-    }
-    setOtp(newOtp);
-    const nextIndex = Math.min(pasted.length, 5);
-    otpRefs.current[nextIndex]?.focus();
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -189,10 +117,10 @@ export function PaymentModal({ isOpen, onClose, pack, onCreditsUpdated }: Paymen
         className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden"
       >
         <AnimatePresence mode="wait">
-          {/* ─── STEP: Phone ─────────────────────── */}
-          {step === 'phone' && (
+          {/* ─── STEP: Form (USSD Instructions + Phone + OTP) ─────────────────────── */}
+          {step === 'form' && (
             <motion.div
-              key="phone"
+              key="form"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -212,11 +140,24 @@ export function PaymentModal({ isOpen, onClose, pack, onCreditsUpdated }: Paymen
                 </p>
               </div>
 
-              {/* Phone Input */}
+              {/* Instructions USSD */}
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+                <h4 className="text-sm font-bold text-amber-900 mb-2">Comment payer ?</h4>
+                <ol className="text-sm text-amber-800 space-y-2 list-decimal list-inside">
+                  <li>Pour Orange Burkina, composez sur votre téléphone : <br/>
+                    <strong className="text-indigo-600 text-base font-mono bg-white px-2 py-0.5 rounded border border-amber-100">*144*4*6*{pack.price}#</strong>
+                  </li>
+                  <li>Entrez votre code secret Orange Money</li>
+                  <li>Vous recevrez un <strong>code OTP</strong> par SMS</li>
+                  <li>Saisissez votre numéro et ce code OTP ci-dessous</li>
+                </ol>
+              </div>
+
+              {/* Inputs */}
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Numéro Mobile Money
+                    Numéro de Téléphone
                   </label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">
@@ -229,15 +170,32 @@ export function PaymentModal({ isOpen, onClose, pack, onCreditsUpdated }: Paymen
                         setPhone(e.target.value.replace(/[^\d\s]/g, ''));
                         setError('');
                       }}
-                      onKeyDown={(e) => e.key === 'Enter' && handleSendOTP()}
                       placeholder="70 00 00 00"
                       className="w-full pl-14 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                      autoFocus
                     />
                   </div>
-                  <p className="text-xs text-slate-400 mt-1.5">
-                    Orange Money, Moov Money, ou Wallet LigdiCash
-                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Code OTP (reçu par SMS)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                      <KeyRound className="w-5 h-5" />
+                    </span>
+                    <input
+                      type="text"
+                      value={otp}
+                      onChange={(e) => {
+                        setOtp(e.target.value.replace(/\s/g, ''));
+                        setError('');
+                      }}
+                      onKeyDown={(e) => e.key === 'Enter' && handleValidatePayment()}
+                      placeholder="Ex: 123456"
+                      className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-lg font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    />
+                  </div>
                 </div>
 
                 {error && (
@@ -248,17 +206,17 @@ export function PaymentModal({ isOpen, onClose, pack, onCreditsUpdated }: Paymen
                 )}
 
                 <button
-                  onClick={handleSendOTP}
-                  disabled={isLoading || !phone.trim()}
-                  className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+                  onClick={handleValidatePayment}
+                  disabled={isLoading || !phone.trim() || !otp.trim()}
+                  className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 mt-2"
                 >
                   {isLoading ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      Envoi en cours...
+                      Validation en cours...
                     </>
                   ) : (
-                    'Recevoir le code OTP →'
+                    `Confirmer le paiement — ${pack.priceLabel} ${APP_CONFIG.pricing.currency}`
                   )}
                 </button>
               </div>
@@ -273,87 +231,9 @@ export function PaymentModal({ isOpen, onClose, pack, onCreditsUpdated }: Paymen
               <button
                 onClick={onClose}
                 className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+                disabled={isLoading}
               >
                 ✕
-              </button>
-            </motion.div>
-          )}
-
-          {/* ─── STEP: OTP ───────────────────────── */}
-          {step === 'otp' && (
-            <motion.div
-              key="otp"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="p-6 sm:p-8"
-            >
-              {/* Back button */}
-              <button
-                onClick={() => setStep('phone')}
-                className="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 mb-4 transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" /> Retour
-              </button>
-
-              {/* Header */}
-              <div className="text-center mb-6">
-                <div className="w-14 h-14 mx-auto bg-amber-100 rounded-2xl flex items-center justify-center mb-4">
-                  <span className="text-2xl">📱</span>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900">Code OTP envoyé</h3>
-                <p className="text-slate-500 text-sm mt-1">
-                  Entrez le code reçu par SMS au{' '}
-                  <span className="font-medium text-slate-700">{phone}</span>
-                </p>
-              </div>
-
-              {/* OTP Input */}
-              <div className="flex justify-center gap-2 sm:gap-3 mb-5" onPaste={handleOtpPaste}>
-                {otp.map((digit, i) => (
-                  <input
-                    key={i}
-                    ref={(el) => { otpRefs.current[i] = el; }}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={digit}
-                    onChange={(e) => handleOtpChange(i, e.target.value)}
-                    onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                    className="w-11 h-14 sm:w-12 sm:h-16 text-center text-xl font-bold border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all bg-slate-50"
-                    autoFocus={i === 0}
-                  />
-                ))}
-              </div>
-
-              {error && (
-                <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg mb-4">
-                  <XCircle className="w-4 h-4 shrink-0" />
-                  {error}
-                </div>
-              )}
-
-              <button
-                onClick={handleValidateOTP}
-                disabled={isLoading || otp.join('').length < 4}
-                className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Validation en cours...
-                  </>
-                ) : (
-                  `Confirmer le paiement — ${pack.priceLabel} ${APP_CONFIG.pricing.currency}`
-                )}
-              </button>
-
-              <button
-                onClick={handleSendOTP}
-                disabled={isLoading}
-                className="w-full mt-3 text-sm text-indigo-600 hover:text-indigo-700 transition-colors"
-              >
-                Pas reçu ? Renvoyer le code
               </button>
             </motion.div>
           )}
@@ -408,7 +288,7 @@ export function PaymentModal({ isOpen, onClose, pack, onCreditsUpdated }: Paymen
               <p className="text-slate-500 mb-6">{error || 'Une erreur est survenue.'}</p>
               <button
                 onClick={() => {
-                  setStep('phone');
+                  setStep('form');
                   setError('');
                 }}
                 className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl transition-all"

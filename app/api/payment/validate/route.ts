@@ -12,8 +12,8 @@ export const runtime = 'nodejs';
 /**
  * POST /api/payment/validate
  * 
- * Step 2: Validates the payment using the OTP code.
- * Body: { otp: string, transactionId: string }
+ * Creates a Straight Checkout Invoice using an OTP the user generated via USSD.
+ * Body: { phone: string, otp: string, packId: string }
  */
 export async function POST(req: Request) {
   const session = await auth();
@@ -31,38 +31,36 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { otp, transactionId } = await req.json();
+    const { phone, otp, packId } = await req.json();
 
-    if (!otp || !transactionId) {
-      return NextResponse.json({ error: 'Code OTP et identifiant de transaction requis.' }, { status: 400 });
+    if (!phone || !otp || !packId) {
+      return NextResponse.json({ error: 'Téléphone, code OTP et pack requis.' }, { status: 400 });
     }
 
-    // Find the pending transaction
-    const transaction = await prisma.paymentTransaction.findUnique({
-      where: { id: transactionId },
-      include: { user: { select: { name: true, email: true } } },
+    // Normalize phone
+    const cleanPhone = phone.replace(/[\s\-\+]/g, '');
+    if (cleanPhone.length < 8) {
+      return NextResponse.json({ error: 'Numéro de téléphone invalide.' }, { status: 400 });
+    }
+
+    // Find pack for pricing
+    const pack = APP_CONFIG.pricing.packs.find((p) => p.id === packId);
+    if (!pack) {
+      return NextResponse.json({ error: 'Pack invalide.' }, { status: 400 });
+    }
+
+    // Create a new pending transaction
+    const transaction = await prisma.paymentTransaction.create({
+      data: {
+        userId: session.user.id,
+        packId: pack.id,
+        amount: pack.price,
+        credits: pack.credits,
+        phone: cleanPhone,
+        status: 'pending',
+      },
     });
 
-    if (!transaction) {
-      return NextResponse.json({ error: 'Transaction introuvable.' }, { status: 404 });
-    }
-
-    if (transaction.userId !== session.user.id) {
-      return NextResponse.json({ error: 'Non autorisé.' }, { status: 403 });
-    }
-
-    if (transaction.status === 'completed') {
-      return NextResponse.json({ error: 'Cette transaction a déjà été traitée.' }, { status: 400 });
-    }
-
-    if (transaction.status === 'failed') {
-      return NextResponse.json({ error: 'Cette transaction a échoué. Veuillez relancer un paiement.' }, { status: 400 });
-    }
-
-    // Find pack for invoice details
-    const pack = APP_CONFIG.pricing.packs.find((p) => p.id === transaction.packId);
-
-    // Build invoice payload for LigdiCash
     const callbackUrl = `${APP_CONFIG.url}/api/payment/callback`;
     
     const payload = {
@@ -70,22 +68,22 @@ export async function POST(req: Request) {
         invoice: {
           items: [
             {
-              name: pack?.name || transaction.packId,
-              description: `${transaction.credits} crédits IA ${APP_CONFIG.name}`,
+              name: pack.name,
+              description: `${pack.credits} crédits IA ${APP_CONFIG.name}`,
               quantity: 1,
-              unit_price: transaction.amount,
-              total_price: transaction.amount,
+              unit_price: pack.price,
+              total_price: pack.price,
             },
           ],
-          total_amount: transaction.amount,
+          total_amount: pack.price,
           devise: 'XOF',
           description: `Achat de crédits ${APP_CONFIG.name}`,
-          customer: transaction.phone,
-          customer_firstname: transaction.user.name?.split(' ')[0] || '',
-          customer_lastname: transaction.user.name?.split(' ').slice(1).join(' ') || '',
-          customer_email: transaction.user.email || '',
+          customer: cleanPhone,
+          customer_firstname: session.user.name?.split(' ')[0] || '',
+          customer_lastname: session.user.name?.split(' ').slice(1).join(' ') || '',
+          customer_email: session.user.email || '',
           external_id: '',
-          otp: otp,
+          otp: otp.trim(), // User's USSD generated OTP
         },
         store: {
           name: APP_CONFIG.name,
@@ -105,8 +103,8 @@ export async function POST(req: Request) {
       },
     };
 
-    // Call LigdiCash validation API
-    const result = await validatePayment(payload);
+    // Call LigdiCash Straight API
+    const result = await validatePayment(payload as any);
 
     if (result.response_code !== '00') {
       await prisma.paymentTransaction.update({
@@ -114,7 +112,7 @@ export async function POST(req: Request) {
         data: { status: 'failed' },
       });
       return NextResponse.json(
-        { error: result.response_text || 'Paiement refusé. Vérifiez votre code OTP.' },
+        { error: result.response_text || 'Paiement refusé. Vérifiez votre code OTP ou votre solde.' },
         { status: 400 }
       );
     }
@@ -129,7 +127,7 @@ export async function POST(req: Request) {
     const status = await verifyTransactionStatus(result.token);
 
     if (isPaymentConfirmed(status)) {
-      // Payment confirmed! Credit the user
+      // Payment confirmed! Credit the user immediately
       await prisma.paymentTransaction.update({
         where: { id: transaction.id },
         data: {
@@ -143,7 +141,7 @@ export async function POST(req: Request) {
         transaction.userId,
         transaction.credits,
         'PURCHASE',
-        `Achat ${pack?.name || transaction.packId} — ${transaction.amount} ${APP_CONFIG.pricing.currency}`
+        `Achat ${pack.name} — ${transaction.amount} ${APP_CONFIG.pricing.currency}`
       );
 
       return NextResponse.json({
@@ -155,7 +153,7 @@ export async function POST(req: Request) {
       });
     }
 
-    // Payment not yet confirmed — might be pending
+    // Payment not yet confirmed — might be waiting for the callback
     return NextResponse.json({
       success: true,
       status: 'pending',
@@ -166,7 +164,7 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error('[Payment] Validate error:', error);
     return NextResponse.json(
-      { error: 'Erreur serveur lors de la validation du paiement.' },
+      { error: 'Erreur serveur lors du paiement.' },
       { status: 500 }
     );
   }
