@@ -99,33 +99,12 @@ export interface LigdiCashCallbackPayload {
 // ─── API Functions ──────────────────────────────
 
 /**
- * Step 1: Initiate OTP — sends a one-time code via SMS to the customer
- */
-export async function initiateOTP(phone: string, amount: number): Promise<LigdiCashOTPResponse> {
-  const url = `${LIGDICASH_BASE_URL}/pay/v02/debitotp/${phone}/${amount}`;
-  
-  console.log(`[LigdiCash] 📱 Initiating OTP for ${phone}, amount: ${amount} FCFA`);
-  
-  const res = await fetch(url, { method: 'GET', headers });
-  
-  if (!res.ok) {
-    const text = await res.text();
-    console.error(`[LigdiCash] ❌ OTP initiation failed: ${res.status} ${text}`);
-    throw new Error(`LigdiCash OTP failed: ${res.status}`);
-  }
-  
-  const data: LigdiCashOTPResponse = await res.json();
-  console.log(`[LigdiCash] ✅ OTP response:`, data);
-  return data;
-}
-
-/**
- * Step 2: Validate payment with OTP — debits the customer and credits the merchant
+ * Validate payment with OTP via Straight API (used for Orange Burkina where the user generates their own OTP via USSD)
  */
 export async function validatePayment(payload: LigdiCashValidatePayload): Promise<LigdiCashValidateResponse> {
-  const url = `${LIGDICASH_BASE_URL}/pay/v02/debitwallet/withotp`;
+  const url = `${LIGDICASH_BASE_URL}/pay/v01/straight/checkout-invoice/create`;
   
-  console.log(`[LigdiCash] 💳 Validating payment for ${payload.commande.invoice.customer}`);
+  console.log(`[LigdiCash] 💳 Creating straight checkout invoice for ${payload.commande.invoice.customer}`);
   
   const res = await fetch(url, {
     method: 'POST',
