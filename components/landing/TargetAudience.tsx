@@ -29,6 +29,7 @@ const targets = [
 ];
 
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { APP_CONFIG } from '@/lib/config';
 
 export function TargetAudience() {
   return (
@@ -39,7 +40,7 @@ export function TargetAudience() {
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionHeader
           theme="dark"
-          title="Pour qui est fait JobSira ?"
+          title={`Pour qui est fait ${APP_CONFIG.name} ?`}
           description={<p>Peu importe où vous en êtes dans votre parcours, notre technologie s&apos;adapte à <span className="text-white font-medium">vos enjeux spécifiques</span>.</p>}
         />
 

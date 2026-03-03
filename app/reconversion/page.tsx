@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { RefreshCw, Lightbulb, PenTool, Route, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Navbar } from '@/components/shared/Navbar';
+import { APP_CONFIG } from '@/lib/config';
 
 const benefits = [
   {
@@ -54,7 +55,7 @@ export default function ReconversionPage() {
               
               <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-10">
                 Votre expérience passée est un atout, pas un obstacle. 
-                JobSira vous aide à présenter votre parcours comme une force pour convaincre dans votre nouveau domaine.
+                {APP_CONFIG.name} vous aide à présenter votre parcours comme une force pour convaincre dans votre nouveau domaine.
               </p>
 
               <Link
@@ -71,7 +72,7 @@ export default function ReconversionPage() {
         <section className="py-20 px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-slate-900 text-center mb-4">
-              Comment JobSira facilite votre transition
+              Comment {APP_CONFIG.name} facilite votre transition
             </h2>
             <p className="text-slate-500 text-center mb-12 max-w-2xl mx-auto">
               Des outils pour transformer votre expérience passée en opportunité future.
@@ -105,7 +106,7 @@ export default function ReconversionPage() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-white mb-4">Prêt pour un nouveau départ ?</h2>
             <p className="text-slate-400 mb-8">
-              Inscription gratuite, 25 crédits offerts, aucune carte bancaire requise.
+              Inscription gratuite, {APP_CONFIG.credits.signupBonus} crédits offerts, aucune carte bancaire requise.
             </p>
             <Link
               href="/auth"

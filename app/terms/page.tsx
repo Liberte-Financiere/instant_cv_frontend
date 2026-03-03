@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { APP_CONFIG } from '@/lib/config';
 
 export const metadata: Metadata = {
-  title: 'Conditions d\'Utilisation | JobSira',
-  description: 'Conditions générales d\'utilisation de la plateforme JobSira',
+  title: `Conditions d'Utilisation | ${APP_CONFIG.name}`,
+  description: `Conditions générales d'utilisation de la plateforme ${APP_CONFIG.name}`,
 };
 
 export default function TermsPage() {
@@ -16,7 +17,7 @@ export default function TermsPage() {
             href="/" 
             className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
           >
-            JobSira
+            {APP_CONFIG.name}
           </Link>
         </div>
       </header>
@@ -39,7 +40,7 @@ export default function TermsPage() {
               1. Acceptation des Conditions
             </h2>
             <p className="text-slate-600 leading-relaxed">
-              En accédant et en utilisant JobSira, vous acceptez d&apos;être lié par ces conditions d&apos;utilisation. 
+              En accédant et en utilisant {APP_CONFIG.name}, vous acceptez d&apos;être lié par ces conditions d&apos;utilisation. 
               Si vous n&apos;acceptez pas ces conditions, veuillez ne pas utiliser notre service.
             </p>
           </section>
@@ -50,7 +51,7 @@ export default function TermsPage() {
               2. Description du Service
             </h2>
             <p className="text-slate-600 leading-relaxed mb-4">
-              JobSira est une plateforme en ligne permettant de :
+              {APP_CONFIG.name} est une plateforme en ligne permettant de :
             </p>
             <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
               <li>Créer et personnaliser des CV professionnels</li>
@@ -78,7 +79,7 @@ export default function TermsPage() {
               4. Propriété Intellectuelle
             </h2>
             <p className="text-slate-600 leading-relaxed">
-              Vous conservez tous les droits sur le contenu que vous créez sur JobSira. Cependant, vous nous 
+              Vous conservez tous les droits sur le contenu que vous créez sur {APP_CONFIG.name}. Cependant, vous nous 
               accordez une licence limitée pour stocker et afficher ce contenu dans le cadre de la fourniture du service.
             </p>
           </section>
@@ -116,7 +117,7 @@ export default function TermsPage() {
               7. Limitation de Responsabilité
             </h2>
             <p className="text-slate-600 leading-relaxed">
-              JobSira est fourni &quot;tel quel&quot;. Nous ne garantissons pas que le service sera ininterrompu ou 
+              {APP_CONFIG.name} est fourni &quot;tel quel&quot;. Nous ne garantissons pas que le service sera ininterrompu ou 
               exempt d&apos;erreurs. Nous ne sommes pas responsables des dommages indirects résultant de l&apos;utilisation du service.
             </p>
           </section>
@@ -162,7 +163,7 @@ export default function TermsPage() {
       {/* Footer */}
       <footer className="bg-slate-50 border-t border-slate-200 py-8 mt-12">
         <div className="max-w-4xl mx-auto px-4 text-center text-slate-500 text-sm">
-          © 2026 JobSira. Tous droits réservés.
+          © 2026 {APP_CONFIG.name}. Tous droits réservés.
         </div>
       </footer>
     </div>

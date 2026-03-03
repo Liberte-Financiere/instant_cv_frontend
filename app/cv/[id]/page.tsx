@@ -5,6 +5,7 @@ import { useCVStore } from '@/store/useCVStore';
 import dynamic from 'next/dynamic';
 import { Download, Printer, Home } from 'lucide-react';
 import Link from 'next/link';
+import { APP_CONFIG } from '@/lib/config';
 
 // Dynamic imports for ALL templates
 const ModernSidebar = dynamic(() => import('@/components/templates/ModernSidebar').then(m => m.ModernSidebar));
@@ -184,7 +185,7 @@ export default function PublicCVPage({ params }: PageProps) {
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0">
             <Link href="/" className="text-xl font-bold text-blue-600 shrink-0">
-              JobSira
+              {APP_CONFIG.name}
             </Link>
             <span className="text-slate-400 hidden sm:inline">|</span>
             <span className="text-sm text-slate-600 truncate hidden sm:inline">
@@ -230,7 +231,7 @@ export default function PublicCVPage({ params }: PageProps) {
 
       {/* Footer - Hidden in print */}
       <footer className="print:hidden py-6 text-center text-sm text-slate-500">
-        Créé avec <Link href="/" className="text-blue-600 hover:underline">JobSira</Link>
+        Créé avec <Link href="/" className="text-blue-600 hover:underline">{APP_CONFIG.name}</Link>
       </footer>
     </div>
   );

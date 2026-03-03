@@ -52,8 +52,46 @@ export default function CoverLetterEditorPage() {
     setIsSaving(false);
   };
 
-  const handleExportPDF = () => {
-    window.open(`/cover-letter/${currentCL?.id}?print=true`, '_blank');
+  const [isExportingPDF, setIsExportingPDF] = useState(false);
+
+  const handleExportPDF = async () => {
+    if (!currentCL?.id) return;
+
+    setIsExportingPDF(true);
+    const toastId = toast.loading('Génération du PDF...');
+
+    try {
+      // Save first to ensure the server has the latest version
+      await saveCurrentCL();
+
+      const res = await fetch('/api/pdf/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: currentCL.id, type: 'cover-letter' }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Erreur lors de la génération du PDF');
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Lettre_${currentCL.title || 'motivation'}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success('PDF téléchargé !', { id: toastId });
+    } catch (error: any) {
+      console.error('Export PDF failed:', error);
+      toast.error(error.message || 'Erreur lors de la génération du PDF.', { id: toastId });
+    } finally {
+      setIsExportingPDF(false);
+    }
   };
 
 
@@ -147,10 +185,19 @@ export default function CoverLetterEditorPage() {
 
           <button 
             onClick={handleExportPDF}
-            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/25 transition-all active:scale-95"
+            disabled={isExportingPDF}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-500/25 transition-all active:scale-95 ${
+              isExportingPDF 
+                ? 'bg-slate-400 cursor-not-allowed text-white' 
+                : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white'
+            }`}
           >
-            <Download className="w-4 h-4" />
-            <span>PDF</span>
+            {isExportingPDF ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4" />
+            )}
+            <span>{isExportingPDF ? '...' : 'PDF'}</span>
           </button>
 
           {/* Mobile preview button — only visible below lg */}

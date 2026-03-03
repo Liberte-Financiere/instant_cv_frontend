@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Radar, Zap, FileText, Star, ArrowRight, Download, WifiOff } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { FeatureCard } from '@/components/landing/FeatureCard';
+import { APP_CONFIG } from '@/lib/config';
 
 export function Features() {
   return (
@@ -119,7 +120,7 @@ export function Features() {
             className="md:col-span-1 border-slate-100"
             title="Disponible Hors-ligne"
             icon={WifiOff}
-            description="Installez JobSira sur votre téléphone. Même sans internet, continuez à éditer votre CV."
+            description={`Installez ${APP_CONFIG.name} sur votre téléphone. Même sans internet, continuez à éditer votre CV.`}
           >
              <div className="w-full h-24 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 p-4 relative overflow-hidden flex items-center justify-center">
                 <div className="flex items-center gap-3">

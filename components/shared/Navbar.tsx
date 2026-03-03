@@ -6,6 +6,7 @@ import { FileText, Menu, X, User } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
+import { APP_CONFIG } from '@/lib/config';
 
 const navLinks = [
   { href: '#features', label: 'Fonctionnalités' },
@@ -30,7 +31,7 @@ export function Navbar() {
                <FileText className="w-5 h-5" />
             </div>
             <span className="text-xl font-bold text-white tracking-tight">
-              JobSira
+              {APP_CONFIG.name}
             </span>
           </Link>
 

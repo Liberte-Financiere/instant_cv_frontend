@@ -3,12 +3,13 @@
 import { motion } from 'framer-motion';
 import { Star, Quote } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { APP_CONFIG } from '@/lib/config';
 
 const testimonials = [
   {
     name: 'Hassan BIKIENGA',
     role: 'Développeur Fullstack',
-    quote: "Avant, je passais des heures à ajuster la mise en page de mon CV sur Word. Avec JobSira, je choisis un template professionnel, l'IA m'aide à reformuler mes expériences, et j'exporte un PDF propre en quelques minutes. C'est un vrai gain de temps.",
+    quote: `Avant, je passais des heures à ajuster la mise en page de mon CV sur Word. Avec ${APP_CONFIG.name}, je choisis un template professionnel, l'IA m'aide à reformuler mes expériences, et j'exporte un PDF propre en quelques minutes. C'est un vrai gain de temps.`,
     rating: 5,
     avatar: 'HB',
     gradient: 'from-blue-500 to-indigo-400',
@@ -33,7 +34,7 @@ export function Testimonials() {
         <SectionHeader
           theme="dark"
           title="Ce qu'en pensent nos utilisateurs"
-          description="Des retours honnêtes de personnes qui utilisent JobSira au quotidien."
+          description={`Des retours honnêtes de personnes qui utilisent ${APP_CONFIG.name} au quotidien.`}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
