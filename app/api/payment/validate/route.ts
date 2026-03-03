@@ -37,9 +37,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Téléphone, code OTP et pack requis.' }, { status: 400 });
     }
 
-    // Normalize phone
+    // Normalize phone (remove spaces, -, +)
     const cleanPhone = phone.replace(/[\s\-\+]/g, '');
-    if (cleanPhone.length < 8) {
+
+    if (cleanPhone.length < 10) {
       return NextResponse.json({ error: 'Numéro de téléphone invalide.' }, { status: 400 });
     }
 
