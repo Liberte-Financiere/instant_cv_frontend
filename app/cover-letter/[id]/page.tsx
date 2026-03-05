@@ -5,6 +5,7 @@ import { useCoverLetterStore } from '@/store/useCoverLetterStore';
 import { LetterPreview } from '@/components/cover-letter/LetterPreview';
 import { Printer, Download, Home, FileText } from 'lucide-react';
 import Link from 'next/link';
+import { APP_CONFIG } from '@/lib/config';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -30,7 +31,10 @@ export default function PublicCoverLetterPage({ params }: PageProps) {
   useEffect(() => {
     if (typeof window !== 'undefined' && currentCL && !isLoading) {
       const searchParams = new URLSearchParams(window.location.search);
-      if (searchParams.get('print') === 'true') {
+      const isPrint = searchParams.get('print') === 'true';
+      const isHeadless = searchParams.get('headless') === 'true';
+
+      if (isPrint && !isHeadless) {
         setTimeout(() => {
           window.print();
         }, 800);
@@ -80,7 +84,7 @@ export default function PublicCoverLetterPage({ params }: PageProps) {
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="text-xl font-bold text-indigo-600">
-              JobSira
+              {APP_CONFIG.name}
             </Link>
             <span className="text-slate-400">|</span>
             <span className="text-sm text-slate-600 flex items-center gap-2">

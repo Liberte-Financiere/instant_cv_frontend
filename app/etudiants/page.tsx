@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { GraduationCap, FileText, Brain, Sparkles, Target, ArrowRight, Check } from 'lucide-react';
 import Link from 'next/link';
 import { Navbar } from '@/components/shared/Navbar';
+import { APP_CONFIG } from '@/lib/config';
 
 const benefits = [
   {
@@ -24,7 +25,7 @@ const benefits = [
   {
     icon: Sparkles,
     title: 'Gratuit pour commencer',
-    desc: '25 crédits offerts dès l\'inscription. Assez pour créer votre CV, générer plusieurs lettres de motivation et postuler à vos premières offres.',
+    desc: `${APP_CONFIG.credits.signupBonus} crédits offerts dès l'inscription. Assez pour créer votre CV, générer plusieurs lettres de motivation et postuler à vos premières offres.`,
   },
 ];
 
@@ -54,7 +55,7 @@ export default function EtudiantsPage() {
               
               <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-10">
                 Vous débutez votre carrière et vous ne savez pas quoi mettre sur votre CV ? 
-                JobSira transforme votre parcours académique en un profil attractif pour les recruteurs.
+                {APP_CONFIG.name} transforme votre parcours académique en un profil attractif pour les recruteurs.
               </p>
 
               <Link
@@ -71,7 +72,7 @@ export default function EtudiantsPage() {
         <section className="py-20 px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-slate-900 text-center mb-4">
-              Comment JobSira vous aide
+              Comment {APP_CONFIG.name} vous aide
             </h2>
             <p className="text-slate-500 text-center mb-12 max-w-2xl mx-auto">
               Des outils pensés pour les profils en début de carrière.
@@ -105,7 +106,7 @@ export default function EtudiantsPage() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-white mb-4">Prêt à décrocher votre premier stage ?</h2>
             <p className="text-slate-400 mb-8">
-              Inscription gratuite, 25 crédits offerts, aucune carte bancaire requise.
+              Inscription gratuite, {APP_CONFIG.credits.signupBonus} crédits offerts, aucune carte bancaire requise.
             </p>
             <Link
               href="/auth"

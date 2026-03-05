@@ -7,6 +7,7 @@ import { Check, Copy, Share2, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { APP_CONFIG } from '@/lib/config';
 
 const A4_WIDTH_PX = 794;
 
@@ -47,7 +48,7 @@ export function SharePageClient({ cv }: { cv: any }) {
              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0">
                 <Sparkles className="w-5 h-5" />
              </div>
-             <span className="hidden sm:inline">JobSira</span>
+             <span className="hidden sm:inline">{APP_CONFIG.name}</span>
           </Link>
 
           <div className="flex items-center gap-2">

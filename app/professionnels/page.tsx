@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Briefcase, BarChart3, Shield, FileSearch, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Navbar } from '@/components/shared/Navbar';
+import { APP_CONFIG } from '@/lib/config';
 
 const benefits = [
   {
@@ -14,7 +15,7 @@ const benefits = [
   {
     icon: Shield,
     title: 'Passez les filtres ATS',
-    desc: 'Les grandes entreprises utilisent des logiciels pour filtrer les CV avant même qu\'un humain ne les lise. JobSira optimise vos mots-clés pour que votre CV passe ces filtres.',
+    desc: `Les grandes entreprises utilisent des logiciels pour filtrer les CV avant même qu'un humain ne les lise. ${APP_CONFIG.name} optimise vos mots-clés pour que votre CV passe ces filtres.`,
   },
   {
     icon: FileSearch,
@@ -54,7 +55,7 @@ export default function ProfessionnelsPage() {
               
               <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-10">
                 Vous avez des années d&apos;expérience mais votre CV ne reflète pas votre valeur ? 
-                JobSira structure vos réalisations pour maximiser votre impact auprès des recruteurs.
+                {APP_CONFIG.name} structure vos réalisations pour maximiser votre impact auprès des recruteurs.
               </p>
 
               <Link
@@ -71,7 +72,7 @@ export default function ProfessionnelsPage() {
         <section className="py-20 px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-slate-900 text-center mb-4">
-              Pourquoi les professionnels choisissent JobSira
+              Pourquoi les professionnels choisissent {APP_CONFIG.name}
             </h2>
             <p className="text-slate-500 text-center mb-12 max-w-2xl mx-auto">
               Des outils conçus pour les profils expérimentés qui visent haut.
@@ -105,7 +106,7 @@ export default function ProfessionnelsPage() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-white mb-4">Prêt à viser plus haut ?</h2>
             <p className="text-slate-400 mb-8">
-              Inscription gratuite, 25 crédits offerts, aucune carte bancaire requise.
+              Inscription gratuite, {APP_CONFIG.credits.signupBonus} crédits offerts, aucune carte bancaire requise.
             </p>
             <Link
               href="/auth"
