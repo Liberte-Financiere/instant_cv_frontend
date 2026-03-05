@@ -12,11 +12,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    const { id } = await req.json();
+    const { id, type = 'cv' } = await req.json();
 
     if (!id) {
-      return NextResponse.json({ error: 'ID du CV manquant' }, { status: 400 });
+      return NextResponse.json({ error: 'ID manquant' }, { status: 400 });
     }
+
+    // Determine the page path based on document type
+    const pagePath = type === 'cover-letter' ? 'cover-letter' : 'cv';
+    const docLabel = type === 'cover-letter' ? 'Lettre' : 'CV';
 
     // Determine base URL dynamically based on environment
     const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
@@ -31,9 +35,9 @@ export async function POST(req: Request) {
     
     // Construct the target URL. Add headless=true to skip window.print()
     const headlessToken = process.env.GOOGLE_API_KEY?.slice(0, 10) || 'fallbackToken';
-    const targetUrl = `${baseUrl}/cv/${id}?print=true&headless=true&token=${headlessToken}`;
+    const targetUrl = `${baseUrl}/${pagePath}/${id}?print=true&headless=true&token=${headlessToken}`;
 
-    console.log(`[PDF] 🚀 C'est parti mon frère ! Je lance la génération du CV: ${id}`);
+    console.log(`[PDF] 🚀 C'est parti mon frère ! Je lance la génération ${docLabel}: ${id}`);
     console.log(`[PDF] 🌐 L'URL cible pour le robot est : ${targetUrl}`);
 
     // Set Chromium options for serverless
@@ -101,13 +105,14 @@ export async function POST(req: Request) {
 
     await browser.close();
 
-    console.log(`[PDF] ✅ Bam ! PDF du CV ${id} généré avec succès ! Le robot ferme ses portes.`);
+    console.log(`[PDF] ✅ Bam ! PDF ${docLabel} ${id} généré avec succès ! Le robot ferme ses portes.`);
 
     // Return the generated PDF as a File Blob
+    const filename = type === 'cover-letter' ? `lettre-${id}.pdf` : `cv-${id}.pdf`;
     return new NextResponse(Buffer.from(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="cv-${id}.pdf"`,
+        'Content-Disposition': `attachment; filename="${filename}"`,
       },
     });
 

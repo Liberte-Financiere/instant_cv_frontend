@@ -4,10 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useState, useEffect } from 'react';
 import { handleGoogleSignIn } from '@/actions/auth';
+import { APP_CONFIG } from '@/lib/config';
 
 const testimonials = [
   {
-    quote: "Avant, je passais des heures à mettre en page mon CV sur Word. Avec JobSira, je choisis un template pro, l'IA m'aide à formuler mes expériences, et j'exporte un PDF propre en quelques minutes.",
+    quote: `Avant, je passais des heures à mettre en page mon CV sur Word. Avec ${APP_CONFIG.name}, je choisis un template pro, l'IA m'aide à formuler mes expériences, et j'exporte un PDF propre en quelques minutes.`,
     name: 'Hassan BIKIENGA',
     role: 'Développeur Fullstack',
     initials: 'HB',
@@ -54,7 +55,7 @@ function AuthContent() {
                Un bon CV, c&apos;est la <span className="text-primary">première impression</span> qui compte.
              </h1>
              <p className="text-slate-400 text-lg">
-               JobSira vous aide à créer un CV professionnel et ciblé grâce à l&apos;intelligence artificielle.
+               {APP_CONFIG.name} vous aide à créer un CV professionnel et ciblé grâce à l&apos;intelligence artificielle.
              </p>
           </motion.div>
 
@@ -109,7 +110,7 @@ function AuthContent() {
               className="mb-10"
             >
                <h2 className="text-3xl font-bold text-slate-900 mb-2">
-                 Bienvenue sur JobSira
+                 Bienvenue sur {APP_CONFIG.name}
                </h2>
                <p className="text-slate-500">
                  Créez des CVs professionnels en quelques clics

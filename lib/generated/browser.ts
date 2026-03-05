@@ -43,6 +43,11 @@ export type AnalysisHistory = Prisma.AnalysisHistoryModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model PaymentTransaction
+ * 
+ */
+export type PaymentTransaction = Prisma.PaymentTransactionModel
+/**
  * Model CV
  * 
  */

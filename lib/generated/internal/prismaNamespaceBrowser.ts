@@ -56,6 +56,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   AnalysisHistory: 'AnalysisHistory',
   User: 'User',
+  PaymentTransaction: 'PaymentTransaction',
   CV: 'CV',
   CoverLetter: 'CoverLetter',
   CreditTransaction: 'CreditTransaction'
@@ -148,6 +149,24 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const PaymentTransactionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  packId: 'packId',
+  amount: 'amount',
+  credits: 'credits',
+  phone: 'phone',
+  status: 'status',
+  ligdicashToken: 'ligdicashToken',
+  transactionId: 'transactionId',
+  operatorName: 'operatorName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentTransactionScalarFieldEnum = (typeof PaymentTransactionScalarFieldEnum)[keyof typeof PaymentTransactionScalarFieldEnum]
 
 
 export const CVScalarFieldEnum = {

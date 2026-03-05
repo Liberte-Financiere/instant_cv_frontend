@@ -8,6 +8,7 @@ import { Menu, X, FileText, LayoutDashboard, LayoutList, LayoutTemplate, PenTool
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { APP_CONFIG } from '@/lib/config';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -37,7 +38,7 @@ export function MobileHeader() {
           <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center">
             <FileText className="w-4 h-4 text-white" />
           </div>
-          <span className="text-lg font-bold text-white">JobSira</span>
+          <span className="text-lg font-bold text-white">{APP_CONFIG.name}</span>
         </div>
         
         <button
@@ -76,7 +77,7 @@ export function MobileHeader() {
                   <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center">
                     <FileText className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-lg font-bold text-white">JobSira</span>
+                  <span className="text-lg font-bold text-white">{APP_CONFIG.name}</span>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
