@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import puppeteer from 'puppeteer-core';
-import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer';
 import { auth } from '@/auth';
 
 export const maxDuration = 60; // Allow enough time for Vercel Hobby/Pro to run Chrome
@@ -37,31 +36,33 @@ export async function POST(req: Request) {
     const headlessToken = process.env.GOOGLE_API_KEY?.slice(0, 10) || 'fallbackToken';
     const targetUrl = `${baseUrl}/${pagePath}/${id}?print=true&headless=true&token=${headlessToken}`;
 
-    console.log(`[PDF] 🚀 C'est parti mon frère ! Je lance la génération ${docLabel}: ${id}`);
-    console.log(`[PDF] 🌐 L'URL cible pour le robot est : ${targetUrl}`);
-
-    // Set Chromium options for serverless
-    chromium.setGraphicsMode = false;
-    
-    // Default to local Chrome/Edge in dev if @sparticuz/chromium fails to find one
-    let executablePath = await chromium.executablePath();
-    if (process.env.NODE_ENV === 'development' && !executablePath) {
-      // Common paths for local dev fallback (macOS/Linux/Windows)
-      executablePath = process.platform === 'win32'
-          ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
-          : process.platform === 'linux'
-            ? '/usr/bin/google-chrome'
-            : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+    // Define real Google Chrome paths based on the OS for both dev and prod
+    let chromeExecutablePath = '';
+    if (process.platform === 'win32') {
+      chromeExecutablePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+    } else if (process.platform === 'linux') {
+      chromeExecutablePath = '/usr/bin/google-chrome';
+    } else if (process.platform === 'darwin') {
+      chromeExecutablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
     }
 
+    // Launch standard Puppeteer using explicit installed Chrome path
     const browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: { width: 1920, height: 1080 }, // Use static viewport instead of chromium.defaultViewport
-      executablePath: executablePath || await chromium.executablePath(),
       headless: true,
+      executablePath: chromeExecutablePath,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--disable-gpu'
+      ],
+      defaultViewport: { width: 1920, height: 1080 },
     });
 
-    console.log(`[PDF] 🤖 Navigateur Chromium lancé avec succès. J'ouvre un nouvel onglet...`);
+    console.log(`[PDF] 🤖 Navigateur Chrome réel (${chromeExecutablePath}) lancé avec succès. J'ouvre un nouvel onglet...`);
     const page = await browser.newPage();
 
     // Inject session cookies to authenticate the headless browser
