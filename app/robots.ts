@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://jobsira.vercel.app'; // À remplacer par le vrai domaine
+  const baseUrl = 'https://jobsira.com'; 
 
   return {
     rules: {
