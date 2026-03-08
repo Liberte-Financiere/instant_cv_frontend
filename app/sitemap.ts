@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://jobsira.vercel.app'; // À remplacer par le vrai domaine
+  const baseUrl = 'https://jobsira.com'; 
 
   return [
     {
