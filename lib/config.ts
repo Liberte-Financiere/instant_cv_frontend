@@ -17,7 +17,7 @@ export const APP_CONFIG = {
   description: 'Créez des CV et lettres de motivation professionnels avec l\'intelligence artificielle. Décrochez le job de vos rêves.',
 
   /** Base URL (production) */
-  url: 'https://jobsira.vercel.app',
+  url: 'https://jobsira.com',
 
   /** Copyright */
   copyright: `© ${new Date().getFullYear()} JobSira. Tous droits réservés.`,
