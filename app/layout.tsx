@@ -16,19 +16,19 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "{APP_CONFIG.name} | Le Coach CV par l`IA",
+  title: `${APP_CONFIG.name} | Le Coach CV par l\`IA`,
   description: "Créez un CV pro compatible ATS et une lettre de motivation en 2 minutes. Rejoignez 10,000+ candidats qui ont décroché leur job de rêve.",
   keywords: ["CV", "créateur CV", "resume builder", "IA", "ATS", "emploi", "lettre de motivation"],
   openGraph: {
     title: `${APP_CONFIG.name} - Décrochez votre job de rêve`,
-    description: "L`IA qui optimise votre CV pour les recruteurs. Essai gratuit, sans carte bancaire.",
+    description: "L\`IA qui optimise votre CV pour les recruteurs. Essai gratuit, sans carte bancaire.",
     type: "website",
     locale: "fr_FR",
-    siteName: "{APP_CONFIG.name}",
+    siteName: `${APP_CONFIG.name}`,
   },
   twitter: {
     card: "summary_large_image",
-    title: "{APP_CONFIG.name} - Votre Coach Carrière IA",
+    title: `${APP_CONFIG.name} - Votre Coach Carrière IA`,
     description: "Créez un CV parfait en quelques clics.",
   },
   other: {
@@ -76,7 +76,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
-              "name": "{APP_CONFIG.name}",
+              "name": APP_CONFIG.name,
               "applicationCategory": "BusinessApplication",
               "operatingSystem": "Web",
               "offers": {

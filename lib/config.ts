@@ -35,11 +35,11 @@ export const APP_CONFIG = {
   // ─── Credits & Pricing ────────────────────────────
   credits: {
     /** Credits gifted to new users on signup */
-    signupBonus: 25,
+    signupBonus: 15,
     /** Credits gifted to the referrer when a referral signs up */
-    referralReward: 15,
+    referralReward: 10,
     /** Credits gifted to the referred user */
-    referralBonus: 15,
+    referralBonus: 10,
   },
 
   pricing: {
@@ -51,7 +51,7 @@ export const APP_CONFIG = {
         id: 'standard',
         name: 'Pack Standard',
         credits: 35,
-        price: 100,
+        price: 1_000,
         priceLabel: '1 000',
         description: "L'essentiel pour postuler.",
         features: [
