@@ -71,17 +71,22 @@ export async function POST(req: Request) {
        const cookieArray = cookiesList
          .split(';')
          .map(c => c.trim())
-         .filter(c => c.length > 0) // Remove empty parts
+         .filter(c => c.length > 0)
          .map(c => {
-           const [name, ...rest] = c.split('=');
+           const firstEq = c.indexOf('=');
+           if (firstEq === -1) return null; // Invalid cookie format
+           const name = c.substring(0, firstEq).trim();
+           const value = c.substring(firstEq + 1).trim();
+           if (!name) return null; // Empty name
+           
            return {
-             name: name.trim(),
-             value: rest.join('=').trim(),
-             domain: new URL(baseUrl).hostname, // Important: matching domain
+             name,
+             value,
+             // domain omitted: Puppeteer will scope it safely to the target URL automatically
              path: '/',
            };
          })
-         .filter(cookie => cookie.name.length > 0); // Ensure cookie has a valid name
+         .filter((cookie): cookie is NonNullable<typeof cookie> => cookie !== null); // Type assertion for TypeScript
 
        if (cookieArray.length > 0) {
          await page.setCookie(...cookieArray);
