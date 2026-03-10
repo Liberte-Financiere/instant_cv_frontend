@@ -82,7 +82,7 @@ export async function POST(req: Request) {
            return {
              name,
              value,
-             // domain omitted: Puppeteer will scope it safely to the target URL automatically
+             url: baseUrl, // URL scoped to satisfy Network.deleteCookies requirement
              path: '/',
            };
          })
