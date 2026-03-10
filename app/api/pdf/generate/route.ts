@@ -68,16 +68,24 @@ export async function POST(req: Request) {
     // Inject session cookies to authenticate the headless browser
     const cookiesList = req.headers.get('cookie');
     if (cookiesList) {
-       const cookieArray = cookiesList.split(';').map(c => {
-         const [name, ...rest] = c.trim().split('=');
-         return {
-           name,
-           value: rest.join('='),
-           domain: new URL(baseUrl).hostname, // Important: matching domain
-           path: '/',
-         };
-       });
-       await page.setCookie(...cookieArray);
+       const cookieArray = cookiesList
+         .split(';')
+         .map(c => c.trim())
+         .filter(c => c.length > 0) // Remove empty parts
+         .map(c => {
+           const [name, ...rest] = c.split('=');
+           return {
+             name: name.trim(),
+             value: rest.join('=').trim(),
+             domain: new URL(baseUrl).hostname, // Important: matching domain
+             path: '/',
+           };
+         })
+         .filter(cookie => cookie.name.length > 0); // Ensure cookie has a valid name
+
+       if (cookieArray.length > 0) {
+         await page.setCookie(...cookieArray);
+       }
     }
 
     // Emulate print media type
