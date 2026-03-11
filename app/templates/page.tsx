@@ -42,7 +42,7 @@ export default function TemplatesPage() {
               onClick={() => setActiveCategory(cat.id)}
               className={`px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wide transition-all duration-300 border ${
                 activeCategory === cat.id
-                  ? 'bg-[#7c3aed] border-[#7c3aed] text-white shadow-lg shadow-purple-500/25'
+                  ? 'bg-violet-600 border-violet-600 text-white shadow-lg shadow-purple-500/25'
                   : 'bg-transparent border-slate-600 text-slate-400 hover:border-slate-400 hover:text-slate-200'
               }`}
             >
@@ -60,7 +60,7 @@ export default function TemplatesPage() {
               className="group cursor-pointer"
             >
               {/* Card */}
-              <div className="bg-[#1a1f2e] rounded-2xl overflow-hidden border border-slate-700/50 hover:border-slate-500/70 transition-all duration-300 hover:shadow-xl hover:shadow-black/30">
+              <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-700/50 hover:border-slate-500/70 transition-all duration-300 hover:shadow-xl hover:shadow-black/30">
                 {/* Thumbnail Container */}
                 <div className="p-4 pb-3">
                   <div className="rounded-xl overflow-hidden bg-white transform group-hover:scale-[1.02] transition-transform duration-300">
@@ -85,7 +85,7 @@ export default function TemplatesPage() {
         </div>
 
         {/* CTA */}
-        <div className="mt-20 text-center bg-gradient-to-br from-[#7c3aed] to-[#4f46e5] rounded-3xl p-12 text-white relative overflow-hidden">
+        <div className="mt-20 text-center bg-gradient-to-br from-violet-600 to-indigo-600 rounded-3xl p-12 text-white relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
           <div className="relative z-10">
             <h2 className="text-3xl font-bold mb-6">
@@ -98,7 +98,7 @@ export default function TemplatesPage() {
               <Button
                 variant="ghost"
                 size="lg"
-                className="bg-white text-[#7c3aed] hover:bg-purple-50 gap-2"
+                className="bg-white text-violet-600 hover:bg-purple-50 gap-2"
               >
                 Créer mon CV maintenant <ArrowRight className="w-5 h-5" />
               </Button>

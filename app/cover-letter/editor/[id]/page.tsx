@@ -149,7 +149,7 @@ export default function CoverLetterEditorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
       {/* Premium Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-slate-200/60 h-16 sticky top-0 z-40 px-3 sm:px-6 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-4">

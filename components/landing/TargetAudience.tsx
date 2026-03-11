@@ -52,18 +52,18 @@ export function TargetAudience() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="group relative rounded-[2rem] p-8 min-h-[400px] flex flex-col justify-between hover:-translate-y-2 transition-transform duration-300 bg-[#ecfdf5]"
+            className="group relative rounded-[2rem] p-8 min-h-[400px] flex flex-col justify-between hover:-translate-y-2 transition-transform duration-300 bg-emerald-50"
           >
             <div>
               <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center mb-6 shadow-sm">
-                <GraduationCap className="w-7 h-7 text-[#059669]" />
+                <GraduationCap className="w-7 h-7 text-emerald-600" />
               </div>
-              <h3 className="text-3xl font-bold text-[#064e3b] mb-4">Étudiants</h3>
-              <p className="text-[#065f46] leading-relaxed">
+              <h3 className="text-3xl font-bold text-emerald-900 mb-4">Étudiants</h3>
+              <p className="text-emerald-800 leading-relaxed">
                 Décrochez votre premier stage ou emploi. Notre IA valorise votre formation et vos projets académiques pour combler le manque d&apos;expérience.
               </p>
             </div>
-            <Link href="/etudiants" className="flex items-center gap-2 text-[#059669] font-bold mt-8 group-hover:gap-3 transition-all">
+            <Link href="/etudiants" className="flex items-center gap-2 text-emerald-600 font-bold mt-8 group-hover:gap-3 transition-all">
               En savoir plus <ArrowRight className="w-5 h-5" />
             </Link>
           </motion.div>
@@ -74,7 +74,7 @@ export function TargetAudience() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="group relative rounded-[2rem] p-8 min-h-[400px] flex flex-col justify-between hover:-translate-y-2 transition-transform duration-300 bg-[#172554] text-white"
+            className="group relative rounded-[2rem] p-8 min-h-[400px] flex flex-col justify-between hover:-translate-y-2 transition-transform duration-300 bg-blue-950 text-white"
           >
             <div>
               <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center mb-6 backdrop-blur-sm">

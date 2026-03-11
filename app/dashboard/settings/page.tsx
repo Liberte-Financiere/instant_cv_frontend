@@ -81,7 +81,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-8 max-w-5xl mx-auto bg-[#F8FAFC] min-h-screen">
+    <div className="p-8 max-w-5xl mx-auto bg-slate-50 min-h-screen">
       
       {/* Breadcrumb & Header */}
       <div className="mb-8">
@@ -120,7 +120,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="px-4 py-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white text-sm font-medium rounded-lg transition-colors">
+            <button className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-lg transition-colors">
               Modifier
             </button>
             <button className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors">
@@ -143,7 +143,7 @@ export default function SettingsPage() {
                   type="text" 
                   value={formData.firstName}
                   onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6366F1]/20 focus:border-[#6366F1] transition-all text-slate-700 text-sm"
+                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700 text-sm"
                 />
               </div>
               <div className="space-y-2">
@@ -152,7 +152,7 @@ export default function SettingsPage() {
                   type="text" 
                   value={formData.lastName}
                   onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6366F1]/20 focus:border-[#6366F1] transition-all text-slate-700 text-sm"
+                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700 text-sm"
                 />
               </div>
             </div>
@@ -173,13 +173,13 @@ export default function SettingsPage() {
                   type="tel" 
                   value={formData.phone}
                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6366F1]/20 focus:border-[#6366F1] transition-all text-slate-700 text-sm"
+                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700 text-sm"
                 />
               </div>
             </div>
 
             <div className="pt-4">
-              <h4 className="text-sm font-bold text-[#6366F1] uppercase tracking-wider mb-6">Préférences d&apos;Emploi</h4>
+              <h4 className="text-sm font-bold text-indigo-500 uppercase tracking-wider mb-6">Préférences d&apos;Emploi</h4>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
@@ -189,7 +189,7 @@ export default function SettingsPage() {
                     placeholder="ex: Product Designer"
                     value={formData.jobTitle}
                     onChange={(e) => setFormData({...formData, jobTitle: e.target.value})}
-                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6366F1]/20 focus:border-[#6366F1] transition-all text-slate-700 text-sm"
+                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700 text-sm"
                   />
                 </div>
                 <div className="space-y-2">
@@ -198,7 +198,7 @@ export default function SettingsPage() {
                     <select 
                       value={formData.sector}
                       onChange={(e) => setFormData({...formData, sector: e.target.value})}
-                      className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6366F1]/20 focus:border-[#6366F1] transition-all text-slate-700 text-sm appearance-none cursor-pointer"
+                      className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700 text-sm appearance-none cursor-pointer"
                     >
                       <option>Technologie & Informatique</option>
                       <option>Finance & Banque</option>
@@ -220,7 +220,7 @@ export default function SettingsPage() {
               <button 
                 onClick={handleSave}
                 disabled={loading}
-                className="px-6 py-3 bg-[#6366F1] hover:bg-[#4f46e5] text-white text-sm font-bold rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {loading ? 'Enregistrement...' : 'Enregistrer les modifications'}
               </button>

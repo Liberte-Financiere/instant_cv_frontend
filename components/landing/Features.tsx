@@ -8,7 +8,7 @@ import { APP_CONFIG } from '@/lib/config';
 
 export function Features() {
   return (
-    <div id="features" className="bg-[#f6f6f8] py-20 px-4">
+    <div id="features" className="bg-bg-light py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <SectionHeader 
           title="Fonctionnalités Intelligentes" 

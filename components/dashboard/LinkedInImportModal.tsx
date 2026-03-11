@@ -108,7 +108,7 @@ export function LinkedInImportModal({ isOpen, onClose }: LinkedInImportModalProp
             className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-linkedin to-[#0A66C2] p-6">
+            <div className="bg-gradient-to-r from-linkedin to-linkedin-dark p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">

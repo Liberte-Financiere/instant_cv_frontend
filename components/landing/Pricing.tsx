@@ -79,7 +79,7 @@ import { APP_CONFIG } from '@/lib/config';
 
 export function Pricing() {
   return (
-    <div id="pricing" className="bg-[#f6f6f8] py-20 px-4 border-t border-slate-200">
+    <div id="pricing" className="bg-bg-light py-20 px-4 border-t border-slate-200">
       <div className="max-w-7xl mx-auto">
         <SectionHeader
           title="Finis les abonnements mensuels"
