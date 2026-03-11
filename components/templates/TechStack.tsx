@@ -28,7 +28,7 @@ export function TechStack({ cv }: TemplateProps) {
   const variant = 'tech';
 
   return (
-    <div className="cv-template w-full h-full bg-[#1e1e1e] text-gray-300 font-mono text-sm min-h-[297mm] p-8 flex flex-col">
+    <div className="cv-template w-full h-full bg-zinc-900 text-gray-300 font-mono text-sm min-h-[297mm] p-8 flex flex-col">
       <div className="flex-1">
         {/* Header */}
         <header className="border-b border-gray-700 pb-6 mb-8 flex justify-between items-end">

@@ -164,7 +164,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
                 size="lg" 
                 onClick={handleUseTemplate}
                 disabled={isLoading || !cvTitle.trim()}
-                className="w-full bg-[#6366f1] hover:bg-[#4f46e5] text-white shadow-lg shadow-indigo-200 gap-2 h-12 md:h-14 text-base md:text-lg"
+                className="w-full bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-200 gap-2 h-12 md:h-14 text-base md:text-lg"
               >
                 {isLoading ? (
                   <>

@@ -25,11 +25,11 @@ export function FeatureCard({
   return (
     <div className={cn(
       "rounded-2xl p-8 shadow-lg flex flex-col justify-between transition-transform duration-300 hover:-translate-y-1 overflow-hidden relative group min-h-[300px]",
-      isDark ? "bg-[#312e81] text-white shadow-xl" : "bg-white border border-slate-100",
+      isDark ? "bg-indigo-900 text-white shadow-xl" : "bg-white border border-slate-100",
       className
     )}>
       {isDark && (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#4338ca] to-[#1e1b4b] opacity-90 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-700 to-indigo-950 opacity-90 pointer-events-none" />
       )}
       
       <div className="relative z-10 flex flex-col h-full justify-between">

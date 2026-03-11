@@ -29,7 +29,7 @@ export async function GET(req: Request) {
         name: true,
         email: true,
         credits: true,
-        // Using string keys logic instead of directly asking 'createdAt' if it causes TS bugs on your local build
+        // Using string keys logic instead of directly asking 'createdAt' if it causes TS bugs on  local build
       },
       take: 50 // Limit to 50 for performance
     });
