@@ -62,6 +62,20 @@ export async function POST(req: Request) {
     }
 
     if (status === 'completed') {
+      // SECURITY CHECK: Verify that the amount paid is at least the amount requested
+      // Note: LigdiCash payload.amount may be a string like "1000", transaction.amount is a Float/Int
+      const paidAmount = parseFloat(payload.amount || '0');
+      const expectedAmount = Number(transaction.amount);
+
+      if (paidAmount < expectedAmount) {
+        console.warn(`[Callback] 🚨 SECURITY ALERT: Partial payment attempt detected! Transaction ${transaction.id}. Expected: ${expectedAmount}, Paid: ${paidAmount}`);
+        await prisma.paymentTransaction.update({
+          where: { id: transaction.id },
+          data: { status: 'failed', transactionId: lgdTransactionId || null, operatorName: payload.operator_name || null },
+        });
+        return NextResponse.json({ status: 'fraud_prevented' }, { status: 200 });
+      }
+
       // Update status and credit the user
       await prisma.paymentTransaction.update({
         where: { id: transaction.id },
