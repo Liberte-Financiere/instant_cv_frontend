@@ -79,7 +79,7 @@ interface CVState {
   setCurrentStep: (step: EditorStep) => void;
   createNewCV: (title: string, templateId?: string) => string;
   createImportedCV: (data: Partial<CV>) => string;
-  loadCV: (id: string) => void;
+  loadCV: (id: string) => Promise<void>;
   deleteCV: (id: string) => Promise<void>;
   
   // Personal Info
@@ -234,9 +234,9 @@ export const useCVStore = create<CVState>()(
       // API Sync
       fetchUserCVs: async () => {
         try {
-          // Fetch CVs and History in parallel
+          // Fetch CVs Summaries and History in parallel
           const [cvsRes, historyRes] = await Promise.all([
-            CVService.getAll(),
+            CVService.getAllSummaries(),
             fetch('/api/ai/history').then(res => res.ok ? res.json() : [])
           ]);
 
@@ -293,8 +293,8 @@ export const useCVStore = create<CVState>()(
           // Check local first (unless we are forcing a token fetch which means SSR bypass)
           if (!token) {
             const localCV = get().cvList.find(c => c.id === id);
-            if (localCV) {
-              // CRITICAL FIX: Ensure `currentCV` is updated even if we return from cache
+            // ONLY use local CV if it's a FULL cv (contains experiences array), otherwise we must fetch
+            if (localCV && localCV.experiences) {
               set({ currentCV: localCV });
               return localCV;
             }
@@ -402,11 +402,31 @@ export const useCVStore = create<CVState>()(
         return newCV.id;
       },
 
-      loadCV: (id) => {
-        const cv = get().cvList.find((c) => c.id === id);
+      loadCV: async (id) => {
+        let cv = get().cvList.find((c) => c.id === id);
+        
+        // If CV is not tracked locally OR it is a summary (missing experiences array)
+        if (!cv || !cv.experiences) {
+           try {
+              const fullCV = await CVService.getById(id);
+              if (fullCV) {
+                // Update local storage with the full CV
+                set(state => ({
+                  cvList: [...state.cvList.filter(c => c.id !== id), fullCV]
+                }));
+                cv = fullCV;
+              }
+           } catch (error) {
+              console.error('Failed to load full CV', error);
+              toast.error('Erreur lors du chargement du CV.');
+              return;
+           }
+        }
+
         if (cv) {
           // Migrate old CVs that don't have new fields
           const migratedCV: CV = {
+             // ... spread the rest of cv
             ...cv,
             hobbies: cv.hobbies || [],
             certifications: cv.certifications || [],
