@@ -144,6 +144,7 @@ export const useCoverLetterStore = create<CoverLetterState>()(
           await CoverLetterService.delete(id);
         } catch (error) {
           console.error('Failed to delete CL', error);
+          throw error;
         }
       }
     }),
