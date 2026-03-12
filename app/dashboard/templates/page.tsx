@@ -120,20 +120,9 @@ export default function DashboardTemplatesPage() {
                  {/* Overlay Button */}
                  <div className="absolute inset-0 bg-black/0 group-hover:bg-slate-900/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100 backdrop-blur-[2px]">
                    <div className="flex flex-col gap-3 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                     <Button variant="secondary" className="rounded-full shadow-xl pointer-events-none w-36 gap-2 bg-white/95 hover:bg-white text-slate-800 border-0">
+                     <Button variant="secondary" className="rounded-full shadow-xl pointer-events-none w-36 gap-2 bg-white/95 hover:bg-white text-slate-800 border-0 flex justify-center items-center">
                        <Eye className="w-4 h-4" /> Aperçu
                      </Button>
-                     {/* 
-                         We stop propagation manually here, because the parent div handles 
-                         thumbnail clicks to open modal, but this Link should redirect instead.
-                     */}
-                     <div onClick={(e) => e.stopPropagation()}>
-                       <Link href={`/dashboard/cvs/new?templateId=${template.id}`}>
-                         <Button size="default" className="rounded-full shadow-xl w-36 gap-2 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer pointer-events-auto">
-                           <Plus className="w-4 h-4" /> Utiliser
-                         </Button>
-                       </Link>
-                     </div>
                    </div>
                  </div>
               </div>
