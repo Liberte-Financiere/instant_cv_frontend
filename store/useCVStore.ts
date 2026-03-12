@@ -428,6 +428,11 @@ export const useCVStore = create<CVState>()(
           const migratedCV: CV = {
              // ... spread the rest of cv
             ...cv,
+            templateId: cv.templateId || 'modern',
+            experiences: cv.experiences || [],
+            education: cv.education || [],
+            skills: cv.skills || [],
+            languages: cv.languages || [],
             hobbies: cv.hobbies || [],
             certifications: cv.certifications || [],
             projects: cv.projects || [],

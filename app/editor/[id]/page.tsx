@@ -56,7 +56,11 @@ export default function EditorPage() {
     // Debounce: save 3s after last change
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
-      doSave();
+      // Check again inside timeout to avoid queueing unnecessary saves if user clicked very fast
+      const latestSnapshot = JSON.stringify(useCVStore.getState().currentCV);
+      if (latestSnapshot !== lastSavedRef.current) {
+        doSave();
+      }
     }, 3000);
 
     return () => {
