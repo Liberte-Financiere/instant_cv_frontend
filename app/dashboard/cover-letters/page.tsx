@@ -12,47 +12,30 @@ import { useCoverLetterStore } from '@/store/useCoverLetterStore';
 import { useCVStore } from '@/store/useCVStore';
 
 export default function CoverLettersPage() {
-  const [cls, setCls] = useState<CoverLetter[]>([]);
+  const { clList, fetchUserCLs, createNewCL, updateContent, deleteCL } = useCoverLetterStore();
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
-  const { createNewCL, updateContent } = useCoverLetterStore();
-  const { cvList, fetchUserCVs } = useCVStore();
-
-  const fetchCLs = async () => {
-    setIsLoading(true);
-    try {
-      const data = await CoverLetterService.getAll();
-      setCls(data);
-    } catch (error) {
-      console.error(error);
-      toast.error('Erreur lors du chargement des lettres.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { fetchUserCVs, cvList } = useCVStore();
 
   useEffect(() => {
-    fetchCLs();
-    useCVStore.getState().fetchUserCVs();
-  }, []);
+    setIsLoading(true);
+    // Fetch both CVs and CLs
+    Promise.all([
+      fetchUserCLs(),
+      fetchUserCVs()
+    ]).finally(() => setIsLoading(false));
+  }, [fetchUserCLs, fetchUserCVs]);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette lettre ?')) return;
     
-    // Optimistic update
-    const previousCls = cls;
-    setCls(prev => prev.filter(c => c.id !== id));
-    
     try {
-      await CoverLetterService.delete(id);
+      // The store handles both local state update and the server API call
+      await deleteCL(id);
       toast.success('Lettre supprimée.');
-      // Also update global store if needed
-      useCoverLetterStore.getState().deleteCL(id);
     } catch (error) {
-      console.error(error);
       toast.error('Erreur lors de la suppression.');
-      setCls(previousCls); // Revert
     }
   };
 
@@ -241,7 +224,7 @@ export default function CoverLettersPage() {
     }
   };
 
-  const filteredCLs = cls.filter(cl => 
+  const filteredCLs = clList.filter(cl => 
     cl.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
