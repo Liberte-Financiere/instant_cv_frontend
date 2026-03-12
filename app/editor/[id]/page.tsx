@@ -136,7 +136,7 @@ export default function EditorPage() {
     }
   };
 
-  if (!currentCV) {
+  if (!currentCV || currentCV.id !== id || !currentCV.experiences) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
