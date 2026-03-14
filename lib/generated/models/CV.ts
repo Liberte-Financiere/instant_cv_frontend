@@ -463,10 +463,6 @@ export type CVUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.CVScalarWhereInput | Prisma.CVScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type CVCreateWithoutUserInput = {
   id?: string
   title: string

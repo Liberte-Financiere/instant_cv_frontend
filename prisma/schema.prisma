@@ -4,23 +4,23 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 // Auth Models
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -47,10 +47,10 @@ model AnalysisHistory {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type      String   // 'analysis' | 'match'
+  type      String // 'analysis' | 'match'
   title     String
   score     Float
-  data      Json     // Full result data
+  data      Json // Full result data
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -72,59 +72,74 @@ model User {
   credits       Float     @default(25) // Utilisation de Float pour supporter les retraits de 0.5
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
+
   // Professional Infos
-  phone         String?
-  jobTitle      String?
-  sector        String?
-  
+  phone    String?
+  jobTitle String?
+  sector   String?
+
   // Referral System
-  referralCode   String?   @unique  // Unique 8-char code for sharing
-  referredById   String?             // ID of the user who referred this user
-  referredBy     User?     @relation("Referrals", fields: [referredById], references: [id])
-  referredUsers  User[]    @relation("Referrals")  // Users this user has referred
-  referralCount  Int       @default(0)  // Count of successful referrals
-  premiumUntil   DateTime?             // Premium access expiry date (reward)
-  
-  accounts      Account[]
-  sessions      Session[]
-  cvs           CV[]
-  coverLetters  CoverLetter[]
-  analyses      AnalysisHistory[] // Relation
-  creditTransactions CreditTransaction[]
+  referralCode  String?   @unique // Unique 8-char code for sharing
+  referredById  String? // ID of the user who referred this user
+  referredBy    User?     @relation("Referrals", fields: [referredById], references: [id])
+  referredUsers User[]    @relation("Referrals") // Users this user has referred
+  referralCount Int       @default(0) // Count of successful referrals
+  premiumUntil  DateTime? // Premium access expiry date (reward)
+
+  accounts            Account[]
+  sessions            Session[]
+  cvs                 CV[]
+  coverLetters        CoverLetter[]
+  analyses            AnalysisHistory[] // Relation
+  creditTransactions  CreditTransaction[]
+  // Feedback System
+  feedbacks           PlatformFeedback[]
   paymentTransactions PaymentTransaction[]
 }
 
+model PlatformFeedback {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int? // Optional 1-5 star rating
+  content   String   @db.Text
+  isVisible Boolean  @default(false) // Admin approval for public display
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
 model PaymentTransaction {
-  id              String   @id @default(cuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  packId          String                       // "standard" | "premium" | "pro"
-  amount          Int                          // Montant en FCFA
-  credits         Int                          // Crédits à ajouter
-  phone           String                       // Numéro du client (format international)
-  status          String   @default("pending") // pending | completed | failed
-  ligdicashToken  String?                      // Token retourné par LigdiCash
-  transactionId   String?                      // ID transaction LigdiCash
-  operatorName    String?                      // "ORANGE BURKINA", etc.
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packId         String // "standard" | "premium" | "pro"
+  amount         Int // Montant en FCFA
+  credits        Int // Crédits à ajouter
+  phone          String // Numéro du client (format international)
+  status         String   @default("pending") // pending | completed | failed
+  ligdicashToken String? // Token retourné par LigdiCash
+  transactionId  String? // ID transaction LigdiCash
+  operatorName   String? // "ORANGE BURKINA", etc.
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@index([userId])
   @@index([ligdicashToken])
 }
 
 model CV {
-  id           String   @id @default(cuid())
-  title        String
-  content      Json     // Stores the full CV data structure (PersonalInfo, Experience, etc.)
-  isPublic     Boolean  @default(false)
-  views        Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  
-  userId       String?
-  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  title     String
+  content   Json // Stores the full CV data structure (PersonalInfo, Experience, etc.)
+  isPublic  Boolean  @default(false)
+  views     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -132,12 +147,12 @@ model CV {
 model CoverLetter {
   id        String   @id @default(cuid())
   title     String
-  content   Json     // Stores the full cover letter data structure
+  content   Json // Stores the full cover letter data structure
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -146,9 +161,9 @@ model CreditTransaction {
   id          String   @id @default(cuid())
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  amount      Float    // Montant de la transaction (négatif pour retrait, positif pour ajout)
-  type        String   // e.g., 'USAGE', 'PURCHASE', 'BONUS_REFERRAL', 'SIGNUP'
-  description String   // e.g., 'Génération Lettre Motivation IA'
+  amount      Float // Montant de la transaction (négatif pour retrait, positif pour ajout)
+  type        String // e.g., 'USAGE', 'PURCHASE', 'BONUS_REFERRAL', 'SIGNUP'
+  description String // e.g., 'Génération Lettre Motivation IA'
   createdAt   DateTime @default(now())
 
   @@index([userId])

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, PenTool, Sparkles, ChevronUp, LayoutList, Target, Brain } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, PenTool, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
@@ -19,6 +19,7 @@ const navigation = [
   { name: 'Mes lettres', href: '/dashboard/cover-letters', icon: FileText },
   { name: 'Modèles', href: '/dashboard/templates', icon: LayoutTemplate },
   { name: 'Acheter des Crédits', href: '/dashboard/pricing', icon: Sparkles },
+  { name: 'Donner mon avis', href: '/dashboard/feedback', icon: MessageSquare },
   { name: 'Compte', href: '/dashboard/settings', icon: Settings },
 ];
 
@@ -98,8 +99,22 @@ export function Sidebar() {
           ))}
         </nav>
 
+        {/* Admin Section */}
+        {session?.user?.role === 'ADMIN' && (
+          <div>
+            <div className="flex items-center gap-2 px-4 mb-2 mt-6">
+              <ShieldAlert className="w-4 h-4 text-red-500" />
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Administration</span>
+            </div>
+            <nav className="space-y-1">
+              <NavLink item={{ name: 'Gestion Crédits', href: '/dashboard/admin', icon: Sparkles }} />
+              <NavLink item={{ name: 'Avis Utilisateurs', href: '/dashboard/admin/feedback', icon: MessageSquare }} />
+            </nav>
+          </div>
+        )}
+
         {/* AI Section */}
-        <div>
+        <div className="mt-6">
 
           <nav className="space-y-1">
             {aiNavigation.map((item) => (

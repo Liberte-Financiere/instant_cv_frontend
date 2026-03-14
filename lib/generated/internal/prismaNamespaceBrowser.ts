@@ -56,6 +56,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   AnalysisHistory: 'AnalysisHistory',
   User: 'User',
+  PlatformFeedback: 'PlatformFeedback',
   PaymentTransaction: 'PaymentTransaction',
   CV: 'CV',
   CoverLetter: 'CoverLetter',
@@ -149,6 +150,19 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const PlatformFeedbackScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  rating: 'rating',
+  content: 'content',
+  isVisible: 'isVisible',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformFeedbackScalarFieldEnum = (typeof PlatformFeedbackScalarFieldEnum)[keyof typeof PlatformFeedbackScalarFieldEnum]
 
 
 export const PaymentTransactionScalarFieldEnum = {
