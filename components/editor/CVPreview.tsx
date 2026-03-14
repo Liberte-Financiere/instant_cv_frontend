@@ -49,28 +49,10 @@ const GradientHeader = dynamic(() => import('@/components/templates/GradientHead
 const TimelinePro = dynamic(() => import('@/components/templates/TimelinePro').then(mod => mod.TimelinePro), {
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
-const CompactSingle = dynamic(() => import('@/components/templates/CompactSingle').then(mod => mod.CompactSingle), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
 const BoldHeader = dynamic(() => import('@/components/templates/BoldHeader').then(mod => mod.BoldHeader), {
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
-const TwoTone = dynamic(() => import('@/components/templates/TwoTone').then(mod => mod.TwoTone), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
-const Infographic = dynamic(() => import('@/components/templates/Infographic').then(mod => mod.Infographic), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
 const ClassicSerif = dynamic(() => import('@/components/templates/ClassicSerif').then(mod => mod.ClassicSerif), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
-const Nordic = dynamic(() => import('@/components/templates/Nordic').then(mod => mod.Nordic), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
-const PastelModern = dynamic(() => import('@/components/templates/PastelModern').then(mod => mod.PastelModern), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
-const BlueprintPremium = dynamic(() => import('@/components/templates/BlueprintPremium').then(mod => mod.BlueprintPremium), {
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
 
@@ -138,22 +120,10 @@ export function CVPreview({ data, hideToolbar }: CVPreviewProps) {
         return <GradientHeader cv={debouncedCV} />;
       case 'timeline':
         return <TimelinePro cv={debouncedCV} />;
-      case 'compact':
-        return <CompactSingle cv={debouncedCV} />;
       case 'bold-header':
         return <BoldHeader cv={debouncedCV} />;
-      case 'two-tone':
-        return <TwoTone cv={debouncedCV} />;
-      case 'infographic':
-        return <Infographic cv={debouncedCV} />;
       case 'classic-serif':
         return <ClassicSerif cv={debouncedCV} />;
-      case 'nordic':
-        return <Nordic cv={debouncedCV} />;
-      case 'pastel':
-        return <PastelModern cv={debouncedCV} />;
-      case 'blueprint-premium':
-        return <BlueprintPremium cv={debouncedCV} />;
       default:
         return <ModernSidebar cv={debouncedCV} />;
     }

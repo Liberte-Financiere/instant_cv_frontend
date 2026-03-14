@@ -65,6 +65,11 @@ export type AnalysisHistory = Prisma.AnalysisHistoryModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model PlatformFeedback
+ * 
+ */
+export type PlatformFeedback = Prisma.PlatformFeedbackModel
+/**
  * Model PaymentTransaction
  * 
  */
