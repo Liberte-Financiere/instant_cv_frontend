@@ -101,6 +101,7 @@ export interface CVSettings {
   accentColor: string; // hex color
   sidebarColor?: string; // hex color
   fontFamily?: 'sans' | 'serif' | 'mono';
+  hideContact?: boolean; // Cache les infos de contact sur le Web
 }
 
 // TemplateId is derived from TEMPLATES in lib/templates.ts (single source of truth)

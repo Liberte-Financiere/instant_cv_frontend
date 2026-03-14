@@ -1,81 +1,67 @@
-'use client';
-
-import { motion } from 'framer-motion';
-import { Star, Quote } from 'lucide-react';
-import { SectionHeader } from '@/components/ui/SectionHeader';
+import { prisma } from '@/lib/prisma';
+import { TestimonialsClient } from './TestimonialsClient';
 import { APP_CONFIG } from '@/lib/config';
 
-const testimonials = [
+// Fallback static testimonials to ensure the section is never completely empty
+const fallbackTestimonials = [
   {
+    id: 'static-1',
     name: 'Hassan BIKIENGA',
     role: 'Développeur Fullstack',
     quote: `Avant, je passais des heures à ajuster la mise en page de mon CV sur Word. Avec ${APP_CONFIG.name}, je choisis un template professionnel, l'IA m'aide à reformuler mes expériences, et j'exporte un PDF propre en quelques minutes. C'est un vrai gain de temps.`,
     rating: 5,
-    avatar: 'HB',
+    image: null,
     gradient: 'from-blue-500 to-indigo-400',
   },
   {
+    id: 'static-2',
     name: 'Traore Adama',
     role: 'Entrepreneur',
     quote: "Ce que j'apprécie le plus, c'est la lettre de motivation générée pour chaque offre. Au lieu de repartir de zéro à chaque candidature, l'IA me propose un texte adapté au poste que je peux personnaliser. C'est simple et efficace.",
     rating: 5,
-    avatar: 'TA',
+    image: null,
     gradient: 'from-amber-500 to-orange-400',
   },
 ];
 
-export function Testimonials() {
-  return (
-    <section className="bg-bg-dark py-24 px-4 border-t border-white/5 relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
+const gradients = [
+  'from-blue-500 to-indigo-400',
+  'from-amber-500 to-orange-400',
+  'from-emerald-500 to-teal-400',
+  'from-purple-500 to-pink-400',
+  'from-rose-500 to-red-400'
+];
 
-      <div className="max-w-5xl mx-auto relative z-10">
-        <SectionHeader
-          theme="dark"
-          title="Ce qu'en pensent nos utilisateurs"
-          description={`Des retours honnêtes de personnes qui utilisent ${APP_CONFIG.name} au quotidien.`}
-        />
+export async function Testimonials() {
+  // Fetch approved feedback, max 6 for the landing page
+  const dbFeedbacks = await prisma.platformFeedback.findMany({
+    where: { isVisible: true },
+    orderBy: { createdAt: 'desc' },
+    take: 6,
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+          jobTitle: true,
+        },
+      },
+    },
+  });
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {testimonials.map((t, index) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 flex flex-col hover:bg-white/[0.08] transition-colors"
-            >
-              {/* Quote icon */}
-              <Quote className="w-8 h-8 text-primary/40 mb-4 -scale-x-100" />
+  // Map DB data to the format expected by the client component
+  const mappedFeedbacks = dbFeedbacks.map((f, i) => ({
+    id: f.id,
+    name: f.user.name || 'Anonyme',
+    role: f.user.jobTitle || 'Utilisateur',
+    quote: f.content,
+    rating: f.rating || 5, // Default to 5 if no rating
+    image: f.user.image,
+    gradient: gradients[i % gradients.length],
+  }));
 
-              {/* Quote text */}
-              <p className="text-slate-300 leading-relaxed flex-1 text-sm">
-                &ldquo;{t.quote}&rdquo;
-              </p>
+  // If we have DB feedbacks, use them. Otherwise, use fallbacks.
+  const finalTestimonials = mappedFeedbacks.length > 0 ? mappedFeedbacks : fallbackTestimonials;
 
-              {/* Stars */}
-              <div className="flex gap-1 my-4">
-                {Array.from({ length: t.rating }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                ))}
-              </div>
-
-              {/* Author */}
-              <div className="flex items-center gap-3 pt-4 border-t border-white/10">
-                <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.gradient} flex items-center justify-center text-white text-xs font-bold`}>
-                  {t.avatar}
-                </div>
-                <div>
-                  <p className="text-white font-bold text-sm">{t.name}</p>
-                  <p className="text-slate-400 text-xs">{t.role}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  return <TestimonialsClient testimonials={finalTestimonials} />;
 }

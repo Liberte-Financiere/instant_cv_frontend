@@ -20,14 +20,8 @@ const CleanGrid = dynamic(() => import('@/components/templates/CleanGrid').then(
 const Swiss = dynamic(() => import('@/components/templates/Swiss').then(mod => mod.Swiss));
 const GradientHeader = dynamic(() => import('@/components/templates/GradientHeader').then(mod => mod.GradientHeader));
 const TimelinePro = dynamic(() => import('@/components/templates/TimelinePro').then(mod => mod.TimelinePro));
-const CompactSingle = dynamic(() => import('@/components/templates/CompactSingle').then(mod => mod.CompactSingle));
 const BoldHeader = dynamic(() => import('@/components/templates/BoldHeader').then(mod => mod.BoldHeader));
-const TwoTone = dynamic(() => import('@/components/templates/TwoTone').then(mod => mod.TwoTone));
-const Infographic = dynamic(() => import('@/components/templates/Infographic').then(mod => mod.Infographic));
 const ClassicSerif = dynamic(() => import('@/components/templates/ClassicSerif').then(mod => mod.ClassicSerif));
-const Nordic = dynamic(() => import('@/components/templates/Nordic').then(mod => mod.Nordic));
-const PastelModern = dynamic(() => import('@/components/templates/PastelModern').then(mod => mod.PastelModern));
-const BlueprintPremium = dynamic(() => import('@/components/templates/BlueprintPremium').then(mod => mod.BlueprintPremium));
 
 interface CVThumbnailProps {
   cv: CV;
@@ -52,14 +46,8 @@ export const CVThumbnail = memo(function CVThumbnail({ cv, scale = 0.15 }: CVThu
       case 'swiss': return <Swiss cv={cv} />;
       case 'gradient': return <GradientHeader cv={cv} />;
       case 'timeline': return <TimelinePro cv={cv} />;
-      case 'compact': return <CompactSingle cv={cv} />;
       case 'bold-header': return <BoldHeader cv={cv} />;
-      case 'two-tone': return <TwoTone cv={cv} />;
-      case 'infographic': return <Infographic cv={cv} />;
       case 'classic-serif': return <ClassicSerif cv={cv} />;
-      case 'nordic': return <Nordic cv={cv} />;
-      case 'pastel': return <PastelModern cv={cv} />;
-      case 'blueprint-premium': return <BlueprintPremium cv={cv} />;
       default: return <ModernSidebar cv={cv} />;
     }
   };
