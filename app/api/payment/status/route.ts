@@ -41,7 +41,24 @@ export async function GET(req: Request) {
     const status = await verifyTransactionStatus(token);
 
     if (isPaymentConfirmed(status)) {
-      // Mark as completed and credit
+      // SECURITY CHECK: Ensure the paid amount covers the pack price
+      const paidAmount = parseFloat(status.amount || '0');
+      const expectedAmount = Number(transaction.amount);
+
+      if (paidAmount < expectedAmount) {
+        console.warn(`[Payment] 🚨 SECURITY ALERT: Polling partial payment attempt! Expected ${expectedAmount}, Paid ${paidAmount}`);
+        await prisma.paymentTransaction.update({
+          where: { id: transaction.id },
+          data: {
+            status: 'failed',
+            transactionId: status.transaction_id,
+            operatorName: status.operator_name,
+          },
+        });
+        return NextResponse.json({ error: 'Montant payé insuffisant.' }, { status: 400 });
+      }
+
+      // Payment verified & amount confirmed! Credit the user
       await prisma.paymentTransaction.update({
         where: { id: transaction.id },
         data: {

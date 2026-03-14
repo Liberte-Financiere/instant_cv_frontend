@@ -28,10 +28,6 @@ export default function DashboardPage() {
   const creditsLoading = useCreditStore((state) => state.isLoading);
   const creditsCount = useCreditStore((state) => state.credits);
   const fetchCredits = useCreditStore((state) => state.fetchCredits);
-  const [isCreating, setIsCreating] = useState(false);
-  const [step, setStep] = useState<'template' | 'name'>('template');
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>('modern');
-  const [newTitle, setNewTitle] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isLinkedInModalOpen, setIsLinkedInModalOpen] = useState(false);
   
@@ -97,23 +93,7 @@ export default function DashboardPage() {
 
 
 
-  const handleCreateCV = () => {
-    if (newTitle.trim()) {
-      const id = createNewCV(newTitle.trim(), selectedTemplate);
-      setNewTitle('');
-      setIsCreating(false);
-      setStep('template');
-      setSelectedTemplate('modern');
-      window.location.href = `/editor/${id}`;
-    }
-  };
 
-  const handleOpenModal = () => {
-    setIsCreating(true);
-    setStep('template');
-    setSelectedTemplate('modern');
-    setNewTitle('');
-  };
 
   const handleToggleVisibility = async (id: string, currentIsPublic: boolean) => {
     try {
@@ -155,8 +135,22 @@ export default function DashboardPage() {
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto">
       <ReferralProcessor />
-      {/* ... (header) ... */}
       
+      {/* Dashboard Header CTA */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-10">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Tableau de Bord</h1>
+          <p className="text-slate-500 mt-2">Bienvenue. Voici un aperçu de vos activités.</p>
+        </div>
+        <Link 
+          href="/dashboard/templates"
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap"
+        >
+          <Plus className="w-5 h-5" />
+          Nouveau CV
+        </Link>
+      </div>
+
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-8 md:mb-12">
         <StatCard 
@@ -209,66 +203,75 @@ export default function DashboardPage() {
         <section>
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-xl font-bold text-slate-900">Vos CVs récents</h2>
-            <Link 
-              href="/dashboard/list" 
-              className="flex items-center gap-1 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors"
-            >
-                Voir tout 
-                <span className="text-xs">→</span>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-             {/* New CV Card - Always first */}
-             <Link 
-                href="/dashboard/templates"
-                className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors min-h-[200px] md:h-[320px] relative overflow-hidden"
+            {recentCVs.length > 0 && (
+              <Link 
+                href="/dashboard/list" 
+                className="flex items-center gap-1 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors"
               >
-                <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
-                  <Plus className="w-8 h-8 text-slate-400 group-hover:text-blue-500 transition-colors" />
-                </div>
-                <p className="font-bold text-slate-600 group-hover:text-blue-600 transition-colors relative z-10">Nouveau CV</p>
-                <p className="text-xs text-slate-400 mt-1 relative z-10">Choisir un modèle</p>
+                  Voir tout 
+                  <span className="text-xs">→</span>
               </Link>
-
-              {/* LinkedIn Import Card - HIDDEN (API is paid)
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                onClick={() => setIsLinkedInModalOpen(true)}
-                className="group cursor-pointer border-2 border-dashed border-linkedin/30 rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 bg-linkedin/5 hover:bg-linkedin/10 hover:border-linkedin transition-colors min-h-[200px] md:h-[320px]"
-              >
-                <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Linkedin className="w-8 h-8 text-linkedin" />
-                </div>
-                <p className="font-bold text-linkedin">Importer de LinkedIn</p>
-                <p className="text-xs text-slate-400 mt-1 text-center">Collez votre URL de profil</p>
-              </motion.div>
-              */}
-
-              {recentCVs.map((cv, index) => (
-                <div key={cv.id} className={index === 0 ? '' : 'hidden md:block'}>
-                  <CVCard 
-                    cv={cv}
-                    onDelete={deleteCV}
-                    onToggleVisibility={handleToggleVisibility}
-                    score={Math.floor(Math.random() * (98 - 70) + 70)}
-                  />
-                </div>
-              ))}
+            )}
           </div>
+
+          {recentCVs.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+               {/* New CV Card - Always first */}
+               <Link 
+                  href="/dashboard/templates"
+                  className="group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 bg-slate-50/50 hover:bg-blue-50 hover:border-blue-300 transition-colors min-h-[200px] md:h-[320px] relative overflow-hidden"
+                >
+                  <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
+                    <Plus className="w-8 h-8 text-slate-400 group-hover:text-blue-500 transition-colors" />
+                  </div>
+                  <p className="font-bold text-slate-600 group-hover:text-blue-600 transition-colors relative z-10">Nouveau CV</p>
+                  <p className="text-xs text-slate-400 mt-1 relative z-10">Choisir un modèle</p>
+                </Link>
+
+                {recentCVs.map((cv, index) => (
+                  <div key={cv.id} className={index === 0 ? '' : 'hidden md:block'}>
+                    <CVCard 
+                      cv={cv}
+                      onDelete={deleteCV}
+                      onToggleVisibility={handleToggleVisibility}
+                      score={Math.floor(Math.random() * (98 - 70) + 70)}
+                    />
+                  </div>
+                ))}
+            </div>
+          ) : (
+             <div className="flex flex-col items-center justify-center py-12 md:py-16 px-4 text-center bg-white rounded-3xl border border-slate-100 shadow-sm mx-auto">
+                <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6">
+                    <FileText className="w-10 h-10 text-blue-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">Aucun CV pour le moment</h3>
+                <p className="text-slate-500 max-w-md mx-auto mb-8 text-sm md:text-base">
+                    Vos CVs apparaîtront ici. Créez votre premier CV professionnel pour débloquer de nouvelles opportunités.
+                </p>
+                <Link 
+                   href="/dashboard/templates"
+                   className="flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-blue-500/20 transition-all hover:scale-105 active:scale-95"
+                >
+                   <Plus className="w-6 h-6" />
+                   Créer mon premier CV
+                </Link>
+             </div>
+          )}
         </section>
 
         {/* Cover Letters Section */}
         <section>
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-xl font-bold text-slate-900">Vos Lettres récentes</h2>
-            <Link 
-              href="/dashboard/cover-letters" 
-              className="flex items-center gap-1 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors"
-            >
-                Voir tout 
-                <span className="text-xs">→</span>
-            </Link>
+            {recentCLs.length > 0 && (
+              <Link 
+                href="/dashboard/cover-letters" 
+                className="flex items-center gap-1 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors"
+              >
+                  Voir tout 
+                  <span className="text-xs">→</span>
+              </Link>
+            )}
           </div>
 
           {recentCLs.length > 0 ? (
@@ -356,12 +359,22 @@ export default function DashboardPage() {
                </Link>
             </div>
           ) : (
-            <div className="text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                <p className="text-slate-500 mb-4">Vous n&apos;avez pas encore de lettre de motivation.</p>
-                <Link href="/dashboard/cover-letters" className="text-blue-600 font-bold hover:underline">
-                  Commencer à rédiger
+             <div className="flex flex-col items-center justify-center py-12 md:py-16 px-4 text-center bg-white rounded-3xl border border-slate-100 shadow-sm mx-auto">
+                <div className="w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center mb-6">
+                    <FileText className="w-10 h-10 text-purple-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">Aucune lettre pour le moment</h3>
+                <p className="text-slate-500 max-w-md mx-auto mb-8 text-sm md:text-base">
+                    Démarquez-vous avec une lettre de motivation percutante. Notre IA peut l&apos;adapter à l&apos;offre pour vous en 30 secondes.
+                </p>
+                <Link 
+                   href="/dashboard/cover-letters"
+                   className="flex items-center gap-2 px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-2xl shadow-xl shadow-purple-500/20 transition-all hover:scale-105 active:scale-95"
+                >
+                   <Plus className="w-6 h-6" />
+                   Rédiger une lettre
                 </Link>
-            </div>
+             </div>
           )}
         </section>
       </div>

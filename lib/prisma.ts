@@ -12,26 +12,7 @@ const adapter = new PrismaPg(pool);
 const prismaClientSingleton = () => {
   const client = new PrismaClient({ adapter });
   
-  return client.$extends({
-    result: {
-      cV: {
-        content: {
-          needs: { content: true, id: true },
-          compute(cv) {
-            // Automatically validate and type the content JSON on read
-            const validation = cvSchema.safeParse(cv.content);
-            if (validation.success) {
-              return validation.data;
-            }
-            // If validation fails, return raw content cast as any (or handling error)
-            // This ensures TypeScript sees it as 'CV' but runtime keeps data intact
-            console.error(`[Prisma Extension] Invalid CV content for ID ${cv.id}`);
-            return cv.content as any; 
-          },
-        },
-      },
-    },
-  });
+  return client;
 };
 
 type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;

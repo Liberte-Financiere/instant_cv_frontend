@@ -56,7 +56,11 @@ export default function EditorPage() {
     // Debounce: save 3s after last change
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
-      doSave();
+      // Check again inside timeout to avoid queueing unnecessary saves if user clicked very fast
+      const latestSnapshot = JSON.stringify(useCVStore.getState().currentCV);
+      if (latestSnapshot !== lastSavedRef.current) {
+        doSave();
+      }
     }, 3000);
 
     return () => {
@@ -136,7 +140,7 @@ export default function EditorPage() {
     }
   };
 
-  if (!currentCV) {
+  if (!currentCV || currentCV.id !== id || !currentCV.experiences) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
