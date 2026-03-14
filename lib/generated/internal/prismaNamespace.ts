@@ -389,6 +389,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   AnalysisHistory: 'AnalysisHistory',
   User: 'User',
+  PlatformFeedback: 'PlatformFeedback',
   PaymentTransaction: 'PaymentTransaction',
   CV: 'CV',
   CoverLetter: 'CoverLetter',
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "user" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction"
+    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -779,6 +780,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlatformFeedback: {
+      payload: Prisma.$PlatformFeedbackPayload<ExtArgs>
+      fields: Prisma.PlatformFeedbackFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformFeedbackFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformFeedbackFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformFeedbackFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformFeedbackFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload>
+        }
+        findMany: {
+          args: Prisma.PlatformFeedbackFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload>[]
+        }
+        create: {
+          args: Prisma.PlatformFeedbackCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload>
+        }
+        createMany: {
+          args: Prisma.PlatformFeedbackCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformFeedbackCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformFeedbackDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload>
+        }
+        update: {
+          args: Prisma.PlatformFeedbackUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformFeedbackDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformFeedbackUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformFeedbackUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformFeedbackUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformFeedbackPayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformFeedbackAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformFeedback>
+        }
+        groupBy: {
+          args: Prisma.PlatformFeedbackGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformFeedbackGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformFeedbackCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformFeedbackCountAggregateOutputType> | number
         }
       }
     }
@@ -1190,6 +1265,19 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const PlatformFeedbackScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  rating: 'rating',
+  content: 'content',
+  isVisible: 'isVisible',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformFeedbackScalarFieldEnum = (typeof PlatformFeedbackScalarFieldEnum)[keyof typeof PlatformFeedbackScalarFieldEnum]
+
+
 export const PaymentTransactionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1482,6 +1570,7 @@ export type GlobalOmitConfig = {
   verificationToken?: Prisma.VerificationTokenOmit
   analysisHistory?: Prisma.AnalysisHistoryOmit
   user?: Prisma.UserOmit
+  platformFeedback?: Prisma.PlatformFeedbackOmit
   paymentTransaction?: Prisma.PaymentTransactionOmit
   cV?: Prisma.CVOmit
   coverLetter?: Prisma.CoverLetterOmit
