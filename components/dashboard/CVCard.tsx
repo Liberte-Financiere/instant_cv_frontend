@@ -116,7 +116,12 @@ export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardPr
               )}
            </button>
            <button
-             onClick={() => onDelete(cv.id)}
+             onClick={(e) => {
+               e.stopPropagation();
+               if (confirm('Êtes-vous sûr de vouloir supprimer ce CV ?')) {
+                 onDelete(cv.id);
+               }
+             }}
              className="p-3 bg-white rounded-xl text-slate-600 hover:text-red-500 hover:scale-110 shadow-lg shadow-slate-200 transition-all"
              title="Supprimer"
            >

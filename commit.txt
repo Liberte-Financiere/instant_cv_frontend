@@ -1,0 +1,22 @@
+2026-03-11 — Refonte Éditoriale des Noms de Modèles (Stratégie Identitaire)
+
+What changed:
+- Renommage complet des modèles de CV en utilisant une sémantique identitaire (ex: Tech Expert -> L'Innovateur, Executive -> Le Stratège).
+- Suppression des mentions redondantes "(ATS)" dans les noms des modèles.
+- Réintégration du modèle Corporate Blue sous le nom "L'Institutionnel".
+- Enrichissement des descriptions pour préciser explicitement les secteurs cibles de chaque design (Mines, Industrie, Logistique, Juriste, Droit, Médical, etc.).
+- Francisation totale des noms (plus d'anglicismes comme "Bold Header" ou "Clean Grid").
+
+Why:
+- Améliorer l'expérience utilisateur et l'image de marque (SaaS Premium) en s'adressant à la personnalité et au métier de l'utilisateur.
+- Retirer la confusion autour de l'ATS en affirmant que tous les modèles le sont subtilement.
+- Aider l'utilisateur à se projeter grâce à des descriptions de secteurs très précises.
+
+Files affected:
+- lib/templates.ts — Mise à jour des propriétés `name`, `description` et `exampleTitles` de l'array `TEMPLATES`.
+
+Breaking changes:
+- None (Les `id` techniques des templates n'ont pas été modifiés, il n'y a donc aucun impact sur les CVs existants en base de données).
+
+Notes for review:
+- Consulter le tableau de bord des templates pour visualiser le rendu des nouveaux noms et descriptions "premium".

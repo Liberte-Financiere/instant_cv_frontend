@@ -69,43 +69,54 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const summary = searchParams.get('summary') === 'true';
 
-    // Retrieve CVs using selection if summary is requested
+    // Always fetch content to extract minimal data like templateId and personalInfo.firstName/title
     const dbCVs = await prisma.cV.findMany({
       where: { userId: session.user.id },
-      orderBy: { updatedAt: 'desc' },
-      select: summary ? {
-         id: true,
-         title: true,
-         createdAt: true,
-         updatedAt: true,
-         isPublic: true,
-         views: true,
-         // content is excluded by default when using select
-      } : undefined
+      orderBy: { updatedAt: 'desc' }
     });
 
     // Transform DB format to frontend CV format
     const cvs = dbCVs.map(cv => {
+      const content = (cv.content as any) || {};
+
       if (summary) {
+        // Strip out heavy arrays and base64 strings
+        const {
+          experiences,
+          education,
+          projects,
+          certifications,
+          skills,
+          languages,
+          references,
+          hobbies,
+          qualities,
+          ...lightweightContent
+        } = content;
+
+        // Remove potentially large base64 strings from personalInfo and footer
+        const minimalPersonalInfo = { ...lightweightContent.personalInfo };
+        delete minimalPersonalInfo.photoUrl;
+
+        const minimalFooter = { ...lightweightContent.footer };
+        delete minimalFooter.signatureUrl;
+
         return {
+          ...lightweightContent,
+          personalInfo: minimalPersonalInfo,
+          footer: minimalFooter,
           id: cv.id,
           title: cv.title,
           updatedAt: cv.updatedAt,
           createdAt: cv.createdAt,
           isPublic: cv.isPublic,
           views: cv.views,
-          // Minimal mock content to satisfy type if needed, or handle partial type in frontend
-          templateId: 'modern', // Default for summary list
-          personalInfo: {}, 
         };
       }
       
       // Full fetch
-      // Content is now automatically typed by Prisma extension
-      const content = cv.content; 
-
       return {
-        ...(content as any), // Spread content (typed but spread needs check)
+        ...content,
         id: cv.id,
         title: cv.title,
         updatedAt: cv.updatedAt,
