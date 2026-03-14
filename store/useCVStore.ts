@@ -644,11 +644,17 @@ export const useCVStore = create<CVState>()(
         };
       }),
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      togglePublic: (_cvId) => set((state) => updateCV(state, (cv) => ({
-        ...cv,
-        isPublic: !cv.isPublic,
-      }))),
+      togglePublic: (cvId) => set((state) => {
+        const updatedList = state.cvList.map((c) => 
+          c.id === cvId ? { ...c, isPublic: !c.isPublic } : c
+        );
+        return {
+          cvList: updatedList,
+          currentCV: state.currentCV?.id === cvId 
+            ? { ...state.currentCV, isPublic: !state.currentCV.isPublic } 
+            : state.currentCV
+        };
+      }),
     }),
     {
       name: 'jobsira-cv-storage',
