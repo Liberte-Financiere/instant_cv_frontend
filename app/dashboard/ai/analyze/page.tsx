@@ -140,23 +140,34 @@ export default function AIAnalyzePage() {
 
           {/* Analyze Button */}
           <div className="mt-8 flex justify-center">
-            <button
-              onClick={handleAnalyze}
-              disabled={isAnalyzing || !isReady}
-              className="flex items-center gap-3 px-10 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-bold rounded-2xl shadow-xl shadow-blue-900/20 transition-all active:scale-[0.98]"
-            >
-              {isAnalyzing ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>Analyse en cours...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-5 h-5 relative z-10" />
-                  <span className="relative z-10">Analyser mon CV</span>
-                </>
+            <div className="relative group/btn inline-block">
+              <button
+                onClick={handleAnalyze}
+                disabled={isAnalyzing || !isReady}
+                className="flex items-center gap-3 px-10 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold rounded-2xl shadow-xl shadow-blue-900/20 transition-all active:scale-[0.98]"
+              >
+                {isAnalyzing ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Analyse en cours...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-5 h-5 relative z-10" />
+                    <span className="relative z-10">Analyser mon CV</span>
+                  </>
+                )}
+              </button>
+
+              {/* Tooltip explaining why it's disabled */}
+              {!isReady && (
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-2 bg-slate-800 text-white text-xs font-medium rounded-lg opacity-0 invisible group-hover/btn:opacity-100 group-hover/btn:visible transition-all whitespace-nowrap shadow-lg z-20">
+                  Veuillez sélectionner ou importer un CV
+                  {/* Petit triangle (flèche) vers le bas */}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+                </div>
               )}
-            </button>
+            </div>
           </div>
         </motion.div>
 
