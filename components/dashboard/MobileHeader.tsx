@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, FileText, LayoutDashboard, LayoutList, LayoutTemplate, PenTool, Settings, LogOut, User, Sparkles, Target, Brain, MessageSquare, ShieldAlert } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import { cn, clearAllLocalData } from '@/lib/utils';
 import { APP_CONFIG } from '@/lib/config';
 
 const navigation = [
@@ -205,7 +205,10 @@ export function MobileHeader() {
                 </div>
                 
                 <button
-                  onClick={() => signOut()}
+                  onClick={async () => {
+                    await clearAllLocalData();
+                    signOut();
+                  }}
                   className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl text-sm font-medium transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
