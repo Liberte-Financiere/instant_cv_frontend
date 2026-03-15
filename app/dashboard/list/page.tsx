@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { CV } from '@/types/cv';
 import { useCVStore } from '@/store/useCVStore';
 import { formatDate } from '@/lib/utils';
-import { Edit, Eye, Trash2, Search, FileText, ArrowRight, Loader2, Share2, MoreVertical } from 'lucide-react';
+import { Edit, Eye, Trash2, Search, FileText, ArrowRight, Loader2, Share2, MoreVertical, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -13,6 +13,7 @@ export default function CVListPage() {
   const { cvList, fetchUserCVs, deleteCV } = useCVStore();
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -49,6 +50,25 @@ export default function CVListPage() {
     } catch (error) {
        console.error("Erreur toggle visibility:", error);
        toast.error("Impossible de modifier la visibilité");
+    }
+  };
+
+  const handleCopyLink = async (cv: CV) => {
+    if (!cv.isPublic) {
+      toast.error('Le CV doit être public pour avoir un lien de partage.');
+      return;
+    }
+    
+    // Fallback URL directly constructed from origin
+    const shareUrl = `${window.location.origin}/share/${cv.id}`;
+    
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopiedUrl(shareUrl);
+      setTimeout(() => setCopiedUrl(null), 2000);
+    } catch (e) {
+      console.error('Erreur lors de la copie du lien:', e);
+      toast.error('Impossible de copier le lien.');
     }
   };
 
@@ -137,13 +157,13 @@ export default function CVListPage() {
                   </div>
                   
                   <div className="flex items-center gap-1">
-                    <Link 
-                      href={`/share/${cv.id}`}
-                      target="_blank"
+                    <button 
+                      onClick={() => handleCopyLink(cv)}
                       className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                      title="Copier le lien"
                     >
                       <Share2 className="w-4 h-4" />
-                    </Link>
+                    </button>
                     <Link 
                       href={`/editor/${cv.id}`}
                       className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
@@ -210,14 +230,13 @@ export default function CVListPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                         <Link 
-                           href={`/share/${cv.id}`} 
-                           target="_blank"
+                         <button 
+                           onClick={() => handleCopyLink(cv)}
                            className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
-                           title="Partager"
+                           title="Copier le lien de partage"
                          >
                            <Share2 className="w-4 h-4" />
-                         </Link>
+                         </button>
                          <Link 
                            href={`/editor/${cv.id}`} 
                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
@@ -240,6 +259,30 @@ export default function CVListPage() {
             </table>
           </div>
         </>
+      )}
+
+      {/* Success Modal for Copy Link */}
+      {copiedUrl && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-4 backdrop-blur-sm bg-slate-900/20">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white p-6 md:p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 text-center max-w-sm pointer-events-auto border border-slate-100"
+          >
+            <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-2">
+              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-green-500/30">
+                <CheckCircle className="w-6 h-6" />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Lien copié !</h3>
+              <p className="text-slate-500 text-sm">
+                Le lien public a été copié dans votre presse-papiers.
+              </p>
+            </div>
+          </motion.div>
+        </div>
       )}
     </div>
   );
