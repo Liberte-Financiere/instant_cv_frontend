@@ -35,7 +35,7 @@ export const APP_CONFIG = {
   // ─── Credits & Pricing ────────────────────────────
   credits: {
     /** Credits gifted to new users on signup */
-    signupBonus: 15,
+    signupBonus: 20,
     /** Credits gifted to the referrer when a referral signs up */
     referralReward: 10,
     /** Credits gifted to the referred user */
