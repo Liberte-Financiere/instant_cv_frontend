@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
           },
           {
              key: 'Content-Security-Policy',
-             value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://lh3.googleusercontent.com https://res.cloudinary.com https://authjs.dev; font-src 'self' data:; connect-src 'self' https://vitals.vercel-insights.com https://*.ingest.us.sentry.io https://cloudflareinsights.com;",
+             value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://lh3.googleusercontent.com https://res.cloudinary.com https://authjs.dev; font-src 'self' data:; connect-src 'self' https://*.ingest.us.sentry.io https://cloudflareinsights.com;",
           },
           {
             key: 'Strict-Transport-Security',

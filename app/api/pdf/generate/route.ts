@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 import { auth } from '@/auth';
 
-export const maxDuration = 60; // Allow enough time for Vercel Hobby/Pro to run Chrome
-
 export async function POST(req: Request) {
   try {
     const session = await auth();
