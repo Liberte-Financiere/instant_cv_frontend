@@ -48,14 +48,15 @@ export default function AIAnalyzePage() {
       let response: Response;
 
       if (cvSourceMode === 'select') {
-        // Send CV data as JSON
-        const cv = cvList.find(c => c.id === selectedCVId);
-        if (!cv) throw new Error('CV non trouvé');
+        // Fetch full CV data (cvList only contains summaries without experiences, skills, etc.)
+        const { CVService } = await import('@/services/cvService');
+        const fullCV = await CVService.getById(selectedCVId);
+        if (!fullCV) throw new Error('CV non trouvé');
 
         response = await fetch('/api/ai/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cvData: cv }),
+          body: JSON.stringify({ cvData: fullCV }),
         });
       } else {
         // Send file as FormData
