@@ -78,7 +78,13 @@ export default function PublicCoverLetterPage({ params }: PageProps) {
   }
 
   return (
-    <div className="letter-page min-h-screen print:min-h-0 bg-slate-200 print:bg-white">
+    <>
+      <style>{`
+        @media print {
+          @page { margin: 10mm 0 !important; }
+        }
+      `}</style>
+      <div className="min-h-screen print:min-h-0 bg-slate-200 print:bg-white">
       {/* Header - Hidden in print */}
       <header className="print:hidden bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -115,5 +121,6 @@ export default function PublicCoverLetterPage({ params }: PageProps) {
         </div>
       </main>
     </div>
+    </>
   );
 }
