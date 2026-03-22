@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, PenTool, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, clearAllLocalData } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
 import { useSession, signOut } from 'next-auth/react';
@@ -174,7 +174,10 @@ export function Sidebar() {
                 </button>
                 <div className="h-px bg-slate-700/50 my-1" />
                 <button 
-                  onClick={() => signOut()}
+                  onClick={async () => {
+                    await clearAllLocalData();
+                    signOut();
+                  }}
                   className="w-full flex items-center gap-3 px-3 py-2.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg text-sm transition-colors"
                 >
                   <LogOut className="w-4 h-4" />

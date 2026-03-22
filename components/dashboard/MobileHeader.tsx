@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, FileText, LayoutDashboard, LayoutList, LayoutTemplate, PenTool, Settings, LogOut, User, Sparkles, Target, Brain, MessageSquare, ShieldAlert } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import { cn, clearAllLocalData } from '@/lib/utils';
 import { APP_CONFIG } from '@/lib/config';
 
 const navigation = [
@@ -151,10 +151,6 @@ export function MobileHeader() {
 
                 {/* AI Section Mobile */}
                 <div className="mt-4">
-                  <div className="flex items-center gap-2 px-4 mb-2">
-                    <Brain className="w-4 h-4 text-blue-400" />
-                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Intelligence IA</span>
-                  </div>
                   <div className="space-y-1">
                     {aiNavigation.map((item) => {
                       const isActive = pathname === item.href;
@@ -205,7 +201,10 @@ export function MobileHeader() {
                 </div>
                 
                 <button
-                  onClick={() => signOut()}
+                  onClick={async () => {
+                    await clearAllLocalData();
+                    signOut();
+                  }}
                   className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl text-sm font-medium transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
