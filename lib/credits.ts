@@ -11,6 +11,8 @@ export const CREDIT_COSTS = {
   AI_REWRITE: 0.5,
   AI_CONTINUE: 0.5,
   AI_CORRECT: 0.5,
+
+  AI_CV_TRANSLATE: 15,
 };
 
 export type ActionType = keyof typeof CREDIT_COSTS;
