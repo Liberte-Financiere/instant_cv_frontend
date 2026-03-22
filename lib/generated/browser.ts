@@ -67,3 +67,8 @@ export type CoverLetter = Prisma.CoverLetterModel
  * 
  */
 export type CreditTransaction = Prisma.CreditTransactionModel
+/**
+ * Model AdminTask
+ * 
+ */
+export type AdminTask = Prisma.AdminTaskModel

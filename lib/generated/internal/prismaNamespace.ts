@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.4.1
- * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
+ * Prisma Client JS version: 7.5.0
+ * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.4.1",
-  engine: "55ae170b1ced7fc6ed07a15f110549408c501bb3"
+  client: "7.5.0",
+  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
 }
 
 /**
@@ -393,7 +393,8 @@ export const ModelName = {
   PaymentTransaction: 'PaymentTransaction',
   CV: 'CV',
   CoverLetter: 'CoverLetter',
-  CreditTransaction: 'CreditTransaction'
+  CreditTransaction: 'CreditTransaction',
+  AdminTask: 'AdminTask'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction"
+    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1153,6 +1154,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AdminTask: {
+      payload: Prisma.$AdminTaskPayload<ExtArgs>
+      fields: Prisma.AdminTaskFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdminTaskFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdminTaskFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload>
+        }
+        findFirst: {
+          args: Prisma.AdminTaskFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdminTaskFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload>
+        }
+        findMany: {
+          args: Prisma.AdminTaskFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload>[]
+        }
+        create: {
+          args: Prisma.AdminTaskCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload>
+        }
+        createMany: {
+          args: Prisma.AdminTaskCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdminTaskCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload>[]
+        }
+        delete: {
+          args: Prisma.AdminTaskDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload>
+        }
+        update: {
+          args: Prisma.AdminTaskUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdminTaskDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdminTaskUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdminTaskUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdminTaskUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminTaskPayload>
+        }
+        aggregate: {
+          args: Prisma.AdminTaskAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdminTask>
+        }
+        groupBy: {
+          args: Prisma.AdminTaskGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminTaskGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdminTaskCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminTaskCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1332,6 +1407,20 @@ export const CreditTransactionScalarFieldEnum = {
 } as const
 
 export type CreditTransactionScalarFieldEnum = (typeof CreditTransactionScalarFieldEnum)[keyof typeof CreditTransactionScalarFieldEnum]
+
+
+export const AdminTaskScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  assignee: 'assignee',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdminTaskScalarFieldEnum = (typeof AdminTaskScalarFieldEnum)[keyof typeof AdminTaskScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1575,6 +1664,7 @@ export type GlobalOmitConfig = {
   cV?: Prisma.CVOmit
   coverLetter?: Prisma.CoverLetterOmit
   creditTransaction?: Prisma.CreditTransactionOmit
+  adminTask?: Prisma.AdminTaskOmit
 }
 
 /* Types for Logging */
