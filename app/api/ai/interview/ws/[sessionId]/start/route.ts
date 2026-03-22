@@ -17,6 +17,7 @@ export async function GET(
     }
 
     const { sessionId } = await params;
+    console.log('[SSE Start] Requête reçue pour session:', sessionId);
 
     // Verify session belongs to user and is active
     const interviewSession = await prisma.interviewSession.findUnique({
@@ -83,6 +84,7 @@ Si le candidat te demande de répéter, répète. S'il hésite, encourage-le.`;
       }
     });
 
+    console.log('[SSE Start] Stream créé, envoi au client...');
     return new NextResponse(stream, {
       headers: {
         'Content-Type': 'text/event-stream',
