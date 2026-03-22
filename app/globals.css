@@ -67,7 +67,8 @@ body {
 
 /* Print styles for PDF export */
 @media print {
-  body {
+  html, body {
+    background: white !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -75,7 +76,6 @@ body {
   /* Page setup */
   @page {
     size: A4;
-    /* Add space on top/bottom for pages 2, 3... */
     margin: 15mm 0;
   }
 
@@ -85,6 +85,14 @@ body {
     margin-left: 0;
     margin-right: 0;
     margin-bottom: 15mm;
+  }
+
+  /* Cover letters handle their own padding via p-[16mm] on LetterPreview */
+  .letter-page {
+    page: letter;
+  }
+  @page letter {
+    margin: 10mm 0;
   }
 
   /* CV Template sizing */

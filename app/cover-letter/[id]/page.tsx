@@ -78,7 +78,7 @@ export default function PublicCoverLetterPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-200 print:bg-white">
+    <div className="letter-page min-h-screen print:min-h-0 bg-slate-200 print:bg-white">
       {/* Header - Hidden in print */}
       <header className="print:hidden bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -110,7 +110,7 @@ export default function PublicCoverLetterPage({ params }: PageProps) {
             {/* A4 Paper */}
             <LetterPreview 
               coverLetter={currentCL} 
-              className="w-full min-h-[297mm] shadow-2xl print:shadow-none"
+              className="w-full min-h-[297mm] print:min-h-0 shadow-2xl print:shadow-none"
             />
         </div>
       </main>
