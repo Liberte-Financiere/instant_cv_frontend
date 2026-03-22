@@ -13,8 +13,11 @@ import {
   Target,
   TrendingUp,
   AlertTriangle,
+  Mic,
+  Keyboard,
 } from 'lucide-react';
 import Link from 'next/link';
+import { AudioControls } from '@/components/interview/AudioControls';
 
 interface Message {
   id: string;
@@ -53,6 +56,8 @@ export default function InterviewChatPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
+  const [inputMode, setInputMode] = useState<'text' | 'audio'>('text');
+  const [isAISpeaking, setIsAISpeaking] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -157,6 +162,21 @@ export default function InterviewChatPage() {
     }
   };
 
+  const handleTranscriptReceived = (text: string, isFromUser: boolean) => {
+    // In audio mode, Gemini Live handles the conversation turn directly.
+    // We just append its transcription to the UI for visibility.
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `transcript-${Date.now()}`,
+        role: isFromUser ? 'candidate' : 'interviewer',
+        content: text,
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+    scrollToBottom();
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -214,7 +234,54 @@ export default function InterviewChatPage() {
             <span className="text-sm font-bold">{session.totalScore}/100</span>
           </div>
         )}
+
+        {/* Input Mode Toggle */}
+        {session.status !== 'completed' && (
+          <div className="flex bg-slate-100 p-1 rounded-xl">
+            <button
+              onClick={() => setInputMode('text')}
+              className={`flex items-center justify-center p-2 rounded-lg transition-colors ${
+                inputMode === 'text' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-700'
+              }`}
+              title="Mode Texte"
+            >
+              <Keyboard className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setInputMode('audio')}
+              className={`flex items-center justify-center p-2 rounded-lg transition-colors ${
+                inputMode === 'audio' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-700'
+              }`}
+              title="Mode Audio (Live)"
+            >
+              <Mic className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Audio Controls Bar */}
+      <AnimatePresence>
+        {inputMode === 'audio' && session.status !== 'completed' && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="bg-white border-b border-slate-200 overflow-hidden shrink-0"
+          >
+            <div className="px-4 py-3 flex items-center justify-center gap-4 max-w-4xl mx-auto">
+              <AudioControls
+                sessionId={sessionId}
+                onTranscriptReceived={handleTranscriptReceived}
+                onSpeakingStateChange={setIsAISpeaking}
+              />
+              <div className="text-xs text-slate-500 max-w-xs leading-relaxed">
+                Appuyez sur le micro pour parler. L'IA vous écoute en temps réel et génère une réponse vocale. Mettez vos écouteurs pour éviter l'écho.
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
@@ -275,10 +342,28 @@ export default function InterviewChatPage() {
               )}
             </motion.div>
           ))}
+
+          {/* AI Speaking Indicator */}
+          {isAISpeaking && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex justify-start"
+            >
+              <div className="flex items-center gap-3 bg-indigo-50 text-indigo-600 px-4 py-3 rounded-full border border-indigo-100 shadow-sm w-fit">
+                <div className="flex gap-1 items-center">
+                  <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                  <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                  <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce"></div>
+                </div>
+                <span className="text-xs font-bold">Le recruteur parle...</span>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
 
-        {/* AI Thinking Indicator */}
-        {isSending && (
+        {/* AI Thinking Indicator (Text Mode) */}
+        {isSending && inputMode === 'text' && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -353,8 +438,8 @@ export default function InterviewChatPage() {
         </motion.div>
       )}
 
-      {/* Input Area */}
-      {session.status !== 'completed' && (
+      {/* Input Area (Text Mode Only) */}
+      {session.status !== 'completed' && inputMode === 'text' && (
         <div className="bg-white border-t border-slate-200 px-4 py-3 shrink-0">
           <div className="flex items-end gap-3 max-w-4xl mx-auto">
             <textarea

@@ -40,6 +40,8 @@ export type InterviewMessageMinAggregateOutputType = {
   role: string | null
   content: string | null
   score: number | null
+  audioUrl: string | null
+  transcript: string | null
   createdAt: Date | null
 }
 
@@ -49,6 +51,8 @@ export type InterviewMessageMaxAggregateOutputType = {
   role: string | null
   content: string | null
   score: number | null
+  audioUrl: string | null
+  transcript: string | null
   createdAt: Date | null
 }
 
@@ -58,6 +62,8 @@ export type InterviewMessageCountAggregateOutputType = {
   role: number
   content: number
   score: number
+  audioUrl: number
+  transcript: number
   createdAt: number
   _all: number
 }
@@ -77,6 +83,8 @@ export type InterviewMessageMinAggregateInputType = {
   role?: true
   content?: true
   score?: true
+  audioUrl?: true
+  transcript?: true
   createdAt?: true
 }
 
@@ -86,6 +94,8 @@ export type InterviewMessageMaxAggregateInputType = {
   role?: true
   content?: true
   score?: true
+  audioUrl?: true
+  transcript?: true
   createdAt?: true
 }
 
@@ -95,6 +105,8 @@ export type InterviewMessageCountAggregateInputType = {
   role?: true
   content?: true
   score?: true
+  audioUrl?: true
+  transcript?: true
   createdAt?: true
   _all?: true
 }
@@ -191,6 +203,8 @@ export type InterviewMessageGroupByOutputType = {
   role: string
   content: string
   score: number | null
+  audioUrl: string | null
+  transcript: string | null
   createdAt: Date
   _count: InterviewMessageCountAggregateOutputType | null
   _avg: InterviewMessageAvgAggregateOutputType | null
@@ -223,6 +237,8 @@ export type InterviewMessageWhereInput = {
   role?: Prisma.StringFilter<"InterviewMessage"> | string
   content?: Prisma.StringFilter<"InterviewMessage"> | string
   score?: Prisma.IntNullableFilter<"InterviewMessage"> | number | null
+  audioUrl?: Prisma.StringNullableFilter<"InterviewMessage"> | string | null
+  transcript?: Prisma.StringNullableFilter<"InterviewMessage"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InterviewMessage"> | Date | string
   session?: Prisma.XOR<Prisma.InterviewSessionScalarRelationFilter, Prisma.InterviewSessionWhereInput>
 }
@@ -233,6 +249,8 @@ export type InterviewMessageOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   score?: Prisma.SortOrderInput | Prisma.SortOrder
+  audioUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  transcript?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   session?: Prisma.InterviewSessionOrderByWithRelationInput
 }
@@ -246,6 +264,8 @@ export type InterviewMessageWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.StringFilter<"InterviewMessage"> | string
   content?: Prisma.StringFilter<"InterviewMessage"> | string
   score?: Prisma.IntNullableFilter<"InterviewMessage"> | number | null
+  audioUrl?: Prisma.StringNullableFilter<"InterviewMessage"> | string | null
+  transcript?: Prisma.StringNullableFilter<"InterviewMessage"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InterviewMessage"> | Date | string
   session?: Prisma.XOR<Prisma.InterviewSessionScalarRelationFilter, Prisma.InterviewSessionWhereInput>
 }, "id">
@@ -256,6 +276,8 @@ export type InterviewMessageOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   score?: Prisma.SortOrderInput | Prisma.SortOrder
+  audioUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  transcript?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.InterviewMessageCountOrderByAggregateInput
   _avg?: Prisma.InterviewMessageAvgOrderByAggregateInput
@@ -273,6 +295,8 @@ export type InterviewMessageScalarWhereWithAggregatesInput = {
   role?: Prisma.StringWithAggregatesFilter<"InterviewMessage"> | string
   content?: Prisma.StringWithAggregatesFilter<"InterviewMessage"> | string
   score?: Prisma.IntNullableWithAggregatesFilter<"InterviewMessage"> | number | null
+  audioUrl?: Prisma.StringNullableWithAggregatesFilter<"InterviewMessage"> | string | null
+  transcript?: Prisma.StringNullableWithAggregatesFilter<"InterviewMessage"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"InterviewMessage"> | Date | string
 }
 
@@ -281,6 +305,8 @@ export type InterviewMessageCreateInput = {
   role: string
   content: string
   score?: number | null
+  audioUrl?: string | null
+  transcript?: string | null
   createdAt?: Date | string
   session: Prisma.InterviewSessionCreateNestedOneWithoutMessagesInput
 }
@@ -291,6 +317,8 @@ export type InterviewMessageUncheckedCreateInput = {
   role: string
   content: string
   score?: number | null
+  audioUrl?: string | null
+  transcript?: string | null
   createdAt?: Date | string
 }
 
@@ -299,6 +327,8 @@ export type InterviewMessageUpdateInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  audioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   session?: Prisma.InterviewSessionUpdateOneRequiredWithoutMessagesNestedInput
 }
@@ -309,6 +339,8 @@ export type InterviewMessageUncheckedUpdateInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  audioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -318,6 +350,8 @@ export type InterviewMessageCreateManyInput = {
   role: string
   content: string
   score?: number | null
+  audioUrl?: string | null
+  transcript?: string | null
   createdAt?: Date | string
 }
 
@@ -326,6 +360,8 @@ export type InterviewMessageUpdateManyMutationInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  audioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -335,6 +371,8 @@ export type InterviewMessageUncheckedUpdateManyInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  audioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -354,6 +392,8 @@ export type InterviewMessageCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  audioUrl?: Prisma.SortOrder
+  transcript?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -367,6 +407,8 @@ export type InterviewMessageMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  audioUrl?: Prisma.SortOrder
+  transcript?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -376,6 +418,8 @@ export type InterviewMessageMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  audioUrl?: Prisma.SortOrder
+  transcript?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -430,6 +474,8 @@ export type InterviewMessageCreateWithoutSessionInput = {
   role: string
   content: string
   score?: number | null
+  audioUrl?: string | null
+  transcript?: string | null
   createdAt?: Date | string
 }
 
@@ -438,6 +484,8 @@ export type InterviewMessageUncheckedCreateWithoutSessionInput = {
   role: string
   content: string
   score?: number | null
+  audioUrl?: string | null
+  transcript?: string | null
   createdAt?: Date | string
 }
 
@@ -476,6 +524,8 @@ export type InterviewMessageScalarWhereInput = {
   role?: Prisma.StringFilter<"InterviewMessage"> | string
   content?: Prisma.StringFilter<"InterviewMessage"> | string
   score?: Prisma.IntNullableFilter<"InterviewMessage"> | number | null
+  audioUrl?: Prisma.StringNullableFilter<"InterviewMessage"> | string | null
+  transcript?: Prisma.StringNullableFilter<"InterviewMessage"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InterviewMessage"> | Date | string
 }
 
@@ -484,6 +534,8 @@ export type InterviewMessageCreateManySessionInput = {
   role: string
   content: string
   score?: number | null
+  audioUrl?: string | null
+  transcript?: string | null
   createdAt?: Date | string
 }
 
@@ -492,6 +544,8 @@ export type InterviewMessageUpdateWithoutSessionInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  audioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -500,6 +554,8 @@ export type InterviewMessageUncheckedUpdateWithoutSessionInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  audioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -508,6 +564,8 @@ export type InterviewMessageUncheckedUpdateManyWithoutSessionInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  audioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -519,6 +577,8 @@ export type InterviewMessageSelect<ExtArgs extends runtime.Types.Extensions.Inte
   role?: boolean
   content?: boolean
   score?: boolean
+  audioUrl?: boolean
+  transcript?: boolean
   createdAt?: boolean
   session?: boolean | Prisma.InterviewSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["interviewMessage"]>
@@ -529,6 +589,8 @@ export type InterviewMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   role?: boolean
   content?: boolean
   score?: boolean
+  audioUrl?: boolean
+  transcript?: boolean
   createdAt?: boolean
   session?: boolean | Prisma.InterviewSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["interviewMessage"]>
@@ -539,6 +601,8 @@ export type InterviewMessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   role?: boolean
   content?: boolean
   score?: boolean
+  audioUrl?: boolean
+  transcript?: boolean
   createdAt?: boolean
   session?: boolean | Prisma.InterviewSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["interviewMessage"]>
@@ -549,10 +613,12 @@ export type InterviewMessageSelectScalar = {
   role?: boolean
   content?: boolean
   score?: boolean
+  audioUrl?: boolean
+  transcript?: boolean
   createdAt?: boolean
 }
 
-export type InterviewMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sessionId" | "role" | "content" | "score" | "createdAt", ExtArgs["result"]["interviewMessage"]>
+export type InterviewMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sessionId" | "role" | "content" | "score" | "audioUrl" | "transcript" | "createdAt", ExtArgs["result"]["interviewMessage"]>
 export type InterviewMessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   session?: boolean | Prisma.InterviewSessionDefaultArgs<ExtArgs>
 }
@@ -574,6 +640,8 @@ export type $InterviewMessagePayload<ExtArgs extends runtime.Types.Extensions.In
     role: string
     content: string
     score: number | null
+    audioUrl: string | null
+    transcript: string | null
     createdAt: Date
   }, ExtArgs["result"]["interviewMessage"]>
   composites: {}
@@ -1004,6 +1072,8 @@ export interface InterviewMessageFieldRefs {
   readonly role: Prisma.FieldRef<"InterviewMessage", 'String'>
   readonly content: Prisma.FieldRef<"InterviewMessage", 'String'>
   readonly score: Prisma.FieldRef<"InterviewMessage", 'Int'>
+  readonly audioUrl: Prisma.FieldRef<"InterviewMessage", 'String'>
+  readonly transcript: Prisma.FieldRef<"InterviewMessage", 'String'>
   readonly createdAt: Prisma.FieldRef<"InterviewMessage", 'DateTime'>
 }
     

@@ -15,6 +15,7 @@ export const CREDIT_COSTS = {
   AI_CV_TRANSLATE: 15,
 
   AI_INTERVIEW: 3,
+  AI_INTERVIEW_AUDIO: 5,
 };
 
 export type ActionType = keyof typeof CREDIT_COSTS;
