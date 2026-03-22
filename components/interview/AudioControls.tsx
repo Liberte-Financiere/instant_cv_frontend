@@ -183,13 +183,51 @@ export function AudioControls({
       processor.connect(audioContext.current.destination);
 
       processor.onaudioprocess = (e) => {
-        if (!isBackendReady) return; // Wait for backend WebSocket to be established
-        
+        if (!isBackendReady) return; 
+
         const inputData = e.inputBuffer.getChannelData(0); // Float32Array at browser's native rate
-        // IMPORTANT: In a production app, robust downsampling to 16000Hz via AudioWorklet is needed.
-        // For simplicity here, we assume standard browser behavior and send the chunks. 
-        // Gemini handles raw PCM but exact rate matching improves quality.
-        sendAudioChunk(inputData);
+        
+        // 1. Calculate Volume (RMS) for Voice Activity Detection
+        let sum = 0;
+        for (let i = 0; i < inputData.length; i++) {
+          sum += inputData[i] * inputData[i];
+        }
+        const rms = Math.sqrt(sum / inputData.length);
+        const SILENCE_THRESHOLD = 0.01; // Tune this to user mic sensitivity
+
+        if (rms >= SILENCE_THRESHOLD) {
+          // User is speaking
+          (processor as any).lastVoiceTime = Date.now();
+          (processor as any).isSilent = false;
+        } else if (Date.now() - ((processor as any).lastVoiceTime || 0) > 1500) {
+          // User has been silent for 1.5 seconds
+          (processor as any).isSilent = true;
+        }
+
+        // 2. Buffer Audio Chunks to reduce HTTP POST spam frequency
+        if (!(processor as any).chunkBuffer) {
+          (processor as any).chunkBuffer = [];
+        }
+
+        // Only add to buffer if speaking, OR if we are capturing the 1.5s trailing silence
+        if (!(processor as any).isSilent) {
+          (processor as any).chunkBuffer.push(new Float32Array(inputData));
+        }
+
+        // Send every ~250ms (3 chunks of 4096 at ~48kHz native)
+        if ((processor as any).chunkBuffer.length >= 3) {
+           const buffer = (processor as any).chunkBuffer;
+           const totalLength = buffer.reduce((acc: number, val: Float32Array) => acc + val.length, 0);
+           const merged = new Float32Array(totalLength);
+           let offset = 0;
+           for (const chunk of buffer) {
+              merged.set(chunk, offset);
+              offset += chunk.length;
+           }
+           
+           sendAudioChunk(merged);
+           (processor as any).chunkBuffer = []; // Reset buffer
+        }
       };
 
       setIsListening(true);
