@@ -102,6 +102,7 @@ export interface CVSettings {
   sidebarColor?: string; // hex color
   fontFamily?: 'sans' | 'serif' | 'mono';
   hideContact?: boolean; // Cache les infos de contact sur le Web
+  language?: 'fr' | 'en' | 'zh'; // Langue du CV pour les en-têtes
 }
 
 // TemplateId is derived from TEMPLATES in lib/templates.ts (single source of truth)

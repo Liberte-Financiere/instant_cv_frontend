@@ -83,6 +83,7 @@ interface CVState {
   deleteCV: (id: string) => Promise<void>;
   
   // Personal Info
+  updateCVTitle: (newTitle: string) => void;
   updatePersonalInfo: (info: Partial<PersonalInfo>) => void;
   
   // Experiences
@@ -496,6 +497,10 @@ export const useCVStore = create<CVState>()(
       },
 
       // Personal Info
+      updateCVTitle: (newTitle) => set((state) => updateCV(state, (cv) => ({
+        ...cv,
+        title: newTitle,
+      }))),
       updatePersonalInfo: (info) => set((state) => updateCV(state, (cv) => ({
         ...cv,
         personalInfo: { ...cv.personalInfo, ...info },
