@@ -95,6 +95,7 @@ model User {
   // Feedback System
   feedbacks           PlatformFeedback[]
   paymentTransactions PaymentTransaction[]
+  interviewSessions   InterviewSession[]
 }
 
 model PlatformFeedback {
@@ -178,4 +179,34 @@ model AdminTask {
   assignee    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model InterviewSession {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobTitle      String
+  jobContext    String?  @db.Text
+  cvSummary     String   @db.Text
+  status        String   @default("active")
+  totalScore    Int?
+  summary       String?  @db.Text
+  questionCount Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  messages      InterviewMessage[]
+
+  @@index([userId])
+}
+
+model InterviewMessage {
+  id        String   @id @default(cuid())
+  sessionId String
+  session   InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String
+  content   String   @db.Text
+  score     Int?
+  createdAt DateTime @default(now())
+
+  @@index([sessionId])
 }
