@@ -10,7 +10,12 @@ interface ActiveConnection {
   userId: string;
   lastActive: number;
 }
-const connections = new Map<string, ActiveConnection>();
+const globalForGemini = globalThis as unknown as {
+  geminiConnections: Map<string, ActiveConnection> | undefined;
+};
+
+export const connections = globalForGemini.geminiConnections ?? new Map<string, ActiveConnection>();
+if (process.env.NODE_ENV !== 'production') globalForGemini.geminiConnections = connections;
 
 // Cleanup inactive connections periodically
 setInterval(() => {
@@ -40,8 +45,10 @@ export function createGeminiLiveConnection(
   const url = `wss://${host}/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${apiKey}`;
 
   const ws = new WebSocket(url);
+  console.log(`[Gemini WS] Initializing connection for connectionId: ${connectionId}`);
 
   ws.on('open', () => {
+    console.log(`[Gemini WS] WebSocket OPEN. Sending Setup to Google...`);
     // 1. Send Setup Message
     const setupMsg = {
       setup: {
@@ -65,15 +72,21 @@ export function createGeminiLiveConnection(
   });
 
   ws.on('message', (data: WebSocket.Data) => {
-    connections.get(connectionId)!.lastActive = Date.now();
+    const connInfo = connections.get(connectionId);
+    if (connInfo) connInfo.lastActive = Date.now();
+    
     try {
       if (data instanceof Buffer) {
         onData(JSON.parse(data.toString()));
       } else if (typeof data === 'string') {
-        onData(JSON.parse(data));
+        const parsed = JSON.parse(data);
+        if (parsed.setupComplete) {
+            console.log(`[Gemini WS] SETUP COMPLETE for ${connectionId}`);
+        }
+        onData(parsed);
       }
     } catch (e) {
-      console.error('Failed to parse Gemini WS message', e);
+      console.error('[Gemini WS] Failed to parse message', e);
     }
   });
 
@@ -95,7 +108,12 @@ export function createGeminiLiveConnection(
 
 export function sendAudioToGemini(connectionId: string, pcmBase64: string) {
   const conn = connections.get(connectionId);
-  if (!conn || conn.ws.readyState !== WebSocket.OPEN) {
+  if (!conn) {
+    console.error(`[Gemini WS API] Connection NOT FOUND in global Map for id: ${connectionId}. Map size: ${connections.size}`);
+    throw new Error('Connection active not found');
+  }
+  if (conn.ws.readyState !== WebSocket.OPEN) {
+    console.error(`[Gemini WS API] WebSocket closed or connecting. State: ${conn.ws.readyState}`);
     throw new Error('Connection active not found');
   }
 
