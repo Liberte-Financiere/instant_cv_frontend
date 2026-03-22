@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Sparkles, Wand2, Loader2, Check, ArrowRight, Languages, AlignLeft } from 'lucide-react';
+import { Sparkles, Wand2, Loader2, Check, ArrowRight, AlignLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface MagicButtonProps {
@@ -13,7 +13,7 @@ interface MagicButtonProps {
   compact?: boolean;
 }
 
-type AIOption = 'fix' | 'improve' | 'expand' | 'translate';
+type AIOption = 'fix' | 'improve' | 'expand';
 
 export function MagicButton({ section, currentText, onApply, className = '', compact = false }: MagicButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -220,13 +220,7 @@ export function MagicButton({ section, currentText, onApply, className = '', com
                     onClick={() => handleAIAction('expand')}
                     disabled={!currentText}
                   />
-                  <OptionButton 
-                    icon={<Languages className="w-4 h-4 text-purple-500" />}
-                    label="Traduire en Anglais"
-                    desc="Traduction professionnelle"
-                    onClick={() => handleAIAction('translate')}
-                    disabled={!currentText}
-                  />
+
                   
                   {error && (
                      <div className="mt-2 p-2 bg-red-50 text-red-600 text-xs rounded border border-red-100 text-center">

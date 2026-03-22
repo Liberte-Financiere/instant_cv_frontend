@@ -7,13 +7,14 @@ import {
   CVProjects, CVReferences, CVDivers, CVFooter, CVQualities 
 } from '@/components/cv-sections';
 
-import { SECTION_TITLES } from '@/constants/sections';
+import { getSectionTitle } from '@/constants/sections';
 
 interface TemplateProps {
   cv: CV;
 }
 
 export function TechStack({ cv }: TemplateProps) {
+  const lang = cv.settings?.language || 'fr';
   const personalInfo = cv.personalInfo || {};
   const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const hobbies = cv.hobbies || [];
@@ -58,17 +59,17 @@ export function TechStack({ cv }: TemplateProps) {
           </div>
 
           <CVExperience experiences={experiences} variant={variant} title="/* Experience */" />
-          <CVEducation education={education} variant={variant} title={`/* ${SECTION_TITLES.education} */`} />
+          <CVEducation education={education} variant={variant} title={`/* ${getSectionTitle('education', undefined, lang)} */`} />
           <CVProjects projects={projects} variant={variant} title="/* Projects */" />
-          <CVCertifications certifications={certifications} variant={variant} title={`/* ${SECTION_TITLES.certifications} */`} />
-          <CVQualities qualities={qualities} variant={variant} title={`/* ${SECTION_TITLES.qualities} */`} />
+          <CVCertifications certifications={certifications} variant={variant} title={`/* ${getSectionTitle('certifications', undefined, lang)} */`} />
+          <CVQualities qualities={qualities} variant={variant} title={`/* ${getSectionTitle('qualities', undefined, lang)} */`} />
           <CVHobbies hobbies={hobbies} variant={variant} title="/* Interests */" />
           <CVReferences references={references} variant={variant} title="/* References */" showContact={false} />
           <CVDivers divers={divers} variant={variant} title="/* Notes */" />
         </div>
       </div>
 
-      <CVFooter footer={footer} variant={variant} />
+      <CVFooter footer={footer} variant={variant}  lang={lang}/>
     </div>
   );
 }

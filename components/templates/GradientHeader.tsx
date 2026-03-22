@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import { CV } from '@/types/cv';
-import { SECTION_TITLES } from '@/constants/sections';
+import { getSectionTitle , getPresentLabel } from '@/constants/sections';
 import { CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter } from '@/components/cv-sections';
 
 interface TemplateProps { cv: CV; }
 
 export function GradientHeader({ cv }: TemplateProps) {
+  const lang = cv.settings?.language || 'fr';
   const p = cv.personalInfo || {} as CV['personalInfo'];
   const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const hobbies = cv.hobbies || [];
@@ -53,7 +54,7 @@ export function GradientHeader({ cv }: TemplateProps) {
         {/* Experience */}
         {experiences.length > 0 && (
           <section>
-            <h2 className="text-sm font-bold uppercase tracking-widest mb-4 pb-1 border-b-2" style={{ color: accent, borderColor: accent }}>{SECTION_TITLES.experience}</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest mb-4 pb-1 border-b-2" style={{ color: accent, borderColor: accent }}>{getSectionTitle('experience', undefined, lang)}</h2>
             <div className="space-y-4">
               {experiences.map((exp) => (
                 <div key={exp.id} className="flex gap-4">
@@ -61,7 +62,7 @@ export function GradientHeader({ cv }: TemplateProps) {
                   <div className="flex-1">
                     <div className="flex justify-between items-baseline">
                       <h3 className="font-bold text-sm">{exp.position} — {exp.company}</h3>
-                      <span className="text-xs text-slate-400 shrink-0">{exp.startDate} — {exp.current ? "Présent" : exp.endDate}</span>
+                      <span className="text-xs text-slate-400 shrink-0">{exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}</span>
                     </div>
                     {exp.description && <p className="text-xs text-slate-600 mt-1 ">{exp.description}</p>}
                   </div>
@@ -74,7 +75,7 @@ export function GradientHeader({ cv }: TemplateProps) {
         {/* Education */}
         {education.length > 0 && (
           <section>
-            <h2 className="text-sm font-bold uppercase tracking-widest mb-3 pb-1 border-b-2" style={{ color: accent, borderColor: accent }}>{SECTION_TITLES.education}</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest mb-3 pb-1 border-b-2" style={{ color: accent, borderColor: accent }}>{getSectionTitle('education', undefined, lang)}</h2>
             <div className="grid grid-cols-2 gap-4">
               {education.map((edu) => (
                 <div key={edu.id} className="p-3 rounded-lg border border-slate-100 bg-slate-50">
@@ -90,7 +91,7 @@ export function GradientHeader({ cv }: TemplateProps) {
         {/* Skills as pills */}
         {skills.length > 0 && (
           <section>
-            <h2 className="text-sm font-bold uppercase tracking-widest mb-3 pb-1 border-b-2" style={{ color: accent, borderColor: accent }}>{SECTION_TITLES.skills}</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest mb-3 pb-1 border-b-2" style={{ color: accent, borderColor: accent }}>{getSectionTitle('skills', undefined, lang)}</h2>
             <div className="flex flex-wrap gap-2">
               {skills.map((s) => (
                 <span key={s.id} className="px-3 py-1.5 text-xs rounded-full font-medium text-white" style={{ backgroundColor: accent }}>{s.name}</span>
@@ -103,29 +104,29 @@ export function GradientHeader({ cv }: TemplateProps) {
         <div className="grid grid-cols-3 gap-6">
           {qualities.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: accent }}>{SECTION_TITLES.qualities}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('qualities', undefined, lang)}</h2>
               {qualities.map((q) => <p key={q.id} className="text-xs text-slate-600">• {q.name}</p>)}
             </section>
           )}
           {languages.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: accent }}>{SECTION_TITLES.languages}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('languages', undefined, lang)}</h2>
               {languages.map((l) => <p key={l.id} className="text-xs text-slate-600">• {l.name} — {l.level}</p>)}
             </section>
           )}
           {hobbies.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: accent }}>{SECTION_TITLES.hobbies}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('hobbies', undefined, lang)}</h2>
               {hobbies.map((h) => <p key={h.id} className="text-xs text-slate-600">• {h.name}</p>)}
             </section>
           )}
         </div>
 
-        <CVCertifications certifications={certifications} variant="creative" accentColor={accent} title={SECTION_TITLES.certifications} />
-        <CVProjects projects={projects} variant="creative" accentColor={accent} />
-        <CVReferences references={references} variant="creative" accentColor={accent} />
-        <CVDivers divers={divers} variant="creative" accentColor={accent} />
-        <CVFooter footer={footer} variant="creative" />
+        <CVCertifications certifications={certifications} variant="creative" accentColor={accent} title={getSectionTitle('certifications', undefined, lang)} />
+        <CVProjects projects={projects} variant="creative" accentColor={accent}  title={getSectionTitle('projects', undefined, lang)} />
+        <CVReferences references={references} variant="creative" accentColor={accent}  title={getSectionTitle('references', undefined, lang)} />
+        <CVDivers divers={divers} variant="creative" accentColor={accent}  title={getSectionTitle('divers', undefined, lang)} />
+        <CVFooter footer={footer} variant="creative"  lang={lang}/>
       </div>
     </div>
   );

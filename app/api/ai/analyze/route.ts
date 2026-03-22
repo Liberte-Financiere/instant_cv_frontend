@@ -1,10 +1,11 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
+import { APP_CONFIG } from '@/lib/config';
 
 // Initialize Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 const model = genAI.getGenerativeModel({ 
-  model: 'gemini-2.5-flash',
+  model: APP_CONFIG.ai.models.fast,
   generationConfig: { responseMimeType: "application/json" }
 });
 
@@ -12,20 +13,13 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 import { auth } from '@/auth';
-import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
+
 
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  // Rate limiting: 5 requests per minute
-  const rateCheck = checkRateLimit(`${session.user.id}:ai-analyze`, RATE_LIMITS.AI_ANALYZE);
-  if (!rateCheck.allowed) {
-    return NextResponse.json(
-      { error: 'Trop de requêtes. Veuillez réessayer dans quelques secondes.' },
-      { status: 429, headers: { 'Retry-After': String(Math.ceil(rateCheck.resetIn / 1000)) } }
-    );
-  }
+
 
   try {
     // Check and consume 2 credits
