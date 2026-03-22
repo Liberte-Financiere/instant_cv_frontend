@@ -35,9 +35,9 @@ export function createGeminiLiveConnection(
   const apiKey = process.env.GOOGLE_API_KEY;
   if (!apiKey) throw new Error('GOOGLE_API_KEY is missing');
 
-  // gemini-live-2.5-flash-preview-native-audio requires the v1alpha API
+  // Live API requires v1beta and the correct model string prefix
   const host = 'generativelanguage.googleapis.com';
-  const url = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${apiKey}`;
+  const url = `wss://${host}/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${apiKey}`;
 
   const ws = new WebSocket(url);
 
@@ -45,7 +45,7 @@ export function createGeminiLiveConnection(
     // 1. Send Setup Message
     const setupMsg = {
       setup: {
-        model: 'models/gemini-2.5-flash', // Using standard flash for text+audio
+        model: 'models/gemini-2.5-flash-native-audio-preview-12-2025',
         generationConfig: {
           responseModalities: ["AUDIO"],
           speechConfig: {
@@ -77,7 +77,8 @@ export function createGeminiLiveConnection(
     }
   });
 
-  ws.on('close', () => {
+  ws.on('close', (code, reason) => {
+    console.warn(`[Gemini WS] Closed with code: ${code}, reason: ${reason.toString()}`);
     connections.delete(connectionId);
     onClose();
   });
