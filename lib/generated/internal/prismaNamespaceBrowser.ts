@@ -261,6 +261,8 @@ export const InterviewMessageScalarFieldEnum = {
   role: 'role',
   content: 'content',
   score: 'score',
+  audioUrl: 'audioUrl',
+  transcript: 'transcript',
   createdAt: 'createdAt'
 } as const
 

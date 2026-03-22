@@ -1,30 +1,29 @@
-[2026-03-22] — feat: simulateur d'entretien IA (Phase 1 - Texte)
+[2026-03-22] — feat: Interview Simulator Audio mode (Phase 2)
 
 What changed:
-- Nouveau simulateur d'entretien interactif avec recruteur IA
-- Questions personnalisées selon le CV et le poste visé
-- Feedback en temps réel avec score par réponse (0-10)
-- Bilan final avec score global, forces, faiblesses et recommandations
+- Built full bidirectional audio support with Gemini Live API using Server-Sent Events (SSE) and HTTP POST chunks to bypass Next.js WebSocket limitations.
+- Created `lib/interview-audio.ts` to manage server-side WebSocket connections securely without leaking API keys to the frontend.
+- Added a standalone `AudioControls` React component to manage microphone streaming, AudioContext playback, and UI state (listening, thinking, speaking).
+- Added a UI toggle in the Chat interface to seamlessly switch between Text mode and Live Audio mode at any time.
+- Updated Prisma schema to store `transcript` and `audioUrl`.
+- Adjusted credit billing: `AI_INTERVIEW_AUDIO` costs 5 credits per session.
 
 Why:
-- Fonctionnalité à haute valeur ajoutée pour la préparation d'entretien
-- Architecture préparée pour le mode audio live (Phase 2)
+- Allows candidates to practice oral interviews interactively in a natural, conversational way via Gemini Live API's low-latency streaming.
+- Next.js serverless architecture lacks robust WebSocket proxying, so splitting the streams (SSE downstream, POST chunks upstream) resolves deployment issues reliably.
 
 Files affected:
-- prisma/schema.prisma — InterviewSession + InterviewMessage models
-- lib/credits.ts — AI_INTERVIEW: 3 crédits par session
-- lib/interview.ts — Prompts, CV summary builder, AI helper
-- app/api/ai/interview/route.ts — POST démarrer session
-- app/api/ai/interview/[sessionId]/route.ts — POST répondre + GET charger
-- app/api/ai/interview/history/route.ts — GET historique sessions
-- app/dashboard/ai/interview/page.tsx — Page de configuration
-- app/interview/[sessionId]/page.tsx — Page chat interactive
+- lib/interview-audio.ts
+- components/interview/AudioControls.tsx
+- app/api/ai/interview/ws/[sessionId]/start/route.ts
+- app/api/ai/interview/ws/[sessionId]/chunk/route.ts
+- app/interview/[sessionId]/page.tsx
+- prisma/schema.prisma
+- lib/credits.ts
 
 Breaking changes:
-- None (nouveau feature sur nouvelle branche)
+- Required `@types/ws` and `ws` package. 
 
 Notes for review:
-- DB schema pushé sur Supabase (tables InterviewSession, InterviewMessage)
-- Facturation par session (3 crédits au démarrage, pas par question)
-- 6 questions par session, types variés (technique, comportemental, etc.)
-- Branche: feature/interview-simulator
+- DB pushed.
+- Text mode remains fully functional and intact as requested.

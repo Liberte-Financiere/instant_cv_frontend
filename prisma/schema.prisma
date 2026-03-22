@@ -200,13 +200,15 @@ model InterviewSession {
 }
 
 model InterviewMessage {
-  id        String   @id @default(cuid())
-  sessionId String
-  session   InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  role      String
-  content   String   @db.Text
-  score     Int?
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  sessionId  String
+  session    InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role       String
+  content    String   @db.Text
+  score      Int?
+  audioUrl   String?
+  transcript String?  @db.Text
+  createdAt  DateTime @default(now())
 
   @@index([sessionId])
 }
