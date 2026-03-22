@@ -11,6 +11,7 @@ import { FormSection } from '@/components/editor/FormSection';
 import { CVPreview } from '@/components/editor/CVPreview';
 import { ColorPicker } from '@/components/editor/ColorPicker';
 import { SectionOrderEditor } from '@/components/editor/SectionOrderEditor';
+import { TranslateCVButton } from '@/components/editor/TranslateCVButton';
 import { MobilePreviewModal } from '@/components/editor/MobilePreviewModal';
 import { EDITOR_STEPS } from '@/types/cv';
 
@@ -202,6 +203,7 @@ export default function EditorPage() {
 
            <div className="h-6 w-px bg-slate-200 mx-1 lg:hidden" />
 
+           <TranslateCVButton />
            <ColorPicker />
            <SectionOrderEditor />
            

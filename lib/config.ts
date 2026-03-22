@@ -117,6 +117,9 @@ export const APP_CONFIG = {
       fast: 'gemini-2.5-flash',
       /** Modèle très léger et rapide pour les petites tâches (Correction, Génération de petites listes) */
       lite: 'gemini-2.5-flash',
+
+      /** Modèle pour la traduction */
+      pro: 'gemini-2.5-pro',
     }
   },
 
