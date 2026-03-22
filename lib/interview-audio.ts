@@ -136,7 +136,9 @@ export function sendClientContentMessage(connectionId: string, text: string) {
 export function endGeminiConnection(connectionId: string) {
   const conn = connections.get(connectionId);
   if (conn) {
-    conn.ws.close();
+    try {
+      conn.ws.close();
+    } catch(e) {}
     connections.delete(connectionId);
   }
 }
