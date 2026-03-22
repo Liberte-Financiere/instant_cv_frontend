@@ -28,9 +28,6 @@ export async function POST(req: Request) {
     if (action === 'correct') {
         creditAction = 'AI_CORRECT';
         label = 'Correction orthographique (IA)';
-    } else if (action === 'translate') {
-        creditAction = 'AI_TRANSLATE';
-        label = 'Traduction de texte (IA)';
     }
 
     try {
@@ -54,13 +51,7 @@ export async function POST(req: Request) {
         Texte : "${text}"
         Retourne UNIQUEMENT le texte corrigé.`;
         break;
-      
-      case 'translate':
-        const targetLang = option === 'en' ? 'Anglais' : 'Français';
-        prompt = `Traduis le texte suivant en ${targetLang}. Garde un ton professionnel adapté à une lettre de motivation.
-        Texte : "${text}"
-        Retourne UNIQUEMENT la traduction.`;
-        break;
+
         
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
