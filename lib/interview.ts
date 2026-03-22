@@ -11,7 +11,7 @@ function getModel() {
     generationConfig: {
       responseMimeType: 'application/json',
       temperature: 0.7,
-      maxOutputTokens: 2048,
+      maxOutputTokens: 8192, // Increased from 2048 to avoid cutoff on long answers
     },
   });
 }
@@ -187,6 +187,26 @@ export async function generateInterviewResponse(prompt: string) {
   const response = await result.response;
   const text = response.text().trim();
 
-  const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
-  return JSON.parse(cleanJson);
+  // Remove markdown wrappers if any
+  let cleanJson = text;
+  const match = cleanJson.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+  if (match) {
+    cleanJson = match[1].trim();
+  } else {
+    cleanJson = cleanJson.replace(/^```json/i, '').replace(/```$/, '').trim();
+  }
+
+  // Sanitize potentially unescaped control characters (newlines) inside strings
+  // This is a common issue when the AI echoes back long text
+  cleanJson = cleanJson.replace(/[\u0000-\u0019]+/g, " ");
+
+  try {
+    return JSON.parse(cleanJson);
+  } catch (error) {
+    console.error("[INTERVIEW_JSON_PARSE_ERROR] Failed to parse AI response:");
+    console.error("------------- RAW OUTPUT -------------");
+    console.error(text.slice(-500)); // Log the end of the text to see if it was cut off
+    console.error("--------------------------------------");
+    throw new Error("L'IA a généré une réponse mal formatée. Veuillez renvoyer votre réponse (ou la raccourcir légèrement).");
+  }
 }
