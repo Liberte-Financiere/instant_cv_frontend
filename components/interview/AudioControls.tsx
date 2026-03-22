@@ -201,32 +201,39 @@ export function AudioControls({
            (processor as any).isSilent = false;
         }
 
+        const wasSilent = (processor as any).isSilent;
+
         if (rms >= SILENCE_THRESHOLD) {
           // User is speaking
           (processor as any).lastVoiceTime = Date.now();
           (processor as any).isSilent = false;
         } else if (Date.now() - (processor as any).lastVoiceTime > 1500) {
           // User has been silent for 1.5 seconds
-          if (!(processor as any).isSilent) {
-             (processor as any).isSilent = true;
-             console.log('[AudioControls] Silence detected > 1.5s. Ending turn.');
-             // Tell Gemini explicitly that our turn is complete!
-             fetch(`/api/ai/interview/ws/${sessionId}/end-turn`, { method: 'POST' }).catch(err => console.error(err));
-          }
+          (processor as any).isSilent = true;
         }
 
-        // 2. Buffer Audio Chunks to reduce HTTP POST spam frequency
+        // 2. Adaptive Buffering to reduce HTTP POST spam frequency
         if (!(processor as any).chunkBuffer) {
           (processor as any).chunkBuffer = [];
         }
 
-        // Only add to buffer if speaking, OR if we are capturing the 1.5s trailing silence
-        if (!(processor as any).isSilent) {
-          (processor as any).chunkBuffer.push(new Float32Array(inputData));
-        }
+        // ALWAYS buffer the underlying audio (don't drop it).
+        // Gemini's server-side VAD needs continuous audio (even silence) to measure time.
+        // If we drop packets, time freezes for Gemini and it never responds!
+        (processor as any).chunkBuffer.push(new Float32Array(inputData));
 
-        // Send every ~250ms (3 chunks of 4096 at ~48kHz native)
-        if ((processor as any).chunkBuffer.length >= 3) {
+        const bufferLength = (processor as any).chunkBuffer.length;
+        const isSilentNow = (processor as any).isSilent;
+        
+        // If we just transitioned from silent -> speaking, flush immediately to minimize latency!
+        const forceFlush = wasSilent && !isSilentNow && bufferLength > 0;
+
+        // Flush Thresholds:
+        // - Speaking: send every ~170ms (2 chunks of 4096 at ~48kHz) to keep low latency.
+        // - Silent: send every ~1000ms (12 chunks) to drastically reduce HTTP POST spam.
+        const flushThreshold = isSilentNow ? 12 : 2;
+
+        if (bufferLength >= flushThreshold || forceFlush) {
            const buffer = (processor as any).chunkBuffer;
            const totalLength = buffer.reduce((acc: number, val: Float32Array) => acc + val.length, 0);
            const merged = new Float32Array(totalLength);
