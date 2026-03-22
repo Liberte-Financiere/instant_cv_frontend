@@ -1,21 +1,30 @@
-[2026-03-22] — fix: AI analyze/match recevait des CV tronqués en mode "select"
+[2026-03-22] — feat: simulateur d'entretien IA (Phase 1 - Texte)
 
 What changed:
-- Corrigé le bug critique où l'AI recevait un CV sans experiences, education, skills, etc.
-- Les pages analyze et match fetchen maintenant le CV complet via CVService.getById()
-- Avant: cvList contenait uniquement des summaries (sans sections importantes)
+- Nouveau simulateur d'entretien interactif avec recruteur IA
+- Questions personnalisées selon le CV et le poste visé
+- Feedback en temps réel avec score par réponse (0-10)
+- Bilan final avec score global, forces, faiblesses et recommandations
 
 Why:
-- fetchUserCVs() appelle /api/cv?summary=true qui strip les données lourdes
-- Les pages envoyaient directement ces summaries à l'IA, qui analysait un CV quasi vide
+- Fonctionnalité à haute valeur ajoutée pour la préparation d'entretien
+- Architecture préparée pour le mode audio live (Phase 2)
 
 Files affected:
-- app/dashboard/ai/analyze/page.tsx — fetch full CV avant envoi à l'IA
-- app/dashboard/ai/match/page.tsx — fetch full CV avant envoi à l'IA
+- prisma/schema.prisma — InterviewSession + InterviewMessage models
+- lib/credits.ts — AI_INTERVIEW: 3 crédits par session
+- lib/interview.ts — Prompts, CV summary builder, AI helper
+- app/api/ai/interview/route.ts — POST démarrer session
+- app/api/ai/interview/[sessionId]/route.ts — POST répondre + GET charger
+- app/api/ai/interview/history/route.ts — GET historique sessions
+- app/dashboard/ai/interview/page.tsx — Page de configuration
+- app/interview/[sessionId]/page.tsx — Page chat interactive
 
 Breaking changes:
-- None
+- None (nouveau feature sur nouvelle branche)
 
 Notes for review:
-- Le dashboard page.tsx n'est pas affecté (utilise upload PDF uniquement)
-- L'appel CVService.getById() ajoute une requête réseau avant l'analyse, mais la latence est négligeable vs le temps de réponse IA
+- DB schema pushé sur Supabase (tables InterviewSession, InterviewMessage)
+- Facturation par session (3 crédits au démarrage, pas par question)
+- 6 questions par session, types variés (technique, comportemental, etc.)
+- Branche: feature/interview-simulator
