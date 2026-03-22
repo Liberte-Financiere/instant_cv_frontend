@@ -1,28 +1,21 @@
-[2026-03-22] — Admin Task Board (Kanban interne)
+[2026-03-22] — fix: AI analyze/match recevait des CV tronqués en mode "select"
 
 What changed:
-- Ajout du modèle Prisma AdminTask (status, priority, assignee)
-- API CRUD admin-only: GET/POST /api/admin/tasks, PUT/DELETE /api/admin/tasks/[id]
-- Page Kanban /admin/tasks avec 4 colonnes (A faire, En cours, En test, Terminé)
-- Drag & drop HTML5 natif entre colonnes avec mise à jour optimiste
-- Modal de création/édition avec titre, description, priorité, assigné, statut
-- Layout admin avec guard serveur (redirect si non-admin)
-- Badge de priorité coloré (basse/moyenne/haute)
+- Corrigé le bug critique où l'AI recevait un CV sans experiences, education, skills, etc.
+- Les pages analyze et match fetchen maintenant le CV complet via CVService.getById()
+- Avant: cvList contenait uniquement des summaries (sans sections importantes)
 
 Why:
-- Permettre à l'équipe admin de gérer les tâches projet en interne sans dépendre de Trello
+- fetchUserCVs() appelle /api/cv?summary=true qui strip les données lourdes
+- Les pages envoyaient directement ces summaries à l'IA, qui analysait un CV quasi vide
 
 Files affected:
-- prisma/schema.prisma — Nouveau modèle AdminTask
-- app/api/admin/tasks/route.ts — GET (liste) + POST (création)
-- app/api/admin/tasks/[id]/route.ts — PUT (update) + DELETE
-- app/admin/layout.tsx — Guard serveur admin-only
-- app/admin/tasks/page.tsx — Page Kanban complète
+- app/dashboard/ai/analyze/page.tsx — fetch full CV avant envoi à l'IA
+- app/dashboard/ai/match/page.tsx — fetch full CV avant envoi à l'IA
 
 Breaking changes:
-- None. Nouvelle feature isolée.
+- None
 
 Notes for review:
-- La migration a été faite via `prisma db push` (pas de fichier migration)
-- Le drag & drop est natif HTML5, pas de dépendance externe
-- Les emails admin sont en dur dans le guard (pattern existant)
+- Le dashboard page.tsx n'est pas affecté (utilise upload PDF uniquement)
+- L'appel CVService.getById() ajoute une requête réseau avant l'analyse, mais la latence est négligeable vs le temps de réponse IA

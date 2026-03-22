@@ -84,9 +84,11 @@ export default function AIMatchPage() {
 
       // CV Source
       if (cvSourceMode === 'select') {
-        const cv = cvList.find(c => c.id === selectedCVId);
-        if (!cv) throw new Error('CV non trouvé');
-        formData.append('cvData', JSON.stringify(cv));
+        // Fetch full CV data (cvList only contains summaries without experiences, skills, etc.)
+        const { CVService } = await import('@/services/cvService');
+        const fullCV = await CVService.getById(selectedCVId);
+        if (!fullCV) throw new Error('CV non trouvé');
+        formData.append('cvData', JSON.stringify(fullCV));
       } else if (cvFile) {
         formData.append('cvFile', cvFile);
       }
