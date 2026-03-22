@@ -195,13 +195,24 @@ export function AudioControls({
         const rms = Math.sqrt(sum / inputData.length);
         const SILENCE_THRESHOLD = 0.01; // Tune this to user mic sensitivity
 
+        // Initialize state if not present
+        if ((processor as any).lastVoiceTime === undefined) {
+           (processor as any).lastVoiceTime = Date.now();
+           (processor as any).isSilent = false;
+        }
+
         if (rms >= SILENCE_THRESHOLD) {
           // User is speaking
           (processor as any).lastVoiceTime = Date.now();
           (processor as any).isSilent = false;
-        } else if (Date.now() - ((processor as any).lastVoiceTime || 0) > 1500) {
+        } else if (Date.now() - (processor as any).lastVoiceTime > 1500) {
           // User has been silent for 1.5 seconds
-          (processor as any).isSilent = true;
+          if (!(processor as any).isSilent) {
+             (processor as any).isSilent = true;
+             console.log('[AudioControls] Silence detected > 1.5s. Ending turn.');
+             // Tell Gemini explicitly that our turn is complete!
+             fetch(`/api/ai/interview/ws/${sessionId}/end-turn`, { method: 'POST' }).catch(err => console.error(err));
+          }
         }
 
         // 2. Buffer Audio Chunks to reduce HTTP POST spam frequency

@@ -152,6 +152,19 @@ export function sendClientContentMessage(connectionId: string, text: string) {
   conn.ws.send(JSON.stringify(msg));
 }
 
+export function sendTurnComplete(connectionId: string) {
+  const conn = connections.get(connectionId);
+  if (!conn || conn.ws.readyState !== WebSocket.OPEN) return;
+
+  const msg = {
+    clientContent: {
+      turnComplete: true
+    }
+  };
+  console.log(`[Gemini WS] Sending TURN COMPLETE for ${connectionId}`);
+  conn.ws.send(JSON.stringify(msg));
+}
+
 export function endGeminiConnection(connectionId: string) {
   const conn = connections.get(connectionId);
   if (conn) {
