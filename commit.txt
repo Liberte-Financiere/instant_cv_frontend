@@ -1,22 +1,41 @@
-2026-03-11 — Refonte Éditoriale des Noms de Modèles (Stratégie Identitaire)
+[2026-03-22] — Localisation complète des CV (en-têtes, dates, footer, traduction IA)
 
 What changed:
-- Renommage complet des modèles de CV en utilisant une sémantique identitaire (ex: Tech Expert -> L'Innovateur, Executive -> Le Stratège).
-- Suppression des mentions redondantes "(ATS)" dans les noms des modèles.
-- Réintégration du modèle Corporate Blue sous le nom "L'Institutionnel".
-- Enrichissement des descriptions pour préciser explicitement les secteurs cibles de chaque design (Mines, Industrie, Logistique, Juriste, Droit, Médical, etc.).
-- Francisation totale des noms (plus d'anglicismes comme "Bold Header" ou "Clean Grid").
+- Localisation des en-têtes de sections (FR/EN/ZH) via dictionnaire et getSectionTitle()
+- Localisation des dates via formatDate(date, lang) avec support fr-FR, en-US, zh-CN
+- Localisation du mot "Présent" via getPresentLabel(lang) dans tous les templates
+- Localisation du footer "Fait à X, le Y" (EN: "Made in X, on Y", ZH: "制作于 X, Y")
+- Ajout d'un sélecteur de langue (LanguageSelector) dans la toolbar de l'éditeur
+- Renommage inline du CV dans l'éditeur (titre cliquable)
+- API de traduction IA avec Gemini (crédits, copie du CV, injection de settings.language)
+- Prompt IA durci : noms propres (pays, villes, entreprises, écoles) jamais traduits
+- Suppression du cache .next pour corriger l'erreur TS liée au module LinkedIn supprimé
 
 Why:
-- Améliorer l'expérience utilisateur et l'image de marque (SaaS Premium) en s'adressant à la personnalité et au métier de l'utilisateur.
-- Retirer la confusion autour de l'ATS en affirmant que tous les modèles le sont subtilement.
-- Aider l'utilisateur à se projeter grâce à des descriptions de secteurs très précises.
+- Permettre aux utilisateurs de générer des CV multilingues cohérents (en-têtes + dates + contenu)
+- Éviter les incohérences visuelles (titres en français sur un CV traduit en chinois)
+- Protéger les noms propres lors de la traduction IA
 
 Files affected:
-- lib/templates.ts — Mise à jour des propriétés `name`, `description` et `exampleTitles` de l'array `TEMPLATES`.
+- lib/utils.ts — formatDate() accepte un paramètre lang, avec fallback safe sur dates invalides
+- constants/sections.ts — Dictionnaire multilingue + getSectionTitle() + getPresentLabel()
+- types/cv.ts — Ajout de language? dans CVSettings
+- components/cv-sections/CVExperience.tsx — Prop lang, formatDate(x, lang), getPresentLabel(lang)
+- components/cv-sections/CVEducation.tsx — Prop lang, formatDate(x, lang), getPresentLabel(lang)
+- components/cv-sections/CVFooter.tsx — Prop lang, phrase localisée (Fait/Made/制作于)
+- components/editor/LanguageSelector.tsx — Nouveau composant dropdown FR/EN/ZH
+- components/editor/TranslateCVButton.tsx — Bouton de traduction IA
+- components/templates/*.tsx (22 fichiers) — Propagation de lang={lang} et titres dynamiques
+- app/editor/[id]/page.tsx — Intégration LanguageSelector + titre inline éditable
+- app/api/cv/[id]/translate/route.ts — Prompt IA durci, logs de debug, settings.language injecté
+- store/useCVStore.ts — updateCVTitle + translateCV
+- lib/config.ts — Ajout du modèle gemini-2.5-pro
+- lib/credits.ts — Ajout AI_CV_TRANSLATE: 15
 
 Breaking changes:
-- None (Les `id` techniques des templates n'ont pas été modifiés, il n'y a donc aucun impact sur les CVs existants en base de données).
+- None. Le fallback par défaut est 'fr' partout.
 
 Notes for review:
-- Consulter le tableau de bord des templates pour visualiser le rendu des nouveaux noms et descriptions "premium".
+- Tester la traduction IA vers EN et ZH pour vérifier que les noms propres sont préservés
+- Vérifier le rendu des dates sur les templates avec sidebar (ModernSidebar, TechStack)
+- Le modèle lite peut encore tronquer le JSON sur des CV très longs (>8192 tokens de sortie)

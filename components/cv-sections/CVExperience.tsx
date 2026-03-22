@@ -2,6 +2,7 @@
 
 import { Experience, CVVariant } from '@/types/cv';
 import { formatDate } from '@/lib/utils';
+import { getPresentLabel } from '@/constants/sections';
 import { variantStyles } from './styles';
 
 interface CVExperienceProps {
@@ -9,9 +10,10 @@ interface CVExperienceProps {
   variant: CVVariant;
   title?: string;
   accentColor?: string;
+  lang?: string;
 }
 
-export function CVExperience({ experiences, variant, title = 'Expérience Professionnelle', accentColor }: CVExperienceProps) {
+export function CVExperience({ experiences, variant, title = 'Expérience Professionnelle', accentColor, lang = 'fr' }: CVExperienceProps) {
   const styles = variantStyles[variant];
   
   if (experiences.length === 0) return null;
@@ -32,7 +34,7 @@ export function CVExperience({ experiences, variant, title = 'Expérience Profes
                 {exp.position}
               </h3>
               <span className={`text-sm font-medium tabular-nums shrink-0 ${variant === 'tech' ? 'text-gray-500' : 'text-slate-500'}`}>
-                {exp.startDate && formatDate(exp.startDate)} — {exp.current ? 'Présent' : (exp.endDate && formatDate(exp.endDate))}
+                {exp.startDate && formatDate(exp.startDate, lang)} — {exp.current ? getPresentLabel(lang) : (exp.endDate && formatDate(exp.endDate, lang))}
               </span>
             </div>
             <div 

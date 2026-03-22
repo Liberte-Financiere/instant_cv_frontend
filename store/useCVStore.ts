@@ -83,6 +83,7 @@ interface CVState {
   deleteCV: (id: string) => Promise<void>;
   
   // Personal Info
+  updateCVTitle: (newTitle: string) => void;
   updatePersonalInfo: (info: Partial<PersonalInfo>) => void;
   
   // Experiences
@@ -145,6 +146,9 @@ interface CVState {
   // Sharing & Analytics
   incrementViews: (cvId: string) => void;
   togglePublic: (cvId: string) => void;
+
+  // AI Translation
+  translateCV: (id: string, targetLanguage: 'en' | 'fr' | 'zh') => Promise<string | null>;
 }
 
 const DEFAULT_SETTINGS: CVSettings = {
@@ -465,7 +469,38 @@ export const useCVStore = create<CVState>()(
         }
       },
 
+      translateCV: async (id, targetLanguage) => {
+        try {
+           const res = await fetch(`/api/cv/${id}/translate`, {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ targetLanguage })
+           });
+
+           const data = await res.json();
+           
+           if (!res.ok) {
+              toast.error(data.error || "Erreur de traduction");
+              return null;
+           }
+
+           toast.success("CV traduit avec succès !");
+           // Fetch the newly translated CV into the store
+           await get().fetchCV(data.newCvId);
+           return data.newCvId;
+
+        } catch (error) {
+           console.error("Translation ERROR", error);
+           toast.error("Erreur de connexion");
+           return null;
+        }
+      },
+
       // Personal Info
+      updateCVTitle: (newTitle) => set((state) => updateCV(state, (cv) => ({
+        ...cv,
+        title: newTitle,
+      }))),
       updatePersonalInfo: (info) => set((state) => updateCV(state, (cv) => ({
         ...cv,
         personalInfo: { ...cv.personalInfo, ...info },

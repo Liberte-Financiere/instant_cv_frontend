@@ -6,11 +6,13 @@ export const CREDIT_COSTS = {
   AI_ANALYZE: 2,
   AI_MATCH: 2,
   AI_GENERATE_LETTER: 2,
-  AI_TRANSLATE: 1,
+
   AI_OPTIMIZE: 1,
   AI_REWRITE: 0.5,
   AI_CONTINUE: 0.5,
   AI_CORRECT: 0.5,
+
+  AI_CV_TRANSLATE: 15,
 };
 
 export type ActionType = keyof typeof CREDIT_COSTS;

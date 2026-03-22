@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import { CV } from '@/types/cv';
-import { SECTION_TITLES } from '@/constants/sections';
+import { getSectionTitle , getPresentLabel } from '@/constants/sections';
 import { CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter } from '@/components/cv-sections';
 
 interface TemplateProps { cv: CV; }
 
 export function TwoTone({ cv }: TemplateProps) {
+  const lang = cv.settings?.language || 'fr';
   const p = cv.personalInfo || {} as CV['personalInfo'];
   const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const hobbies = cv.hobbies || [];
@@ -48,13 +49,13 @@ export function TwoTone({ cv }: TemplateProps) {
         {/* Experience */}
         {experiences.length > 0 && (
           <section>
-            <h2 className="text-xs font-bold uppercase tracking-widest mb-3 pb-1 border-b" style={{ color: accent, borderColor: accent }}>{SECTION_TITLES.experience}</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest mb-3 pb-1 border-b" style={{ color: accent, borderColor: accent }}>{getSectionTitle('experience', undefined, lang)}</h2>
             <div className="space-y-4">
               {experiences.map((exp) => (
                 <div key={exp.id}>
                   <div className="flex justify-between items-baseline">
                     <h3 className="font-bold text-sm">{exp.position} — <span style={{ color: accent }}>{exp.company}</span></h3>
-                    <span className="text-xs text-slate-400">{exp.startDate} — {exp.current ? "Présent" : exp.endDate}</span>
+                    <span className="text-xs text-slate-400">{exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}</span>
                   </div>
                   {exp.description && <p className="text-xs text-slate-600 mt-1 ">{exp.description}</p>}
                 </div>
@@ -67,7 +68,7 @@ export function TwoTone({ cv }: TemplateProps) {
         <div className="grid grid-cols-2 gap-6">
           {education.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-2 pb-1 border-b" style={{ color: accent, borderColor: accent }}>{SECTION_TITLES.education}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-2 pb-1 border-b" style={{ color: accent, borderColor: accent }}>{getSectionTitle('education', undefined, lang)}</h2>
               <div className="space-y-2">
                 {education.map((edu) => (
                   <div key={edu.id}>
@@ -80,7 +81,7 @@ export function TwoTone({ cv }: TemplateProps) {
           )}
           {skills.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-2 pb-1 border-b" style={{ color: accent, borderColor: accent }}>{SECTION_TITLES.skills}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-2 pb-1 border-b" style={{ color: accent, borderColor: accent }}>{getSectionTitle('skills', undefined, lang)}</h2>
               <div className="space-y-1.5">
                 {skills.map((s) => (
                   <div key={s.id}>
@@ -99,29 +100,29 @@ export function TwoTone({ cv }: TemplateProps) {
         <div className="grid grid-cols-3 gap-4">
           {languages.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: accent }}>{SECTION_TITLES.languages}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: accent }}>{getSectionTitle('languages', undefined, lang)}</h2>
               {languages.map((l) => <p key={l.id} className="text-xs text-slate-600">{l.name} — {l.level}</p>)}
             </section>
           )}
           {hobbies.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: accent }}>{SECTION_TITLES.hobbies}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: accent }}>{getSectionTitle('hobbies', undefined, lang)}</h2>
               {hobbies.map((h) => <p key={h.id} className="text-xs text-slate-600">• {h.name}</p>)}
             </section>
           )}
           {qualities.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: accent }}>{SECTION_TITLES.qualities}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: accent }}>{getSectionTitle('qualities', undefined, lang)}</h2>
               {qualities.map((q) => <p key={q.id} className="text-xs text-slate-600">• {q.name}</p>)}
             </section>
           )}
         </div>
 
-        <CVCertifications certifications={certifications} variant="creative" accentColor={accent} title={SECTION_TITLES.certifications} />
-        <CVProjects projects={projects} variant="creative" accentColor={accent} />
-        <CVReferences references={references} variant="creative" accentColor={accent} />
-        <CVDivers divers={divers} variant="creative" accentColor={accent} />
-        <CVFooter footer={footer} variant="creative" />
+        <CVCertifications certifications={certifications} variant="creative" accentColor={accent} title={getSectionTitle('certifications', undefined, lang)} />
+        <CVProjects projects={projects} variant="creative" accentColor={accent}  title={getSectionTitle('projects', undefined, lang)} />
+        <CVReferences references={references} variant="creative" accentColor={accent}  title={getSectionTitle('references', undefined, lang)} />
+        <CVDivers divers={divers} variant="creative" accentColor={accent}  title={getSectionTitle('divers', undefined, lang)} />
+        <CVFooter footer={footer} variant="creative"  lang={lang}/>
       </div>
     </div>
   );

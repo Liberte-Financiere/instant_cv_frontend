@@ -11,6 +11,8 @@ import { FormSection } from '@/components/editor/FormSection';
 import { CVPreview } from '@/components/editor/CVPreview';
 import { ColorPicker } from '@/components/editor/ColorPicker';
 import { SectionOrderEditor } from '@/components/editor/SectionOrderEditor';
+import { TranslateCVButton } from '@/components/editor/TranslateCVButton';
+import { LanguageSelector } from '@/components/editor/LanguageSelector';
 import { MobilePreviewModal } from '@/components/editor/MobilePreviewModal';
 import { EDITOR_STEPS } from '@/types/cv';
 
@@ -21,6 +23,10 @@ export default function EditorPage() {
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [tempTitle, setTempTitle] = useState('');
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedRef = useRef<string>('');
 
@@ -165,9 +171,44 @@ export default function EditorPage() {
           </Link>
           <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
           <div className="min-w-0 flex flex-col justify-center">
-            <h1 className="font-bold text-slate-900 text-sm sm:text-base truncate max-w-[80px] xs:max-w-[120px] sm:max-w-xs block">
-              {currentCV.title}
-            </h1>
+            {isEditingTitle ? (
+              <input
+                ref={titleInputRef}
+                type="text"
+                value={tempTitle}
+                onChange={(e) => setTempTitle(e.target.value)}
+                onBlur={() => {
+                  if (tempTitle.trim() && tempTitle.trim() !== currentCV.title) {
+                    useCVStore.getState().updateCVTitle(tempTitle.trim());
+                  }
+                  setIsEditingTitle(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (tempTitle.trim() && tempTitle.trim() !== currentCV.title) {
+                      useCVStore.getState().updateCVTitle(tempTitle.trim());
+                    }
+                    setIsEditingTitle(false);
+                  } else if (e.key === 'Escape') {
+                    setIsEditingTitle(false);
+                  }
+                }}
+                className="font-bold text-slate-900 text-sm sm:text-base bg-white border border-indigo-400 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-indigo-500/50 w-full max-w-[200px]"
+              />
+            ) : (
+              <h1 
+                onClick={() => {
+                  setTempTitle(currentCV.title);
+                  setIsEditingTitle(true);
+                  setTimeout(() => titleInputRef.current?.focus(), 0);
+                }}
+                className="font-bold text-slate-900 text-sm sm:text-base truncate max-w-[80px] xs:max-w-[120px] sm:max-w-xs cursor-pointer hover:bg-slate-100 px-2 py-0.5 rounded -ml-2 transition-colors inline-flex items-center gap-2 group"
+                title="Renommer le CV"
+              >
+                <span>{currentCV.title}</span>
+                <span className="opacity-0 group-hover:opacity-100 text-slate-400 text-xs transition-opacity">✏️</span>
+              </h1>
+            )}
             <div className="flex items-center gap-1.5 text-xs text-slate-500">
                {saveStatus === 'saving' ? (
                  <>
@@ -202,6 +243,8 @@ export default function EditorPage() {
 
            <div className="h-6 w-px bg-slate-200 mx-1 lg:hidden" />
 
+           <TranslateCVButton />
+           <LanguageSelector />
            <ColorPicker />
            <SectionOrderEditor />
            

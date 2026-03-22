@@ -18,8 +18,7 @@ import { CoverLetterService } from '@/services/coverLetterService';
 import { ReferralCodeCard } from '@/components/dashboard/ReferralCodeCard';
 import { ReferralProcessor } from '@/components/dashboard/ReferralProcessor';
 import { useCreditStore } from '@/store/useCreditStore';
-import { LinkedInImportModal } from '@/components/dashboard/LinkedInImportModal';
-import { Linkedin } from 'lucide-react';
+
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -29,7 +28,7 @@ export default function DashboardPage() {
   const creditsCount = useCreditStore((state) => state.credits);
   const fetchCredits = useCreditStore((state) => state.fetchCredits);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [isLinkedInModalOpen, setIsLinkedInModalOpen] = useState(false);
+
   
   const recentCVs = cvList.slice(0, 3);
   const recentCLs = clList.slice(0, 3);
@@ -396,11 +395,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* LinkedIn Import Modal */}
-        <LinkedInImportModal 
-          isOpen={isLinkedInModalOpen} 
-          onClose={() => setIsLinkedInModalOpen(false)} 
-        />
+
     </div>
   );
 }

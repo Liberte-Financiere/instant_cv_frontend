@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import { CV } from '@/types/cv';
-import { SECTION_TITLES } from '@/constants/sections';
+import { getSectionTitle , getPresentLabel } from '@/constants/sections';
 import { CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter } from '@/components/cv-sections';
 
 interface TemplateProps { cv: CV; }
 
 export function ClassicSerif({ cv }: TemplateProps) {
+  const lang = cv.settings?.language || 'fr';
   const p = cv.personalInfo || {} as CV['personalInfo'];
   const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const hobbies = cv.hobbies || [];
@@ -49,14 +50,14 @@ export function ClassicSerif({ cv }: TemplateProps) {
         {experiences.length > 0 && (
           <section className="mb-6">
             <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>
-              {SECTION_TITLES.experience}
+              {getSectionTitle('experience', undefined, lang)}
             </h2>
             <div className="space-y-4">
               {experiences.map((exp) => (
                 <div key={exp.id}>
                   <div className="flex justify-between items-baseline">
                     <h3 className="font-bold">{exp.position}</h3>
-                    <span className="text-xs italic text-slate-500">{exp.startDate} — {exp.current ? "Présent" : exp.endDate}</span>
+                    <span className="text-xs italic text-slate-500">{exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}</span>
                   </div>
                   <p className="text-xs font-semibold italic" style={{ color: accent }}>{exp.company}</p>
                   {exp.description && <p className="text-xs text-slate-600 mt-1 ">{exp.description}</p>}
@@ -70,7 +71,7 @@ export function ClassicSerif({ cv }: TemplateProps) {
         {education.length > 0 && (
           <section className="mb-6">
             <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>
-              {SECTION_TITLES.education}
+              {getSectionTitle('education', undefined, lang)}
             </h2>
             <div className="space-y-3">
               {education.map((edu) => (
@@ -90,13 +91,13 @@ export function ClassicSerif({ cv }: TemplateProps) {
         <div className="grid grid-cols-3 gap-6">
           {skills.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{SECTION_TITLES.skills}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('skills', undefined, lang)}</h2>
               {skills.map((s) => <p key={s.id} className="text-xs text-center">• {s.name}</p>)}
             </section>
           )}
           {languages.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{SECTION_TITLES.languages}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('languages', undefined, lang)}</h2>
               {languages.map((l) => <p key={l.id} className="text-xs text-center">{l.name} — <em>{l.level}</em></p>)}
             </section>
           )}
@@ -104,13 +105,13 @@ export function ClassicSerif({ cv }: TemplateProps) {
             <section>
               {qualities.length > 0 && (
                 <>
-                  <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{SECTION_TITLES.qualities}</h2>
+                  <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('qualities', undefined, lang)}</h2>
                   {qualities.map((q) => <p key={q.id} className="text-xs text-center">• {q.name}</p>)}
                 </>
               )}
               {hobbies.length > 0 && (
                 <>
-                  <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b mt-3" style={{ color: accent, borderColor: `${accent}40` }}>{SECTION_TITLES.hobbies}</h2>
+                  <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b mt-3" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('hobbies', undefined, lang)}</h2>
                   {hobbies.map((h) => <p key={h.id} className="text-xs text-center">• {h.name}</p>)}
                 </>
               )}
@@ -119,11 +120,11 @@ export function ClassicSerif({ cv }: TemplateProps) {
         </div>
 
         <div className="mt-4">
-          <CVCertifications certifications={certifications} variant="executive" accentColor={accent} title={SECTION_TITLES.certifications} />
-          <CVProjects projects={projects} variant="executive" accentColor={accent} />
-          <CVReferences references={references} variant="executive" accentColor={accent} />
-          <CVDivers divers={divers} variant="executive" accentColor={accent} />
-          <CVFooter footer={footer} variant="executive" />
+          <CVCertifications certifications={certifications} variant="executive" accentColor={accent} title={getSectionTitle('certifications', undefined, lang)} />
+          <CVProjects projects={projects} variant="executive" accentColor={accent}  title={getSectionTitle('projects', undefined, lang)} />
+          <CVReferences references={references} variant="executive" accentColor={accent}  title={getSectionTitle('references', undefined, lang)} />
+          <CVDivers divers={divers} variant="executive" accentColor={accent}  title={getSectionTitle('divers', undefined, lang)} />
+          <CVFooter footer={footer} variant="executive"  lang={lang}/>
         </div>
       </div>
     </div>

@@ -1,24 +1,18 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
+
+import { APP_CONFIG } from '@/lib/config';
+import { GoogleGenerativeAI } from '@google/generative-ai'; // Added this import as it's used later
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.lite });
 
 export async function POST(req: Request) {
   try {
     const session = await auth();
     if (!session?.user?.id) return new NextResponse("Unauthorized", { status: 401 });
 
-    // Rate limiting: 10 requests per minute
-    const rateCheck = checkRateLimit(`${session.user.id}:ai-refine`, RATE_LIMITS.AI_COVER_LETTER);
-    if (!rateCheck.allowed) {
-      return NextResponse.json(
-        { error: 'Trop de requêtes. Veuillez réessayer dans quelques secondes.' },
-        { status: 429, headers: { 'Retry-After': String(Math.ceil(rateCheck.resetIn / 1000)) } }
-      );
-    }
+
 
     const { text, action, option } = await req.json();
 
@@ -34,9 +28,6 @@ export async function POST(req: Request) {
     if (action === 'correct') {
         creditAction = 'AI_CORRECT';
         label = 'Correction orthographique (IA)';
-    } else if (action === 'translate') {
-        creditAction = 'AI_TRANSLATE';
-        label = 'Traduction de texte (IA)';
     }
 
     try {
@@ -60,13 +51,7 @@ export async function POST(req: Request) {
         Texte : "${text}"
         Retourne UNIQUEMENT le texte corrigé.`;
         break;
-      
-      case 'translate':
-        const targetLang = option === 'en' ? 'Anglais' : 'Français';
-        prompt = `Traduis le texte suivant en ${targetLang}. Garde un ton professionnel adapté à une lettre de motivation.
-        Texte : "${text}"
-        Retourne UNIQUEMENT la traduction.`;
-        break;
+
         
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });

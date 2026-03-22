@@ -126,9 +126,19 @@ export async function DELETE(
 
     const { id } = await params;
     
-    await prisma.cV.delete({
-      where: { id, userId: session.user.id }
-    });
+    try {
+      await prisma.cV.delete({
+        where: { id, userId: session.user.id }
+      });
+    } catch (dbError: any) {
+      // P2025: Record to delete does not exist.
+      // C'est l'erreur que vous voyiez dans PM2. On l'ignore silencieusement 
+      // car le but (supprimer le CV) est techniquement déjà atteint.
+      if (dbError.code === 'P2025') {
+        return new NextResponse(null, { status: 204 });
+      }
+      throw dbError; // On remonte les autres vraies erreurs
+    }
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {

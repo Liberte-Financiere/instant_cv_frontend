@@ -110,6 +110,22 @@ export const APP_CONFIG = {
   /** PWA cache prefix */
   cachePrefix: 'jobsira',
 
+  // ─── AI Configuration ────────────────────────────
+  ai: {
+    models: {
+      /** Modèle rapide et intelligent pour les tâches générales (Analyse, Match) */
+      fast: 'gemini-2.5-flash',
+      /** Modèle très léger et rapide pour les petites tâches (Correction, Génération de petites listes) */
+      lite: 'gemini-2.5-flash',
+
+      /** Modèle pour la traduction */
+      pro: 'gemini-2.5-pro',
+    }
+  },
+
+
+
+
   /** Zustand persist keys */
   storageKeys: {
     cv: 'jobsira-cv-storage',

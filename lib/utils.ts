@@ -6,10 +6,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: string | Date): string {
+const LOCALE_MAP: Record<string, string> = {
+  fr: 'fr-FR',
+  en: 'en-US',
+  zh: 'zh-CN',
+};
+
+export function formatDate(date: string | Date, lang: string = 'fr'): string {
   if (!date) return '';
   const d = new Date(date);
-  return d.toLocaleDateString('fr-FR', { 
+  if (isNaN(d.getTime())) return String(date);
+  const locale = LOCALE_MAP[lang] || 'fr-FR';
+  return d.toLocaleDateString(locale, { 
     year: 'numeric', 
     month: 'long' 
   });
