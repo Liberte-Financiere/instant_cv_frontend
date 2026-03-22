@@ -1240,6 +1240,11 @@ export type PlatformFeedbackFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` PlatformFeedbacks.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of PlatformFeedbacks.
+   */
   distinct?: Prisma.PlatformFeedbackScalarFieldEnum | Prisma.PlatformFeedbackScalarFieldEnum[]
 }
 

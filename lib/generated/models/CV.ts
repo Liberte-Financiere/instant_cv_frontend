@@ -1265,6 +1265,11 @@ export type CVFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Skip the first `n` CVS.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CVS.
+   */
   distinct?: Prisma.CVScalarFieldEnum | Prisma.CVScalarFieldEnum[]
 }
 
