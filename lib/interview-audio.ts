@@ -65,6 +65,10 @@ export function createGeminiLiveConnection(
         },
         systemInstruction: {
           parts: [{ text: systemInstruction }]
+        },
+        inputAudioConfig: {
+          audioEncoding: "LINEAR16",
+          sampleRateHertz: 16000
         }
       }
     };
