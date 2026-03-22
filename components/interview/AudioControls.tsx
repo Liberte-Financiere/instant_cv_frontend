@@ -124,6 +124,11 @@ export function AudioControls({
           await audioContext.current.resume();
       }
 
+      let isBackendReady = false;
+      sse.onopen = () => {
+        isBackendReady = true;
+      };
+
       sse.onmessage = (event) => {
         const msg = JSON.parse(event.data);
         
@@ -178,6 +183,8 @@ export function AudioControls({
       processor.connect(audioContext.current.destination);
 
       processor.onaudioprocess = (e) => {
+        if (!isBackendReady) return; // Wait for backend WebSocket to be established
+        
         const inputData = e.inputBuffer.getChannelData(0); // Float32Array at browser's native rate
         // IMPORTANT: In a production app, robust downsampling to 16000Hz via AudioWorklet is needed.
         // For simplicity here, we assume standard browser behavior and send the chunks. 
