@@ -1,32 +1,41 @@
-[2026-03-22] — feat: add full AI-powered CV translation (EN, FR, ZH)
+[2026-03-22] — Localisation complète des CV (en-têtes, dates, footer, traduction IA)
 
 What changed:
-- Added `AI_CV_TRANSLATE` credit cost (15 credits) in `credits.ts`.
-- Created a new backend endpoint `/api/cv/[id]/translate` that leverages the `gemini-2.5-pro` model to translate a CV's JSON content exactly.
-- Added a `translateCV` action in the Zustand store `useCVStore.ts` to coordinate the translation request, display toasts, and pull the new CV.
-- Built a new `TranslateCVButton` component with a dropdown for selecting the target language.
-- Added the translate button to the header toolbar in the CV Editor.
-- Removed legacy `@page letter` named page logic in `globals.css` and `LetterPreview.tsx` that was causing extra blank pages in PDF exports.
+- Localisation des en-têtes de sections (FR/EN/ZH) via dictionnaire et getSectionTitle()
+- Localisation des dates via formatDate(date, lang) avec support fr-FR, en-US, zh-CN
+- Localisation du mot "Présent" via getPresentLabel(lang) dans tous les templates
+- Localisation du footer "Fait à X, le Y" (EN: "Made in X, on Y", ZH: "制作于 X, Y")
+- Ajout d'un sélecteur de langue (LanguageSelector) dans la toolbar de l'éditeur
+- Renommage inline du CV dans l'éditeur (titre cliquable)
+- API de traduction IA avec Gemini (crédits, copie du CV, injection de settings.language)
+- Prompt IA durci : noms propres (pays, villes, entreprises, écoles) jamais traduits
+- Suppression du cache .next pour corriger l'erreur TS liée au module LinkedIn supprimé
 
 Why:
-- To allow users to instantly translate their CV for international applications without losing their formatting or structural data.
-- The translation creates a new copy of the CV instead of overwriting the original, acting as a safeguard for user data.
-- The named page PDF fix ensures flawless PDF generations without ghost pages at the end of cover letters.
+- Permettre aux utilisateurs de générer des CV multilingues cohérents (en-têtes + dates + contenu)
+- Éviter les incohérences visuelles (titres en français sur un CV traduit en chinois)
+- Protéger les noms propres lors de la traduction IA
 
 Files affected:
-- lib/config.ts — added 'pro' AI model mapping.
-- lib/credits.ts — added new AI_CV_TRANSLATE credit cost rule.
-- app/api/cv/[id]/translate/route.ts — NEW file. Handles AI translation prompt, credit deduction, and duplicate CV creation.
-- store/useCVStore.ts — added `translateCV` Zustand action.
-- components/editor/TranslateCVButton.tsx — NEW file. Dropdown UI for picking translation language.
-- app/editor/[id]/page.tsx — injected Translation button into the main editor header.
-- app/globals.css — removed problematic `@page letter` named rule.
-- components/cover-letter/LetterPreview.tsx — removed flexbox rendering to assist with clean pagination.
-- app/cover-letter/[id]/page.tsx — applied inline style for print margin fix.
+- lib/utils.ts — formatDate() accepte un paramètre lang, avec fallback safe sur dates invalides
+- constants/sections.ts — Dictionnaire multilingue + getSectionTitle() + getPresentLabel()
+- types/cv.ts — Ajout de language? dans CVSettings
+- components/cv-sections/CVExperience.tsx — Prop lang, formatDate(x, lang), getPresentLabel(lang)
+- components/cv-sections/CVEducation.tsx — Prop lang, formatDate(x, lang), getPresentLabel(lang)
+- components/cv-sections/CVFooter.tsx — Prop lang, phrase localisée (Fait/Made/制作于)
+- components/editor/LanguageSelector.tsx — Nouveau composant dropdown FR/EN/ZH
+- components/editor/TranslateCVButton.tsx — Bouton de traduction IA
+- components/templates/*.tsx (22 fichiers) — Propagation de lang={lang} et titres dynamiques
+- app/editor/[id]/page.tsx — Intégration LanguageSelector + titre inline éditable
+- app/api/cv/[id]/translate/route.ts — Prompt IA durci, logs de debug, settings.language injecté
+- store/useCVStore.ts — updateCVTitle + translateCV
+- lib/config.ts — Ajout du modèle gemini-2.5-pro
+- lib/credits.ts — Ajout AI_CV_TRANSLATE: 15
 
 Breaking changes:
-- None
+- None. Le fallback par défaut est 'fr' partout.
 
 Notes for review:
-- The translation targets rely directly on standard JSON structure mapping via Gemini Pro to ensure arrays and key names are NOT translated.
-- If we ever add more languages, simply update the `TranslateCVButton` array and the translation prompt mapping in the API.
+- Tester la traduction IA vers EN et ZH pour vérifier que les noms propres sont préservés
+- Vérifier le rendu des dates sur les templates avec sidebar (ModernSidebar, TechStack)
+- Le modèle lite peut encore tronquer le JSON sur des CV très longs (>8192 tokens de sortie)

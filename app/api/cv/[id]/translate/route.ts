@@ -9,8 +9,12 @@ import { APP_CONFIG } from '@/lib/config';
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 // Force using standard text/JSON model
 const model = genAI.getGenerativeModel({ 
-  model: APP_CONFIG.ai.models.pro, 
-  generationConfig: { responseMimeType: "application/json" }
+  model: APP_CONFIG.ai.models.lite, 
+  generationConfig: { 
+    responseMimeType: "application/json",
+    maxOutputTokens: 8192, 
+    temperature: 0.1 // Low temperature to prevent hallucinations
+  }
 });
 
 export async function POST(
@@ -64,24 +68,42 @@ RÈGLES STRICTES :
 1. Tu DOIS renvoyer un objet JSON valide et structuré exactement comme l'original.
 2. Ne modifie AUCUNE clé du JSON (ex: 'personalInfo', 'jobTitle', 'startDate' doivent rester en anglais si elles le sont).
 3. Ne traduis QUE les CHAÎNES DE CARACTÈRES qui représentent du contenu utilisateur (titres de postes, descriptions, résumés, noms de diplômes, compétences).
-4. Ne traduis pas les emails, les numéros de téléphone, les URLs, ou les noms propres (sauf exceptions logiques).
-5. Ne rajoute aucun nouveau champ, ne supprime aucun champ. Si un tableau est vide, laisse-le vide.
-6. Le format de sortie doit être un JSON pur, sans markdown autour (pas de \`\`\`json).
+4. Ne traduis PAS les noms propres : noms de pays (Burkina Faso, France...), noms de villes (Ouagadougou, Paris...), noms d'entreprises, noms d'écoles, noms de personnes. Garde-les exactement comme dans l'original.
+5. Ne traduis pas les emails, les numéros de téléphone, les URLs.
+6. Ne rajoute aucun nouveau champ, ne supprime aucun champ. Si un tableau est vide, laisse-le vide.
+7. Le format de sortie doit être un JSON pur, sans markdown autour (pas de \`\`\`json).
+8. TRÈS IMPORTANT: L'IA NE DOIT INVENTER AUCUNE DONNÉE (pas de nouvelles compétences, pas de nouvelles expériences). TRADUIS UNIQUEMENT LE CONTENU EXISTANT SANS BOUCLER.
 
 Contenu original à traduire :
 ${JSON.stringify(cvContentToTranslate, null, 2)}`;
 
+    console.log(`[TRANSLATE] Target Language: ${targetLanguage}, Original Length: ${JSON.stringify(cvContentToTranslate).length} characters`);
+
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const generatedText = response.text().trim();
+    
+    console.log(`[TRANSLATE] Generation Complete. Output Length: ${generatedText.length} characters`);
+    console.log(`[TRANSLATE] Raw Output Preview:`, generatedText.substring(0, 150) + '...', '...[END]...', generatedText.substring(generatedText.length - 150));
 
-    // Clean up potential markdown blocks if Gemini ignored the instruction
+    // Clean up potential markdown blocks robustly
     let jsonString = generatedText;
-    if (jsonString.startsWith('```json')) jsonString = jsonString.slice(7);
-    if (jsonString.startsWith('```')) jsonString = jsonString.slice(3);
-    if (jsonString.endsWith('```')) jsonString = jsonString.slice(0, -3);
+    const match = jsonString.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (match) {
+        jsonString = match[1].trim();
+    } else {
+        jsonString = jsonString.replace(/^```json/i, '').replace(/```$/, '').trim();
+    }
 
-    const translatedContent = JSON.parse(jsonString.trim());
+    let translatedContent;
+    try {
+      translatedContent = JSON.parse(jsonString);
+    } catch (parseError) {
+      console.error("[TRANSLATE] JSON Parse Error. The model returned invalid or truncated JSON.");
+      // We log a large chunk of the end to see where it got cut off
+      console.error("[TRANSLATE] End of generated string:", jsonString.substring(jsonString.length - 300));
+      throw new Error(`Invalid JSON format returned by AI: ${parseError}`);
+    }
     
     // Set a new ID for the content object
     const newContentId = crypto.randomUUID();
@@ -93,6 +115,12 @@ ${JSON.stringify(cvContentToTranslate, null, 2)}`;
     if (!newTitle.endsWith(langSuffix)) {
         newTitle = `${newTitle}${langSuffix}`;
     }
+
+    // Ensure settings exist and inject language
+    translatedContent.settings = {
+        ...(translatedContent.settings || {}),
+        language: targetLanguage.toLowerCase()
+    };
 
     // 5. Save the new Translated CV
     const newCV = await prisma.cV.create({

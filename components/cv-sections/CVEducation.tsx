@@ -1,6 +1,8 @@
 'use client';
 
 import { Education, CVVariant } from '@/types/cv';
+import { formatDate } from '@/lib/utils';
+import { getPresentLabel } from '@/constants/sections';
 import { variantStyles } from './styles';
 
 interface CVEducationProps {
@@ -8,9 +10,10 @@ interface CVEducationProps {
   variant: CVVariant;
   title?: string;
   accentColor?: string;
+  lang?: string;
 }
 
-export function CVEducation({ education, variant, title = 'Éducation', accentColor }: CVEducationProps) {
+export function CVEducation({ education, variant, title = 'Éducation', accentColor, lang = 'fr' }: CVEducationProps) {
   const styles = variantStyles[variant];
   
   if (education.length === 0) return null;
@@ -32,7 +35,7 @@ export function CVEducation({ education, variant, title = 'Éducation', accentCo
               </h3>
               {(edu.startDate || edu.endDate) && (
                 <span className={`text-sm font-medium tabular-nums shrink-0 ${variant === 'tech' ? 'text-gray-500' : 'text-slate-500'}`}>
-                  {edu.startDate} - {edu.endDate || 'Présent'}
+                  {edu.startDate && formatDate(edu.startDate, lang)} - {edu.endDate ? formatDate(edu.endDate, lang) : getPresentLabel(lang)}
                 </span>
               )}
             </div>

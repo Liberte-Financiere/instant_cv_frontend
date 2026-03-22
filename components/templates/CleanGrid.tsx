@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { CV } from '@/types/cv';
-import { SECTION_TITLES } from '@/constants/sections';
+import { getSectionTitle , getPresentLabel } from '@/constants/sections';
 import { getAccentColor } from '@/components/cv-sections/styles';
 import {
   CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter
@@ -13,6 +13,7 @@ interface TemplateProps {
 }
 
 export function CleanGrid({ cv }: TemplateProps) {
+  const lang = cv.settings?.language || 'fr';
   const personalInfo = cv.personalInfo || {} as CV['personalInfo'];
   const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const hobbies = cv.hobbies || [];
@@ -54,7 +55,7 @@ export function CleanGrid({ cv }: TemplateProps) {
       {personalInfo.summary && (
         <section className="mb-5">
           <h2 className="text-xs font-bold uppercase tracking-widest mb-2 pb-1 border-b" style={{ color: accentColor, borderColor: `${accentColor}40` }}>
-            {SECTION_TITLES.summary}
+            {getSectionTitle('summary', undefined, lang)}
           </h2>
           <p className="text-sm text-slate-600 leading-relaxed ">{personalInfo.summary}</p>
         </section>
@@ -64,13 +65,13 @@ export function CleanGrid({ cv }: TemplateProps) {
       {experiences.length > 0 && (
         <section className="mb-5">
           <h2 className="text-xs font-bold uppercase tracking-widest mb-3 pb-1 border-b" style={{ color: accentColor, borderColor: `${accentColor}40` }}>
-            {SECTION_TITLES.experience}
+            {getSectionTitle('experience', undefined, lang)}
           </h2>
           <div className="grid grid-cols-2 gap-x-6 gap-y-4">
             {experiences.map((exp) => (
               <div key={exp.id}>
                 <p className="text-xs font-semibold" style={{ color: accentColor }}>
-                  {exp.startDate} — {exp.current ? "Présent" : exp.endDate}
+                  {exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}
                 </p>
                 <h3 className="font-bold text-sm text-slate-900">{exp.position}</h3>
                 <p className="text-xs font-semibold text-slate-500">{exp.company}</p>
@@ -94,7 +95,7 @@ export function CleanGrid({ cv }: TemplateProps) {
       {education.length > 0 && (
         <section className="mb-5">
           <h2 className="text-xs font-bold uppercase tracking-widest mb-3 pb-1 border-b" style={{ color: accentColor, borderColor: `${accentColor}40` }}>
-            {SECTION_TITLES.education}
+            {getSectionTitle('education', undefined, lang)}
           </h2>
           <div className="grid grid-cols-2 gap-x-6 gap-y-3">
             {education.map((edu) => (
@@ -113,7 +114,7 @@ export function CleanGrid({ cv }: TemplateProps) {
       {skills.length > 0 && (
         <section className="mb-5">
           <h2 className="text-xs font-bold uppercase tracking-widest mb-2 pb-1 border-b" style={{ color: accentColor, borderColor: `${accentColor}40` }}>
-            {SECTION_TITLES.skills}
+            {getSectionTitle('skills', undefined, lang)}
           </h2>
           <div className="grid grid-cols-3 gap-x-4 gap-y-1">
             {skills.map((skill) => (
@@ -127,7 +128,7 @@ export function CleanGrid({ cv }: TemplateProps) {
       {hobbies.length > 0 && (
         <section className="mb-5">
           <h2 className="text-xs font-bold uppercase tracking-widest mb-2 pb-1 border-b" style={{ color: accentColor, borderColor: `${accentColor}40` }}>
-            {SECTION_TITLES.hobbies}
+            {getSectionTitle('hobbies', undefined, lang)}
           </h2>
           <div className="grid grid-cols-3 gap-x-4 gap-y-1">
             {hobbies.map((h) => (
@@ -141,7 +142,7 @@ export function CleanGrid({ cv }: TemplateProps) {
       {languages.length > 0 && (
         <section className="mb-5">
           <h2 className="text-xs font-bold uppercase tracking-widest mb-2 pb-1 border-b" style={{ color: accentColor, borderColor: `${accentColor}40` }}>
-            {SECTION_TITLES.languages}
+            {getSectionTitle('languages', undefined, lang)}
           </h2>
           <div className="grid grid-cols-3 gap-x-4 gap-y-1">
             {languages.map((lang) => (
@@ -151,11 +152,11 @@ export function CleanGrid({ cv }: TemplateProps) {
         </section>
       )}
 
-      <CVCertifications certifications={certifications} variant="professional" accentColor={accentColor} title={SECTION_TITLES.certifications} />
-      <CVProjects projects={projects} variant="professional" accentColor={accentColor} />
-      <CVReferences references={references} variant="professional" accentColor={accentColor} />
-      <CVDivers divers={divers} variant="professional" accentColor={accentColor} />
-      <CVFooter footer={footer} variant="professional" />
+      <CVCertifications certifications={certifications} variant="professional" accentColor={accentColor} title={getSectionTitle('certifications', undefined, lang)} />
+      <CVProjects projects={projects} variant="professional" accentColor={accentColor}  title={getSectionTitle('projects', undefined, lang)} />
+      <CVReferences references={references} variant="professional" accentColor={accentColor}  title={getSectionTitle('references', undefined, lang)} />
+      <CVDivers divers={divers} variant="professional" accentColor={accentColor}  title={getSectionTitle('divers', undefined, lang)} />
+      <CVFooter footer={footer} variant="professional"  lang={lang}/>
     </div>
   );
 }

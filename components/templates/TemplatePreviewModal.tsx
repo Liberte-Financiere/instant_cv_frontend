@@ -11,6 +11,7 @@ import { useCVStore } from '@/store/useCVStore';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
+import { getSectionTitle } from '@/constants/sections';
 
 interface TemplatePreviewModalProps {
   template: TemplateOption | null;

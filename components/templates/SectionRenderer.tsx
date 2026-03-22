@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
-import { SECTION_TITLES } from '@/constants/sections';
+import { getSectionTitle } from '@/constants/sections';
 import { 
   CVSummary, CVExperience, CVEducation, 
   CVSkills, CVLanguages, CVHobbies, CVCertifications, 
@@ -26,6 +26,7 @@ export function SectionRenderer({
   excludeSections = [] 
 }: SectionRendererProps) {
   const sectionOrder = cv.sectionOrder || [...DEFAULT_SECTION_ORDER];
+  const lang = cv.settings?.language || 'fr';
   
   // Filter sections if specified
   let sectionsToRender = filterSections 
@@ -39,57 +40,57 @@ export function SectionRenderer({
     switch (sectionId) {
       case 'summary':
         return cv.personalInfo.summary ? (
-          <CVSummary key={sectionId} summary={cv.personalInfo.summary} variant={variant} accentColor={accentColor} title={SECTION_TITLES.summary} />
+          <CVSummary key={sectionId} summary={cv.personalInfo.summary} variant={variant} accentColor={accentColor} title={getSectionTitle('summary', undefined, lang)} />
         ) : null;
       
       case 'experience':
         return cv.experiences.length > 0 ? (
-          <CVExperience key={sectionId} experiences={cv.experiences} variant={variant} accentColor={accentColor} title={SECTION_TITLES.experience} />
+          <CVExperience key={sectionId} experiences={cv.experiences} variant={variant} accentColor={accentColor} title={getSectionTitle('experience', undefined, lang)} />
         ) : null;
       
       case 'education':
         return cv.education.length > 0 ? (
-          <CVEducation key={sectionId} education={cv.education} variant={variant} accentColor={accentColor} title={SECTION_TITLES.education} />
+          <CVEducation key={sectionId} education={cv.education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', undefined, lang)} />
         ) : null;
       
       case 'skills':
         return cv.skills.length > 0 ? (
-          <CVSkills key={sectionId} skills={cv.skills} variant={variant} title={SECTION_TITLES.skills} />
+          <CVSkills key={sectionId} skills={cv.skills} variant={variant} title={getSectionTitle('skills', undefined, lang)} />
         ) : null;
       
       case 'languages':
         return cv.languages.length > 0 ? (
-          <CVLanguages key={sectionId} languages={cv.languages} variant={variant} title={SECTION_TITLES.languages} />
+          <CVLanguages key={sectionId} languages={cv.languages} variant={variant} title={getSectionTitle('languages', undefined, lang)} />
         ) : null;
       
       case 'hobbies':
         return (cv.hobbies?.length || 0) > 0 ? (
-          <CVHobbies key={sectionId} hobbies={cv.hobbies || []} variant={variant} title={SECTION_TITLES.hobbies} />
+          <CVHobbies key={sectionId} hobbies={cv.hobbies || []} variant={variant} title={getSectionTitle('hobbies', undefined, lang)} />
         ) : null;
       
       case 'certifications':
         return (cv.certifications?.length || 0) > 0 ? (
-          <CVCertifications key={sectionId} certifications={cv.certifications || []} variant={variant} accentColor={accentColor} title={SECTION_TITLES.certifications} />
+          <CVCertifications key={sectionId} certifications={cv.certifications || []} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', undefined, lang)} />
         ) : null;
       
       case 'projects':
         return (cv.projects?.length || 0) > 0 ? (
-          <CVProjects key={sectionId} projects={cv.projects || []} variant={variant} accentColor={accentColor} title={SECTION_TITLES.projects} />
+          <CVProjects key={sectionId} projects={cv.projects || []} variant={variant} accentColor={accentColor} title={getSectionTitle('projects', undefined, lang)} />
         ) : null;
       
       case 'references':
         return (cv.references?.length || 0) > 0 ? (
-          <CVReferences key={sectionId} references={cv.references || []} variant={variant} accentColor={accentColor} title={SECTION_TITLES.references} />
+          <CVReferences key={sectionId} references={cv.references || []} variant={variant} accentColor={accentColor} title={getSectionTitle('references', undefined, lang)} />
         ) : null;
 
         case 'qualities':
           return (cv.qualities?.length || 0) > 0 ? (
-            <CVQualities key={sectionId} qualities={cv.qualities || []} variant={variant} accentColor={accentColor} title={SECTION_TITLES.qualities} />
+            <CVQualities key={sectionId} qualities={cv.qualities || []} variant={variant} accentColor={accentColor} title={getSectionTitle('qualities', undefined, lang)} />
           ) : null;
       
       case 'divers':
         return cv.divers ? (
-          <CVDivers key={sectionId} divers={cv.divers} variant={variant} accentColor={accentColor} title={SECTION_TITLES.divers} />
+          <CVDivers key={sectionId} divers={cv.divers} variant={variant} accentColor={accentColor} title={getSectionTitle('divers', undefined, lang)} />
         ) : null;
       
       default:
