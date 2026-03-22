@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sparkles, CheckCheck, Languages, RefreshCw, Loader2, ChevronDown } from 'lucide-react';
+import { Sparkles, CheckCheck, RefreshCw, Loader2, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -106,15 +106,7 @@ export function AIToolbar({ text, onRefine, disabled }: AIToolbarProps) {
         Corriger
       </button>
 
-      {/* Translate */}
-      <button
-        onClick={() => handleAction('translate', 'en')}
-        disabled={disabled || !!isLoading}
-        className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold transition-colors disabled:opacity-50 whitespace-nowrap"
-      >
-        {isLoading === 'translate' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Languages className="w-3.5 h-3.5" />}
-        Traduire (EN)
-      </button>
+
     </div>
   );
 }
