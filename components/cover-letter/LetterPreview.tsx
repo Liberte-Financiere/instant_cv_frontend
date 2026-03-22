@@ -9,7 +9,7 @@ interface LetterPreviewProps {
 export const LetterPreview: React.FC<LetterPreviewProps> = ({ coverLetter, className }) => {
   return (
     <div 
-      className={`bg-white p-[16mm] print:pt-[6mm] flex flex-col font-serif text-slate-800 text-[11pt] leading-relaxed relative z-10 ${className || ''}`}
+      className={`bg-white p-[16mm] print:pt-[6mm] block font-serif text-slate-800 text-[11pt] leading-relaxed relative z-10 ${className || ''}`}
     >
       {/* Header Info */}
       <div className="flex justify-between mb-6">
