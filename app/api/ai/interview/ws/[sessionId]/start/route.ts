@@ -86,8 +86,10 @@ Si le candidat te demande de répéter, répète. S'il hésite, encourage-le.`;
     return new NextResponse(stream, {
       headers: {
         'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
+        'Cache-Control': 'no-cache, no-transform',
         'Connection': 'keep-alive',
+        'Content-Encoding': 'none',
+        'X-Accel-Buffering': 'no'
       },
     });
 

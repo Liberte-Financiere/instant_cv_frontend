@@ -161,9 +161,9 @@ export function AudioControls({
       };
 
       sse.onerror = (err) => {
-        console.error('SSE Error:', err);
+        console.warn('[AudioControls] SSE Disconnected:', err);
         cleanup();
-        setError('Connexion serveur interrompue');
+        setError('Déconnexion du serveur AI (Vérifiez votre réseau)');
       };
 
       // 2. Capture Microphone Upstream (send User voice)
@@ -188,10 +188,19 @@ export function AudioControls({
       setIsListening(true);
       setIsConnecting(false);
     } catch (err: any) {
-      console.error(err);
       cleanup();
-      setError('Erreur d\'accès au microphone ou au serveur.');
-      onError?.(err);
+      
+      if (err.name === 'NotAllowedError' || err.message?.includes('Permission denied')) {
+        console.warn('[AudioControls] Microphone access denied by user or settings.');
+        setError('Accès refusé. Autorisez le micro (en haut à gauche de l\'URL) 🔒');
+      } else {
+        console.warn('[AudioControls] Audio setup error:', err);
+        setError('Erreur d\'accès au microphone ou au serveur.');
+      }
+      
+      if (onError && typeof onError === 'function') {
+        onError(err);
+      }
     }
   };
 
