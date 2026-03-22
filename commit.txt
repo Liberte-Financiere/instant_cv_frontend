@@ -1,41 +1,28 @@
-[2026-03-22] — Localisation complète des CV (en-têtes, dates, footer, traduction IA)
+[2026-03-22] — Admin Task Board (Kanban interne)
 
 What changed:
-- Localisation des en-têtes de sections (FR/EN/ZH) via dictionnaire et getSectionTitle()
-- Localisation des dates via formatDate(date, lang) avec support fr-FR, en-US, zh-CN
-- Localisation du mot "Présent" via getPresentLabel(lang) dans tous les templates
-- Localisation du footer "Fait à X, le Y" (EN: "Made in X, on Y", ZH: "制作于 X, Y")
-- Ajout d'un sélecteur de langue (LanguageSelector) dans la toolbar de l'éditeur
-- Renommage inline du CV dans l'éditeur (titre cliquable)
-- API de traduction IA avec Gemini (crédits, copie du CV, injection de settings.language)
-- Prompt IA durci : noms propres (pays, villes, entreprises, écoles) jamais traduits
-- Suppression du cache .next pour corriger l'erreur TS liée au module LinkedIn supprimé
+- Ajout du modèle Prisma AdminTask (status, priority, assignee)
+- API CRUD admin-only: GET/POST /api/admin/tasks, PUT/DELETE /api/admin/tasks/[id]
+- Page Kanban /admin/tasks avec 4 colonnes (A faire, En cours, En test, Terminé)
+- Drag & drop HTML5 natif entre colonnes avec mise à jour optimiste
+- Modal de création/édition avec titre, description, priorité, assigné, statut
+- Layout admin avec guard serveur (redirect si non-admin)
+- Badge de priorité coloré (basse/moyenne/haute)
 
 Why:
-- Permettre aux utilisateurs de générer des CV multilingues cohérents (en-têtes + dates + contenu)
-- Éviter les incohérences visuelles (titres en français sur un CV traduit en chinois)
-- Protéger les noms propres lors de la traduction IA
+- Permettre à l'équipe admin de gérer les tâches projet en interne sans dépendre de Trello
 
 Files affected:
-- lib/utils.ts — formatDate() accepte un paramètre lang, avec fallback safe sur dates invalides
-- constants/sections.ts — Dictionnaire multilingue + getSectionTitle() + getPresentLabel()
-- types/cv.ts — Ajout de language? dans CVSettings
-- components/cv-sections/CVExperience.tsx — Prop lang, formatDate(x, lang), getPresentLabel(lang)
-- components/cv-sections/CVEducation.tsx — Prop lang, formatDate(x, lang), getPresentLabel(lang)
-- components/cv-sections/CVFooter.tsx — Prop lang, phrase localisée (Fait/Made/制作于)
-- components/editor/LanguageSelector.tsx — Nouveau composant dropdown FR/EN/ZH
-- components/editor/TranslateCVButton.tsx — Bouton de traduction IA
-- components/templates/*.tsx (22 fichiers) — Propagation de lang={lang} et titres dynamiques
-- app/editor/[id]/page.tsx — Intégration LanguageSelector + titre inline éditable
-- app/api/cv/[id]/translate/route.ts — Prompt IA durci, logs de debug, settings.language injecté
-- store/useCVStore.ts — updateCVTitle + translateCV
-- lib/config.ts — Ajout du modèle gemini-2.5-pro
-- lib/credits.ts — Ajout AI_CV_TRANSLATE: 15
+- prisma/schema.prisma — Nouveau modèle AdminTask
+- app/api/admin/tasks/route.ts — GET (liste) + POST (création)
+- app/api/admin/tasks/[id]/route.ts — PUT (update) + DELETE
+- app/admin/layout.tsx — Guard serveur admin-only
+- app/admin/tasks/page.tsx — Page Kanban complète
 
 Breaking changes:
-- None. Le fallback par défaut est 'fr' partout.
+- None. Nouvelle feature isolée.
 
 Notes for review:
-- Tester la traduction IA vers EN et ZH pour vérifier que les noms propres sont préservés
-- Vérifier le rendu des dates sur les templates avec sidebar (ModernSidebar, TechStack)
-- Le modèle lite peut encore tronquer le JSON sur des CV très longs (>8192 tokens de sortie)
+- La migration a été faite via `prisma db push` (pas de fichier migration)
+- Le drag & drop est natif HTML5, pas de dépendance externe
+- Les emails admin sont en dur dans le guard (pattern existant)

@@ -168,3 +168,14 @@ model CreditTransaction {
 
   @@index([userId])
 }
+
+model AdminTask {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  status      String   @default("todo")
+  priority    String   @default("medium")
+  assignee    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
