@@ -1,29 +1,24 @@
-[2026-03-22] — feat: Interview Simulator Audio mode (Phase 2)
+[2026-03-24] — feat(interview): Add audio/text format selection and dynamic per-minute billing
 
 What changed:
-- Built full bidirectional audio support with Gemini Live API using Server-Sent Events (SSE) and HTTP POST chunks to bypass Next.js WebSocket limitations.
-- Created `lib/interview-audio.ts` to manage server-side WebSocket connections securely without leaking API keys to the frontend.
-- Added a standalone `AudioControls` React component to manage microphone streaming, AudioContext playback, and UI state (listening, thinking, speaking).
-- Added a UI toggle in the Chat interface to seamlessly switch between Text mode and Live Audio mode at any time.
-- Updated Prisma schema to store `transcript` and `audioUrl`.
-- Adjusted credit billing: `AI_INTERVIEW_AUDIO` costs 5 credits per session.
+- Added a Format Selector (Text vs Audio) on the Interview Setup page.
+- Implemented a dynamic billing system for Audio interviews (1 credit per minute, billed proactively via the live SSE connection loop).
+- Updated the database schema (`InterviewSession`) to store the chosen interview format.
+- Locked the Interview UI to conform strictly to the chosen format (preventing users from bypassing audio billing by switching to text UI mid-session).
 
 Why:
-- Allows candidates to practice oral interviews interactively in a natural, conversational way via Gemini Live API's low-latency streaming.
-- Next.js serverless architecture lacks robust WebSocket proxying, so splitting the streams (SSE downstream, POST chunks upstream) resolves deployment issues reliably.
+- To reflect the difference in AI real-time audio computation costs vs traditional text processing, making the platform's economics viable while offering an immersive voice experience.
 
 Files affected:
-- lib/interview-audio.ts
-- components/interview/AudioControls.tsx
-- app/api/ai/interview/ws/[sessionId]/start/route.ts
-- app/api/ai/interview/ws/[sessionId]/chunk/route.ts
-- app/interview/[sessionId]/page.tsx
-- prisma/schema.prisma
-- lib/credits.ts
+- prisma/schema.prisma — Added format field to InterviewSession.
+- lib/credits.ts — Adjusted AI_INTERVIEW base cost to 5 and added AI_INTERVIEW_AUDIO_MINUTE for 1 credit dynamic cost.
+- app/dashboard/ai/interview/page.tsx — Built the Mode selection UI.
+- app/api/ai/interview/route.ts — Session startup now registers the format and charges correctly based on selection.
+- app/api/ai/interview/ws/[sessionId]/start/route.ts — Added a 60-second recurring billing interval to proxy WebSocket. Checks user balance real-time and disconnects if bankrupt.
+- app/interview/[sessionId]/page.tsx — Replaced format Toggle buttons with fixed format Badges based on DB session settings.
 
 Breaking changes:
-- Required `@types/ws` and `ws` package. 
+- None. (New `format` defaults to "text", keeping legacy rows safe).
 
 Notes for review:
-- DB pushed.
-- Text mode remains fully functional and intact as requested.
+- Audio interviews now execute a billing loop every 60s within the serverless function. Please confirm your Vercel/NextJS environment timeout allows for this duration (if standard SSE, it's virtually infinite, but worth noting).

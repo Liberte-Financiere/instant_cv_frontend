@@ -1580,6 +1580,7 @@ export const InterviewSessionScalarFieldEnum = {
   jobContext: 'jobContext',
   cvSummary: 'cvSummary',
   status: 'status',
+  format: 'format',
   totalScore: 'totalScore',
   summary: 'summary',
   questionCount: 'questionCount',

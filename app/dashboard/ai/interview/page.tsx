@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { MessageSquare, Loader2, ArrowLeft, Briefcase, Clock, Award } from 'lucide-react';
+import { MessageSquare, Loader2, ArrowLeft, Briefcase, Clock, Award, Mic, Keyboard } from 'lucide-react';
 import { useCVStore } from '@/store/useCVStore';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -29,6 +29,7 @@ export default function InterviewSetupPage() {
   const [cvSourceMode, setCvSourceMode] = useState<CVSourceMode>('select');
   const [jobTitle, setJobTitle] = useState('');
   const [jobContext, setJobContext] = useState('');
+  const [format, setFormat] = useState<'text' | 'audio'>('text');
   const [isStarting, setIsStarting] = useState(false);
   const [history, setHistory] = useState<HistorySession[]>([]);
 
@@ -48,7 +49,7 @@ export default function InterviewSetupPage() {
       const res = await fetch('/api/ai/interview', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cvId: selectedCVId, jobTitle, jobContext }),
+        body: JSON.stringify({ cvId: selectedCVId, jobTitle, jobContext, format }),
       });
 
       if (!res.ok) {
@@ -137,6 +138,81 @@ export default function InterviewSetupPage() {
                 />
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Format Selection */}
+        <div className="mt-8 border-t border-slate-100 pt-8">
+          <h3 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2">
+            <span className="w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+            Format de l'entretien
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Text Mode */}
+            <button
+              onClick={() => setFormat('text')}
+              style={{ paddingBottom: '16px' }}
+              className={`relative flex items-start gap-4 p-5 rounded-2xl border-2 text-left transition-all ${
+                format === 'text' 
+                  ? 'border-indigo-600 bg-indigo-50/50 shadow-sm' 
+                  : 'border-slate-200 hover:border-indigo-200 hover:bg-slate-50'
+              }`}
+            >
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
+                format === 'text' ? 'bg-indigo-600' : 'bg-slate-100 text-slate-600'
+              }`}>
+                <Keyboard className={`w-6 h-6 ${format === 'text' ? 'text-white' : ''}`} />
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 mb-1">Mode Écrit</h4>
+                <p className="text-sm text-slate-500 mb-3 leading-relaxed">
+                  L'IA pose les questions par écrit. Prenez votre temps pour taper vos réponses et recevez un feedback après chaque interaction.
+                </p>
+                <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-indigo-100 text-indigo-700">
+                  Coût : 5 crédits (fixe)
+                </span>
+              </div>
+              {format === 'text' && (
+                <div className="absolute -top-3 -right-3 w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center border-4 border-white">
+                  <span className="text-white text-xs">✓</span>
+                </div>
+              )}
+            </button>
+
+            {/* Audio Mode */}
+            <button
+              onClick={() => setFormat('audio')}
+              style={{ paddingBottom: '16px' }}
+              className={`relative flex items-start gap-4 p-5 rounded-2xl border-2 text-left transition-all ${
+                format === 'audio' 
+                  ? 'border-indigo-600 bg-indigo-50/50 shadow-sm' 
+                  : 'border-slate-200 hover:border-indigo-200 hover:bg-slate-50'
+              }`}
+            >
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
+                format === 'audio' ? 'bg-indigo-600' : 'bg-slate-100 text-slate-600'
+              }`}>
+                <Mic className={`w-6 h-6 ${format === 'audio' ? 'text-white' : ''}`} />
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 mb-1">Mode Audio Live</h4>
+                <p className="text-sm text-slate-500 mb-3 leading-relaxed">
+                  Appel vocal fluide en simulant les conditions réelles d'un entretien. L'IA réagit à votre voix instantanément.
+                </p>
+                <div className="flex gap-2 items-center">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-100 text-amber-700">
+                    Coût : 1 crédit / minute
+                  </span>
+                  <span className="text-xs text-slate-400 font-medium">BETA</span>
+                </div>
+              </div>
+              {format === 'audio' && (
+                <div className="absolute -top-3 -right-3 w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center border-4 border-white">
+                  <span className="text-white text-xs">✓</span>
+                </div>
+              )}
+            </button>
           </div>
         </div>
 

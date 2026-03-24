@@ -32,6 +32,7 @@ interface SessionData {
   jobTitle: string;
   jobContext: string | null;
   status: string;
+  format: 'text' | 'audio';
   totalScore: number | null;
   questionCount: number;
   summary: string | null;
@@ -73,6 +74,7 @@ export default function InterviewChatPage() {
         if (!res.ok) throw new Error();
         const data: SessionData = await res.json();
         setSession(data);
+        setInputMode(data.format || 'text');
         setMessages(data.messages);
 
         const summaryMsg = data.messages.find((m) => m.role === 'summary');
@@ -235,29 +237,20 @@ export default function InterviewChatPage() {
           </div>
         )}
 
-        {/* Input Mode Toggle */}
-        {session.status !== 'completed' && (
-          <div className="flex bg-slate-100 p-1 rounded-xl">
-            <button
-              onClick={() => setInputMode('text')}
-              className={`flex items-center justify-center p-2 rounded-lg transition-colors ${
-                inputMode === 'text' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-700'
-              }`}
-              title="Mode Texte"
-            >
-              <Keyboard className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setInputMode('audio')}
-              className={`flex items-center justify-center p-2 rounded-lg transition-colors ${
-                inputMode === 'audio' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-700'
-              }`}
-              title="Mode Audio (Live)"
-            >
-              <Mic className="w-4 h-4" />
-            </button>
-          </div>
-        )}
+        {/* Format Badge */}
+        <div className="flex bg-slate-100 p-1.5 px-3 rounded-xl items-center gap-2">
+           {session.format === 'audio' ? (
+              <>
+                <Mic className="w-4 h-4 text-indigo-600"/>
+                <span className="text-xs font-bold text-indigo-600">Audio Live</span>
+              </>
+           ) : (
+              <>
+                <Keyboard className="w-4 h-4 text-indigo-600"/>
+                <span className="text-xs font-bold text-indigo-600">Mode Écrit</span>
+              </>
+           )}
+        </div>
       </div>
 
       {/* Audio Controls Bar */}
