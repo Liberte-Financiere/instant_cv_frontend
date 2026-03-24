@@ -1,17 +1,57 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, SchemaType, Schema } from '@google/generative-ai';
 import { APP_CONFIG } from '@/lib/config';
 
 const MAX_QUESTIONS = 6;
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
-function getModel() {
+const FIRST_QUESTION_SCHEMA: Schema = {
+  type: SchemaType.OBJECT,
+  properties: {
+    question: { type: SchemaType.STRING, description: "La première question posée" },
+    questionType: { type: SchemaType.STRING, description: "Type de question (motivation, comportementale, etc.)" },
+    questionNumber: { type: SchemaType.INTEGER, description: "Toujours 1" }
+  },
+  required: ["question", "questionType", "questionNumber"]
+};
+
+const RESPONSE_SCHEMA: Schema = {
+  type: SchemaType.OBJECT,
+  properties: {
+    feedback: { type: SchemaType.STRING, description: "Feedback constructif et spécifique (2-3 phrases max)" },
+    score: { type: SchemaType.INTEGER, description: "Note sur 10 de la réponse" },
+    nextQuestion: { type: SchemaType.STRING, nullable: true, description: "La prochaine question à poser. Null si c'est la fin de l'entretien." },
+    questionType: { type: SchemaType.STRING, description: "Le type de la prochaine question" }
+  },
+  required: ["feedback", "score"]
+};
+
+const SUMMARY_SCHEMA: Schema = {
+  type: SchemaType.OBJECT,
+  properties: {
+    totalScore: { type: SchemaType.INTEGER, description: "Score global sur 100" },
+    globalFeedback: { type: SchemaType.STRING, description: "Résumé en 2-3 phrases de la performance globale" },
+    strengths: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING }, description: "3 points forts" },
+    improvements: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING }, description: "3 axes d'amélioration concrets" },
+    recommendations: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING }, description: "Recommandations spécifiques pour le poste" }
+  },
+  required: ["totalScore", "globalFeedback", "strengths", "improvements", "recommendations"]
+};
+
+function getModel(schemaType: 'first' | 'response' | 'summary') {
+  const schemaMap = {
+    first: FIRST_QUESTION_SCHEMA,
+    response: RESPONSE_SCHEMA,
+    summary: SUMMARY_SCHEMA
+  };
+
   return genAI.getGenerativeModel({
     model: APP_CONFIG.ai.models.fast,
     generationConfig: {
       responseMimeType: 'application/json',
+      responseSchema: schemaMap[schemaType],
       temperature: 0.7,
-      maxOutputTokens: 8192, // Increased from 2048 to avoid cutoff on long answers
+      maxOutputTokens: 8192,
     },
   });
 }
@@ -81,15 +121,7 @@ RÈGLES :
 1. Pose UNE SEULE question pertinente pour commencer l'entretien.
 2. La question doit être adaptée au profil et au poste visé.
 3. Commence par une question d'introduction (motivation, parcours) avant d'aller vers le technique.
-4. Sois professionnel mais bienveillant.
-5. Réponds en JSON.
-
-FORMAT JSON :
-{
-  "question": "Votre question ici",
-  "questionType": "motivation|comportementale|technique|situationnelle|culture_fit",
-  "questionNumber": 1
-}`;
+4. Sois professionnel mais bienveillant.`;
 }
 
 export function buildResponsePrompt(
@@ -124,21 +156,12 @@ DERNIÈRE RÉPONSE DU CANDIDAT :
 "${candidateAnswer}"
 
 RÈGLES :
-1. Évalue la réponse sur 10 (score).
+1. Évalue la réponse sur 10.
 2. Donne un feedback constructif et spécifique (2-3 phrases max).
 3. ${isLastQuestion
-      ? 'C\'est la DERNIÈRE question. Ne pose PAS de nouvelle question. Mets "nextQuestion" à null.'
-      : 'Pose la PROCHAINE question adaptée au contexte de l\'entretien. Varie les types de questions.'}
-4. Le feedback doit être bienveillant mais honnête.
-5. Réponds en JSON.
-
-FORMAT JSON :
-{
-  "feedback": "Votre feedback sur la réponse",
-  "score": 7,
-  ${isLastQuestion ? '"nextQuestion": null,' : '"nextQuestion": "Votre prochaine question",'}
-  "questionType": "motivation|comportementale|technique|situationnelle|culture_fit"
-}`;
+      ? "C'est la DERNIÈRE question. Ne pose PAS de nouvelle question. Assigne null au champ nextQuestion."
+      : "PROCHAINE QUESTION (Règle d'or) : Si la réponse du candidat est courte, floue ou théorique, NE PASSE PAS à un autre sujet. Pose une sous-question incisive (méthode STAR : Situation, Tâche, Action, Résultat) pour le forcer à donner un exemple concret. Si sa réponse était déjà parfaite et détaillée, passe à un nouveau sujet pertinent."}
+4. Le feedback doit être bienveillant mais honnête, n'hésite pas à le challenger s'il survole un point technique.`;
 }
 
 export function buildSummaryPrompt(
@@ -165,48 +188,22 @@ ENTRETIEN COMPLET :
 ${historyText}
 
 RÈGLES :
-1. Score global sur 100.
-2. 3 points forts du candidat.
-3. 3 axes d'amélioration concrets.
-4. Recommandations spécifiques pour le poste visé.
-5. Réponds en JSON.
-
-FORMAT JSON :
-{
-  "totalScore": 72,
-  "globalFeedback": "Résumé en 2-3 phrases de la performance globale",
-  "strengths": ["Force 1", "Force 2", "Force 3"],
-  "improvements": ["Amélioration 1", "Amélioration 2", "Amélioration 3"],
-  "recommendations": ["Recommandation 1", "Recommandation 2"]
-}`;
+1. Donne un score global sur 100.
+2. Identifie 3 points forts du candidat.
+3. Identifie 3 axes d'amélioration concrets.
+4. Rédige des recommandations spécifiques pour le poste visé.`;
 }
 
-export async function generateInterviewResponse(prompt: string) {
-  const model = getModel();
+export async function generateInterviewResponse(prompt: string, schemaType: 'first' | 'response' | 'summary') {
+  const model = getModel(schemaType);
   const result = await model.generateContent(prompt);
   const response = await result.response;
   const text = response.text().trim();
 
-  // Remove markdown wrappers if any
-  let cleanJson = text;
-  const match = cleanJson.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  if (match) {
-    cleanJson = match[1].trim();
-  } else {
-    cleanJson = cleanJson.replace(/^```json/i, '').replace(/```$/, '').trim();
-  }
-
-  // Sanitize potentially unescaped control characters (newlines) inside strings
-  // This is a common issue when the AI echoes back long text
-  cleanJson = cleanJson.replace(/[\u0000-\u0019]+/g, " ");
-
   try {
-    return JSON.parse(cleanJson);
+    return JSON.parse(text);
   } catch (error) {
-    console.error("[INTERVIEW_JSON_PARSE_ERROR] Failed to parse AI response:");
-    console.error("------------- RAW OUTPUT -------------");
-    console.error(text.slice(-500)); // Log the end of the text to see if it was cut off
-    console.error("--------------------------------------");
-    throw new Error("L'IA a généré une réponse mal formatée. Veuillez renvoyer votre réponse (ou la raccourcir légèrement).");
+    console.error(`[INTERVIEW_JSON_PARSE_ERROR] Schema: ${schemaType} Failed:`, text.slice(-500));
+    throw new Error("L'IA n'a pas pu formatter la réponse selon le schéma attendu. Veuillez réessayer.");
   }
 }

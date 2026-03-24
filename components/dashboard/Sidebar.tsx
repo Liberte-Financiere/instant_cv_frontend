@@ -3,10 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, PenTool, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap } from 'lucide-react';
 import { cn, clearAllLocalData } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
+import { useCreditStore } from '@/store/useCreditStore';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { APP_CONFIG } from '@/lib/config';
@@ -15,17 +16,21 @@ import { APP_CONFIG } from '@/lib/config';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Mes CV (Liste)', href: '/dashboard/list', icon: LayoutList },
+  { name: 'Mes CV', href: '/dashboard/list', icon: LayoutList },
   { name: 'Mes lettres', href: '/dashboard/cover-letters', icon: FileText },
   { name: 'Modèles', href: '/dashboard/templates', icon: LayoutTemplate },
   { name: 'Acheter des Crédits', href: '/dashboard/pricing', icon: Sparkles },
-  { name: 'Donner mon avis', href: '/dashboard/feedback', icon: MessageSquare },
-  { name: 'Compte', href: '/dashboard/settings', icon: Settings },
 ];
 
 const aiNavigation = [
-  { name: 'Analyser mon CV', href: '/dashboard/ai/analyze', icon: Sparkles },
+  { name: 'Analyser mon CV', href: '/dashboard/ai/analyze', icon: Brain },
   { name: 'Matcher une offre', href: '/dashboard/ai/match', icon: Target },
+  { name: "Simulateur d'entretien", href: '/dashboard/ai/interview', icon: Mic },
+];
+
+const secondaryNavigation = [
+  { name: 'Paramètres', href: '/dashboard/settings', icon: Settings },
+  { name: 'Donner mon avis', href: '/dashboard/feedback', icon: MessageSquare },
 ];
 
 export function Sidebar() {
@@ -33,12 +38,14 @@ export function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const { fetchUserCVs, saveCurrentCV, currentCV } = useCVStore();
+  const { credits, fetchCredits } = useCreditStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   // Initial Fetch
   useEffect(() => {
     fetchUserCVs();
-  }, [fetchUserCVs]);
+    fetchCredits();
+  }, [fetchUserCVs, fetchCredits]);
 
   // Auto-save on change (Debounced 4s)
   useEffect(() => {
@@ -99,29 +106,46 @@ export function Sidebar() {
           ))}
         </nav>
 
-        {/* Admin Section */}
-        {session?.user?.role === 'ADMIN' && (
-          <div>
-            <div className="flex items-center gap-2 px-4 mb-2 mt-6">
-              <ShieldAlert className="w-4 h-4 text-red-500" />
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Administration</span>
-            </div>
-            <nav className="space-y-1">
-              <NavLink item={{ name: 'Gestion Crédits', href: '/dashboard/admin', icon: Sparkles }} />
-              <NavLink item={{ name: 'Avis Utilisateurs', href: '/dashboard/admin/feedback', icon: MessageSquare }} />
-            </nav>
-          </div>
-        )}
-
         {/* AI Section */}
-        <div className="mt-6">
-
+        <div className="mt-8">
+          <div className="flex items-center gap-2 px-4 mb-2">
+            <Sparkles className="w-4 h-4 text-blue-400" />
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Outils IA</span>
+          </div>
           <nav className="space-y-1">
             {aiNavigation.map((item) => (
               <NavLink key={item.name} item={item} />
             ))}
           </nav>
         </div> 
+
+        {/* Admin Section */}
+        {session?.user?.role === 'ADMIN' && (
+          <div className="mt-8">
+            <div className="flex items-center gap-2 px-4 mb-2">
+              <ShieldAlert className="w-4 h-4 text-red-500" />
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Administration</span>
+            </div>
+            <nav className="space-y-1">
+              <NavLink item={{ name: 'Gestion Crédits', href: '/dashboard/admin', icon: Zap }} />
+              <NavLink item={{ name: 'Avis Utilisateurs', href: '/dashboard/admin/feedback', icon: MessageSquare }} />
+            </nav>
+          </div>
+        )}
+      </div>
+
+
+      {/* Preferences Section */}
+      <div className="px-4 mb-2">
+        <div className="flex items-center gap-2 px-4 mb-2">
+          <Settings className="w-4 h-4 text-slate-500" />
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Préférences</span>
+        </div>
+        <nav className="space-y-1">
+          {secondaryNavigation.map((item) => (
+            <NavLink key={item.name} item={item} />
+          ))}
+        </nav>
       </div>
 
       {/* User Profile */}

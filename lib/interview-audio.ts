@@ -9,6 +9,8 @@ interface ActiveConnection {
   sessionId: string;
   userId: string;
   lastActive: number;
+  // Invoked by endGeminiConnection to stop the billing interval in the SSE handler
+  terminateBilling?: () => void;
 }
 const globalForGemini = globalThis as unknown as {
   geminiConnections: Map<string, ActiveConnection> | undefined;
@@ -22,6 +24,7 @@ setInterval(() => {
   const now = Date.now();
   for (const [id, conn] of Array.from(connections.entries())) {
     if (now - conn.lastActive > 10 * 60 * 1000) { // 10 minutes timeout
+      conn.terminateBilling?.();
       conn.ws.close();
       connections.delete(id);
     }
@@ -155,6 +158,8 @@ export function sendClientContentMessage(connectionId: string, text: string) {
 export function endGeminiConnection(connectionId: string) {
   const conn = connections.get(connectionId);
   if (conn) {
+    // Stop the billing interval before closing the WebSocket
+    conn.terminateBilling?.();
     try {
       conn.ws.close();
     } catch(e) {}

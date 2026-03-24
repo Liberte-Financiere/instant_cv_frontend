@@ -15,9 +15,11 @@ import {
   AlertTriangle,
   Mic,
   Keyboard,
+  PhoneOff,
 } from 'lucide-react';
 import Link from 'next/link';
 import { AudioControls } from '@/components/interview/AudioControls';
+import { INTERVIEW_CONFIG } from '@/lib/interview';
 
 interface Message {
   id: string;
@@ -186,8 +188,26 @@ export default function InterviewChatPage() {
     }
   };
 
+  const handleEndInterview = async () => {
+    const confirmed = window.confirm('Terminer cet entretien ? La facturation s\'arrêtera immédiatement.');
+    if (!confirmed) return;
+
+    // Mark session as completed server-side before navigating away
+    try {
+      await fetch(`/api/ai/interview/${sessionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'terminate' }),
+      });
+    } catch {
+      // Non-blocking: navigate even if the request fails
+    }
+
+    router.push('/dashboard/ai/interview');
+  };
+
   const currentQuestionNumber = messages.filter((m) => m.role === 'interviewer').length;
-  const maxQuestions = 6;
+  const maxQuestions = INTERVIEW_CONFIG.maxQuestions;
   const progress = session?.status === 'completed' ? 100 : (currentQuestionNumber / maxQuestions) * 100;
 
   if (isLoading) {
@@ -252,29 +272,6 @@ export default function InterviewChatPage() {
            )}
         </div>
       </div>
-
-      {/* Audio Controls Bar */}
-      <AnimatePresence>
-        {inputMode === 'audio' && session.status !== 'completed' && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="bg-white border-b border-slate-200 overflow-hidden shrink-0"
-          >
-            <div className="px-4 py-3 flex items-center justify-center gap-4 max-w-4xl mx-auto">
-              <AudioControls
-                sessionId={sessionId}
-                onTranscriptReceived={handleTranscriptReceived}
-                onSpeakingStateChange={setIsAISpeaking}
-              />
-              <div className="text-xs text-slate-500 max-w-xs leading-relaxed">
-                Appuyez sur le micro pour parler. L'IA vous écoute en temps réel et génère une réponse vocale. Mettez vos écouteurs pour éviter l'écho.
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
@@ -455,6 +452,29 @@ export default function InterviewChatPage() {
               ) : (
                 <Send className="w-5 h-5" />
               )}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Audio Mode Bottom Bar: mic controls + end call button */}
+      {session.status !== 'completed' && inputMode === 'audio' && (
+        <div className="bg-white border-t border-slate-200 px-4 py-4 shrink-0">
+          <div className="flex items-center justify-center gap-4 max-w-4xl mx-auto">
+            <div className="flex flex-col items-center gap-1">
+              <AudioControls
+                sessionId={sessionId}
+                onTranscriptReceived={handleTranscriptReceived}
+                onSpeakingStateChange={setIsAISpeaking}
+              />
+              <p className="text-xs text-slate-400">Cliquez sur le micro pour démarrer</p>
+            </div>
+            <button
+              onClick={handleEndInterview}
+              className="flex items-center gap-2.5 px-6 py-3 bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm rounded-xl border border-red-200 hover:border-red-300 transition-all active:scale-[0.98]"
+            >
+              <PhoneOff className="w-4 h-4" />
+              Terminer l&apos;entretien
             </button>
           </div>
         </div>

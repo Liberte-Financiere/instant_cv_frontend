@@ -27,6 +27,10 @@ export function AudioControls({
   const eventSource = useRef<EventSource | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
+  // Chunk batching: accumulate raw PCM arrays and flush on an interval
+  const chunkBuffer = useRef<Float32Array[]>([]);
+  const batchingInterval = useRef<NodeJS.Timeout | null>(null);
+
   // Buffer queue for playback
   const audioQueue = useRef<Float32Array[]>([]);
   const isPlaying = useRef(false);
@@ -44,6 +48,11 @@ export function AudioControls({
     if (audioContext.current && audioContext.current.state !== 'closed') {
       audioContext.current.close();
     }
+    if (batchingInterval.current) {
+      clearInterval(batchingInterval.current);
+      batchingInterval.current = null;
+    }
+    chunkBuffer.current = [];
     fetch(`/api/ai/interview/ws/${sessionId}/chunk`, {
       method: 'POST',
       body: JSON.stringify({ action: 'close' }),
@@ -57,29 +66,38 @@ export function AudioControls({
     return cleanup;
   }, [cleanup]);
 
-  const sendAudioChunk = async (pcmData: Float32Array) => {
-    // Gemini expects 16kHz PCM 16-bit little-endian Base64
-    // Convert Float32Array [-1, 1] to Int16Array [-32768, 32767]
-    const pcm16 = new Int16Array(pcmData.length);
-    for (let i = 0; i < pcmData.length; i++) {
-        const s = Math.max(-1, Math.min(1, pcmData[i]));
-        pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+  // Converts a merged Float32Array to PCM16 base64 and fires a single HTTP POST.
+  const flushAudioBuffer = useCallback(async () => {
+    if (chunkBuffer.current.length === 0) return;
+
+    // Merge all accumulated chunks into a single Float32Array
+    const totalLength = chunkBuffer.current.reduce((sum, arr) => sum + arr.length, 0);
+    const merged = new Float32Array(totalLength);
+    let offset = 0;
+    for (const chunk of chunkBuffer.current) {
+      merged.set(chunk, offset);
+      offset += chunk.length;
+    }
+    chunkBuffer.current = [];
+
+    // Convert Float32 [-1, 1] to Int16 PCM16 for Gemini Live API
+    const pcm16 = new Int16Array(merged.length);
+    for (let i = 0; i < merged.length; i++) {
+      const s = Math.max(-1, Math.min(1, merged[i]));
+      pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
     }
 
-    // Convert to Base64
-    const buffer = pcm16.buffer;
-    const base64 = Buffer.from(buffer).toString('base64');
-
+    const base64 = Buffer.from(pcm16.buffer).toString('base64');
     try {
       await fetch(`/api/ai/interview/ws/${sessionId}/chunk`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'chunk', pcmBase64: base64 }),
       });
-    } catch (err: any) {
-      console.error('Failed to send audio chunk', err);
+    } catch (err) {
+      console.error('[AudioControls] Failed to send audio batch', err);
     }
-  };
+  }, [sessionId]);
 
   const playAudioQueue = async () => {
     if (isPlaying.current || audioQueue.current.length === 0 || isMuted) return;
@@ -172,7 +190,16 @@ export function AudioControls({
       };
 
       // 2. Capture Microphone Upstream (send User voice)
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Request hardware echo cancellation and noise suppression for maximum clarity
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          sampleRate: 16000,
+          channelCount: 1,
+        },
+      });
       streamRef.current = stream;
 
       // Use modern AudioWorkletNode instead of deprecated ScriptProcessorNode
@@ -183,11 +210,15 @@ export function AudioControls({
       const workletNode = new AudioWorkletNode(audioContext.current, 'audio-processor');
 
       workletNode.port.onmessage = (e) => {
-        if (!isBackendReady) return; // Wait for backend WebSocket to be established
+        if (!isBackendReady) return;
         if (e.data.pcm) {
-          sendAudioChunk(e.data.pcm);
+          // Accumulate chunks in the buffer; the batching interval will flush them
+          chunkBuffer.current.push(e.data.pcm);
         }
       };
+
+      // Flush batched audio every 500ms: 1 HTTP request per 500ms vs 1 per ~20ms
+      batchingInterval.current = setInterval(flushAudioBuffer, 500);
 
       source.connect(workletNode);
       // DO NOT connect workletNode to audioContext.current.destination to prevent microphone echo!
