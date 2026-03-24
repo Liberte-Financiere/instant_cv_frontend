@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    const { cvId, jobTitle, jobContext } = await req.json();
+    const { cvId, jobTitle, jobContext, format = 'text' } = await req.json();
 
     if (!cvId || !jobTitle?.trim()) {
       return NextResponse.json(
@@ -37,13 +37,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'CV introuvable.' }, { status: 404 });
     }
 
-    // Consume credits
+    // Consume credits based on format
     try {
-      await checkAndConsumeCredits(
-        session.user.id,
-        'AI_INTERVIEW',
-        `Simulation d'entretien pour ${jobTitle}`
-      );
+      if (format === 'text') {
+        // Text mode: 5 credits per session (flat)
+        await checkAndConsumeCredits(
+          session.user.id,
+          'AI_INTERVIEW',
+          `Simulation d'entretien écrit pour ${jobTitle}`
+        );
+      } else if (format === 'audio') {
+        // Audio mode: 1 credit for the 1st minute (billed dynamically afterwards)
+        await checkAndConsumeCredits(
+          session.user.id,
+          'AI_INTERVIEW_AUDIO_MINUTE',
+          `1ère minute d'entretien vocal pour ${jobTitle}`
+        );
+      }
     } catch (e: any) {
       return NextResponse.json(
         { error: e.message || 'Crédits insuffisants' },
@@ -67,6 +77,7 @@ export async function POST(req: Request) {
           jobTitle: jobTitle.trim(),
           jobContext: jobContext?.trim() || null,
           cvSummary,
+          format, // "text" or "audio"
           questionCount: 1,
         },
       });

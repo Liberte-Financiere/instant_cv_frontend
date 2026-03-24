@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
+import { checkAndConsumeCredits } from '@/lib/credits';
 import { createGeminiLiveConnection } from '@/lib/interview-audio';
 
 export const dynamic = 'force-dynamic';
@@ -47,6 +48,32 @@ Si le candidat te demande de répéter, répète. S'il hésite, encourage-le.`;
 
           let wsClosed = false;
 
+          // Billing interval for Audio Mode (1 credit / min)
+          let billingInterval: NodeJS.Timeout | null = null;
+          if (interviewSession.format === 'audio') {
+            billingInterval = setInterval(async () => {
+              if (wsClosed) return;
+              try {
+                // Must explicitly specify non-null assertion since session.user.id was already checked at route start
+                await checkAndConsumeCredits(
+                  session.user!.id!,
+                  'AI_INTERVIEW_AUDIO_MINUTE',
+                  `Minute audio supplémentaire pour ${interviewSession.jobTitle}`
+                );
+                console.log(`[SSE Billing] Billed 1 credit for minute on session ${sessionId}`);
+              } catch (e: any) {
+                console.error(`[SSE Billing] Out of credits for session ${sessionId}. Closing connection.`);
+                wsClosed = true;
+                if (billingInterval) clearInterval(billingInterval);
+                clearInterval(keepAlive);
+                
+                // Signal client that the stream is dead due to billing
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: 'Crédits épuisés. L\'entretien a été interrompu.' })}\n\n`));
+                try { controller.close(); } catch (err) {}
+              }
+            }, 60000); // 60 seconds
+          }
+
           const ws = createGeminiLiveConnection(
             sessionId,
             sessionId,
@@ -60,11 +87,13 @@ Si le candidat te demande de répéter, répète. S'il hésite, encourage-le.`;
             () => {
               wsClosed = true;
               clearInterval(keepAlive);
+              if (billingInterval) clearInterval(billingInterval);
               try { controller.close(); } catch (e) {}
             },
             (err) => {
               wsClosed = true;
               clearInterval(keepAlive);
+              if (billingInterval) clearInterval(billingInterval);
               try { controller.error(err); } catch (e) {}
             }
           );
@@ -73,6 +102,7 @@ Si le candidat te demande de répéter, répète. S'il hésite, encourage-le.`;
           req.signal.addEventListener('abort', () => {
             wsClosed = true;
             clearInterval(keepAlive);
+            if (billingInterval) clearInterval(billingInterval);
             ws.close();
           });
 

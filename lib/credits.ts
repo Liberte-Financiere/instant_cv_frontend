@@ -14,8 +14,8 @@ export const CREDIT_COSTS = {
 
   AI_CV_TRANSLATE: 15,
 
-  AI_INTERVIEW: 3,
-  AI_INTERVIEW_AUDIO: 5,
+  AI_INTERVIEW: 5,               // 5 credits for Text Mode (flat rate)
+  AI_INTERVIEW_AUDIO_MINUTE: 1,  // 1 credit per minute for Audio Mode (dynamic rate)
 };
 
 export type ActionType = keyof typeof CREDIT_COSTS;

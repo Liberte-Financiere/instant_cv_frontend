@@ -189,6 +189,7 @@ model InterviewSession {
   jobContext    String?  @db.Text
   cvSummary     String   @db.Text
   status        String   @default("active")
+  format        String   @default("text")
   totalScore    Int?
   summary       String?  @db.Text
   questionCount Int      @default(0)
