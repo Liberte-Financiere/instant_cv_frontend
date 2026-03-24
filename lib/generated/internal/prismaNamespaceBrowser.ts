@@ -61,7 +61,9 @@ export const ModelName = {
   CV: 'CV',
   CoverLetter: 'CoverLetter',
   CreditTransaction: 'CreditTransaction',
-  AdminTask: 'AdminTask'
+  AdminTask: 'AdminTask',
+  InterviewSession: 'InterviewSession',
+  InterviewMessage: 'InterviewMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -234,6 +236,38 @@ export const AdminTaskScalarFieldEnum = {
 } as const
 
 export type AdminTaskScalarFieldEnum = (typeof AdminTaskScalarFieldEnum)[keyof typeof AdminTaskScalarFieldEnum]
+
+
+export const InterviewSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  jobTitle: 'jobTitle',
+  jobContext: 'jobContext',
+  cvSummary: 'cvSummary',
+  status: 'status',
+  format: 'format',
+  totalScore: 'totalScore',
+  summary: 'summary',
+  questionCount: 'questionCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InterviewSessionScalarFieldEnum = (typeof InterviewSessionScalarFieldEnum)[keyof typeof InterviewSessionScalarFieldEnum]
+
+
+export const InterviewMessageScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  role: 'role',
+  content: 'content',
+  score: 'score',
+  audioUrl: 'audioUrl',
+  transcript: 'transcript',
+  createdAt: 'createdAt'
+} as const
+
+export type InterviewMessageScalarFieldEnum = (typeof InterviewMessageScalarFieldEnum)[keyof typeof InterviewMessageScalarFieldEnum]
 
 
 export const SortOrder = {

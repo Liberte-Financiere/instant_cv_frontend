@@ -2,12 +2,10 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 
-const ADMIN_EMAILS = ['m9bikienga@gmail.com', 'optijob18@gmail.com'];
-
 async function isAdmin() {
   const session = await auth();
   if (!session?.user) return false;
-  return session.user.role === 'ADMIN' || ADMIN_EMAILS.includes(session.user.email || '');
+  return session.user.role === 'ADMIN';
 }
 
 export async function GET() {
