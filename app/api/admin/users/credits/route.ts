@@ -6,8 +6,8 @@ import { addCredits } from '@/lib/credits';
 export async function GET(req: Request) {
   try {
     const session = await auth();
-    // Véfirication admin basée sur le rôle ou l'email admin
-    const isAdmin = session?.user?.role === 'ADMIN' || ['m9bikienga@gmail.com', 'optijob18@gmail.com'].includes(session?.user?.email || '');
+    // Vérification admin basée sur le rôle
+    const isAdmin = session?.user?.role === 'ADMIN';
     
     if (!isAdmin) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -60,7 +60,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await auth();
-    const isAdmin = session?.user?.role === 'ADMIN' || ['m9bikienga@gmail.com', 'optijob18@gmail.com'].includes(session?.user?.email || '');
+    const isAdmin = session?.user?.role === 'ADMIN';
     
     if (!isAdmin) {
       return new NextResponse("Unauthorized", { status: 401 });
