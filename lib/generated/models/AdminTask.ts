@@ -31,6 +31,7 @@ export type AdminTaskMinAggregateOutputType = {
   status: string | null
   priority: string | null
   assignee: string | null
+  dueDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +43,7 @@ export type AdminTaskMaxAggregateOutputType = {
   status: string | null
   priority: string | null
   assignee: string | null
+  dueDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,6 +55,8 @@ export type AdminTaskCountAggregateOutputType = {
   status: number
   priority: number
   assignee: number
+  dueDate: number
+  tags: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -66,6 +70,7 @@ export type AdminTaskMinAggregateInputType = {
   status?: true
   priority?: true
   assignee?: true
+  dueDate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -77,6 +82,7 @@ export type AdminTaskMaxAggregateInputType = {
   status?: true
   priority?: true
   assignee?: true
+  dueDate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +94,8 @@ export type AdminTaskCountAggregateInputType = {
   status?: true
   priority?: true
   assignee?: true
+  dueDate?: true
+  tags?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -172,6 +180,8 @@ export type AdminTaskGroupByOutputType = {
   status: string
   priority: string
   assignee: string | null
+  dueDate: Date | null
+  tags: string[]
   createdAt: Date
   updatedAt: Date
   _count: AdminTaskCountAggregateOutputType | null
@@ -204,6 +214,8 @@ export type AdminTaskWhereInput = {
   status?: Prisma.StringFilter<"AdminTask"> | string
   priority?: Prisma.StringFilter<"AdminTask"> | string
   assignee?: Prisma.StringNullableFilter<"AdminTask"> | string | null
+  dueDate?: Prisma.DateTimeNullableFilter<"AdminTask"> | Date | string | null
+  tags?: Prisma.StringNullableListFilter<"AdminTask">
   createdAt?: Prisma.DateTimeFilter<"AdminTask"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdminTask"> | Date | string
 }
@@ -215,6 +227,8 @@ export type AdminTaskOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   assignee?: Prisma.SortOrderInput | Prisma.SortOrder
+  dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  tags?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -229,6 +243,8 @@ export type AdminTaskWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"AdminTask"> | string
   priority?: Prisma.StringFilter<"AdminTask"> | string
   assignee?: Prisma.StringNullableFilter<"AdminTask"> | string | null
+  dueDate?: Prisma.DateTimeNullableFilter<"AdminTask"> | Date | string | null
+  tags?: Prisma.StringNullableListFilter<"AdminTask">
   createdAt?: Prisma.DateTimeFilter<"AdminTask"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdminTask"> | Date | string
 }, "id">
@@ -240,6 +256,8 @@ export type AdminTaskOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   assignee?: Prisma.SortOrderInput | Prisma.SortOrder
+  dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  tags?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AdminTaskCountOrderByAggregateInput
@@ -257,6 +275,8 @@ export type AdminTaskScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"AdminTask"> | string
   priority?: Prisma.StringWithAggregatesFilter<"AdminTask"> | string
   assignee?: Prisma.StringNullableWithAggregatesFilter<"AdminTask"> | string | null
+  dueDate?: Prisma.DateTimeNullableWithAggregatesFilter<"AdminTask"> | Date | string | null
+  tags?: Prisma.StringNullableListFilter<"AdminTask">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AdminTask"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"AdminTask"> | Date | string
 }
@@ -268,6 +288,8 @@ export type AdminTaskCreateInput = {
   status?: string
   priority?: string
   assignee?: string | null
+  dueDate?: Date | string | null
+  tags?: Prisma.AdminTaskCreatetagsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -279,6 +301,8 @@ export type AdminTaskUncheckedCreateInput = {
   status?: string
   priority?: string
   assignee?: string | null
+  dueDate?: Date | string | null
+  tags?: Prisma.AdminTaskCreatetagsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -290,6 +314,8 @@ export type AdminTaskUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   assignee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.AdminTaskUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -301,6 +327,8 @@ export type AdminTaskUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   assignee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.AdminTaskUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -312,6 +340,8 @@ export type AdminTaskCreateManyInput = {
   status?: string
   priority?: string
   assignee?: string | null
+  dueDate?: Date | string | null
+  tags?: Prisma.AdminTaskCreatetagsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -323,6 +353,8 @@ export type AdminTaskUpdateManyMutationInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   assignee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.AdminTaskUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -334,8 +366,18 @@ export type AdminTaskUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   assignee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.AdminTaskUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type AdminTaskCountOrderByAggregateInput = {
@@ -345,6 +387,8 @@ export type AdminTaskCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   assignee?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -356,6 +400,7 @@ export type AdminTaskMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   assignee?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -367,8 +412,18 @@ export type AdminTaskMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   assignee?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type AdminTaskCreatetagsInput = {
+  set: string[]
+}
+
+export type AdminTaskUpdatetagsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 
@@ -380,6 +435,8 @@ export type AdminTaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   status?: boolean
   priority?: boolean
   assignee?: boolean
+  dueDate?: boolean
+  tags?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["adminTask"]>
@@ -391,6 +448,8 @@ export type AdminTaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   status?: boolean
   priority?: boolean
   assignee?: boolean
+  dueDate?: boolean
+  tags?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["adminTask"]>
@@ -402,6 +461,8 @@ export type AdminTaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   status?: boolean
   priority?: boolean
   assignee?: boolean
+  dueDate?: boolean
+  tags?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["adminTask"]>
@@ -413,11 +474,13 @@ export type AdminTaskSelectScalar = {
   status?: boolean
   priority?: boolean
   assignee?: boolean
+  dueDate?: boolean
+  tags?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AdminTaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "status" | "priority" | "assignee" | "createdAt" | "updatedAt", ExtArgs["result"]["adminTask"]>
+export type AdminTaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "status" | "priority" | "assignee" | "dueDate" | "tags" | "createdAt" | "updatedAt", ExtArgs["result"]["adminTask"]>
 
 export type $AdminTaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AdminTask"
@@ -429,6 +492,8 @@ export type $AdminTaskPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     status: string
     priority: string
     assignee: string | null
+    dueDate: Date | null
+    tags: string[]
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["adminTask"]>
@@ -860,6 +925,8 @@ export interface AdminTaskFieldRefs {
   readonly status: Prisma.FieldRef<"AdminTask", 'String'>
   readonly priority: Prisma.FieldRef<"AdminTask", 'String'>
   readonly assignee: Prisma.FieldRef<"AdminTask", 'String'>
+  readonly dueDate: Prisma.FieldRef<"AdminTask", 'DateTime'>
+  readonly tags: Prisma.FieldRef<"AdminTask", 'String[]'>
   readonly createdAt: Prisma.FieldRef<"AdminTask", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"AdminTask", 'DateTime'>
 }

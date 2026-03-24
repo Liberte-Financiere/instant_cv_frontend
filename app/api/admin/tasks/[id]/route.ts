@@ -2,12 +2,10 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 
-const ADMIN_EMAILS = ['m9bikienga@gmail.com', 'optijob18@gmail.com'];
-
 async function isAdmin() {
   const session = await auth();
   if (!session?.user) return false;
-  return session.user.role === 'ADMIN' || ADMIN_EMAILS.includes(session.user.email || '');
+  return session.user.role === 'ADMIN';
 }
 
 export async function PUT(
@@ -21,17 +19,19 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
-    const { title, description, status, priority, assignee } = body;
+    const { title, description, status, priority, assignee, dueDate, tags } = body;
 
     const validStatuses = ['todo', 'in_progress', 'testing', 'done'];
     const validPriorities = ['low', 'medium', 'high'];
 
-    const updateData: Record<string, unknown> = {};
+    const updateData: Record<string, any> = {};
     if (title !== undefined) updateData.title = title.trim();
     if (description !== undefined) updateData.description = description?.trim() || null;
     if (status !== undefined && validStatuses.includes(status)) updateData.status = status;
     if (priority !== undefined && validPriorities.includes(priority)) updateData.priority = priority;
     if (assignee !== undefined) updateData.assignee = assignee?.trim() || null;
+    if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null;
+    if (tags !== undefined && Array.isArray(tags)) updateData.tags = tags;
 
     const task = await prisma.adminTask.update({
       where: { id },

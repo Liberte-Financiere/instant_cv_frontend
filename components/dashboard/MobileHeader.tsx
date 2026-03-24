@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, FileText, LayoutDashboard, LayoutList, LayoutTemplate, PenTool, Settings, LogOut, User, Sparkles, Target, Brain, MessageSquare, ShieldAlert } from 'lucide-react';
+import { Menu, X, FileText, LayoutDashboard, LayoutList, LayoutTemplate, PenTool, Settings, LogOut, User, Sparkles, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { cn, clearAllLocalData } from '@/lib/utils';
@@ -16,13 +16,17 @@ const navigation = [
   { name: 'Mes lettres', href: '/dashboard/cover-letters', icon: FileText },
   { name: 'Modèles', href: '/dashboard/templates', icon: LayoutTemplate },
   { name: 'Acheter des Crédits', href: '/dashboard/pricing', icon: Sparkles },
-  { name: 'Donner mon avis', href: '/dashboard/feedback', icon: MessageSquare },
-  { name: 'Compte', href: '/dashboard/settings', icon: Settings },
 ];
 
 const aiNavigation = [
-  { name: 'Analyser mon CV', href: '/dashboard/ai/analyze', icon: Sparkles },
+  { name: 'Analyser mon CV', href: '/dashboard/ai/analyze', icon: Brain },
   { name: 'Matcher une offre', href: '/dashboard/ai/match', icon: Target },
+  { name: "Simulateur d'entretien", href: '/dashboard/ai/interview', icon: Mic },
+];
+
+const secondaryNavigation = [
+  { name: 'Paramètres', href: '/dashboard/settings', icon: Settings },
+  { name: 'Donner mon avis', href: '/dashboard/feedback', icon: MessageSquare },
 ];
 
 export function MobileHeader() {
@@ -131,7 +135,7 @@ export function MobileHeader() {
                           pathname === '/dashboard/admin' ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
                         )}
                       >
-                        <Sparkles className={cn("w-5 h-5", pathname === '/dashboard/admin' ? "text-blue-400" : "text-slate-500")} />
+                        <Zap className={cn("w-5 h-5", pathname === '/dashboard/admin' ? "text-blue-400" : "text-slate-500")} />
                         <span>Gestion Crédits</span>
                       </Link>
                       <Link
@@ -145,12 +149,27 @@ export function MobileHeader() {
                         <MessageSquare className={cn("w-5 h-5", pathname === '/dashboard/admin/feedback' ? "text-blue-400" : "text-slate-500")} />
                         <span>Avis Utilisateurs</span>
                       </Link>
+                      <Link
+                        href="/admin/tasks"
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                          pathname === '/admin/tasks' ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                        )}
+                      >
+                        <LayoutList className={cn("w-5 h-5", pathname === '/admin/tasks' ? "text-blue-400" : "text-slate-500")} />
+                        <span>Gestion des Tâches</span>
+                      </Link>
                     </div>
                   </div>
                 )}
 
                 {/* AI Section Mobile */}
-                <div className="mt-4">
+                <div className="mt-8">
+                  <div className="flex items-center gap-2 px-4 mb-2">
+                    <Sparkles className="w-4 h-4 text-blue-400" />
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Outils IA</span>
+                  </div>
                   <div className="space-y-1">
                     {aiNavigation.map((item) => {
                       const isActive = pathname === item.href;
@@ -164,7 +183,38 @@ export function MobileHeader() {
                           className={cn(
                             "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
                             isActive 
-                              ? "bg-slate-800 text-white" 
+                              ? "bg-slate-800 text-white shadow-lg shadow-black/20" 
+                              : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                          )}
+                        >
+                          <Icon className={cn("w-5 h-5", isActive ? "text-blue-400" : "text-slate-500")} />
+                          <span>{item.name}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Preferences Section Mobile */}
+                <div className="mt-8">
+                  <div className="flex items-center gap-2 px-4 mb-2">
+                    <Settings className="w-4 h-4 text-slate-500" />
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Préférences</span>
+                  </div>
+                  <div className="space-y-1">
+                    {secondaryNavigation.map((item) => {
+                      const isActive = pathname === item.href;
+                      const Icon = item.icon;
+                      
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className={cn(
+                            "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                            isActive 
+                              ? "bg-slate-800 text-white shadow-lg shadow-black/20" 
                               : "text-slate-400 hover:text-white hover:bg-slate-800/50"
                           )}
                         >

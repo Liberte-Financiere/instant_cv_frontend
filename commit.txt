@@ -1,21 +1,26 @@
-[2026-03-22] — fix: AI analyze/match recevait des CV tronqués en mode "select"
+[2026-03-24] — Interview Hub, Mobile Sync & Dashboard Persistence
 
 What changed:
-- Corrigé le bug critique où l'AI recevait un CV sans experiences, education, skills, etc.
-- Les pages analyze et match fetchen maintenant le CV complet via CVService.getById()
-- Avant: cvList contenait uniquement des summaries (sans sections importantes)
+- Created a dedicated History Hub for AI Interviews with advanced filtering and search.
+- Synced the mobile sidebar with the desktop navigation to include all AI tools and preferences.
+- Fixed inconsistent icons in the mobile header (Brain, Mic, Zap).
+- Enabled persistence for AI analyses performed from the main dashboard "Magic Analyzer".
+- Limited the interview history view on the setup page to 3 items for a cleaner UI.
 
 Why:
-- fetchUserCVs() appelle /api/cv?summary=true qui strip les données lourdes
-- Les pages envoyaient directement ces summaries à l'IA, qui analysait un CV quasi vide
+- To provide users with a feature-rich interface to manage their interview history.
+- To ensure a consistent and full feature set across mobile and desktop devices.
+- To avoid data loss and provide a complete history of AI analyses regardless of where they are initiated.
 
 Files affected:
-- app/dashboard/ai/analyze/page.tsx — fetch full CV avant envoi à l'IA
-- app/dashboard/ai/match/page.tsx — fetch full CV avant envoi à l'IA
+- app/dashboard/ai/interview/history/page.tsx — New dedicated history hub.
+- app/dashboard/ai/interview/page.tsx — Limited recent history and added link to the new hub.
+- components/dashboard/MobileHeader.tsx — Synced navigation links and fixed icons for mobile.
+- app/dashboard/page.tsx — Added persistence call for "Magic Analyzer" results.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Le dashboard page.tsx n'est pas affecté (utilise upload PDF uniquement)
-- L'appel CVService.getById() ajoute une requête réseau avant l'analyse, mais la latence est négligeable vs le temps de réponse IA
+- Verify the mobile menu on a real device or responsive simulator to ensure icons are properly aligned.
+- Check that analyses from the dashboard now appear in /dashboard/ai/analyze history.

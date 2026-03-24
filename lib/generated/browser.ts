@@ -72,3 +72,13 @@ export type CreditTransaction = Prisma.CreditTransactionModel
  * 
  */
 export type AdminTask = Prisma.AdminTaskModel
+/**
+ * Model InterviewSession
+ * 
+ */
+export type InterviewSession = Prisma.InterviewSessionModel
+/**
+ * Model InterviewMessage
+ * 
+ */
+export type InterviewMessage = Prisma.InterviewMessageModel
