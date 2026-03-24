@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, description, status, priority, assignee } = body;
+    const { title, description, status, priority, assignee, dueDate, tags } = body;
 
     if (!title || typeof title !== 'string' || title.trim().length === 0) {
       return NextResponse.json({ error: 'Le titre est requis.' }, { status: 400 });
@@ -51,6 +51,8 @@ export async function POST(req: Request) {
         status: validStatuses.includes(status) ? status : 'todo',
         priority: validPriorities.includes(priority) ? priority : 'medium',
         assignee: assignee?.trim() || null,
+        dueDate: dueDate ? new Date(dueDate) : null,
+        tags: Array.isArray(tags) ? tags : [],
       },
     });
 

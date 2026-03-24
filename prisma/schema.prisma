@@ -177,6 +177,8 @@ model AdminTask {
   status      String   @default("todo")
   priority    String   @default("medium")
   assignee    String?
+  dueDate     DateTime?
+  tags        String[] @default([])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

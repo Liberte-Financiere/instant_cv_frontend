@@ -1,28 +1,26 @@
-[2026-03-24] — feat(ai/interview): Multi-step setup wizard & session management
+[2026-03-24] — Interview Hub, Mobile Sync & Dashboard Persistence
 
 What changed:
-- Refactored `app/dashboard/ai/interview/page.tsx` from a single long form into an animated 3-step wizard (Hub -> Context -> Format) using framer-motion.
-- Added `PATCH` endpoint to `/api/ai/interview/[sessionId]/route.ts` to support manual early termination of interviews. Computes partial score and marks status as `completed`.
-- Added `DELETE` endpoint to `/api/ai/interview/[sessionId]/route.ts` for removing history sessions.
-- Added a proper "Terminer l'entretien" button in the audio mode UI (`app/interview/[sessionId]/page.tsx`) that triggers the `PATCH` termination before navigating, resolving the "En cours" stuck status.
-- UI: Merged AudioControls and "Terminer l'entretien" into a sleek bottom bar.
-- UI: Added a permanent trash icon to history cards for deleting previous sessions.
-- UI: Added `pr-12` padding to history cards to prevent the delete button from overlapping the status badge.
-- UI: Changed history dates to include the exact hour and minute for better distinction.
+- Created a dedicated History Hub for AI Interviews with advanced filtering and search.
+- Synced the mobile sidebar with the desktop navigation to include all AI tools and preferences.
+- Fixed inconsistent icons in the mobile header (Brain, Mic, Zap).
+- Enabled persistence for AI analyses performed from the main dashboard "Magic Analyzer".
+- Limited the interview history view on the setup page to 3 items for a cleaner UI.
 
 Why:
-- The setup page was becoming cluttered. A multi-step wizard splits cognitive load and looks more premium.
-- In audio mode, users needed a clear "hang up" button that correctly terminates the session state on the server.
-- Users requested the ability to delete past history items to keep their dashboard clean.
-- Fixed a layout bug where absolute positioning caused overlapping text.
+- To provide users with a feature-rich interface to manage their interview history.
+- To ensure a consistent and full feature set across mobile and desktop devices.
+- To avoid data loss and provide a complete history of AI analyses regardless of where they are initiated.
 
 Files affected:
-- app/dashboard/ai/interview/page.tsx — Converted to 3-step wizard, added delete history logic, dates formatting, UI overlap fix.
-- app/api/ai/interview/[sessionId]/route.ts — Added PATCH (terminate) and DELETE endpoints.
-- app/interview/[sessionId]/page.tsx — Added bottom action bar for audio mode, wired handleEndInterview.
+- app/dashboard/ai/interview/history/page.tsx — New dedicated history hub.
+- app/dashboard/ai/interview/page.tsx — Limited recent history and added link to the new hub.
+- components/dashboard/MobileHeader.tsx — Synced navigation links and fixed icons for mobile.
+- app/dashboard/page.tsx — Added persistence call for "Magic Analyzer" results.
 
 Breaking changes:
-- None.
+- None
 
 Notes for review:
-- Deleting an interview triggers a Prisma `onDelete: Cascade` that safely removes associated messages.
+- Verify the mobile menu on a real device or responsive simulator to ensure icons are properly aligned.
+- Check that analyses from the dashboard now appear in /dashboard/ai/analyze history.

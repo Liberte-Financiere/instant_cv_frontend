@@ -231,6 +231,8 @@ export const AdminTaskScalarFieldEnum = {
   status: 'status',
   priority: 'priority',
   assignee: 'assignee',
+  dueDate: 'dueDate',
+  tags: 'tags',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
