@@ -149,6 +149,17 @@ export function MobileHeader() {
                         <MessageSquare className={cn("w-5 h-5", pathname === '/dashboard/admin/feedback' ? "text-blue-400" : "text-slate-500")} />
                         <span>Avis Utilisateurs</span>
                       </Link>
+                      <Link
+                        href="/admin/tasks"
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                          pathname === '/admin/tasks' ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                        )}
+                      >
+                        <LayoutList className={cn("w-5 h-5", pathname === '/admin/tasks' ? "text-blue-400" : "text-slate-500")} />
+                        <span>Gestion des Tâches</span>
+                      </Link>
                     </div>
                   </div>
                 )}
