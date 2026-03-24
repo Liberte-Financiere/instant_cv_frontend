@@ -1,8 +1,11 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Plus, Trash2, GripVertical, X, ArrowLeft, Search, Filter } from 'lucide-react';
+import { Plus, Trash2, GripVertical, X, ArrowLeft, Search, Filter, Calendar, Tag as TagIcon, Clock, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { format, isPast, isToday, formatDistanceToNow } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 interface Task {
   id: string;
@@ -11,27 +14,29 @@ interface Task {
   status: string;
   priority: string;
   assignee: string | null;
+  dueDate: string | null;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
 }
 
 const COLUMNS = [
-  { id: 'todo', label: 'A faire', color: '#64748b', bg: 'bg-slate-50' },
-  { id: 'in_progress', label: 'En cours', color: '#3b82f6', bg: 'bg-blue-50' },
-  { id: 'testing', label: 'En test', color: '#f59e0b', bg: 'bg-amber-50' },
-  { id: 'done', label: 'Terminé', color: '#22c55e', bg: 'bg-green-50' },
+  { id: 'todo', label: 'À faire', color: '#64748b', bg: 'bg-slate-50/50' },
+  { id: 'in_progress', label: 'En cours', color: '#3b82f6', bg: 'bg-blue-50/50' },
+  { id: 'testing', label: 'En test', color: '#f59e0b', bg: 'bg-amber-50/50' },
+  { id: 'done', label: 'Terminé', color: '#10b981', bg: 'bg-emerald-50/50' },
 ];
 
 const PRIORITIES = [
-  { id: 'low', label: 'Basse', color: 'bg-slate-200 text-slate-700' },
-  { id: 'medium', label: 'Moyenne', color: 'bg-blue-100 text-blue-700' },
-  { id: 'high', label: 'Haute', color: 'bg-red-100 text-red-700' },
+  { id: 'low', label: 'Basse', color: 'bg-slate-100 text-slate-600 border-slate-200' },
+  { id: 'medium', label: 'Moyenne', color: 'bg-blue-50 text-blue-600 border-blue-100' },
+  { id: 'high', label: 'Haute', color: 'bg-red-50 text-red-600 border-red-100' },
 ];
 
 function PriorityBadge({ priority }: { priority: string }) {
   const p = PRIORITIES.find((pr) => pr.id === priority) || PRIORITIES[1];
   return (
-    <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${p.color}`}>
+    <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${p.color}`}>
       {p.label}
     </span>
   );
@@ -46,87 +51,107 @@ function StatsPanel({ tasks }: { tasks: Task[] }) {
     count: tasks.filter((t) => t.status === col.id).length,
   }));
 
-  const priorityCounts = PRIORITIES.map((p) => ({
-    ...p,
-    count: tasks.filter((t) => t.priority === p.id).length,
-  }));
-
   const doneCount = statusCounts.find((s) => s.id === 'done')?.count || 0;
   const progressPercent = Math.round((doneCount / total) * 100);
+  const highPriorityCount = tasks.filter(t => t.priority === 'high' && t.status !== 'done').length;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      {/* Progress global */}
-      <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-slate-700">Progression</h3>
-          <span className="text-2xl font-black text-slate-800">{progressPercent}%</span>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      {/* Overall Progress */}
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden group"
+      >
+        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-full blur-3xl -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-500" />
+        <div className="relative">
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-2.5 bg-blue-50 rounded-xl">
+              <Clock className="w-5 h-5 text-blue-600" />
+            </div>
+            <span className="text-3xl font-black text-slate-800 tracking-tight">{progressPercent}%</span>
+          </div>
+          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Progression Globale</h3>
+          <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden mb-3">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${progressPercent}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="h-full rounded-full shadow-[0_0_12px_rgba(59,130,246,0.3)]"
+              style={{ background: 'linear-gradient(90deg, #3b82f6, #60a5fa)' }}
+            />
+          </div>
+          <p className="text-[10px] font-bold text-slate-500">{doneCount} sur {total} tâches terminées</p>
         </div>
-        <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
-          <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{
-              width: `${progressPercent}%`,
-              background: 'linear-gradient(90deg, #3b82f6, #22c55e)',
-            }}
-          />
-        </div>
-        <p className="text-xs text-slate-500 mt-2">{doneCount}/{total} tâches terminées</p>
-      </div>
+      </motion.div>
 
-      {/* Distribution par statut */}
-      <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
-        <h3 className="text-sm font-bold text-slate-700 mb-3">Par statut</h3>
-        <div className="space-y-2">
+      {/* Status Distribution */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100"
+      >
+        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+          Répartition par statut
+        </h3>
+        <div className="grid grid-cols-4 gap-2">
           {statusCounts.map((s) => {
             const pct = Math.round((s.count / total) * 100);
             return (
-              <div key={s.id} className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
-                <span className="text-xs text-slate-600 w-20 shrink-0">{s.label}</span>
-                <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{ width: `${pct}%`, backgroundColor: s.color }}
-                  />
+              <div key={s.id} className="flex flex-col items-center gap-2">
+                <div className="relative w-full aspect-square flex items-center justify-center">
+                   <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                      <circle cx="18" cy="18" r="16" fill="none" className="stroke-slate-50" strokeWidth="3" />
+                      <motion.circle 
+                        cx="18" cy="18" r="16" fill="none" 
+                        stroke={s.color} strokeWidth="3" strokeDasharray="100"
+                        initial={{ strokeDashoffset: 100 }}
+                        animate={{ strokeDashoffset: 100 - pct }}
+                        transition={{ duration: 1, delay: 0.5 }}
+                        strokeLinecap="round"
+                      />
+                   </svg>
+                   <span className="absolute text-[10px] font-black text-slate-700">{s.count}</span>
                 </div>
-                <span className="text-xs font-bold text-slate-700 w-6 text-right">{s.count}</span>
+                <span className="text-[9px] font-black text-slate-400 uppercase text-center leading-tight">{s.label}</span>
               </div>
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Distribution par priorité */}
-      <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
-        <h3 className="text-sm font-bold text-slate-700 mb-3">Par priorité</h3>
-        <div className="flex items-end gap-3 h-24">
-          {priorityCounts.map((p) => {
-            const maxCount = Math.max(...priorityCounts.map((x) => x.count), 1);
-            const barHeight = Math.max((p.count / maxCount) * 100, 8);
-            const barColors: Record<string, string> = {
-              low: '#94a3b8',
-              medium: '#3b82f6',
-              high: '#ef4444',
-            };
-            return (
-              <div key={p.id} className="flex-1 flex flex-col items-center gap-1">
-                <span className="text-xs font-bold text-slate-700">{p.count}</span>
-                <div className="w-full flex items-end" style={{ height: '60px' }}>
-                  <div
-                    className="w-full rounded-t-md transition-all duration-500"
-                    style={{
-                      height: `${barHeight}%`,
-                      backgroundColor: barColors[p.id] || '#94a3b8',
-                    }}
-                  />
-                </div>
-                <span className="text-[10px] font-semibold text-slate-500 uppercase">{p.label}</span>
-              </div>
-            );
-          })}
+      {/* Critical Tasks */}
+      <motion.div 
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.2 }}
+        className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 group"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div className="p-2.5 bg-red-50 rounded-xl group-hover:rotate-12 transition-transform">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+          </div>
+          <span className="text-3xl font-black text-red-600 tracking-tight">{highPriorityCount}</span>
         </div>
-      </div>
+        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Urgences Critiques</h3>
+        <p className="text-[10px] text-slate-500 font-bold leading-relaxed mb-4">
+          Tâches de haute priorité non terminées nécessitant une attention immédiate.
+        </p>
+        <div className="flex -space-x-2">
+           {[...Array(Math.min(highPriorityCount, 5))].map((_, i) => (
+             <div key={i} className="w-7 h-7 rounded-full border-2 border-white bg-red-100 flex items-center justify-center text-[10px] font-bold text-red-600 shadow-sm">
+               !
+             </div>
+           ))}
+           {highPriorityCount > 5 && (
+             <div className="w-7 h-7 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400 shadow-sm">
+               +{highPriorityCount - 5}
+             </div>
+           )}
+        </div>
+      </motion.div>
     </div>
   );
 }
@@ -144,124 +169,263 @@ function TaskModal({ task, onClose, onSave, onDelete }: TaskModalProps) {
   const [priority, setPriority] = useState(task?.priority || 'medium');
   const [assignee, setAssignee] = useState(task?.assignee || '');
   const [status, setStatus] = useState(task?.status || 'todo');
+  const [dueDate, setDueDate] = useState(task?.dueDate ? task.dueDate.split('T')[0] : '');
+  const [tagInput, setTagInput] = useState(task?.tags?.join(', ') || '');
 
   const isEditing = !!task?.id;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
-    onSave({ title, description, priority, assignee, status });
+    
+    const tags = tagInput.split(',').map(t => t.trim()).filter(t => t !== '');
+    
+    onSave({ 
+      title, 
+      description, 
+      priority, 
+      assignee, 
+      status,
+      dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+      tags
+    });
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden"
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-          <h2 className="text-lg font-bold text-slate-800">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+          <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${isEditing ? 'bg-blue-500' : 'bg-green-500'}`} />
             {isEditing ? 'Modifier la tâche' : 'Nouvelle tâche'}
           </h2>
-          <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-100 transition-colors">
+          <button onClick={onClose} className="p-1.5 rounded-xl hover:bg-slate-200 transition-colors">
             <X className="w-5 h-5 text-slate-400" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1">Titre</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Ex: Implémenter le système de paiement"
-              autoFocus
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1">Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              rows={3}
-              placeholder="Détails de la tâche..."
-            />
-          </div>
-
-          <div className="grid grid-cols-3 gap-3">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-slate-600 mb-1">Priorité</label>
-              <select
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
-                className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-              >
-                {PRIORITIES.map((p) => (
-                  <option key={p.id} value={p.id}>{p.label}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-600 mb-1">Statut</label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-              >
-                {COLUMNS.map((c) => (
-                  <option key={c.id} value={c.id}>{c.label}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-600 mb-1">Assigné</label>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Titre de la tâche</label>
               <input
                 type="text"
-                value={assignee}
-                onChange={(e) => setAssignee(e.target.value)}
-                className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Nom"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-inner"
+                placeholder="Ex: Optimisation du moteur de recherche"
+                autoFocus
+                required
               />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Description</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none shadow-inner"
+                rows={3}
+                placeholder="Détails, objectifs ou notes..."
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Assigné à</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={assignee}
+                    onChange={(e) => setAssignee(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-inner"
+                    placeholder="Nom du membre"
+                  />
+                  <GripVertical className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Date limite</label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-inner"
+                  />
+                  <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Priorité</label>
+                <select
+                  value={priority}
+                  onChange={(e) => setPriority(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none shadow-inner"
+                >
+                  {PRIORITIES.map((p) => (
+                    <option key={p.id} value={p.id}>{p.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Statut Initial</label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none shadow-inner"
+                >
+                  {COLUMNS.map((c) => (
+                    <option key={c.id} value={c.id}>{c.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Tags (séparés par des virgules)</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-inner"
+                  placeholder="Design, Fix, Urgent..."
+                />
+                <TagIcon className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
             {isEditing && onDelete ? (
               <button
                 type="button"
                 onClick={onDelete}
-                className="flex items-center gap-1.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-xl transition-all font-bold group"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 Supprimer
               </button>
             ) : (
               <div />
             )}
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                className="px-6 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition-all"
               >
                 Annuler
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                className="px-8 py-2.5 text-sm font-black text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95"
               >
-                {isEditing ? 'Sauvegarder' : 'Créer'}
+                {isEditing ? 'Mettre à jour' : 'Créer la tâche'}
               </button>
             </div>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
+  );
+}
+
+function TaskCard({ task, onClick, onDragStart, isDragged }: { task: Task, onClick: () => void, onDragStart: () => void, isDragged: boolean }) {
+  const isOverdue = task.dueDate && isPast(new Date(task.dueDate)) && !isToday(new Date(task.dueDate)) && task.status !== 'done';
+  const isDueToday = task.dueDate && isToday(new Date(task.dueDate)) && task.status !== 'done';
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
+      draggable
+      onDragStart={onDragStart}
+      onClick={onClick}
+      className={`bg-white rounded-2xl p-4 shadow-sm border border-slate-100 cursor-pointer transition-shadow group relative overflow-hidden ${
+        isDragged ? 'opacity-40 scale-95 shadow-none' : ''
+      }`}
+    >
+      {/* Priority Indicator */}
+      <div className="flex items-center justify-between mb-3">
+        <PriorityBadge priority={task.priority} />
+        {task.priority === 'high' && task.status !== 'done' && (
+           <motion.div 
+            animate={{ scale: [1, 1.2, 1] }} 
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" 
+           />
+        )}
+      </div>
+
+      <h4 className="text-sm font-bold text-slate-800 leading-snug mb-2 group-hover:text-blue-600 transition-colors">
+        {task.title}
+      </h4>
+
+      {task.description && (
+        <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed">
+          {task.description}
+        </p>
+      )}
+
+      {/* Tags */}
+      {task.tags && task.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {task.tags.map((tag, i) => (
+            <span key={i} className="text-[9px] font-black uppercase px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded-md border border-slate-200/50">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-50">
+        <div className="flex items-center gap-2">
+           {task.assignee ? (
+             <div className="flex items-center gap-1.5">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center text-[10px] font-black shadow-sm">
+                  {task.assignee[0]?.toUpperCase()}
+                </div>
+                <span className="text-[10px] text-slate-500 font-bold max-w-[60px] truncate">{task.assignee}</span>
+             </div>
+           ) : (
+             <div className="w-6 h-6 rounded-full border border-dashed border-slate-200 flex items-center justify-center">
+               <Plus className="w-3 h-3 text-slate-300" />
+             </div>
+           )}
+        </div>
+
+        {task.dueDate && (
+          <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold ${
+            isOverdue ? 'bg-red-50 text-red-600' : 
+            isDueToday ? 'bg-amber-50 text-amber-600' : 
+            'bg-slate-50 text-slate-500'
+          }`}>
+            <Clock className="w-3 h-3" />
+            {isOverdue ? 'Retard' : isDueToday ? 'Aujourd\'hui' : format(new Date(task.dueDate), 'dd MMM', { locale: fr })}
+          </div>
+        )}
+      </div>
+
+      {/* Overdue highlight */}
+      {isOverdue && (
+        <div className="absolute top-0 right-0 w-8 h-8 overflow-hidden pointer-events-none">
+          <div className="absolute top-[-10px] right-[-10px] w-5 h-5 bg-red-500 rotate-45" />
+        </div>
+      )}
+    </motion.div>
   );
 }
 
@@ -492,82 +656,66 @@ export default function AdminTasksPage() {
             return (
               <div
                 key={col.id}
-                className="flex flex-col"
+                className="flex flex-col h-full min-h-[500px]"
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, col.id)}
               >
                 {/* Column Header */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between mb-4 px-1">
+                  <div className="flex items-center gap-2.5">
                     <div
-                      className="w-3 h-3 rounded-full"
+                      className="w-2.5 h-2.5 rounded-full ring-4 ring-white shadow-sm"
                       style={{ backgroundColor: col.color }}
                     />
-                    <h2 className="font-bold text-sm text-slate-700 uppercase tracking-wide">
+                    <h2 className="font-black text-xs text-slate-600 uppercase tracking-widest">
                       {col.label}
                     </h2>
-                    <span className="text-xs font-bold text-slate-400 bg-slate-200 px-1.5 py-0.5 rounded-full">
+                    <span className="text-[10px] font-black text-slate-400 bg-white border border-slate-100 w-5 h-5 flex items-center justify-center rounded-full shadow-sm">
                       {columnTasks.length}
                     </span>
                   </div>
                   <button
                     onClick={() => openCreateModal(col.id)}
-                    className="p-1 hover:bg-slate-200 rounded transition-colors"
+                    className="p-1.5 hover:bg-white hover:shadow-sm rounded-lg transition-all text-slate-400 hover:text-blue-500"
                     title={`Ajouter dans "${col.label}"`}
                   >
-                    <Plus className="w-4 h-4 text-slate-400" />
+                    <Plus className="w-4 h-4" />
                   </button>
                 </div>
 
                 {/* Column Body */}
                 <div
-                  className={`flex-1 rounded-xl ${col.bg} border-2 border-dashed border-transparent p-2 space-y-2 min-h-[200px] transition-colors ${
-                    draggedTaskId ? 'border-slate-300' : ''
+                  className={`flex-1 rounded-3xl ${col.bg} border-2 border-dashed border-transparent p-3 space-y-3 transition-all duration-300 ${
+                    draggedTaskId ? 'ring-2 ring-blue-200 border-blue-300 bg-blue-50/30' : ''
                   }`}
                 >
-                  {columnTasks.map((task) => (
-                    <div
-                      key={task.id}
-                      draggable
-                      onDragStart={() => handleDragStart(task.id)}
-                      onClick={() => openEditModal(task)}
-                      className={`bg-white rounded-xl p-3.5 shadow-sm border border-slate-100 cursor-pointer hover:shadow-md hover:border-slate-200 transition-all group ${
-                        draggedTaskId === task.id ? 'opacity-50 scale-95' : ''
-                      }`}
-                    >
-                      <div className="flex items-start gap-2">
-                        <GripVertical className="w-4 h-4 text-slate-300 mt-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab" />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1.5">
-                            <PriorityBadge priority={task.priority} />
-                          </div>
-                          <p className="text-sm font-semibold text-slate-800 leading-snug">
-                            {task.title}
-                          </p>
-                          {task.description && (
-                            <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                              {task.description}
-                            </p>
-                          )}
-                          {task.assignee && (
-                            <div className="mt-2 flex items-center gap-1.5">
-                              <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[10px] font-bold">
-                                {task.assignee[0]?.toUpperCase()}
-                              </div>
-                              <span className="text-[11px] text-slate-500 font-medium">
-                                {task.assignee}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  <AnimatePresence mode="popLayout">
+                    <LayoutGroup>
+                      {columnTasks.map((task) => (
+                        <TaskCard
+                          key={task.id}
+                          task={task}
+                          onClick={() => openEditModal(task)}
+                          onDragStart={() => handleDragStart(task.id)}
+                          isDragged={draggedTaskId === task.id}
+                        />
+                      ))}
+                    </LayoutGroup>
+                  </AnimatePresence>
 
                   {columnTasks.length === 0 && (
-                    <div className="flex items-center justify-center h-24 text-xs text-slate-400 font-medium">
-                      {hasActiveFilters ? 'Aucun résultat' : 'Glisser une tâche ici'}
-                    </div>
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex flex-col items-center justify-center h-32 text-center"
+                    >
+                      <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-2 shadow-sm border border-slate-50">
+                        <Plus className="w-5 h-5 text-slate-200" />
+                      </div>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                        {hasActiveFilters ? 'Aucun résultat' : 'Vide'}
+                      </p>
+                    </motion.div>
                   )}
                 </div>
               </div>

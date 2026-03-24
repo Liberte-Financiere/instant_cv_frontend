@@ -22,7 +22,7 @@ import { useCreditStore } from '@/store/useCreditStore';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { createNewCV, cvList, setAnalysisData, deleteCV } = useCVStore();
+  const { createNewCV, cvList, setAnalysisData, deleteCV, addToHistory } = useCVStore();
   const { clList, createNewCL, deleteCL } = useCoverLetterStore();
   const creditsLoading = useCreditStore((state) => state.isLoading);
   const creditsCount = useCreditStore((state) => state.credits);
@@ -77,6 +77,18 @@ export default function DashboardPage() {
       
       // Store complete analysis data in global store
       setAnalysisData(data);
+
+      // Persist to history so it shows up in dashboard/ai/analyze history list
+      addToHistory({
+        id: crypto.randomUUID(),
+        type: 'analysis',
+        date: new Date().toISOString(),
+        score: data.analysis?.globalScore || 0,
+        title: data.cvData?.personalInfo?.title 
+          ? `Analyse - ${data.cvData.personalInfo.title}`
+          : `Analyse CV - ${new Date().toLocaleDateString()}`,
+        data: data
+      });
       
       toast.success("Analyse terminée !");
       router.push('/analysis');
