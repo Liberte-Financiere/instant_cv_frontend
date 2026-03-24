@@ -128,6 +128,7 @@ export function Sidebar() {
             </div>
             <nav className="space-y-1">
               <NavLink item={{ name: 'Gestion Crédits', href: '/dashboard/admin', icon: Zap }} />
+              <NavLink item={{ name: 'Gestion des Tâches', href: '/admin/tasks', icon: LayoutList }} />
               <NavLink item={{ name: 'Avis Utilisateurs', href: '/dashboard/admin/feedback', icon: MessageSquare }} />
             </nav>
           </div>
