@@ -195,9 +195,19 @@ export default function InterviewSetupPage() {
                 transition={{ delay: 0.1 }}
                 className="mt-8"
               >
-                <h2 className="text-lg font-bold text-slate-800 mb-4">Entretiens précédents</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-bold text-slate-800">Entretiens précédents</h2>
+                  {history.length > 3 && (
+                    <Link
+                      href="/dashboard/ai/interview/history"
+                      className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+                    >
+                      Voir tout l'historique →
+                    </Link>
+                  )}
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {history.map((s) => (
+                  {history.slice(0, 3).map((s) => (
                     <div key={s.id} className="relative group/card">
                       <Link
                         href={`/interview/${s.id}`}
