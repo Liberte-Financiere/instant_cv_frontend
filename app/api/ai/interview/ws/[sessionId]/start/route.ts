@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { checkAndConsumeCredits } from '@/lib/credits';
-import { createGeminiLiveConnection } from '@/lib/interview-audio';
+import { createGeminiLiveConnection, connections } from '@/lib/interview-audio';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs'; // Required for long-lived streams and generic EventEmitter
@@ -98,7 +98,20 @@ Si le candidat te demande de répéter, répète. S'il hésite, encourage-le.`;
             }
           );
 
-          // Handle client disconnect
+          // Register billing terminator on the connection so endGeminiConnection can stop billing
+          // This is the authoritative fix: AudioControls.cleanup() sends { action: 'close' } to the
+          // chunk route, which calls endGeminiConnection, which invokes terminateBilling.
+          const connEntry = connections.get(sessionId);
+          if (connEntry && billingInterval) {
+            connEntry.terminateBilling = () => {
+              wsClosed = true;
+              clearInterval(keepAlive);
+              clearInterval(billingInterval!);
+              try { controller.close(); } catch (e) {}
+            };
+          }
+
+          // Handle client disconnect (best effort — req.signal is unreliable in Next.js SSE)
           req.signal.addEventListener('abort', () => {
             wsClosed = true;
             clearInterval(keepAlive);

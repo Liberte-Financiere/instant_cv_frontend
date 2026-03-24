@@ -67,7 +67,7 @@ export async function POST(req: Request) {
 
     // Generate first question
     const prompt = buildFirstQuestionPrompt(cvSummary, jobTitle.trim(), jobContext);
-    const aiResponse = await generateInterviewResponse(prompt);
+    const aiResponse = await generateInterviewResponse(prompt, 'first');
 
     // Create session + first message in a transaction
     const interviewSession = await prisma.$transaction(async (tx) => {

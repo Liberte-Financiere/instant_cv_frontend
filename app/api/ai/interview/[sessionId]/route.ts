@@ -70,7 +70,7 @@ export async function POST(
       interviewSession.jobContext
     );
 
-    const aiResponse = await generateInterviewResponse(prompt);
+    const aiResponse = await generateInterviewResponse(prompt, 'response');
 
     // Save messages in transaction
     await prisma.$transaction(async (tx) => {
@@ -129,7 +129,7 @@ export async function POST(
         fullHistory
       );
 
-      const summaryResponse = await generateInterviewResponse(summaryPrompt);
+      const summaryResponse = await generateInterviewResponse(summaryPrompt, 'summary');
 
       // Save summary message and update session
       await prisma.$transaction(async (tx) => {
@@ -216,3 +216,107 @@ export async function GET(
     );
   }
 }
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ sessionId: string }> }
+) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const { sessionId } = await params;
+    const { action } = await req.json();
+
+    if (action !== 'terminate') {
+      return NextResponse.json({ error: 'Action invalide.' }, { status: 400 });
+    }
+
+    const interviewSession = await prisma.interviewSession.findUnique({
+      where: { id: sessionId, userId: session.user.id },
+      include: { messages: { orderBy: { createdAt: 'asc' } } },
+    });
+
+    if (!interviewSession) {
+      return NextResponse.json({ error: 'Session introuvable.' }, { status: 404 });
+    }
+
+    if (interviewSession.status === 'completed') {
+      return NextResponse.json({ success: true });
+    }
+
+    // Compute a partial score from graded feedback messages already recorded
+    const feedbackMessages = interviewSession.messages.filter(
+      (m) => m.role === 'feedback' && m.score !== null
+    );
+    const totalScore = feedbackMessages.length > 0
+      ? Math.round(
+          feedbackMessages.reduce((sum, m) => sum + (m.score ?? 0), 0) /
+          feedbackMessages.length * 10
+        )
+      : 0;
+
+    await prisma.$transaction(async (tx) => {
+      await tx.interviewMessage.create({
+        data: {
+          sessionId,
+          role: 'summary',
+          content: JSON.stringify({
+            totalScore,
+            globalFeedback: `Entretien terminé manuellement après ${feedbackMessages.length} question(s).`,
+            strengths: [],
+            improvements: [],
+            recommendations: [],
+          }),
+        },
+      });
+
+      await tx.interviewSession.update({
+        where: { id: sessionId },
+        data: { status: 'completed', totalScore },
+      });
+    });
+
+    return NextResponse.json({ success: true, totalScore });
+  } catch (error) {
+    console.error('[INTERVIEW_TERMINATE]', error);
+    return NextResponse.json({ error: 'Erreur serveur.' }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  _req: Request,
+  { params }: { params: Promise<{ sessionId: string }> }
+) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const { sessionId } = await params;
+
+    // Verify ownership before deleting
+    const interviewSession = await prisma.interviewSession.findUnique({
+      where: { id: sessionId, userId: session.user.id },
+      select: { id: true },
+    });
+
+    if (!interviewSession) {
+      return NextResponse.json({ error: 'Session introuvable.' }, { status: 404 });
+    }
+
+    // Messages are cascade-deleted by Prisma via onDelete: Cascade on the relation
+    await prisma.interviewSession.delete({
+      where: { id: sessionId },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('[INTERVIEW_DELETE]', error);
+    return NextResponse.json({ error: 'Erreur serveur.' }, { status: 500 });
+  }
+}
+
