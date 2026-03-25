@@ -41,7 +41,7 @@ export function LanguageSelector() {
             onClick={() => setIsOpen(false)}
           />
           <div 
-            className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl border border-slate-100 z-50 transform origin-top-right overflow-hidden py-1"
+            className="fixed left-1/2 top-20 -translate-x-1/2 w-48 sm:absolute sm:left-auto sm:top-full sm:right-0 sm:translate-x-0 sm:w-40 mt-2 bg-white rounded-xl shadow-xl border border-slate-100 z-50 transform origin-top sm:origin-top-right overflow-hidden py-1"
           >
             <div className="px-3 py-2 text-xs font-semibold text-slate-500 bg-slate-50/80 border-b border-slate-100 uppercase tracking-wider">
               En-têtes

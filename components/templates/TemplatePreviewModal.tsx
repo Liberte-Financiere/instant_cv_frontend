@@ -27,11 +27,10 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
 
   // Reset title when template changes
   useEffect(() => {
-    if (template && !cvTitle) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (template) {
       setCvTitle(`Mon CV ${template.name}`);
     }
-  }, [template, cvTitle]);
+  }, [template?.id]);
 
   // Close on Escape key
   useEffect(() => {

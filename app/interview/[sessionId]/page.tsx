@@ -460,18 +460,18 @@ export default function InterviewChatPage() {
       {/* Audio Mode Bottom Bar: mic controls + end call button */}
       {session.status !== 'completed' && inputMode === 'audio' && (
         <div className="bg-white border-t border-slate-200 px-4 py-4 shrink-0">
-          <div className="flex items-center justify-center gap-4 max-w-4xl mx-auto">
-            <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-center gap-4 sm:gap-6 max-w-4xl mx-auto w-full">
+            <div className="flex flex-col items-center gap-1.5">
               <AudioControls
                 sessionId={sessionId}
                 onTranscriptReceived={handleTranscriptReceived}
                 onSpeakingStateChange={setIsAISpeaking}
               />
-              <p className="text-xs text-slate-400">Cliquez sur le micro pour démarrer</p>
+              <p className="text-[10px] sm:text-xs text-slate-400 text-center">Cliquez sur le micro pour démarrer</p>
             </div>
             <button
               onClick={handleEndInterview}
-              className="flex items-center gap-2.5 px-6 py-3 bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm rounded-xl border border-red-200 hover:border-red-300 transition-all active:scale-[0.98]"
+              className="flex items-center justify-center gap-2.5 px-6 py-3 w-full sm:w-auto bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm rounded-xl border border-red-200 hover:border-red-300 transition-all active:scale-[0.98]"
             >
               <PhoneOff className="w-4 h-4" />
               Terminer l&apos;entretien
