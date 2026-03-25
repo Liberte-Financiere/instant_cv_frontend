@@ -69,17 +69,18 @@ export function SharePageClient({ cv }: { cv: any }) {
       </header>
 
       {/* Main Content */}
-      <main ref={containerRef} className="flex-1 p-4 md:p-8 overflow-y-auto">
+      <main ref={containerRef} className="flex-1 p-4 md:p-8 flex flex-col items-center overflow-y-auto overflow-x-hidden pb-32 sm:pb-8">
         <div 
-          className="mx-auto overflow-hidden bg-white shadow-2xl rounded-sm"
+          className="bg-white shadow-2xl rounded-sm shrink-0"
           style={{
             width: `${A4_WIDTH_PX}px`,
+            minHeight: '1123px', // Standard A4
             transform: `scale(${scale})`,
             transformOrigin: 'top center',
             marginBottom: scale < 1 ? `calc((${scale} - 1) * 1123px)` : undefined,
           }}
         >
-          <CVPreview data={cv} />
+          <CVPreview data={cv} hideToolbar />
         </div>
       </main>
       
