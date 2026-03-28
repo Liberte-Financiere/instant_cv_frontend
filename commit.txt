@@ -1,25 +1,19 @@
-[2026-03-28] — Refactor AI Interview to Native Chat Mode & Centralize Configs
+[2026-03-28] — Fix Gemini Live Audio Playback Artifacts
 
 What changed:
-- Migrated the prompt structure for the mock interview from manual string concatenation ("RECRUTEUR:", "CANDIDAT:") to the native `startChat({ history })` Gemini API.
-- Integrated `formatHistoryForGemini` to seamlessly convert Prisma database messages into `user` and `model` role blocks.
-- Centralized `MAX_QUESTIONS` and Audio `model` config into `lib/config.ts`.
-- Swapped simple prompts for `systemInstruction` where appropriately supported by `GoogleGenerativeAI`.
+- Refactored `playAudioQueue` in `AudioControls.tsx` to use precise Web Audio API scheduling (`source.start(nextStartTime.current)`) instead of `await source.onended`.
+- Added a `nextStartTime` ref to maintain gapless playback alignment for incoming PCM audio chunks.
+- Scheduled a dynamic `setTimeout` to manage the `isPlaying` and UI indicators corresponding precisely to the hardware playback completion time.
 
 Why:
-- To eliminate AI hallucinations regarding speaker roles during long interviews.
-- Improved processing efficiency and token understanding by making the Prompt context explicit (Model vs User).
-- Removed hardcoded constants scattered in TS logic to make the app maintainable and configurable from a single source of truth.
+- The previous implementation caused tiny silences between audio chunks because the JavaScript event loop is too slow to chain audio seamlessly. This resulted in audible clicks/pops between chunks.
+- Gapless scheduling ensures the browser plays the incoming Gemini TTS voice stream as a single continuous soundwave, without artifacts.
 
 Files affected:
-- lib/config.ts — Added `audioLive` model string and `interview.maxQuestions` setting.
-- lib/interview.ts — Heavy refactor to adapt prompt builders into System Instructions, implemented `formatHistoryForGemini`, and replaced `generateContent` with `startChat` for answers.
-- lib/interview-audio.ts — Replaced hardcoded Gemini Live model with config variable.
-- app/api/ai/interview/route.ts — Adjusted import and function call to adapt to `systemInstruction`.
-- app/api/ai/interview/[sessionId]/route.ts — Adapted backend to fetch full history via `formatHistoryForGemini` and inject it in `generateInterviewResponse()`.
+- components/interview/AudioControls.tsx — Replaced `playAudioQueue` logic with latency-free context time scheduling.
 
 Breaking changes:
 - None
 
 Notes for review:
-- The JSON parsing robustness has been upgraded with a small RegEx cleaner. Keep an eye out just in case the AI outputs extremely malformed markdown json.
+- Monitor behavior on mobile browsers (Safari iOS usually has strict autoplay policies but shouldn't affect this exact flow since the AudioContext is resumed upon startListening).
