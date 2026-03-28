@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Radar, Zap, FileText, Star, ArrowRight, Download, WifiOff } from 'lucide-react';
+import { Radar, Zap, FileText, Star, ArrowRight, Download, WifiOff, Mic } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { FeatureCard } from '@/components/landing/FeatureCard';
 import { APP_CONFIG } from '@/lib/config';
@@ -129,6 +129,25 @@ export function Features() {
                    </div>
                    <div className="text-xs font-bold text-emerald-600 uppercase tracking-wider">Mode<br/>Offline</div>
                 </div>
+             </div>
+          </FeatureCard>
+
+          {/* Card 6b: Simulation d'Entretien IA (md:col-span-2) */}
+          <FeatureCard
+            className="md:col-span-2 border-slate-100"
+            title="Simulation d'Entretien IA"
+            icon={Mic}
+            description="Entraînez-vous avec notre recruteur IA interactif (vocal et écrit) pour être prêt le jour J."
+          >
+             <div className="w-full h-24 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 p-4 relative overflow-hidden flex flex-col items-center justify-center gap-2">
+                 <div className="flex gap-1 items-center">
+                   <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                   <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse delay-75" />
+                   <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse delay-150" />
+                 </div>
+                 <div className="text-xs font-bold text-indigo-500 uppercase tracking-wider">
+                    Recruteur IA à l'écoute
+                 </div>
              </div>
           </FeatureCard>
 

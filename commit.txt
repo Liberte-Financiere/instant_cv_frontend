@@ -1,26 +1,25 @@
-[2026-03-24] — Interview Hub, Mobile Sync & Dashboard Persistence
+[2026-03-28] — Refactor AI Interview to Native Chat Mode & Centralize Configs
 
 What changed:
-- Created a dedicated History Hub for AI Interviews with advanced filtering and search.
-- Synced the mobile sidebar with the desktop navigation to include all AI tools and preferences.
-- Fixed inconsistent icons in the mobile header (Brain, Mic, Zap).
-- Enabled persistence for AI analyses performed from the main dashboard "Magic Analyzer".
-- Limited the interview history view on the setup page to 3 items for a cleaner UI.
+- Migrated the prompt structure for the mock interview from manual string concatenation ("RECRUTEUR:", "CANDIDAT:") to the native `startChat({ history })` Gemini API.
+- Integrated `formatHistoryForGemini` to seamlessly convert Prisma database messages into `user` and `model` role blocks.
+- Centralized `MAX_QUESTIONS` and Audio `model` config into `lib/config.ts`.
+- Swapped simple prompts for `systemInstruction` where appropriately supported by `GoogleGenerativeAI`.
 
 Why:
-- To provide users with a feature-rich interface to manage their interview history.
-- To ensure a consistent and full feature set across mobile and desktop devices.
-- To avoid data loss and provide a complete history of AI analyses regardless of where they are initiated.
+- To eliminate AI hallucinations regarding speaker roles during long interviews.
+- Improved processing efficiency and token understanding by making the Prompt context explicit (Model vs User).
+- Removed hardcoded constants scattered in TS logic to make the app maintainable and configurable from a single source of truth.
 
 Files affected:
-- app/dashboard/ai/interview/history/page.tsx — New dedicated history hub.
-- app/dashboard/ai/interview/page.tsx — Limited recent history and added link to the new hub.
-- components/dashboard/MobileHeader.tsx — Synced navigation links and fixed icons for mobile.
-- app/dashboard/page.tsx — Added persistence call for "Magic Analyzer" results.
+- lib/config.ts — Added `audioLive` model string and `interview.maxQuestions` setting.
+- lib/interview.ts — Heavy refactor to adapt prompt builders into System Instructions, implemented `formatHistoryForGemini`, and replaced `generateContent` with `startChat` for answers.
+- lib/interview-audio.ts — Replaced hardcoded Gemini Live model with config variable.
+- app/api/ai/interview/route.ts — Adjusted import and function call to adapt to `systemInstruction`.
+- app/api/ai/interview/[sessionId]/route.ts — Adapted backend to fetch full history via `formatHistoryForGemini` and inject it in `generateInterviewResponse()`.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Verify the mobile menu on a real device or responsive simulator to ensure icons are properly aligned.
-- Check that analyses from the dashboard now appear in /dashboard/ai/analyze history.
+- The JSON parsing robustness has been upgraded with a small RegEx cleaner. Keep an eye out just in case the AI outputs extremely malformed markdown json.

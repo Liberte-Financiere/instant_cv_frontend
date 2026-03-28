@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { prisma } from '@/lib/prisma';
 import { INTERVIEW_CONFIG } from './interview';
+import { APP_CONFIG } from '@/lib/config';
 import WebSocket from 'ws';
 
 // In-memory store for active Gemini Live connections
@@ -55,7 +56,7 @@ export function createGeminiLiveConnection(
     // 1. Send Setup Message
     const setupMsg = {
       setup: {
-        model: 'models/gemini-2.5-flash-native-audio-preview-12-2025',
+        model: APP_CONFIG.ai.models.audioLive,
         generationConfig: {
           responseModalities: ["AUDIO"],
           speechConfig: {
