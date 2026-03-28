@@ -34,6 +34,8 @@ export function AudioControls({
   // Buffer queue for playback
   const audioQueue = useRef<Float32Array[]>([]);
   const isPlaying = useRef(false);
+  const nextStartTime = useRef<number>(0);
+  const playbackTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const cleanup = useCallback(() => {
     if (mediaRecorder.current && mediaRecorder.current.state !== 'inactive') {
@@ -51,6 +53,10 @@ export function AudioControls({
     if (batchingInterval.current) {
       clearInterval(batchingInterval.current);
       batchingInterval.current = null;
+    }
+    if (playbackTimeoutRef.current) {
+      clearTimeout(playbackTimeoutRef.current);
+      playbackTimeoutRef.current = null;
     }
     chunkBuffer.current = [];
     fetch(`/api/ai/interview/ws/${sessionId}/chunk`, {
@@ -99,15 +105,23 @@ export function AudioControls({
     }
   }, [sessionId]);
 
-  const playAudioQueue = async () => {
-    if (isPlaying.current || audioQueue.current.length === 0 || isMuted) return;
+  const playAudioQueue = () => {
+    if (audioQueue.current.length === 0 || isMuted) return;
     
-    isPlaying.current = true;
-    onSpeakingStateChange?.(true);
+    if (!isPlaying.current) {
+      isPlaying.current = true;
+      onSpeakingStateChange?.(true);
+    }
 
     const ctx = audioContext.current;
     if (!ctx) return;
 
+    // Reset nextStartTime if it's in the past to avoid playing simultaneously
+    if (nextStartTime.current < ctx.currentTime) {
+      nextStartTime.current = ctx.currentTime + 0.05; // 50ms buffer initial
+    }
+
+    // Planifier l'audio avec précision (Gapless playback)
     while (audioQueue.current.length > 0) {
       const pcmData = audioQueue.current.shift()!;
       // Gemini sends 24kHz PCM 16-bit. AudioContext might be 48kHz, so we need an AudioBuffer
@@ -117,15 +131,24 @@ export function AudioControls({
       const source = ctx.createBufferSource();
       source.buffer = buffer;
       source.connect(ctx.destination);
-      source.start();
-
-      await new Promise((resolve) => {
-        source.onended = resolve;
-      });
+      
+      // On planifie le démarrage avec précision
+      source.start(nextStartTime.current);
+      nextStartTime.current += buffer.duration;
     }
 
-    isPlaying.current = false;
-    onSpeakingStateChange?.(false);
+    // Réinitialiser le timeout de fin de parole à chaque ajout de nouveau chunk (Stream continu)
+    if (playbackTimeoutRef.current) {
+      clearTimeout(playbackTimeoutRef.current);
+    }
+
+    const timeUntilFinish = Math.max(0, nextStartTime.current - ctx.currentTime) * 1000;
+    
+    playbackTimeoutRef.current = setTimeout(() => {
+      isPlaying.current = false;
+      onSpeakingStateChange?.(false);
+      playbackTimeoutRef.current = null;
+    }, timeUntilFinish);
   };
 
   const startListening = async () => {
