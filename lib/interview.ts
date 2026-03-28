@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI, SchemaType, Schema } from '@google/generative-ai';
+import { GoogleGenerativeAI, SchemaType, Schema, Content } from '@google/generative-ai';
 import { APP_CONFIG } from '@/lib/config';
 
-const MAX_QUESTIONS = 6;
+const MAX_QUESTIONS = APP_CONFIG.ai.interview.maxQuestions;
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
@@ -38,7 +38,7 @@ const SUMMARY_SCHEMA: Schema = {
   required: ["totalScore", "globalFeedback", "strengths", "improvements", "recommendations"]
 };
 
-function getModel(schemaType: 'first' | 'response' | 'summary') {
+function getModel(schemaType: 'first' | 'response' | 'summary', systemInstruction?: string) {
   const schemaMap = {
     first: FIRST_QUESTION_SCHEMA,
     response: RESPONSE_SCHEMA,
@@ -47,6 +47,7 @@ function getModel(schemaType: 'first' | 'response' | 'summary') {
 
   return genAI.getGenerativeModel({
     model: APP_CONFIG.ai.models.fast,
+    systemInstruction,
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema: schemaMap[schemaType],
@@ -103,7 +104,7 @@ export function buildCVSummary(cvData: Record<string, any>): string {
   return parts.join('\n\n');
 }
 
-export function buildFirstQuestionPrompt(
+export function buildFirstQuestionSystemInstruction(
   cvSummary: string,
   jobTitle: string,
   jobContext?: string | null
@@ -124,21 +125,13 @@ RÈGLES :
 4. Sois professionnel mais bienveillant.`;
 }
 
-export function buildResponsePrompt(
+export function buildResponseSystemInstruction(
   cvSummary: string,
   jobTitle: string,
-  conversationHistory: { role: string; content: string }[],
-  candidateAnswer: string,
   questionNumber: number,
   jobContext?: string | null
 ): string {
   const isLastQuestion = questionNumber >= MAX_QUESTIONS;
-
-  const historyText = conversationHistory.map((m) => {
-    if (m.role === 'interviewer') return `RECRUTEUR : ${m.content}`;
-    if (m.role === 'candidate') return `CANDIDAT : ${m.content}`;
-    return '';
-  }).filter(Boolean).join('\n\n');
 
   return `Tu es un recruteur professionnel expérimenté.
 Tu évalues les réponses d'un candidat lors d'un entretien simulé.
@@ -149,12 +142,6 @@ ${cvSummary}
 POSTE VISÉ : ${jobTitle}
 ${jobContext ? `CONTEXTE DE L'OFFRE :\n${jobContext}` : ''}
 
-HISTORIQUE DE L'ENTRETIEN :
-${historyText}
-
-DERNIÈRE RÉPONSE DU CANDIDAT :
-"${candidateAnswer}"
-
 RÈGLES :
 1. Évalue la réponse sur 10.
 2. Donne un feedback constructif et spécifique (2-3 phrases max).
@@ -164,18 +151,10 @@ RÈGLES :
 4. Le feedback doit être bienveillant mais honnête, n'hésite pas à le challenger s'il survole un point technique.`;
 }
 
-export function buildSummaryPrompt(
+export function buildSummarySystemInstruction(
   cvSummary: string,
-  jobTitle: string,
-  conversationHistory: { role: string; content: string; score?: number | null }[]
+  jobTitle: string
 ): string {
-  const historyText = conversationHistory.map((m) => {
-    if (m.role === 'interviewer') return `RECRUTEUR : ${m.content}`;
-    if (m.role === 'candidate') return `CANDIDAT : ${m.content}`;
-    if (m.role === 'feedback') return `ÉVALUATION (${m.score}/10) : ${m.content}`;
-    return '';
-  }).filter(Boolean).join('\n\n');
-
   return `Tu es un coach carrière expert.
 Analyse l'ensemble de cet entretien simulé et donne un bilan complet.
 
@@ -184,9 +163,6 @@ ${cvSummary}
 
 POSTE VISÉ : ${jobTitle}
 
-ENTRETIEN COMPLET :
-${historyText}
-
 RÈGLES :
 1. Donne un score global sur 100.
 2. Identifie 3 points forts du candidat.
@@ -194,16 +170,65 @@ RÈGLES :
 4. Rédige des recommandations spécifiques pour le poste visé.`;
 }
 
-export async function generateInterviewResponse(prompt: string, schemaType: 'first' | 'response' | 'summary') {
-  const model = getModel(schemaType);
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text().trim();
+export function formatHistoryForGemini(
+  conversationHistory: { role: string; content: string; score?: number | null }[]
+): Content[] {
+  const history: Content[] = [];
+
+  for (const msg of conversationHistory) {
+    if (msg.role === 'candidate') {
+      history.push({ role: 'user', parts: [{ text: msg.content }] });
+    } else if (msg.role === 'interviewer' || msg.role === 'feedback') {
+      const last = history[history.length - 1];
+      const textToAppend = msg.role === 'feedback' 
+        ? `[ÉVALUATION INTERNE : ${msg.score}/10] ${msg.content}` 
+        : msg.content;
+        
+      if (last && last.role === 'model') {
+        last.parts[0].text += `\n\n${textToAppend}`;
+      } else {
+        history.push({ role: 'model', parts: [{ text: textToAppend }] });
+      }
+    }
+  }
+
+  // L'API de Chat de Gemini préfère généralement commencer par un user.
+  if (history.length > 0 && history[0].role === 'model') {
+    history.unshift({ role: 'user', parts: [{ text: "Bonjour, je suis prêt pour l'entretien." }] });
+  }
+
+  return history;
+}
+
+export async function generateInterviewResponse(
+  schemaType: 'first' | 'response' | 'summary',
+  systemInstruction: string,
+  message: string,
+  history: Content[] = []
+) {
+  const model = getModel(schemaType, systemInstruction);
+  
+  const cleanJson = (text: string) => text.replace(/\`\`\`json/g, '').replace(/\`\`\`/g, '').trim();
+
+  let text = '';
+  try {
+    if (schemaType === 'first') {
+      const result = await model.generateContent(message);
+      text = result.response.text();
+    } else {
+      const chat = model.startChat({ history });
+      const result = await chat.sendMessage(message);
+      text = result.response.text();
+    }
+  } catch (error) {
+    console.error(`[INTERVIEW_GENERATE_ERROR]`, error);
+    throw new Error("L'IA n'a pas pu générer la réponse. Veuillez réessayer.");
+  }
 
   try {
-    return JSON.parse(text);
+    return JSON.parse(cleanJson(text));
   } catch (error) {
-    console.error(`[INTERVIEW_JSON_PARSE_ERROR] Schema: ${schemaType} Failed:`, text.slice(-500));
-    throw new Error("L'IA n'a pas pu formatter la réponse selon le schéma attendu. Veuillez réessayer.");
+    console.error(`[INTERVIEW_JSON_PARSE_ERROR] Schema: ${schemaType} Failed for text:`, text.substring(0, 500));
+    throw new Error("L'IA n'a pas pu formatter la réponse au format requis. Veuillez réessayer.");
   }
 }

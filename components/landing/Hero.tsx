@@ -24,7 +24,7 @@ export function Hero() {
             </h1>
             
             <p className="text-slate-400 text-lg md:text-xl font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Bien plus qu&apos;un simple éditeur. Notre IA <span className="text-blue-200 font-medium">analyse votre profil</span>, adapte votre CV à <span className="text-blue-200 font-medium">chaque offre d&apos;emploi</span> et rédige votre <span className="text-blue-200 font-medium">lettre de motivation</span> en un clic.
+              Bien plus qu&apos;un simple éditeur. Notre IA <span className="text-blue-200 font-medium">analyse votre profil</span>, adapte votre CV à <span className="text-blue-200 font-medium">chaque offre d&apos;emploi</span>, rédige votre <span className="text-blue-200 font-medium">lettre de motivation</span> et vous entraîne avec des <span className="text-blue-200 font-medium">simulations d&apos;entretien</span>.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
