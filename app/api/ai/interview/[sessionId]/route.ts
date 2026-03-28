@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import {
-  buildResponsePrompt,
-  buildSummaryPrompt,
+  buildResponseSystemInstruction,
+  buildSummarySystemInstruction,
+  formatHistoryForGemini,
   generateInterviewResponse,
   INTERVIEW_CONFIG,
 } from '@/lib/interview';
@@ -61,16 +62,15 @@ export async function POST(
     }));
 
     // Generate feedback + next question
-    const prompt = buildResponsePrompt(
+    const systemInstruction = buildResponseSystemInstruction(
       interviewSession.cvSummary,
       interviewSession.jobTitle,
-      conversationHistory,
-      answer.trim(),
       currentQuestionNumber,
       interviewSession.jobContext
     );
+    const history = formatHistoryForGemini(conversationHistory);
 
-    const aiResponse = await generateInterviewResponse(prompt, 'response');
+    const aiResponse = await generateInterviewResponse('response', systemInstruction, answer.trim(), history);
 
     // Save messages in transaction
     await prisma.$transaction(async (tx) => {
@@ -123,13 +123,13 @@ export async function POST(
         score: m.score,
       }));
 
-      const summaryPrompt = buildSummaryPrompt(
+      const summaryInstruction = buildSummarySystemInstruction(
         interviewSession.cvSummary,
-        interviewSession.jobTitle,
-        fullHistory
+        interviewSession.jobTitle
       );
 
-      const summaryResponse = await generateInterviewResponse(summaryPrompt, 'summary');
+      const history = formatHistoryForGemini(fullHistory);
+      const summaryResponse = await generateInterviewResponse('summary', summaryInstruction, "Génère le bilan global de cet entretien complet.", history);
 
       // Save summary message and update session
       await prisma.$transaction(async (tx) => {

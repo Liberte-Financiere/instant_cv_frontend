@@ -120,6 +120,12 @@ export const APP_CONFIG = {
 
       /** Modèle pour la traduction */
       pro: 'gemini-2.5-pro',
+
+      /** Modèle pour l'audio en live */
+      audioLive: 'models/gemini-2.5-flash-native-audio-preview-12-2025',
+    },
+    interview: {
+      maxQuestions: 6,
     }
   },
 
