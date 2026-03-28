@@ -192,6 +192,15 @@ export default function InterviewChatPage() {
     const confirmed = window.confirm('Terminer cet entretien ? La facturation s\'arrêtera immédiatement.');
     if (!confirmed) return;
 
+    // Close the Gemini WebSocket connection to stop billing immediately
+    try {
+      await fetch(`/api/ai/interview/ws/${sessionId}/chunk`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'close' }),
+      });
+    } catch {}
+
     // Mark session as completed server-side before navigating away
     try {
       await fetch(`/api/ai/interview/${sessionId}`, {
@@ -199,9 +208,7 @@ export default function InterviewChatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'terminate' }),
       });
-    } catch {
-      // Non-blocking: navigate even if the request fails
-    }
+    } catch {}
 
     router.push('/dashboard/ai/interview');
   };

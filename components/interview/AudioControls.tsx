@@ -241,7 +241,7 @@ export function AudioControls({
       };
 
       // Flush batched audio every 500ms: 1 HTTP request per 500ms vs 1 per ~20ms
-      batchingInterval.current = setInterval(flushAudioBuffer, 500);
+      batchingInterval.current = setInterval(flushAudioBuffer, 250);
 
       source.connect(workletNode);
       // DO NOT connect workletNode to audioContext.current.destination to prevent microphone echo!

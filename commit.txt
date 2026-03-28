@@ -1,19 +1,32 @@
-[2026-03-28] — Fix Gemini Live Audio Playback Artifacts
+2026-03-28 — Interview Audio: Security hardening, resource leak fixes, and transcript persistence
 
 What changed:
-- Refactored `playAudioQueue` in `AudioControls.tsx` to use precise Web Audio API scheduling (`source.start(nextStartTime.current)`) instead of `await source.onended`.
-- Added a `nextStartTime` ref to maintain gapless playback alignment for incoming PCM audio chunks.
-- Scheduled a dynamic `setTimeout` to manage the `isPlaying` and UI indicators corresponding precisely to the hardware playback completion time.
+- Added ownership verification on the chunk route to prevent cross-user session hijacking
+- Added 512KB body size limit on the chunk route to prevent payload bomb attacks
+- Explicit Gemini WebSocket closure in handleEndInterview to stop billing immediately
+- Prevent duplicate connections for the same sessionId (close old before opening new)
+- Server-side persistence of AI text transcriptions during audio interviews
+- PM2 scaled to 1 instance (fork mode) to fix the in-memory Map routing issue
 
 Why:
-- The previous implementation caused tiny silences between audio chunks because the JavaScript event loop is too slow to chain audio seamlessly. This resulted in audible clicks/pops between chunks.
-- Gapless scheduling ensures the browser plays the incoming Gemini TTS voice stream as a single continuous soundwave, without artifacts.
+- The chunk route accepted audio from any authenticated user without verifying session ownership
+- No body size limit exposed the server to memory exhaustion attacks
+- handleEndInterview navigated away without closing the Gemini connection, causing billing to continue
+- Refreshing the page during an audio session leaked the previous WebSocket connection
+- Audio interview conversations were lost on page reload (only displayed client-side, never saved)
+- PM2 cluster mode distributed requests across instances that have separate memory, breaking the session Map
 
 Files affected:
-- components/interview/AudioControls.tsx — Replaced `playAudioQueue` logic with latency-free context time scheduling.
+- app/api/ai/interview/ws/[sessionId]/chunk/route.ts — ownership check, body size limit
+- app/api/ai/interview/ws/[sessionId]/start/route.ts — duplicate connection prevention, transcript persistence
+- app/interview/[sessionId]/page.tsx — explicit Gemini close before navigation
+- ecosystem.config.js — instances: 1, exec_mode: fork
 
 Breaking changes:
 - None
 
 Notes for review:
-- Monitor behavior on mobile browsers (Safari iOS usually has strict autoplay policies but shouldn't affect this exact flow since the AudioContext is resumed upon startListening).
+- Transcript persistence only saves AI responses (Gemini does not return user speech transcription)
+- The 512KB limit is ~24x larger than a normal audio chunk; should never block legitimate traffic
+- The ownership check uses the in-memory Map (O(1) lookup), not a DB query, so no performance impact
+- Latency analysis: the 500ms client batching interval is the largest controllable delay source
