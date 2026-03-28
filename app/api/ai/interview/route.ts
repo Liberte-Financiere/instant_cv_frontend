@@ -5,7 +5,7 @@ import { checkAndConsumeCredits } from '@/lib/credits';
 import { CVService } from '@/services/cvService';
 import {
   buildCVSummary,
-  buildFirstQuestionPrompt,
+  buildFirstQuestionSystemInstruction,
   generateInterviewResponse,
 } from '@/lib/interview';
 
@@ -66,8 +66,8 @@ export async function POST(req: Request) {
     const cvSummary = buildCVSummary(cvContent);
 
     // Generate first question
-    const prompt = buildFirstQuestionPrompt(cvSummary, jobTitle.trim(), jobContext);
-    const aiResponse = await generateInterviewResponse(prompt, 'first');
+    const systemInstruction = buildFirstQuestionSystemInstruction(cvSummary, jobTitle.trim(), jobContext);
+    const aiResponse = await generateInterviewResponse('first', systemInstruction, "Commence l'entretien par la première question.");
 
     // Create session + first message in a transaction
     const interviewSession = await prisma.$transaction(async (tx) => {
