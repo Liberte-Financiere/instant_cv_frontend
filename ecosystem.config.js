@@ -3,8 +3,8 @@ module.exports = {
     {
       name: 'jobsira',
       script: './.next/standalone/server.js',
-      instances: 2, // You can change this to 'max' for cluster mode if needed
-      exec_mode: 'cluster', // Standalone performs better in fork or cluster mode depending on setup
+      instances: 1, // You can change this to 'max' for cluster mode if needed
+      exec_mode: 'fork', // Standalone performs better in fork or cluster mode depending on setup
       env: {
         NODE_ENV: 'production',
         PORT: 3000,

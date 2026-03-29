@@ -3,7 +3,8 @@ import { auth } from '@/auth';
 import { 
   sendAudioToGemini, 
   sendClientContentMessage, 
-  endGeminiConnection 
+  endGeminiConnection,
+  connections 
 } from '@/lib/interview-audio';
 
 export const dynamic = 'force-dynamic';
@@ -20,7 +21,27 @@ export async function POST(
     }
 
     const { sessionId } = await params;
-    const body = await req.json();
+
+    // Verify that the active connection belongs to the authenticated user
+    const conn = connections.get(sessionId);
+    if (conn && conn.userId !== session.user.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
+    }
+
+    // Reject oversized payloads before parsing (512KB max)
+    // Normal audio chunk: ~21KB base64 for 500ms of 16kHz PCM16
+    const MAX_BODY_BYTES = 512 * 1024;
+    const contentLength = parseInt(req.headers.get('content-length') || '0', 10);
+    if (contentLength > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: 'Payload trop volumineux' }, { status: 413 });
+    }
+
+    const rawBody = await req.text();
+    if (rawBody.length > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: 'Payload trop volumineux' }, { status: 413 });
+    }
+
+    const body = JSON.parse(rawBody);
 
     if (body.action === 'chunk' && body.pcmBase64) {
       sendAudioToGemini(sessionId, body.pcmBase64);

@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          { key: 'Permissions-Policy', value: "camera=(), microphone=(), geolocation=()" },
+          { key: 'Permissions-Policy', value: "camera=(), microphone=(self), geolocation=()" },
           {
              key: 'Content-Security-Policy',
              value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://lh3.googleusercontent.com https://res.cloudinary.com https://authjs.dev; font-src 'self' data:; connect-src 'self' wss://generativelanguage.googleapis.com https://*.ingest.us.sentry.io https://cloudflareinsights.com;",

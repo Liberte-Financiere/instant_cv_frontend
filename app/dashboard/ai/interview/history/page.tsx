@@ -229,7 +229,9 @@ export default function InterviewHistoryHub() {
                       })}
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-slate-500">{s.questionCount} question{s.questionCount > 1 ? 's' : ''}</span>
+                      {s.format !== 'audio' && (
+                        <span className="text-xs text-slate-500">{s.questionCount} question{s.questionCount > 1 ? 's' : ''}</span>
+                      )}
                       {s.totalScore !== null && (
                         <span className="flex items-center gap-1 text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md">
                           <Award className="w-3.5 h-3.5" />

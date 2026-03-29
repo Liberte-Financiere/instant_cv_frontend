@@ -1,19 +1,20 @@
-[2026-03-28] — Fix Gemini Live Audio Playback Artifacts
+2026-03-29 — Masquage du nombre de questions pour les entretiens audio
 
 What changed:
-- Refactored `playAudioQueue` in `AudioControls.tsx` to use precise Web Audio API scheduling (`source.start(nextStartTime.current)`) instead of `await source.onended`.
-- Added a `nextStartTime` ref to maintain gapless playback alignment for incoming PCM audio chunks.
-- Scheduled a dynamic `setTimeout` to manage the `isPlaying` and UI indicators corresponding precisely to the hardware playback completion time.
+- Suppression du décompte dynamique du nombre de questions pour les entretiens audio côté API (réversion de la modif précédente).
+- Masquage complet de la mention "X questions" sur le Dashboard principal et sur la page d'historique lorsque l'entretien est de type 'audio'.
 
 Why:
-- The previous implementation caused tiny silences between audio chunks because the JavaScript event loop is too slow to chain audio seamlessly. This resulted in audible clicks/pops between chunks.
-- Gapless scheduling ensures the browser plays the incoming Gemini TTS voice stream as a single continuous soundwave, without artifacts.
+- Demande explicite de l'utilisateur : il préfère ne pas afficher du tout le nombre de questions quand c'est un test vocal (puisque le format est plus fluide/conversationnel et ne se prête pas à un décompte strict).
 
 Files affected:
-- components/interview/AudioControls.tsx — Replaced `playAudioQueue` logic with latency-free context time scheduling.
+- app/api/ai/interview/[sessionId]/route.ts — Retrait du `questionCount: Math.max(...)` lors du terminate de session.
+- app/api/ai/interview/history/route.ts — Ajout du champ `format` dans le select Prisma renvoyé au dashboard.
+- app/dashboard/ai/interview/page.tsx — Conditonnement de l'affichage `s.format !== 'audio' && <span>...</span>`.
+- app/dashboard/ai/interview/history/page.tsx — Même condition de masquage pour la page complète.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Monitor behavior on mobile browsers (Safari iOS usually has strict autoplay policies but shouldn't affect this exact flow since the AudioContext is resumed upon startListening).
+- Le compteur de questions ne s'affichera désormais que pour les examens textuels.

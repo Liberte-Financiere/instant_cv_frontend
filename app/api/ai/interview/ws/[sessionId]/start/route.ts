@@ -41,6 +41,14 @@ Sois concis, naturel, et interactif. Pose une question à la fois.
 Si le candidat te demande de répéter, répète. S'il hésite, encourage-le.`;
 
         try {
+          // Close any existing connection for this session to prevent resource leaks
+          const existingConn = connections.get(sessionId);
+          if (existingConn) {
+            existingConn.terminateBilling?.();
+            try { existingConn.ws.close(); } catch {}
+            connections.delete(sessionId);
+          }
+
           // Keep-alive interval for SSE
           const keepAlive = setInterval(() => {
             controller.enqueue(encoder.encode(': keepalive\n\n'));
@@ -74,6 +82,9 @@ Si le candidat te demande de répéter, répète. S'il hésite, encourage-le.`;
             }, 60000); // 60 seconds
           }
 
+          // Buffer to accumulate AI text transcriptions across streamed chunks
+          let transcriptBuffer = '';
+
           const ws = createGeminiLiveConnection(
             sessionId,
             sessionId,
@@ -81,6 +92,31 @@ Si le candidat te demande de répéter, répète. S'il hésite, encourage-le.`;
             systemInstruction,
             (data) => {
               if (wsClosed) return;
+
+              // Accumulate text transcriptions from Gemini model turns
+              if (data.serverContent?.modelTurn?.parts) {
+                for (const part of data.serverContent.modelTurn.parts) {
+                  if (part.text) {
+                    transcriptBuffer += part.text;
+                  }
+                }
+              }
+
+              // When the AI finishes speaking, persist the transcript to the database
+              if (data.serverContent?.turnComplete && transcriptBuffer.trim()) {
+                const textToSave = transcriptBuffer.trim();
+                transcriptBuffer = '';
+                prisma.interviewMessage.create({
+                  data: {
+                    sessionId,
+                    role: 'interviewer',
+                    content: textToSave,
+                  },
+                }).catch((err: any) => {
+                  console.error('[SSE] Failed to save transcript:', err.message);
+                });
+              }
+
               // Forward Gemini payload to client via SSE
               controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
             },
