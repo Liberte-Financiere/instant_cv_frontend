@@ -1,19 +1,19 @@
-2026-03-29 — Fix des permissions globales et génération auto-bilan après 10min
+2026-03-29 — Fix du compteur de questions pour les entretiens audio
 
 What changed:
-- Correction de l'en-tête HTTP globale Permissions-Policy qui bloquait brutalement l'accès au microphone sur tous les navigateurs.
-- Lien entre le timer de 10 minutes (mode audio) et la génération du bilan de fin d'entretien.
+- Le compteur de questions posées (affiché sur le tableau de bord) comptabilise désormais correctement les questions posées lors d'un entretien vocal.
+- Ajout de l'état `isTerminating` lors du clic sur "Terminer l'entretien", avec un spinner plein écran ("Génération du bilan...").
 
 Why:
-- Le fichier `next.config.ts` contenait `microphone=()` ce qui levait l'erreur `Permissions policy violation` avant même de demander la permission du micro.
-- Lors de l'ajout précédent du timer de 10 minutes, la session audio se coupait bien mais la génération du bilan final (scores & recos) nécessitait toujours un clic manuel sur "Terminer l'entretien". Maintenant c'est automatique.
+- Le champ `questionCount` en base de données n'était jamais incrémenté dynamiquement pendant les sessions Gemini Live vocales (l'IA gère le fil). À la fin on se retrouvait avec "1 question" même si l'IA en posait 10.
+- L'interface se figeait (~2s) sans feedback visuel lors de l'appel final de génération de résumé OpenAI/Gemini, donnant une fausse impression de plantage à l'utilisateur, comme identifié sur l'erreur `Violation 'click' handler took 2006ms`.
 
 Files affected:
-- next.config.ts — Modification de l'en-tête `Permissions-Policy` pour `microphone=(self)`.
-- app/interview/[sessionId]/page.tsx — Ajout de la prop `onTimeUp` sur le composant `<AudioControls />` pour déclencher `handleEndInterview(true)` (sans la popup de confirmation).
+- app/api/ai/interview/[sessionId]/route.ts — Mise à jour dynamique de `questionCount` avec `Math.max(interviewSession.questionCount, interviewerMessages.length)` à la sauvegarde du bilan.
+- app/interview/[sessionId]/page.tsx — Rendu conditionnel d'un spinner pendant que `handleEndInterview` attend l'API, tuant au passage le composant `AudioControls` instantanément.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Le bug "ça fait crasher quand on clique deux fois de suite sur le micro" analysé en détail n'est pas encore corrigé volontairement. L'architecture backend du SSE fonctionne bien, le fix attendra la V2.
+- Les anciens entretiens vocaux resteront à 1 question, seuls les prochains auront le compte exact pris en compte par le Dashboard.

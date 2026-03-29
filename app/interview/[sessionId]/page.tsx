@@ -188,11 +188,15 @@ export default function InterviewChatPage() {
     }
   };
 
+  const [isTerminating, setIsTerminating] = useState(false);
+
   const handleEndInterview = async (skipConfirm = false) => {
     if (!skipConfirm) {
       const confirmed = window.confirm('Terminer cet entretien ? La facturation s\'arrêtera immédiatement.');
       if (!confirmed) return;
     }
+
+    setIsTerminating(true);
 
     // Close the Gemini WebSocket connection to stop billing immediately
     try {
@@ -203,7 +207,7 @@ export default function InterviewChatPage() {
       });
     } catch {}
 
-    // Mark session as completed server-side before navigating away
+    // Mark session as completed server-side before navigating away (this generates the AI report)
     try {
       await fetch(`/api/ai/interview/${sessionId}`, {
         method: 'PATCH',
@@ -219,10 +223,15 @@ export default function InterviewChatPage() {
   const maxQuestions = INTERVIEW_CONFIG.maxQuestions;
   const progress = session?.status === 'completed' ? 100 : (currentQuestionNumber / maxQuestions) * 100;
 
-  if (isLoading) {
+  if (isLoading || isTerminating) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 gap-4">
+        <Loader2 className="w-10 h-10 animate-spin text-indigo-500" />
+        {isTerminating && (
+          <p className="text-slate-500 font-medium animate-pulse text-sm">
+            Génération de votre bilan détaillé...
+          </p>
+        )}
       </div>
     );
   }
