@@ -20,6 +20,7 @@ export async function GET() {
         status: true,
         totalScore: true,
         questionCount: true,
+        format: true,
         createdAt: true,
       },
       take: 20,

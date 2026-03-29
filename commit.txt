@@ -1,19 +1,20 @@
-2026-03-29 — Fix du compteur de questions pour les entretiens audio
+2026-03-29 — Masquage du nombre de questions pour les entretiens audio
 
 What changed:
-- Le compteur de questions posées (affiché sur le tableau de bord) comptabilise désormais correctement les questions posées lors d'un entretien vocal.
-- Ajout de l'état `isTerminating` lors du clic sur "Terminer l'entretien", avec un spinner plein écran ("Génération du bilan...").
+- Suppression du décompte dynamique du nombre de questions pour les entretiens audio côté API (réversion de la modif précédente).
+- Masquage complet de la mention "X questions" sur le Dashboard principal et sur la page d'historique lorsque l'entretien est de type 'audio'.
 
 Why:
-- Le champ `questionCount` en base de données n'était jamais incrémenté dynamiquement pendant les sessions Gemini Live vocales (l'IA gère le fil). À la fin on se retrouvait avec "1 question" même si l'IA en posait 10.
-- L'interface se figeait (~2s) sans feedback visuel lors de l'appel final de génération de résumé OpenAI/Gemini, donnant une fausse impression de plantage à l'utilisateur, comme identifié sur l'erreur `Violation 'click' handler took 2006ms`.
+- Demande explicite de l'utilisateur : il préfère ne pas afficher du tout le nombre de questions quand c'est un test vocal (puisque le format est plus fluide/conversationnel et ne se prête pas à un décompte strict).
 
 Files affected:
-- app/api/ai/interview/[sessionId]/route.ts — Mise à jour dynamique de `questionCount` avec `Math.max(interviewSession.questionCount, interviewerMessages.length)` à la sauvegarde du bilan.
-- app/interview/[sessionId]/page.tsx — Rendu conditionnel d'un spinner pendant que `handleEndInterview` attend l'API, tuant au passage le composant `AudioControls` instantanément.
+- app/api/ai/interview/[sessionId]/route.ts — Retrait du `questionCount: Math.max(...)` lors du terminate de session.
+- app/api/ai/interview/history/route.ts — Ajout du champ `format` dans le select Prisma renvoyé au dashboard.
+- app/dashboard/ai/interview/page.tsx — Conditonnement de l'affichage `s.format !== 'audio' && <span>...</span>`.
+- app/dashboard/ai/interview/history/page.tsx — Même condition de masquage pour la page complète.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Les anciens entretiens vocaux resteront à 1 question, seuls les prochains auront le compte exact pris en compte par le Dashboard.
+- Le compteur de questions ne s'affichera désormais que pour les examens textuels.
