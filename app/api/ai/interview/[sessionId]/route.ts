@@ -341,7 +341,6 @@ export async function PATCH(
           status: 'completed',
           totalScore: summaryData.totalScore,
           summary: summaryData.globalFeedback,
-          questionCount: Math.max(interviewSession.questionCount, interviewerMessages.length),
         },
       });
     });

@@ -32,6 +32,7 @@ interface HistorySession {
   status: string;
   totalScore: number | null;
   questionCount: number;
+  format: string;
   createdAt: string;
 }
 
@@ -245,7 +246,7 @@ export default function InterviewSetupPage() {
                               {s.totalScore}/100
                             </span>
                           )}
-                          <span>{s.questionCount} questions</span>
+                          {s.format !== 'audio' && <span>{s.questionCount} questions</span>}
                         </div>
                       </Link>
                       <button
