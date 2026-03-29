@@ -1,13 +1,18 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Mic, MicOff, Volume2, VolumeX, Loader2, AlertCircle } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Loader2, AlertCircle, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+const SESSION_DURATION_SECONDS = 10 * 60; // 10 minutes (Gemini Live API limit)
+const WARNING_THRESHOLD = 2 * 60; // Amber at 2 minutes remaining
+const CRITICAL_THRESHOLD = 60; // Red at 1 minute remaining
 
 interface AudioControlsProps {
   sessionId: string;
   onTranscriptReceived?: (text: string, isFromUser: boolean) => void;
   onSpeakingStateChange?: (isAI: boolean) => void;
+  onTimeUp?: () => void;
   onError?: (err: Error) => void;
 }
 
@@ -15,12 +20,15 @@ export function AudioControls({
   sessionId,
   onTranscriptReceived,
   onSpeakingStateChange,
+  onTimeUp,
   onError,
 }: AudioControlsProps) {
   const [isListening, setIsListening] = useState(false);
   const [isMuted, setIsMuted] = useState(false); // Refers to the AI output
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(SESSION_DURATION_SECONDS);
+  const timerInterval = useRef<NodeJS.Timeout | null>(null);
 
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const audioContext = useRef<AudioContext | null>(null);
@@ -58,6 +66,10 @@ export function AudioControls({
       clearTimeout(playbackTimeoutRef.current);
       playbackTimeoutRef.current = null;
     }
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current);
+      timerInterval.current = null;
+    }
     chunkBuffer.current = [];
     fetch(`/api/ai/interview/ws/${sessionId}/chunk`, {
       method: 'POST',
@@ -66,6 +78,7 @@ export function AudioControls({
 
     setIsListening(false);
     setIsConnecting(false);
+    setSecondsLeft(SESSION_DURATION_SECONDS);
   }, [sessionId]);
 
   useEffect(() => {
@@ -241,13 +254,25 @@ export function AudioControls({
       };
 
       // Flush batched audio every 500ms: 1 HTTP request per 500ms vs 1 per ~20ms
-      batchingInterval.current = setInterval(flushAudioBuffer, 500);
+      batchingInterval.current = setInterval(flushAudioBuffer, 250);
 
       source.connect(workletNode);
       // DO NOT connect workletNode to audioContext.current.destination to prevent microphone echo!
 
       setIsListening(true);
       setIsConnecting(false);
+      setSecondsLeft(SESSION_DURATION_SECONDS);
+
+      timerInterval.current = setInterval(() => {
+        setSecondsLeft((prev) => {
+          if (prev <= 1) {
+            cleanup();
+            onTimeUp?.();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     } catch (err: any) {
       cleanup();
       
@@ -314,8 +339,8 @@ export function AudioControls({
         </button>
       )}
 
-      {/* Status indicator */}
-      <div className="px-3 flex items-center justify-center min-w-[120px]">
+      {/* Timer + Status indicator */}
+      <div className="px-3 flex items-center justify-center min-w-[120px] gap-2">
         {error ? (
           <span className="flex items-center gap-1.5 text-xs font-semibold text-red-600">
             <AlertCircle className="w-3.5 h-3.5" /> Erreur
@@ -323,15 +348,26 @@ export function AudioControls({
         ) : isConnecting ? (
           <span className="text-xs font-medium text-slate-500">Connexion IA...</span>
         ) : isListening ? (
-          <div className="flex items-center gap-2 text-xs font-semibold text-green-600">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-            </span>
-            À l'écoute
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-green-600">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+            </div>
+            <div className={`flex items-center gap-1 text-xs font-bold tabular-nums ${
+              secondsLeft <= CRITICAL_THRESHOLD
+                ? 'text-red-600'
+                : secondsLeft <= WARNING_THRESHOLD
+                  ? 'text-amber-600'
+                  : 'text-slate-600'
+            }`}>
+              <Clock className="w-3 h-3" />
+              {String(Math.floor(secondsLeft / 60)).padStart(2, '0')}:{String(secondsLeft % 60).padStart(2, '0')}
+            </div>
           </div>
         ) : (
-          <span className="text-xs font-medium text-slate-500">Mode vocal inactif</span>
+          <span className="text-xs font-medium text-slate-500">10 min max</span>
         )}
       </div>
     </div>
