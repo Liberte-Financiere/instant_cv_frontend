@@ -247,39 +247,105 @@ export async function PATCH(
       return NextResponse.json({ success: true });
     }
 
-    // Compute a partial score from graded feedback messages already recorded
+    // Check if we have interview content to analyze (audio transcriptions or text messages)
+    const interviewerMessages = interviewSession.messages.filter(
+      (m) => m.role === 'interviewer'
+    );
+    const candidateMessages = interviewSession.messages.filter(
+      (m) => m.role === 'candidate'
+    );
     const feedbackMessages = interviewSession.messages.filter(
       (m) => m.role === 'feedback' && m.score !== null
     );
-    const totalScore = feedbackMessages.length > 0
-      ? Math.round(
-          feedbackMessages.reduce((sum, m) => sum + (m.score ?? 0), 0) /
-          feedbackMessages.length * 10
-        )
-      : 0;
+
+    const hasConversationContent = interviewerMessages.length > 0 || candidateMessages.length > 0;
+
+    let summaryData: {
+      totalScore: number;
+      globalFeedback: string;
+      strengths: string[];
+      improvements: string[];
+      recommendations: string[];
+    };
+
+    if (hasConversationContent) {
+      // Generate a real AI-powered summary from the conversation
+      try {
+        const fullHistory = interviewSession.messages.map((m) => ({
+          role: m.role,
+          content: m.content,
+          score: m.score,
+        }));
+
+        const summaryInstruction = buildSummarySystemInstruction(
+          interviewSession.cvSummary,
+          interviewSession.jobTitle
+        );
+
+        const history = formatHistoryForGemini(fullHistory);
+        const summaryResponse = await generateInterviewResponse(
+          'summary',
+          summaryInstruction,
+          "Génère le bilan global de cet entretien complet.",
+          history
+        );
+
+        summaryData = {
+          totalScore: summaryResponse.totalScore ?? 0,
+          globalFeedback: summaryResponse.globalFeedback ?? 'Bilan généré automatiquement.',
+          strengths: summaryResponse.strengths ?? [],
+          improvements: summaryResponse.improvements ?? [],
+          recommendations: summaryResponse.recommendations ?? [],
+        };
+      } catch (err: any) {
+        console.error('[INTERVIEW_TERMINATE] AI summary generation failed:', err.message);
+        // Fallback to partial score from feedback messages
+        const partialScore = feedbackMessages.length > 0
+          ? Math.round(
+              feedbackMessages.reduce((sum, m) => sum + (m.score ?? 0), 0) /
+              feedbackMessages.length * 10
+            )
+          : 0;
+
+        summaryData = {
+          totalScore: partialScore,
+          globalFeedback: `Entretien terminé après ${interviewerMessages.length} échange(s). Le bilan détaillé n'a pas pu être généré.`,
+          strengths: [],
+          improvements: [],
+          recommendations: [],
+        };
+      }
+    } else {
+      // No conversation content at all (terminated immediately)
+      summaryData = {
+        totalScore: 0,
+        globalFeedback: `Entretien terminé sans échange.`,
+        strengths: [],
+        improvements: [],
+        recommendations: [],
+      };
+    }
 
     await prisma.$transaction(async (tx) => {
       await tx.interviewMessage.create({
         data: {
           sessionId,
           role: 'summary',
-          content: JSON.stringify({
-            totalScore,
-            globalFeedback: `Entretien terminé manuellement après ${feedbackMessages.length} question(s).`,
-            strengths: [],
-            improvements: [],
-            recommendations: [],
-          }),
+          content: JSON.stringify(summaryData),
         },
       });
 
       await tx.interviewSession.update({
         where: { id: sessionId },
-        data: { status: 'completed', totalScore },
+        data: {
+          status: 'completed',
+          totalScore: summaryData.totalScore,
+          summary: summaryData.globalFeedback,
+        },
       });
     });
 
-    return NextResponse.json({ success: true, totalScore });
+    return NextResponse.json({ success: true, totalScore: summaryData.totalScore });
   } catch (error) {
     console.error('[INTERVIEW_TERMINATE]', error);
     return NextResponse.json({ error: 'Erreur serveur.' }, { status: 500 });
