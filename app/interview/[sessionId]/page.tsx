@@ -188,9 +188,11 @@ export default function InterviewChatPage() {
     }
   };
 
-  const handleEndInterview = async () => {
-    const confirmed = window.confirm('Terminer cet entretien ? La facturation s\'arrêtera immédiatement.');
-    if (!confirmed) return;
+  const handleEndInterview = async (skipConfirm = false) => {
+    if (!skipConfirm) {
+      const confirmed = window.confirm('Terminer cet entretien ? La facturation s\'arrêtera immédiatement.');
+      if (!confirmed) return;
+    }
 
     // Close the Gemini WebSocket connection to stop billing immediately
     try {
@@ -473,11 +475,12 @@ export default function InterviewChatPage() {
                 sessionId={sessionId}
                 onTranscriptReceived={handleTranscriptReceived}
                 onSpeakingStateChange={setIsAISpeaking}
+                onTimeUp={() => handleEndInterview(true)}
               />
               <p className="text-[10px] sm:text-xs text-slate-400 text-center">Cliquez sur le micro pour démarrer</p>
             </div>
             <button
-              onClick={handleEndInterview}
+              onClick={() => handleEndInterview(false)}
               className="flex items-center justify-center gap-2.5 px-6 py-3 w-full sm:w-auto bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm rounded-xl border border-red-200 hover:border-red-300 transition-all active:scale-[0.98]"
             >
               <PhoneOff className="w-4 h-4" />

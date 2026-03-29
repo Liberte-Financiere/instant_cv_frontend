@@ -1,19 +1,19 @@
-2026-03-29 — Ajout du timer et correction du bilan pour le mode audio
+2026-03-29 — Fix des permissions globales et génération auto-bilan après 10min
 
 What changed:
-- Ajout d'un compte à rebours de 10 minutes sur le micro (mode audio).
-- Génération d'un vrai bilan de fin d'entretien (notes, forces, faiblesses) à la fermeture d'un entretien audio.
+- Correction de l'en-tête HTTP globale Permissions-Policy qui bloquait brutalement l'accès au microphone sur tous les navigateurs.
+- Lien entre le timer de 10 minutes (mode audio) et la génération du bilan de fin d'entretien.
 
 Why:
-- Les sessions Gemini Live sont limitées à 10 ou 15 minutes, il faut donc informer l'utilisateur qu'il y a une limite au lieu que ça coupe par surprise (en attendant une v2 avec Session Resumption).
-- En mode audio, aucun feedback par question n'était généré contrairement au mode texte, ce qui donnait un score de 0 et aucune conclusion quand l'utilisateur terminait son entretien manuellement.
+- Le fichier `next.config.ts` contenait `microphone=()` ce qui levait l'erreur `Permissions policy violation` avant même de demander la permission du micro.
+- Lors de l'ajout précédent du timer de 10 minutes, la session audio se coupait bien mais la génération du bilan final (scores & recos) nécessitait toujours un clic manuel sur "Terminer l'entretien". Maintenant c'est automatique.
 
 Files affected:
-- components/interview/AudioControls.tsx — Ajout d'un timer visuel (vert -> orange -> rouge) qui auto-ferme la session au bout de 10 minutes.
-- app/api/ai/interview/[sessionId]/route.ts — Modification de la route PATCH (action 'terminate') pour utiliser l'historique complet des messages (transcrits par l'IA) et générer un bilan final complet via `generateInterviewResponse` avec les instructions de 'summary'.
+- next.config.ts — Modification de l'en-tête `Permissions-Policy` pour `microphone=(self)`.
+- app/interview/[sessionId]/page.tsx — Ajout de la prop `onTimeUp` sur le composant `<AudioControls />` pour déclencher `handleEndInterview(true)` (sans la popup de confirmation).
 
 Breaking changes:
 - None
 
 Notes for review:
-- Le bilan de fin d'entretien prendra quelques secondes à générer lorsque l'utilisateur cliquera sur "Terminer l'entretien", car l'API Gemini doit lire toute la transcription pour générer la conclusion.
+- Le bug "ça fait crasher quand on clique deux fois de suite sur le micro" analysé en détail n'est pas encore corrigé volontairement. L'architecture backend du SSE fonctionne bien, le fix attendra la V2.
