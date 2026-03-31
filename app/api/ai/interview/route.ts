@@ -65,9 +65,13 @@ export async function POST(req: Request) {
     const cvContent = cv.content as Record<string, any>;
     const cvSummary = buildCVSummary(cvContent);
 
-    // Generate first question
-    const systemInstruction = buildFirstQuestionSystemInstruction(cvSummary, jobTitle.trim(), jobContext);
-    const aiResponse = await generateInterviewResponse('first', systemInstruction, "Commence l'entretien par la première question.");
+    // Generate first question ONLY if it's a text interview
+    let aiResponse = { question: "Cliquez sur le micro pour commencer l'entretien.", questionType: "intro" };
+    
+    if (format === 'text') {
+      const systemInstruction = buildFirstQuestionSystemInstruction(cvSummary, jobTitle.trim(), jobContext);
+      aiResponse = await generateInterviewResponse('first', systemInstruction, "Commence l'entretien par la première question.");
+    }
 
     // Create session + first message in a transaction
     const interviewSession = await prisma.$transaction(async (tx) => {
@@ -78,17 +82,19 @@ export async function POST(req: Request) {
           jobContext: jobContext?.trim() || null,
           cvSummary,
           format, // "text" or "audio"
-          questionCount: 1,
+          questionCount: format === 'audio' ? 0 : 1,
         },
       });
 
-      await tx.interviewMessage.create({
-        data: {
-          sessionId: newSession.id,
-          role: 'interviewer',
-          content: aiResponse.question,
-        },
-      });
+      if (format === 'text') {
+        await tx.interviewMessage.create({
+          data: {
+            sessionId: newSession.id,
+            role: 'interviewer',
+            content: aiResponse.question,
+          },
+        });
+      }
 
       return newSession;
     });
@@ -97,7 +103,7 @@ export async function POST(req: Request) {
       sessionId: interviewSession.id,
       question: aiResponse.question,
       questionType: aiResponse.questionType,
-      questionNumber: 1,
+      questionNumber: format === 'audio' ? 0 : 1,
     });
   } catch (error: any) {
     console.error('[INTERVIEW_START]', error);
