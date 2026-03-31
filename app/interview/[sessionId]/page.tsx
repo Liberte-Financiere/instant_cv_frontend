@@ -61,6 +61,7 @@ export default function InterviewChatPage() {
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
   const [inputMode, setInputMode] = useState<'text' | 'audio'>('text');
   const [isAISpeaking, setIsAISpeaking] = useState(false);
+  const [isMicActive, setIsMicActive] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -298,6 +299,32 @@ export default function InterviewChatPage() {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
         <AnimatePresence initial={false}>
+          {!isMicActive && inputMode === 'audio' && messages.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+            >
+              <div className="bg-white p-8 rounded-3xl shadow-xl shadow-indigo-500/10 border border-slate-100 flex flex-col items-center max-w-sm text-center">
+                <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6 text-indigo-600">
+                  <Mic className="w-8 h-8 animate-pulse" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 mb-2">Prêt à commencer ?</h3>
+                <p className="text-sm text-slate-500 mb-6">
+                  Cliquez sur le micro en bas de l'écran pour activer l'audio. L'IA prendra directement la parole.
+                </p>
+                <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full">
+                  <span className="flex h-2 w-2 relative">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                  </span>
+                  L'IA est en attente
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {visibleMessages.map((msg) => (
             <motion.div
               key={msg.id}
@@ -488,6 +515,7 @@ export default function InterviewChatPage() {
                 sessionId={sessionId}
                 onTranscriptReceived={handleTranscriptReceived}
                 onSpeakingStateChange={setIsAISpeaking}
+                onListeningStateChange={setIsMicActive}
                 onTimeUp={() => handleEndInterview(true)}
               />
               <p className="text-[10px] sm:text-xs text-slate-400 text-center">Cliquez sur le micro pour démarrer</p>
