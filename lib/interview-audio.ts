@@ -86,6 +86,20 @@ export function createGeminiLiveConnection(
         const parsed = JSON.parse(data);
         if (parsed.setupComplete) {
             console.log(`[Gemini WS] SETUP COMPLETE for ${connectionId}`);
+            
+            // Force the AI to speak the first question out loud right after connecting
+            const firstPromptMsg = {
+              clientContent: {
+                turns: [
+                  {
+                    role: "user",
+                    parts: [{ text: "Bonjour. Tu as la parole, commence l'entretien en m'accueillant et pose-moi la première question." }]
+                  }
+                ],
+                turnComplete: true
+              }
+            };
+            ws.send(JSON.stringify(firstPromptMsg));
         }
         onData(parsed);
       }

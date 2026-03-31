@@ -1,18 +1,20 @@
-2026-03-31 — Masquage ProgressBar + Décompte Question (En-tête Vue Entretien Audio)
+2026-03-31 — Déclenchement automatique de la parole de l'IA (Mode Audio Live)
 
 What changed:
-- Sur la plage de l'entretien (`app/interview/[sessionId]/page.tsx`), la barre de progression bleue et le texte "Question X/Y" ont été masqués quand le format est `audio`.
-- À la place du texte "Question X/Y", il est simplement écrit "En cours" (ou "Terminé").
+- Lors de la création d'un entretien Audio, l'API ne génère plus de première question textuelle facturée "en fond" avant le chargement de la page.
+- Une fois sur la page de l'entretien audio, lorsque l'utilisateur clique sur le micro pour se connecter, le serveur envoie automatiquement un prompt invisible à Gemini : "Bonjour. Tu as la parole, commence l'entretien en m'accueillant et pose-moi la première question."
+- Dès que la connexion est établie, au lieu d'attendre que l'utilisateur dise quelque chose, Gemini se met immédiatement à parler pour l'accueillir et lui poser la 1ère question à voix haute !
 
 Why:
-- L'utilisateur a remarqué que pendant un entretien audio (qui est fluide form et sans décompte strict autorisé par la feature de reprise session), l'interface essayait quand même de compter et affichait des fractions absurdes (ex: `Question 9/6`).
-- Masquer la barre de progression évite aussi un visuel cassé puisque la progression ne correspondait plus à la réalité du dialogue vocal continu.
+- Le comportement d'avant était perturbant : le candidat arrivait sur la page, un texte était déjà écrit, et quand il allumait le micro, il devait lui-même parler dans le vide pour déclencher la suite.
+- L'utilisateur final a exprimé clairement : "on vas faire de sorte a ce que cest lia qui commence a parler sinon actuellement cest un texte quon voit au debut" : l'IA doit engager la conversation vocalement en première.
 
 Files affected:
-- app/interview/[sessionId]/page.tsx — Rendu conditionnel et opérateur ternaire modifiés dans l'en-tête (Header).
+- app/api/ai/interview/route.ts — Skips saving an initial `interviewMessage` and returning a text question if format is 'audio'.
+- lib/interview-audio.ts — Inside `ws.on('message')`, hooks into `parsed.setupComplete` to dynamically inject a `clientContent` message forcing the AI to speak the greeting.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Le comportement reste 100% normal pour les entretiens `text` (barre de progression + "Question 1/6").
+- Gemini Live nécessite toujours qu'on lui envoie "quelque chose" pour qu'il commence à générer la réponse audio. Ce "hack" d'injecter un prompt après le Setup est la méthode officielle supportée par la documentation Google Multimodal Live pour initier le premier tour de parole.
