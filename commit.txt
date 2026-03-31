@@ -1,20 +1,28 @@
-2026-03-31 — Déclenchement automatique de la parole de l'IA (Mode Audio Live)
+2026-03-31 — Fix import PDF pour entretien + IA parle en premier (Audio Live)
 
 What changed:
-- Lors de la création d'un entretien Audio, l'API ne génère plus de première question textuelle facturée "en fond" avant le chargement de la page.
-- Une fois sur la page de l'entretien audio, lorsque l'utilisateur clique sur le micro pour se connecter, le serveur envoie automatiquement un prompt invisible à Gemini : "Bonjour. Tu as la parole, commence l'entretien en m'accueillant et pose-moi la première question."
-- Dès que la connexion est établie, au lieu d'attendre que l'utilisateur dise quelque chose, Gemini se met immédiatement à parler pour l'accueillir et lui poser la 1ère question à voix haute !
+- Fix: Le bouton "Importer PDF" dans la page de configuration d'entretien ne faisait rien (onFileSelected était une fonction vide).
+  Il est maintenant connecté a un vrai handler qui parse le PDF via /api/utils/parse-pdf, cree un CV temporaire, et le selectionne automatiquement.
+- Fix: Restauration de unpdf dans parse-pdf/route.ts (pdf-parse avait ete ajoute par erreur, supprime).
+- Feature: En mode Audio Live, l'IA commence maintenant a parler des que la connexion est etablie.
+  Le serveur envoie automatiquement un prompt invisible a Gemini apres le setupComplete pour forcer le premier tour de parole.
+- Feature: En mode Audio, la route POST /api/ai/interview ne genere plus de question textuelle inutile.
+  Le questionCount demarre a 0 et aucun interviewMessage n'est cree en base.
 
 Why:
-- Le comportement d'avant était perturbant : le candidat arrivait sur la page, un texte était déjà écrit, et quand il allumait le micro, il devait lui-même parler dans le vide pour déclencher la suite.
-- L'utilisateur final a exprimé clairement : "on vas faire de sorte a ce que cest lia qui commence a parler sinon actuellement cest un texte quon voit au debut" : l'IA doit engager la conversation vocalement en première.
+- Le bouton "Importer PDF" etait un bouton mort depuis sa creation. Le composant CvSelectionSection etait reutilise mais le callback n'avait jamais ete implemente pour la page d'entretien.
+- unpdf fonctionne parfaitement dans analyze/route.ts et match/route.ts. Le probleme n'etait pas la librairie mais l'absence de handler cote frontend.
+- L'experience utilisateur en mode audio etait confuse : un texte apparaissait a l'ecran, puis silence total jusqu'a ce que l'utilisateur parle. Maintenant l'IA engage la conversation vocalement.
 
 Files affected:
-- app/api/ai/interview/route.ts — Skips saving an initial `interviewMessage` and returning a text question if format is 'audio'.
-- lib/interview-audio.ts — Inside `ws.on('message')`, hooks into `parsed.setupComplete` to dynamically inject a `clientContent` message forcing the AI to speak the greeting.
+- app/dashboard/ai/interview/page.tsx — Ajout handleFileUpload, branchement onFileSelected et cvFile sur CvSelectionSection
+- app/api/utils/parse-pdf/route.ts — Restaure avec unpdf (retrait de pdf-parse)
+- app/api/ai/interview/route.ts — Skip generation de question texte si format=audio
+- lib/interview-audio.ts — Envoi automatique d'un prompt apres setupComplete pour forcer l'IA a parler
 
 Breaking changes:
 - None
 
 Notes for review:
-- Gemini Live nécessite toujours qu'on lui envoie "quelque chose" pour qu'il commence à générer la réponse audio. Ce "hack" d'injecter un prompt après le Setup est la méthode officielle supportée par la documentation Google Multimodal Live pour initier le premier tour de parole.
+- Le handler handleFileUpload cree un CV complet via createImportedCV avec le texte extrait dans personalInfo.summary. Ce CV est ensuite utilise par la route POST /interview pour construire le cvSummary.
+- pdf-parse a ete desinstalle du projet (npm uninstall pdf-parse).
