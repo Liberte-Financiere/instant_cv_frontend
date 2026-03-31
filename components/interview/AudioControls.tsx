@@ -12,6 +12,7 @@ interface AudioControlsProps {
   sessionId: string;
   onTranscriptReceived?: (text: string, isFromUser: boolean) => void;
   onSpeakingStateChange?: (isAI: boolean) => void;
+  onListeningStateChange?: (isListening: boolean) => void;
   onTimeUp?: () => void;
   onError?: (err: Error) => void;
 }
@@ -20,6 +21,7 @@ export function AudioControls({
   sessionId,
   onTranscriptReceived,
   onSpeakingStateChange,
+  onListeningStateChange,
   onTimeUp,
   onError,
 }: AudioControlsProps) {
@@ -77,9 +79,10 @@ export function AudioControls({
     }).catch(console.error);
 
     setIsListening(false);
+    onListeningStateChange?.(false);
     setIsConnecting(false);
     setSecondsLeft(SESSION_DURATION_SECONDS);
-  }, [sessionId]);
+  }, [sessionId, onListeningStateChange]);
 
   useEffect(() => {
     return cleanup;
@@ -260,6 +263,7 @@ export function AudioControls({
       // DO NOT connect workletNode to audioContext.current.destination to prevent microphone echo!
 
       setIsListening(true);
+      onListeningStateChange?.(true);
       setIsConnecting(false);
       setSecondsLeft(SESSION_DURATION_SECONDS);
 

@@ -80,15 +80,47 @@ export function createGeminiLiveConnection(
     if (connInfo) connInfo.lastActive = Date.now();
     
     try {
+      let rawStr = '';
       if (data instanceof Buffer) {
-        onData(JSON.parse(data.toString()));
+        rawStr = data.toString();
       } else if (typeof data === 'string') {
-        const parsed = JSON.parse(data);
-        if (parsed.setupComplete) {
-            console.log(`[Gemini WS] SETUP COMPLETE for ${connectionId}`);
-        }
-        onData(parsed);
+        rawStr = data;
+      } else if (data instanceof ArrayBuffer) {
+        rawStr = Buffer.from(data).toString();
+      } else if (Array.isArray(data)) {
+        rawStr = Buffer.concat(data).toString();
       }
+
+      const parsed = JSON.parse(rawStr);
+
+      // Log setup messages or errors to debug the connection
+      if (parsed.setupComplete || parsed.serverContent?.interrupted || parsed.error) {
+         console.log(`[Gemini WS] Meta event:`, JSON.stringify(parsed).slice(0, 150));
+      }
+
+      if (parsed.setupComplete) {
+          console.log(`[Gemini WS] SETUP COMPLETE for ${connectionId}. Waiting 500ms to send trigger...`);
+          
+          setTimeout(() => {
+             const firstPromptMsg = {
+               clientContent: {
+                 turns: [
+                   {
+                     role: "user",
+                     parts: [{ text: "Bonjour, commence." }]
+                   }
+                 ],
+                 turnComplete: true
+               }
+             };
+             if (ws.readyState === WebSocket.OPEN) {
+               ws.send(JSON.stringify(firstPromptMsg));
+               console.log(`[Gemini WS] TRIGGER SENT ("Bonjour, commence.") for ${connectionId}`);
+             }
+          }, 500);
+      }
+      
+      onData(parsed);
     } catch (e) {
       console.error('[Gemini WS] Failed to parse message', e);
     }

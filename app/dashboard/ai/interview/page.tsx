@@ -50,7 +50,7 @@ const stepVariants = {
 
 export default function InterviewSetupPage() {
   const router = useRouter();
-  const { cvList, fetchUserCVs } = useCVStore();
+  const { cvList, fetchUserCVs, createImportedCV } = useCVStore();
 
   const [step, setStep] = useState<Step>(0);
   const [direction, setDirection] = useState(1);
@@ -61,6 +61,8 @@ export default function InterviewSetupPage() {
   const [jobContext, setJobContext] = useState('');
   const [format, setFormat] = useState<'text' | 'audio'>('text');
   const [isStarting, setIsStarting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [history, setHistory] = useState<HistorySession[]>([]);
   const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
 
@@ -75,6 +77,40 @@ export default function InterviewSetupPage() {
   const goTo = (next: Step) => {
     setDirection(next > step ? 1 : -1);
     setStep(next);
+  };
+
+  const handleFileUpload = async (file: File) => {
+    if (file.type !== 'application/pdf') {
+       toast.error('Seuls les fichiers PDF sont acceptés.');
+       return;
+    }
+    setIsUploading(true);
+    setUploadedFile(file);
+    try {
+       const formData = new FormData();
+       formData.append('file', file);
+       const res = await fetch('/api/utils/parse-pdf', {
+          method: 'POST',
+          body: formData
+       });
+       if (!res.ok) throw new Error("Erreur de lecture du PDF");
+       const { text } = await res.json();
+       
+       // Create a temporary local CV for the interview
+       const newCvId = createImportedCV({
+          title: `CV Importé - ${file.name}`,
+          personalInfo: { summary: text, firstName: '', lastName: '', email: '', phone: '', address: '', title: '' }
+       });
+       
+       setSelectedCVId(newCvId);
+       setCvSourceMode('select');
+       toast.success("PDF importé avec succès pour l'entretien !");
+    } catch (error) {
+       toast.error("Impossible de lire le contenu du PDF.");
+       setUploadedFile(null);
+    } finally {
+       setIsUploading(false);
+    }
   };
 
   const handleStart = async () => {
@@ -291,8 +327,8 @@ export default function InterviewSetupPage() {
                 selectedCVId={selectedCVId}
                 setSelectedCVId={setSelectedCVId}
                 cvList={cvList}
-                cvFile={null}
-                onFileSelected={() => {}}
+                cvFile={uploadedFile}
+                onFileSelected={handleFileUpload}
                 label="Votre CV"
                 stepNumber={1}
               />

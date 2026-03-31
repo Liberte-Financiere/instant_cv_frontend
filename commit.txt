@@ -1,20 +1,28 @@
-2026-03-29 — Masquage du nombre de questions pour les entretiens audio
+2026-03-31 — Fix import PDF pour entretien + IA parle en premier (Audio Live)
 
 What changed:
-- Suppression du décompte dynamique du nombre de questions pour les entretiens audio côté API (réversion de la modif précédente).
-- Masquage complet de la mention "X questions" sur le Dashboard principal et sur la page d'historique lorsque l'entretien est de type 'audio'.
+- Fix: Le bouton "Importer PDF" dans la page de configuration d'entretien ne faisait rien (onFileSelected était une fonction vide).
+  Il est maintenant connecté a un vrai handler qui parse le PDF via /api/utils/parse-pdf, cree un CV temporaire, et le selectionne automatiquement.
+- Fix: Restauration de unpdf dans parse-pdf/route.ts (pdf-parse avait ete ajoute par erreur, supprime).
+- Feature: En mode Audio Live, l'IA commence maintenant a parler des que la connexion est etablie.
+  Le serveur envoie automatiquement un prompt invisible a Gemini apres le setupComplete pour forcer le premier tour de parole.
+- Feature: En mode Audio, la route POST /api/ai/interview ne genere plus de question textuelle inutile.
+  Le questionCount demarre a 0 et aucun interviewMessage n'est cree en base.
 
 Why:
-- Demande explicite de l'utilisateur : il préfère ne pas afficher du tout le nombre de questions quand c'est un test vocal (puisque le format est plus fluide/conversationnel et ne se prête pas à un décompte strict).
+- Le bouton "Importer PDF" etait un bouton mort depuis sa creation. Le composant CvSelectionSection etait reutilise mais le callback n'avait jamais ete implemente pour la page d'entretien.
+- unpdf fonctionne parfaitement dans analyze/route.ts et match/route.ts. Le probleme n'etait pas la librairie mais l'absence de handler cote frontend.
+- L'experience utilisateur en mode audio etait confuse : un texte apparaissait a l'ecran, puis silence total jusqu'a ce que l'utilisateur parle. Maintenant l'IA engage la conversation vocalement.
 
 Files affected:
-- app/api/ai/interview/[sessionId]/route.ts — Retrait du `questionCount: Math.max(...)` lors du terminate de session.
-- app/api/ai/interview/history/route.ts — Ajout du champ `format` dans le select Prisma renvoyé au dashboard.
-- app/dashboard/ai/interview/page.tsx — Conditonnement de l'affichage `s.format !== 'audio' && <span>...</span>`.
-- app/dashboard/ai/interview/history/page.tsx — Même condition de masquage pour la page complète.
+- app/dashboard/ai/interview/page.tsx — Ajout handleFileUpload, branchement onFileSelected et cvFile sur CvSelectionSection
+- app/api/utils/parse-pdf/route.ts — Restaure avec unpdf (retrait de pdf-parse)
+- app/api/ai/interview/route.ts — Skip generation de question texte si format=audio
+- lib/interview-audio.ts — Envoi automatique d'un prompt apres setupComplete pour forcer l'IA a parler
 
 Breaking changes:
 - None
 
 Notes for review:
-- Le compteur de questions ne s'affichera désormais que pour les examens textuels.
+- Le handler handleFileUpload cree un CV complet via createImportedCV avec le texte extrait dans personalInfo.summary. Ce CV est ensuite utilise par la route POST /interview pour construire le cvSummary.
+- pdf-parse a ete desinstalle du projet (npm uninstall pdf-parse).
