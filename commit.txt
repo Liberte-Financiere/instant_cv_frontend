@@ -1,20 +1,18 @@
-2026-03-29 — Masquage du nombre de questions pour les entretiens audio
+2026-03-31 — Masquage ProgressBar + Décompte Question (En-tête Vue Entretien Audio)
 
 What changed:
-- Suppression du décompte dynamique du nombre de questions pour les entretiens audio côté API (réversion de la modif précédente).
-- Masquage complet de la mention "X questions" sur le Dashboard principal et sur la page d'historique lorsque l'entretien est de type 'audio'.
+- Sur la plage de l'entretien (`app/interview/[sessionId]/page.tsx`), la barre de progression bleue et le texte "Question X/Y" ont été masqués quand le format est `audio`.
+- À la place du texte "Question X/Y", il est simplement écrit "En cours" (ou "Terminé").
 
 Why:
-- Demande explicite de l'utilisateur : il préfère ne pas afficher du tout le nombre de questions quand c'est un test vocal (puisque le format est plus fluide/conversationnel et ne se prête pas à un décompte strict).
+- L'utilisateur a remarqué que pendant un entretien audio (qui est fluide form et sans décompte strict autorisé par la feature de reprise session), l'interface essayait quand même de compter et affichait des fractions absurdes (ex: `Question 9/6`).
+- Masquer la barre de progression évite aussi un visuel cassé puisque la progression ne correspondait plus à la réalité du dialogue vocal continu.
 
 Files affected:
-- app/api/ai/interview/[sessionId]/route.ts — Retrait du `questionCount: Math.max(...)` lors du terminate de session.
-- app/api/ai/interview/history/route.ts — Ajout du champ `format` dans le select Prisma renvoyé au dashboard.
-- app/dashboard/ai/interview/page.tsx — Conditonnement de l'affichage `s.format !== 'audio' && <span>...</span>`.
-- app/dashboard/ai/interview/history/page.tsx — Même condition de masquage pour la page complète.
+- app/interview/[sessionId]/page.tsx — Rendu conditionnel et opérateur ternaire modifiés dans l'en-tête (Header).
 
 Breaking changes:
 - None
 
 Notes for review:
-- Le compteur de questions ne s'affichera désormais que pour les examens textuels.
+- Le comportement reste 100% normal pour les entretiens `text` (barre de progression + "Question 1/6").
