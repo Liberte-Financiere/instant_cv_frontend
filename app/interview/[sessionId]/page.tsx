@@ -255,15 +255,19 @@ export default function InterviewChatPage() {
             Entretien : {session.jobTitle}
           </h1>
           <div className="flex items-center gap-3 mt-1">
-            <div className="flex-1 bg-slate-100 rounded-full h-1.5 max-w-[200px]">
-              <div
-                className="bg-indigo-500 h-1.5 rounded-full transition-all duration-500"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+            {session.format !== 'audio' && (
+              <div className="flex-1 bg-slate-100 rounded-full h-1.5 max-w-[200px]">
+                <div
+                  className="bg-indigo-500 h-1.5 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(100, progress)}%` }}
+                />
+              </div>
+            )}
             <span className="text-xs text-slate-500">
               {session.status === 'completed'
                 ? 'Terminé'
+                : session.format === 'audio'
+                ? 'En cours'
                 : `Question ${currentQuestionNumber}/${maxQuestions}`}
             </span>
           </div>
