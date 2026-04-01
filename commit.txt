@@ -1,23 +1,25 @@
-[2026-04-01] — Refactor P8: extract audio interview prompt into shared builder
+[2026-04-01] — Migrate audio Live API from Gemini 2.5 to 3.1 Flash Live Preview
 
 What changed:
-- Created `buildAudioSystemInstruction()` in lib/interview.ts
-- Replaced hardcoded system instruction in ws/[sessionId]/start/route.ts with builder call
-- Added jobContext support to the audio interview prompt
-- Enriched prompt rules: clearer trigger behavior, explicit encouragement directives, conversational tone instruction
+- Updated model string from gemini-2.5-flash-native-audio-preview-12-2025 to gemini-3.1-flash-live-preview
+- Setup message: changed top-level key from "setup" to "config", flattened generationConfig (responseModalities and speechConfig are now direct children of config)
+- Trigger message: replaced clientContent with realtimeInput.text
+- Audio sending: replaced mediaChunks array with single audio object { data, mimeType }
+- Text sending: replaced clientContent with realtimeInput.text for mid-conversation text input
 
 Why:
-- The audio prompt was the only one hardcoded directly in a route instead of the shared lib
-- Missing jobContext meant the AI had no visibility on the job offer details during audio interviews
-- Original prompt was too sparse compared to text interview prompts (P7)
+- Gemini 3.1 Flash Live Preview is the new recommended model for real-time audio
+- The WebSocket message format has changed (documented migration guide)
+- clientContent is now reserved for initial history priming only, not for runtime text input
 
 Files affected:
-- lib/interview.ts — added buildAudioSystemInstruction() export
-- app/api/ai/interview/ws/[sessionId]/start/route.ts — replaced inline prompt with builder call, added import
+- lib/config.ts — model string update
+- lib/interview-audio.ts — all 4 message format changes (setup, trigger, audio, text)
 
 Breaking changes:
-- None
+- None for end users. Backend-only changes.
 
 Notes for review:
-- The trigger message "Bonjour, commence." (line ~110 in interview-audio.ts) is still sent 500ms after setup. The new prompt rule 1 says "present yourself once audio is established" which aligns better than the old "Commence TOUJOURS" that could conflict.
-- No max questions limit was added per user instruction — audio mode is open-ended by design.
+- Voice "Aoede" is kept in speechConfig — verify it still works with 3.1
+- Transcriptions (inputTranscription/outputTranscription) are not handled yet; they are available in 3.1 server events but ignored for now
+- The chunk/route.ts was NOT modified since it calls interview-audio.ts functions which were updated
