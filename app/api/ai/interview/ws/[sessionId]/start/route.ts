@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { checkAndConsumeCredits } from '@/lib/credits';
 import { createGeminiLiveConnection, connections } from '@/lib/interview-audio';
+import { buildAudioSystemInstruction } from '@/lib/interview';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs'; // Required for long-lived streams and generic EventEmitter
@@ -33,13 +34,11 @@ export async function GET(
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       async start(controller) {
-        // Build system prompt based on session
-        const systemInstruction = `Tu es un recruteur professionnel. L'entretien se fait à l'oral.
-PROFIL: ${interviewSession.cvSummary}
-POSTE: ${interviewSession.jobTitle}
-Commence TOUJOURS par te présenter et accueillir le candidat dès le début de la conversation, sans attendre qu'il parle.
-Sois concis, naturel, et interactif. Pose une question à la fois.
-Si le candidat te demande de répéter, répète. S'il hésite, encourage-le.`;
+        const systemInstruction = buildAudioSystemInstruction(
+          interviewSession.cvSummary,
+          interviewSession.jobTitle,
+          interviewSession.jobContext
+        );
 
         try {
           // Close any existing connection for this session to prevent resource leaks
