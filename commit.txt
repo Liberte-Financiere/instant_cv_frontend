@@ -1,28 +1,25 @@
-2026-03-31 — Fix import PDF pour entretien + IA parle en premier (Audio Live)
+[2026-04-01] — Migrate audio Live API from Gemini 2.5 to 3.1 Flash Live Preview
 
 What changed:
-- Fix: Le bouton "Importer PDF" dans la page de configuration d'entretien ne faisait rien (onFileSelected était une fonction vide).
-  Il est maintenant connecté a un vrai handler qui parse le PDF via /api/utils/parse-pdf, cree un CV temporaire, et le selectionne automatiquement.
-- Fix: Restauration de unpdf dans parse-pdf/route.ts (pdf-parse avait ete ajoute par erreur, supprime).
-- Feature: En mode Audio Live, l'IA commence maintenant a parler des que la connexion est etablie.
-  Le serveur envoie automatiquement un prompt invisible a Gemini apres le setupComplete pour forcer le premier tour de parole.
-- Feature: En mode Audio, la route POST /api/ai/interview ne genere plus de question textuelle inutile.
-  Le questionCount demarre a 0 et aucun interviewMessage n'est cree en base.
+- Updated model string from gemini-2.5-flash-native-audio-preview-12-2025 to gemini-3.1-flash-live-preview
+- Setup message: changed top-level key from "setup" to "config", flattened generationConfig (responseModalities and speechConfig are now direct children of config)
+- Trigger message: replaced clientContent with realtimeInput.text
+- Audio sending: replaced mediaChunks array with single audio object { data, mimeType }
+- Text sending: replaced clientContent with realtimeInput.text for mid-conversation text input
 
 Why:
-- Le bouton "Importer PDF" etait un bouton mort depuis sa creation. Le composant CvSelectionSection etait reutilise mais le callback n'avait jamais ete implemente pour la page d'entretien.
-- unpdf fonctionne parfaitement dans analyze/route.ts et match/route.ts. Le probleme n'etait pas la librairie mais l'absence de handler cote frontend.
-- L'experience utilisateur en mode audio etait confuse : un texte apparaissait a l'ecran, puis silence total jusqu'a ce que l'utilisateur parle. Maintenant l'IA engage la conversation vocalement.
+- Gemini 3.1 Flash Live Preview is the new recommended model for real-time audio
+- The WebSocket message format has changed (documented migration guide)
+- clientContent is now reserved for initial history priming only, not for runtime text input
 
 Files affected:
-- app/dashboard/ai/interview/page.tsx — Ajout handleFileUpload, branchement onFileSelected et cvFile sur CvSelectionSection
-- app/api/utils/parse-pdf/route.ts — Restaure avec unpdf (retrait de pdf-parse)
-- app/api/ai/interview/route.ts — Skip generation de question texte si format=audio
-- lib/interview-audio.ts — Envoi automatique d'un prompt apres setupComplete pour forcer l'IA a parler
+- lib/config.ts — model string update
+- lib/interview-audio.ts — all 4 message format changes (setup, trigger, audio, text)
 
 Breaking changes:
-- None
+- None for end users. Backend-only changes.
 
 Notes for review:
-- Le handler handleFileUpload cree un CV complet via createImportedCV avec le texte extrait dans personalInfo.summary. Ce CV est ensuite utilise par la route POST /interview pour construire le cvSummary.
-- pdf-parse a ete desinstalle du projet (npm uninstall pdf-parse).
+- Voice "Aoede" is kept in speechConfig — verify it still works with 3.1
+- Transcriptions (inputTranscription/outputTranscription) are not handled yet; they are available in 3.1 server events but ignored for now
+- The chunk/route.ts was NOT modified since it calls interview-audio.ts functions which were updated
