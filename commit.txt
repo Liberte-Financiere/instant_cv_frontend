@@ -1,28 +1,23 @@
-2026-03-31 — Fix import PDF pour entretien + IA parle en premier (Audio Live)
+[2026-04-01] — Refactor P8: extract audio interview prompt into shared builder
 
 What changed:
-- Fix: Le bouton "Importer PDF" dans la page de configuration d'entretien ne faisait rien (onFileSelected était une fonction vide).
-  Il est maintenant connecté a un vrai handler qui parse le PDF via /api/utils/parse-pdf, cree un CV temporaire, et le selectionne automatiquement.
-- Fix: Restauration de unpdf dans parse-pdf/route.ts (pdf-parse avait ete ajoute par erreur, supprime).
-- Feature: En mode Audio Live, l'IA commence maintenant a parler des que la connexion est etablie.
-  Le serveur envoie automatiquement un prompt invisible a Gemini apres le setupComplete pour forcer le premier tour de parole.
-- Feature: En mode Audio, la route POST /api/ai/interview ne genere plus de question textuelle inutile.
-  Le questionCount demarre a 0 et aucun interviewMessage n'est cree en base.
+- Created `buildAudioSystemInstruction()` in lib/interview.ts
+- Replaced hardcoded system instruction in ws/[sessionId]/start/route.ts with builder call
+- Added jobContext support to the audio interview prompt
+- Enriched prompt rules: clearer trigger behavior, explicit encouragement directives, conversational tone instruction
 
 Why:
-- Le bouton "Importer PDF" etait un bouton mort depuis sa creation. Le composant CvSelectionSection etait reutilise mais le callback n'avait jamais ete implemente pour la page d'entretien.
-- unpdf fonctionne parfaitement dans analyze/route.ts et match/route.ts. Le probleme n'etait pas la librairie mais l'absence de handler cote frontend.
-- L'experience utilisateur en mode audio etait confuse : un texte apparaissait a l'ecran, puis silence total jusqu'a ce que l'utilisateur parle. Maintenant l'IA engage la conversation vocalement.
+- The audio prompt was the only one hardcoded directly in a route instead of the shared lib
+- Missing jobContext meant the AI had no visibility on the job offer details during audio interviews
+- Original prompt was too sparse compared to text interview prompts (P7)
 
 Files affected:
-- app/dashboard/ai/interview/page.tsx — Ajout handleFileUpload, branchement onFileSelected et cvFile sur CvSelectionSection
-- app/api/utils/parse-pdf/route.ts — Restaure avec unpdf (retrait de pdf-parse)
-- app/api/ai/interview/route.ts — Skip generation de question texte si format=audio
-- lib/interview-audio.ts — Envoi automatique d'un prompt apres setupComplete pour forcer l'IA a parler
+- lib/interview.ts — added buildAudioSystemInstruction() export
+- app/api/ai/interview/ws/[sessionId]/start/route.ts — replaced inline prompt with builder call, added import
 
 Breaking changes:
 - None
 
 Notes for review:
-- Le handler handleFileUpload cree un CV complet via createImportedCV avec le texte extrait dans personalInfo.summary. Ce CV est ensuite utilise par la route POST /interview pour construire le cvSummary.
-- pdf-parse a ete desinstalle du projet (npm uninstall pdf-parse).
+- The trigger message "Bonjour, commence." (line ~110 in interview-audio.ts) is still sent 500ms after setup. The new prompt rule 1 says "present yourself once audio is established" which aligns better than the old "Commence TOUJOURS" that could conflict.
+- No max questions limit was added per user instruction — audio mode is open-ended by design.
