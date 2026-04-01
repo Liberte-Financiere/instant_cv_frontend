@@ -53,17 +53,15 @@ export function createGeminiLiveConnection(
 
   ws.on('open', () => {
     console.log(`[Gemini WS] WebSocket OPEN. Sending Setup to Google...`);
-    // 1. Send Setup Message
+    // 1. Send Setup Message (Gemini 3.1 Live format: "config" replaces "setup")
     const setupMsg = {
-      setup: {
+      config: {
         model: APP_CONFIG.ai.models.audioLive,
-        generationConfig: {
-          responseModalities: ["AUDIO"],
-          speechConfig: {
-            voiceConfig: {
-              prebuiltVoiceConfig: {
-                voiceName: "Aoede" // Example voice
-              }
+        responseModalities: ["AUDIO"],
+        speechConfig: {
+          voiceConfig: {
+            prebuiltVoiceConfig: {
+              voiceName: "Aoede"
             }
           }
         },
@@ -102,15 +100,10 @@ export function createGeminiLiveConnection(
           console.log(`[Gemini WS] SETUP COMPLETE for ${connectionId}. Waiting 500ms to send trigger...`);
           
           setTimeout(() => {
+             // Gemini 3.1: use realtimeInput.text instead of clientContent
              const firstPromptMsg = {
-               clientContent: {
-                 turns: [
-                   {
-                     role: "user",
-                     parts: [{ text: "Bonjour, commence." }]
-                   }
-                 ],
-                 turnComplete: true
+               realtimeInput: {
+                 text: "Bonjour, commence."
                }
              };
              if (ws.readyState === WebSocket.OPEN) {
@@ -155,15 +148,13 @@ export function sendAudioToGemini(connectionId: string, pcmBase64: string) {
 
   conn.lastActive = Date.now();
   
-  // 2. Send RealtimeInput message with Audio data
+  // 2. Send RealtimeInput message with Audio data (Gemini 3.1 format)
   const msg = {
     realtimeInput: {
-      mediaChunks: [
-        {
-          mimeType: "audio/pcm;rate=16000",
-          data: pcmBase64
-        }
-      ]
+      audio: {
+        data: pcmBase64,
+        mimeType: "audio/pcm;rate=16000"
+      }
     }
   };
   
@@ -174,15 +165,10 @@ export function sendClientContentMessage(connectionId: string, text: string) {
   const conn = connections.get(connectionId);
   if (!conn || conn.ws.readyState !== WebSocket.OPEN) return;
 
+  // Gemini 3.1: use realtimeInput.text instead of clientContent for mid-conversation text
   const msg = {
-    clientContent: {
-      turns: [
-        {
-          role: "user",
-          parts: [{ text }]
-        }
-      ],
-      turnComplete: true
+    realtimeInput: {
+      text
     }
   };
   conn.ws.send(JSON.stringify(msg));
