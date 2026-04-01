@@ -82,9 +82,6 @@ export async function GET(
             }, 60000); // 60 seconds
           }
 
-          // Buffer to accumulate AI text transcriptions across streamed chunks
-          let transcriptBuffer = '';
-
           const ws = createGeminiLiveConnection(
             sessionId,
             sessionId,
@@ -93,28 +90,37 @@ export async function GET(
             (data) => {
               if (wsClosed) return;
 
-              // Accumulate text transcriptions from Gemini model turns
-              if (data.serverContent?.modelTurn?.parts) {
-                for (const part of data.serverContent.modelTurn.parts) {
-                  if (part.text) {
-                    transcriptBuffer += part.text;
-                  }
+              // Gemini 3.1: capture native transcriptions
+              // inputTranscription = what the candidate said (speech-to-text)
+              if (data.serverContent?.inputTranscription?.text) {
+                const candidateText = data.serverContent.inputTranscription.text.trim();
+                if (candidateText) {
+                  prisma.interviewMessage.create({
+                    data: {
+                      sessionId,
+                      role: 'candidate',
+                      content: candidateText,
+                    },
+                  }).catch((err: any) => {
+                    console.error('[SSE] Failed to save candidate transcript:', err.message);
+                  });
                 }
               }
 
-              // When the AI finishes speaking, persist the transcript to the database
-              if (data.serverContent?.turnComplete && transcriptBuffer.trim()) {
-                const textToSave = transcriptBuffer.trim();
-                transcriptBuffer = '';
-                prisma.interviewMessage.create({
-                  data: {
-                    sessionId,
-                    role: 'interviewer',
-                    content: textToSave,
-                  },
-                }).catch((err: any) => {
-                  console.error('[SSE] Failed to save transcript:', err.message);
-                });
+              // outputTranscription = what the AI said (speech-to-text)
+              if (data.serverContent?.outputTranscription?.text) {
+                const aiText = data.serverContent.outputTranscription.text.trim();
+                if (aiText) {
+                  prisma.interviewMessage.create({
+                    data: {
+                      sessionId,
+                      role: 'interviewer',
+                      content: aiText,
+                    },
+                  }).catch((err: any) => {
+                    console.error('[SSE] Failed to save AI transcript:', err.message);
+                  });
+                }
               }
 
               // Forward Gemini payload to client via SSE
