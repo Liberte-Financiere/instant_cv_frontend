@@ -65,6 +65,8 @@ export function createGeminiLiveConnection(
             }
           }
         },
+        outputAudioTranscription: {},
+        inputAudioTranscription: {},
         systemInstruction: {
           parts: [{ text: systemInstruction }]
         }
