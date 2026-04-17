@@ -60,6 +60,7 @@ export default function InterviewSetupPage() {
   const [jobTitle, setJobTitle] = useState('');
   const [jobContext, setJobContext] = useState('');
   const [format, setFormat] = useState<'text' | 'audio'>('text');
+  const [voicePreference, setVoicePreference] = useState<'male' | 'female'>('male');
   const [isStarting, setIsStarting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -121,7 +122,7 @@ export default function InterviewSetupPage() {
       const res = await fetch('/api/ai/interview', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cvId: selectedCVId, jobTitle, jobContext, format }),
+        body: JSON.stringify({ cvId: selectedCVId, jobTitle, jobContext, format, voicePreference: format === 'audio' ? voicePreference : undefined }),
       });
 
       if (!res.ok) {
@@ -486,6 +487,40 @@ export default function InterviewSetupPage() {
                 )}
               </button>
             </div>
+
+            {/* Voice gender selector -- shown only for audio mode */}
+            {format === 'audio' && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+                className="mt-6 max-w-2xl mx-auto"
+              >
+                <h3 className="text-sm font-bold text-slate-700 mb-3 text-center">Voix du recruteur</h3>
+                <div className="flex justify-center gap-3">
+                  <button
+                    onClick={() => setVoicePreference('male')}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${
+                      voicePreference === 'male'
+                        ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+                        : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                    }`}
+                  >
+                    Homme
+                  </button>
+                  <button
+                    onClick={() => setVoicePreference('female')}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${
+                      voicePreference === 'female'
+                        ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+                        : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                    }`}
+                  >
+                    Femme
+                  </button>
+                </div>
+              </motion.div>
+            )}
 
             <div className="flex items-center justify-between mt-10 pt-6 border-t border-slate-100 max-w-2xl mx-auto">
               <button

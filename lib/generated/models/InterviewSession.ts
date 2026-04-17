@@ -44,6 +44,7 @@ export type InterviewSessionMinAggregateOutputType = {
   cvSummary: string | null
   status: string | null
   format: string | null
+  voicePreference: string | null
   totalScore: number | null
   summary: string | null
   questionCount: number | null
@@ -59,6 +60,7 @@ export type InterviewSessionMaxAggregateOutputType = {
   cvSummary: string | null
   status: string | null
   format: string | null
+  voicePreference: string | null
   totalScore: number | null
   summary: string | null
   questionCount: number | null
@@ -74,6 +76,7 @@ export type InterviewSessionCountAggregateOutputType = {
   cvSummary: number
   status: number
   format: number
+  voicePreference: number
   totalScore: number
   summary: number
   questionCount: number
@@ -101,6 +104,7 @@ export type InterviewSessionMinAggregateInputType = {
   cvSummary?: true
   status?: true
   format?: true
+  voicePreference?: true
   totalScore?: true
   summary?: true
   questionCount?: true
@@ -116,6 +120,7 @@ export type InterviewSessionMaxAggregateInputType = {
   cvSummary?: true
   status?: true
   format?: true
+  voicePreference?: true
   totalScore?: true
   summary?: true
   questionCount?: true
@@ -131,6 +136,7 @@ export type InterviewSessionCountAggregateInputType = {
   cvSummary?: true
   status?: true
   format?: true
+  voicePreference?: true
   totalScore?: true
   summary?: true
   questionCount?: true
@@ -233,6 +239,7 @@ export type InterviewSessionGroupByOutputType = {
   cvSummary: string
   status: string
   format: string
+  voicePreference: string | null
   totalScore: number | null
   summary: string | null
   questionCount: number
@@ -271,6 +278,7 @@ export type InterviewSessionWhereInput = {
   cvSummary?: Prisma.StringFilter<"InterviewSession"> | string
   status?: Prisma.StringFilter<"InterviewSession"> | string
   format?: Prisma.StringFilter<"InterviewSession"> | string
+  voicePreference?: Prisma.StringNullableFilter<"InterviewSession"> | string | null
   totalScore?: Prisma.IntNullableFilter<"InterviewSession"> | number | null
   summary?: Prisma.StringNullableFilter<"InterviewSession"> | string | null
   questionCount?: Prisma.IntFilter<"InterviewSession"> | number
@@ -288,6 +296,7 @@ export type InterviewSessionOrderByWithRelationInput = {
   cvSummary?: Prisma.SortOrder
   status?: Prisma.SortOrder
   format?: Prisma.SortOrder
+  voicePreference?: Prisma.SortOrderInput | Prisma.SortOrder
   totalScore?: Prisma.SortOrderInput | Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   questionCount?: Prisma.SortOrder
@@ -308,6 +317,7 @@ export type InterviewSessionWhereUniqueInput = Prisma.AtLeast<{
   cvSummary?: Prisma.StringFilter<"InterviewSession"> | string
   status?: Prisma.StringFilter<"InterviewSession"> | string
   format?: Prisma.StringFilter<"InterviewSession"> | string
+  voicePreference?: Prisma.StringNullableFilter<"InterviewSession"> | string | null
   totalScore?: Prisma.IntNullableFilter<"InterviewSession"> | number | null
   summary?: Prisma.StringNullableFilter<"InterviewSession"> | string | null
   questionCount?: Prisma.IntFilter<"InterviewSession"> | number
@@ -325,6 +335,7 @@ export type InterviewSessionOrderByWithAggregationInput = {
   cvSummary?: Prisma.SortOrder
   status?: Prisma.SortOrder
   format?: Prisma.SortOrder
+  voicePreference?: Prisma.SortOrderInput | Prisma.SortOrder
   totalScore?: Prisma.SortOrderInput | Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   questionCount?: Prisma.SortOrder
@@ -348,6 +359,7 @@ export type InterviewSessionScalarWhereWithAggregatesInput = {
   cvSummary?: Prisma.StringWithAggregatesFilter<"InterviewSession"> | string
   status?: Prisma.StringWithAggregatesFilter<"InterviewSession"> | string
   format?: Prisma.StringWithAggregatesFilter<"InterviewSession"> | string
+  voicePreference?: Prisma.StringNullableWithAggregatesFilter<"InterviewSession"> | string | null
   totalScore?: Prisma.IntNullableWithAggregatesFilter<"InterviewSession"> | number | null
   summary?: Prisma.StringNullableWithAggregatesFilter<"InterviewSession"> | string | null
   questionCount?: Prisma.IntWithAggregatesFilter<"InterviewSession"> | number
@@ -362,6 +374,7 @@ export type InterviewSessionCreateInput = {
   cvSummary: string
   status?: string
   format?: string
+  voicePreference?: string | null
   totalScore?: number | null
   summary?: string | null
   questionCount?: number
@@ -379,6 +392,7 @@ export type InterviewSessionUncheckedCreateInput = {
   cvSummary: string
   status?: string
   format?: string
+  voicePreference?: string | null
   totalScore?: number | null
   summary?: string | null
   questionCount?: number
@@ -394,6 +408,7 @@ export type InterviewSessionUpdateInput = {
   cvSummary?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   format?: Prisma.StringFieldUpdateOperationsInput | string
+  voicePreference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   questionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -411,6 +426,7 @@ export type InterviewSessionUncheckedUpdateInput = {
   cvSummary?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   format?: Prisma.StringFieldUpdateOperationsInput | string
+  voicePreference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   questionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -427,6 +443,7 @@ export type InterviewSessionCreateManyInput = {
   cvSummary: string
   status?: string
   format?: string
+  voicePreference?: string | null
   totalScore?: number | null
   summary?: string | null
   questionCount?: number
@@ -441,6 +458,7 @@ export type InterviewSessionUpdateManyMutationInput = {
   cvSummary?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   format?: Prisma.StringFieldUpdateOperationsInput | string
+  voicePreference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   questionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -456,6 +474,7 @@ export type InterviewSessionUncheckedUpdateManyInput = {
   cvSummary?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   format?: Prisma.StringFieldUpdateOperationsInput | string
+  voicePreference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   questionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -481,6 +500,7 @@ export type InterviewSessionCountOrderByAggregateInput = {
   cvSummary?: Prisma.SortOrder
   status?: Prisma.SortOrder
   format?: Prisma.SortOrder
+  voicePreference?: Prisma.SortOrder
   totalScore?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   questionCount?: Prisma.SortOrder
@@ -501,6 +521,7 @@ export type InterviewSessionMaxOrderByAggregateInput = {
   cvSummary?: Prisma.SortOrder
   status?: Prisma.SortOrder
   format?: Prisma.SortOrder
+  voicePreference?: Prisma.SortOrder
   totalScore?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   questionCount?: Prisma.SortOrder
@@ -516,6 +537,7 @@ export type InterviewSessionMinOrderByAggregateInput = {
   cvSummary?: Prisma.SortOrder
   status?: Prisma.SortOrder
   format?: Prisma.SortOrder
+  voicePreference?: Prisma.SortOrder
   totalScore?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   questionCount?: Prisma.SortOrder
@@ -596,6 +618,7 @@ export type InterviewSessionCreateWithoutUserInput = {
   cvSummary: string
   status?: string
   format?: string
+  voicePreference?: string | null
   totalScore?: number | null
   summary?: string | null
   questionCount?: number
@@ -611,6 +634,7 @@ export type InterviewSessionUncheckedCreateWithoutUserInput = {
   cvSummary: string
   status?: string
   format?: string
+  voicePreference?: string | null
   totalScore?: number | null
   summary?: string | null
   questionCount?: number
@@ -656,6 +680,7 @@ export type InterviewSessionScalarWhereInput = {
   cvSummary?: Prisma.StringFilter<"InterviewSession"> | string
   status?: Prisma.StringFilter<"InterviewSession"> | string
   format?: Prisma.StringFilter<"InterviewSession"> | string
+  voicePreference?: Prisma.StringNullableFilter<"InterviewSession"> | string | null
   totalScore?: Prisma.IntNullableFilter<"InterviewSession"> | number | null
   summary?: Prisma.StringNullableFilter<"InterviewSession"> | string | null
   questionCount?: Prisma.IntFilter<"InterviewSession"> | number
@@ -670,6 +695,7 @@ export type InterviewSessionCreateWithoutMessagesInput = {
   cvSummary: string
   status?: string
   format?: string
+  voicePreference?: string | null
   totalScore?: number | null
   summary?: string | null
   questionCount?: number
@@ -686,6 +712,7 @@ export type InterviewSessionUncheckedCreateWithoutMessagesInput = {
   cvSummary: string
   status?: string
   format?: string
+  voicePreference?: string | null
   totalScore?: number | null
   summary?: string | null
   questionCount?: number
@@ -716,6 +743,7 @@ export type InterviewSessionUpdateWithoutMessagesInput = {
   cvSummary?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   format?: Prisma.StringFieldUpdateOperationsInput | string
+  voicePreference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   questionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -732,6 +760,7 @@ export type InterviewSessionUncheckedUpdateWithoutMessagesInput = {
   cvSummary?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   format?: Prisma.StringFieldUpdateOperationsInput | string
+  voicePreference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   questionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -746,6 +775,7 @@ export type InterviewSessionCreateManyUserInput = {
   cvSummary: string
   status?: string
   format?: string
+  voicePreference?: string | null
   totalScore?: number | null
   summary?: string | null
   questionCount?: number
@@ -760,6 +790,7 @@ export type InterviewSessionUpdateWithoutUserInput = {
   cvSummary?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   format?: Prisma.StringFieldUpdateOperationsInput | string
+  voicePreference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   questionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -775,6 +806,7 @@ export type InterviewSessionUncheckedUpdateWithoutUserInput = {
   cvSummary?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   format?: Prisma.StringFieldUpdateOperationsInput | string
+  voicePreference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   questionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -790,6 +822,7 @@ export type InterviewSessionUncheckedUpdateManyWithoutUserInput = {
   cvSummary?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   format?: Prisma.StringFieldUpdateOperationsInput | string
+  voicePreference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   questionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -836,6 +869,7 @@ export type InterviewSessionSelect<ExtArgs extends runtime.Types.Extensions.Inte
   cvSummary?: boolean
   status?: boolean
   format?: boolean
+  voicePreference?: boolean
   totalScore?: boolean
   summary?: boolean
   questionCount?: boolean
@@ -854,6 +888,7 @@ export type InterviewSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   cvSummary?: boolean
   status?: boolean
   format?: boolean
+  voicePreference?: boolean
   totalScore?: boolean
   summary?: boolean
   questionCount?: boolean
@@ -870,6 +905,7 @@ export type InterviewSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   cvSummary?: boolean
   status?: boolean
   format?: boolean
+  voicePreference?: boolean
   totalScore?: boolean
   summary?: boolean
   questionCount?: boolean
@@ -886,6 +922,7 @@ export type InterviewSessionSelectScalar = {
   cvSummary?: boolean
   status?: boolean
   format?: boolean
+  voicePreference?: boolean
   totalScore?: boolean
   summary?: boolean
   questionCount?: boolean
@@ -893,7 +930,7 @@ export type InterviewSessionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type InterviewSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "jobTitle" | "jobContext" | "cvSummary" | "status" | "format" | "totalScore" | "summary" | "questionCount" | "createdAt" | "updatedAt", ExtArgs["result"]["interviewSession"]>
+export type InterviewSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "jobTitle" | "jobContext" | "cvSummary" | "status" | "format" | "voicePreference" | "totalScore" | "summary" | "questionCount" | "createdAt" | "updatedAt", ExtArgs["result"]["interviewSession"]>
 export type InterviewSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   messages?: boolean | Prisma.InterviewSession$messagesArgs<ExtArgs>
@@ -920,6 +957,7 @@ export type $InterviewSessionPayload<ExtArgs extends runtime.Types.Extensions.In
     cvSummary: string
     status: string
     format: string
+    voicePreference: string | null
     totalScore: number | null
     summary: string | null
     questionCount: number
@@ -1357,6 +1395,7 @@ export interface InterviewSessionFieldRefs {
   readonly cvSummary: Prisma.FieldRef<"InterviewSession", 'String'>
   readonly status: Prisma.FieldRef<"InterviewSession", 'String'>
   readonly format: Prisma.FieldRef<"InterviewSession", 'String'>
+  readonly voicePreference: Prisma.FieldRef<"InterviewSession", 'String'>
   readonly totalScore: Prisma.FieldRef<"InterviewSession", 'Int'>
   readonly summary: Prisma.FieldRef<"InterviewSession", 'String'>
   readonly questionCount: Prisma.FieldRef<"InterviewSession", 'Int'>

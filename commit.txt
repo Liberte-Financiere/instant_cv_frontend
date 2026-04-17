@@ -1,25 +1,41 @@
-[2026-04-01] — Migrate audio Live API from Gemini 2.5 to 3.1 Flash Live Preview
+[2026-04-17] — SEO Overhaul & Branding Fix
 
 What changed:
-- Updated model string from gemini-2.5-flash-native-audio-preview-12-2025 to gemini-3.1-flash-live-preview
-- Setup message: changed top-level key from "setup" to "config", flattened generationConfig (responseModalities and speechConfig are now direct children of config)
-- Trigger message: replaced clientContent with realtimeInput.text
-- Audio sending: replaced mediaChunks array with single audio object { data, mimeType }
-- Text sending: replaced clientContent with realtimeInput.text for mid-conversation text input
+- Replaced default Vercel favicon.ico with proper JobSira brand favicon generated from icon.svg
+- Generated multi-size PNG icons (16, 32, 180, 192, 512) for cross-platform compatibility
+- Added og:image (1200x630 social preview banner) for rich link previews
+- Added metadataBase and canonical URL to prevent duplicate content
+- Added "JobSira" as first keyword for brand recognition in Google
+- Enriched Structured Data: Organization + WebSite (with SearchAction) + SoftwareApplication schemas
+- Updated manifest.json with PNG icons instead of SVG-only
+- Removed leftover Vercel template files (vercel.svg, next.svg, file.svg, globe.svg, window.svg)
 
 Why:
-- Gemini 3.1 Flash Live Preview is the new recommended model for real-time audio
-- The WebSocket message format has changed (documented migration guide)
-- clientContent is now reserved for initial history priming only, not for runtime text input
+- Google was showing the Vercel triangle logo instead of JobSira's brand icon
+- Google was autocorrecting "jobsira" to "jobsora" (a competitor) due to lack of brand authority signals
+- No social preview image was appearing when sharing links on social media
+- Structured Data was too basic to help Google differentiate JobSira as a distinct brand
 
 Files affected:
-- lib/config.ts — model string update
-- lib/interview-audio.ts — all 4 message format changes (setup, trigger, audio, text)
+- app/layout.tsx — Full metadata + Structured Data rewrite
+- app/favicon.ico — Regenerated from brand SVG with 32-bit color
+- public/manifest.json — Updated with PNG icon references
+- public/og-image.png — New social preview image
+- public/icons/icon-16x16.png — New
+- public/icons/icon-32x32.png — New
+- public/icons/icon-180x180.png — New (Apple Touch)
+- public/icons/icon-192x192.png — New (Android)
+- public/icons/icon-512x512.png — New (PWA splash)
+- public/vercel.svg — Deleted
+- public/next.svg — Deleted
+- public/file.svg — Deleted
+- public/globe.svg — Deleted
+- public/window.svg — Deleted
 
 Breaking changes:
-- None for end users. Backend-only changes.
+- None
 
 Notes for review:
-- Voice "Aoede" is kept in speechConfig — verify it still works with 3.1
-- Transcriptions (inputTranscription/outputTranscription) are not handled yet; they are available in 3.1 server events but ignored for now
-- The chunk/route.ts was NOT modified since it calls interview-audio.ts functions which were updated
+- Google may take 1-2 weeks to update the favicon in search results after deploy
+- Consider submitting updated sitemap in Google Search Console after deploy
+- The aggregateRating in Structured Data uses placeholder values (4.8/150) — update with real data when available
