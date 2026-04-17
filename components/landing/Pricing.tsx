@@ -1,26 +1,36 @@
 'use client';
 
-import { Check, Star } from 'lucide-react';
+import { Check, Star, Zap, FileText, Languages, Mic, PenLine, Search, BarChart3, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { SectionHeader } from '@/components/ui/SectionHeader';
+import { APP_CONFIG } from '@/lib/config';
+
+const creditActions = [
+  { icon: BarChart3, label: 'Analyse de CV', cost: '2 cr.', color: 'text-blue-500' },
+  { icon: Search, label: 'Match CV vs Offre', cost: '2 cr.', color: 'text-indigo-500' },
+  { icon: FileText, label: 'Lettre de motivation', cost: '2 cr.', color: 'text-violet-500' },
+  { icon: PenLine, label: 'Amelioration IA', cost: '1 cr.', color: 'text-emerald-500' },
+  { icon: Zap, label: 'Correction / Reformulation', cost: '0.5 cr.', color: 'text-amber-500' },
+  { icon: Languages, label: 'Traduction de CV', cost: '10 cr.', color: 'text-cyan-500' },
+  { icon: MessageSquare, label: 'Entretien ecrit', cost: '5 cr.', color: 'text-rose-500' },
+  { icon: Mic, label: 'Entretien vocal', cost: '1 cr./min', color: 'text-orange-500' },
+];
 
 const plans = [
   {
     name: 'Essai Gratuit',
     price: '0',
     currency: 'FCFA',
-    description: `${APP_CONFIG.credits.signupBonus} crédits offerts dès l'inscription.`,
+    description: `${APP_CONFIG.credits.signupBonus} credits offerts a l'inscription.`,
     features: [
-      'IA incluse mais limitée (25 cr.)',
-      'Générer des CV',
-      'Lettres de motivation',
-      'Analyse de CV',
-      'Export PDF Pro illimité',
-      'Design et couleurs illimités',
+      'IA incluse (25 credits)',
+      'Creation de CV illimitee',
+      'Export PDF Pro illimite',
       'Templates CV & LM gratuits',
-      'Crédits sans expiration'
+      'Credits sans expiration'
     ],
-    cta: 'Créer mon compte',
+    cta: 'Creer mon compte',
     popular: false,
     dark: false
   },
@@ -29,27 +39,27 @@ const plans = [
     price: '1 000',
     currency: 'FCFA',
     period: ' / achat unique',
-    description: '35 crédits - L\'essentiel pour postuler.',
+    description: '35 credits',
     features: [
-      'Valable à vie',
-      'Création et modifications libres',
-      'Refonte IA de votre CV',
-      'Lettres pour chaque offre'
+      'Valable a vie',
+      'Analyse + Match IA',
+      'Lettres de motivation IA',
+      'Refonte IA de votre CV'
     ],
     cta: 'Explorer',
     popular: true,
-    dark: true // Highlighted styling
+    dark: true
   },
   {
     name: 'Pack Premium',
     price: '2 000',
     currency: 'FCFA',
     period: ' / achat unique',
-    description: '80 crédits - Pour postuler activement.',
+    description: '80 credits',
     features: [
-      'Valable à vie',
-      'Correction et traduction',
-      'Analyse CV vs Offre IA',
+      'Valable a vie',
+      'Correction et traduction IA',
+      'Entretiens simules IA',
       'Multiples versions de CV'
     ],
     cta: 'En savoir plus',
@@ -61,21 +71,18 @@ const plans = [
     price: '5 000',
     currency: 'FCFA',
     period: ' / achat unique',
-    description: '250 crédits - La tranquillité ultime.',
+    description: '250 credits',
     features: [
-      'Valable à vie',
-      'Création sans limite',
-      'Coach IA complet à disposition',
-      'Toutes les options débloquées'
+      'Valable a vie',
+      'Coach IA complet',
+      'Entretiens vocaux illimites',
+      'Toutes les options'
     ],
-    cta: 'Voir l\'offre',
+    cta: "Voir l'offre",
     popular: false,
     dark: false
   }
 ];
-
-import { SectionHeader } from '@/components/ui/SectionHeader';
-import { APP_CONFIG } from '@/lib/config';
 
 export function Pricing() {
   return (
@@ -83,8 +90,31 @@ export function Pricing() {
       <div className="max-w-7xl mx-auto">
         <SectionHeader
           title="Finis les abonnements mensuels"
-          description="Achetez uniquement les crédits IA dont vous avez besoin."
+          description="Achetez des credits et utilisez-les quand vous voulez. Pas d'engagement, pas d'expiration."
         />
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-3xl mx-auto mb-16"
+        >
+          <h3 className="text-center text-lg font-bold text-slate-800 mb-6">
+            Combien coute chaque action ?
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {creditActions.map((action) => (
+              <div
+                key={action.label}
+                className="flex flex-col items-center gap-2 rounded-xl bg-white border border-slate-100 shadow-sm p-4 text-center"
+              >
+                <action.icon className={`w-5 h-5 ${action.color}`} />
+                <span className="text-xs text-slate-600 leading-tight">{action.label}</span>
+                <span className="text-sm font-bold text-slate-900">{action.cost}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto items-center">
           {plans.map((plan, index) => (
