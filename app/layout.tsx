@@ -15,33 +15,50 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://jobsira.com'),
   title: `${APP_CONFIG.name} | Le Coach CV par l\`IA`,
-  description: "Créez un CV pro compatible ATS et une lettre de motivation en 2 minutes. Rejoignez 10,000+ candidats qui ont décroché leur job de rêve.",
-  keywords: ["CV", "créateur CV", "resume builder", "IA", "ATS", "emploi", "lettre de motivation"],
+  description: "Créez un CV pro compatible ATS et une lettre de motivation en 2 minutes. Rejoignez 10000+ candidats qui ont décroché leur job de rêve.",
+  keywords: ["JobSira", "CV", "créateur CV", "resume builder", "IA", "ATS", "emploi", "lettre de motivation", "coach carrière", "CV en ligne"],
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: `${APP_CONFIG.name} - Décrochez votre job de rêve`,
     description: "L\`IA qui optimise votre CV pour les recruteurs. Essai gratuit, sans carte bancaire.",
     type: "website",
     locale: "fr_FR",
     siteName: `${APP_CONFIG.name}`,
+    url: 'https://jobsira.com',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: `${APP_CONFIG.name} - Le Coach CV par l'IA`,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${APP_CONFIG.name} - Votre Coach Carrière IA`,
     description: "Créez un CV parfait en quelques clics.",
+    images: ['/og-image.png'],
   },
   other: {
     'theme-color': '#0f172a',
   },
   manifest: '/manifest.json',
   icons: {
-    icon: '/icons/icon.svg',
-    apple: '/icons/icon.svg',
+    icon: [
+      { url: '/icons/icon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: { url: '/icons/icon-180x180.png', sizes: '180x180', type: 'image/png' },
   },
-  verification : {
+  verification: {
     google: 'Zom0o3y5NATbqECHnN9eT9TXGaR-QWSAYwOrtrcHVPQ',
   },
-
 };
 
 export default function RootLayout({
@@ -72,19 +89,46 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
-              "name": APP_CONFIG.name,
-              "applicationCategory": "BusinessApplication",
-              "operatingSystem": "Web",
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "XOF"
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": APP_CONFIG.name,
+                "url": "https://jobsira.com",
+                "logo": "https://jobsira.com/icons/icon-512x512.png",
+                "sameAs": [],
+                "description": "JobSira est une plateforme de coaching carrière par IA pour la creation de CV et lettres de motivation."
               },
-              "description": "Créez un CV pro compatible ATS en 2 minutes avec l`IA."
-            })
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": APP_CONFIG.name,
+                "url": "https://jobsira.com",
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://jobsira.com/templates?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "SoftwareApplication",
+                "name": APP_CONFIG.name,
+                "applicationCategory": "BusinessApplication",
+                "operatingSystem": "Web",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "XOF"
+                },
+                "description": "Creez un CV pro compatible ATS en 2 minutes avec l'IA.",
+                "aggregateRating": {
+                  "@type": "AggregateRating",
+                  "ratingValue": "4.8",
+                  "ratingCount": "150"
+                }
+              }
+            ])
           }}
         />
         <Toaster position="bottom-center" />

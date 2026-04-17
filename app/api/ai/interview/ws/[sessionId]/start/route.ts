@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { checkAndConsumeCredits } from '@/lib/credits';
 import { createGeminiLiveConnection, connections } from '@/lib/interview-audio';
 import { buildAudioSystemInstruction } from '@/lib/interview';
+import { APP_CONFIG } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs'; // Required for long-lived streams and generic EventEmitter
@@ -39,6 +40,12 @@ export async function GET(
           interviewSession.jobTitle,
           interviewSession.jobContext
         );
+
+        // Resolve voice name from user preference
+        const voicePool = interviewSession.voicePreference === 'female'
+          ? APP_CONFIG.ai.voices.female
+          : APP_CONFIG.ai.voices.male;
+        const voiceName = voicePool[Math.floor(Math.random() * voicePool.length)];
 
         try {
           // Close any existing connection for this session to prevent resource leaks
@@ -137,7 +144,8 @@ export async function GET(
               clearInterval(keepAlive);
               if (billingInterval) clearInterval(billingInterval);
               try { controller.error(err); } catch (e) {}
-            }
+            },
+            voiceName
           );
 
           // Register billing terminator on the connection so endGeminiConnection can stop billing
