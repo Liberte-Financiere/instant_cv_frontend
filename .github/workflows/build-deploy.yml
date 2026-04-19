@@ -1,0 +1,113 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Raison du build manuel'
+        required: false
+        default: 'Build manuel'
+
+concurrency:
+  group: build-deploy
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout du code source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Installation des dependances
+        run: npm ci
+
+      - name: Generation du client Prisma
+        run: npx prisma generate
+
+      - name: Build Next.js (standalone)
+        run: npm run build
+
+      - name: Assemblage de l'artefact de deploiement
+        run: |
+          set -euo pipefail
+
+          mkdir -p artifact
+
+          # Le coeur : le serveur standalone auto-suffisant
+          cp -r .next/standalone/* artifact/
+
+          # Les assets statiques (CSS, JS chunks)
+          mkdir -p artifact/.next/static
+          cp -r .next/static/* artifact/.next/static/
+
+          # Les fichiers publics (icons, images, manifest, sw.js)
+          cp -r public artifact/public
+
+          # La config PM2
+          cp ecosystem.config.js artifact/
+
+          # Le schema Prisma (necessaire pour les migrations futures)
+          mkdir -p artifact/prisma
+          cp prisma/schema.prisma artifact/prisma/
+
+      - name: Verification de l'artefact
+        run: |
+          set -euo pipefail
+
+          # Verifier que les fichiers critiques existent
+          for f in artifact/server.js artifact/ecosystem.config.js artifact/.next/static artifact/public/manifest.json; do
+            if [[ ! -e "$f" ]]; then
+              echo "Fichier ou dossier manquant : $f"
+              exit 1
+            fi
+          done
+
+          echo "Taille de l'artefact :"
+          du -sh artifact/
+          echo ""
+          echo "Fichiers principaux :"
+          ls -la artifact/
+
+      - name: Push sur la branche build
+        run: |
+          set -euo pipefail
+
+          cd artifact
+
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b build
+          git add -A
+          git commit -m "build: $(date +%Y-%m-%d-%H%M) from ${GITHUB_SHA::8}"
+
+          # Force push car on ecrase le build precedent (pas d'historique necessaire)
+          git push --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" build
+
+      - name: Resume du build
+        if: always()
+        run: |
+          {
+            echo "## Build & Deploy"
+            echo ""
+            echo "| Champ | Valeur |"
+            echo "|-------|--------|"
+            echo "| Statut | ${{ job.status }} |"
+            echo "| Commit | ${GITHUB_SHA::8} |"
+            echo "| Branche source | ${{ github.ref_name }} |"
+            echo "| Declenchement | ${{ github.event_name }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
