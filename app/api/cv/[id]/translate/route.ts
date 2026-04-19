@@ -9,7 +9,7 @@ import { APP_CONFIG } from '@/lib/config';
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 // Force using standard text/JSON model
 const model = genAI.getGenerativeModel({ 
-  model: APP_CONFIG.ai.models.lite, 
+  model: APP_CONFIG.ai.models.pro, 
   generationConfig: { 
     responseMimeType: "application/json",
     maxOutputTokens: 8192, 
