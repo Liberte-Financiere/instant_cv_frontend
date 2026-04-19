@@ -5,7 +5,7 @@ import { APP_CONFIG } from '@/lib/config';
 import { GoogleGenerativeAI } from '@google/generative-ai'; // Assuming this import is needed for GoogleGenerativeAI
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.lite });
+const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.fast });
 
 export async function POST(req: Request) {
   try {
