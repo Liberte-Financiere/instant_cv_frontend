@@ -114,19 +114,24 @@ export const APP_CONFIG = {
   ai: {
     models: {
       /** Modèle rapide et intelligent pour les tâches générales (Analyse, Match) */
-      fast: 'gemini-2.5-flash',
+      fast: 'gemini-3-flash-preview',
       /** Modèle très léger et rapide pour les petites tâches (Correction, Génération de petites listes) */
-      lite: 'gemini-2.5-flash',
+      lite: 'gemini-3.1-flash-lite-preview',
 
-      /** Modèle pour la traduction */
-      pro: 'gemini-2.5-pro',
+      /** Modèle pour la traduction et les tâches complexes */
+      pro: 'gemini-3.1-pro-preview',
 
       /** Modèle pour l'audio en live */
       audioLive: 'models/gemini-3.1-flash-live-preview',
     },
     interview: {
       maxQuestions: 6,
-    }
+    },
+    voices: {
+      male: ['Fenrir', 'Algieba'],
+      female: ['Gacrux'],
+      default: 'Fenrir',
+    } as const,
   },
 
 

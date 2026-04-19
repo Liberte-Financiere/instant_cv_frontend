@@ -39,7 +39,8 @@ export function createGeminiLiveConnection(
   systemInstruction: string,
   onData: (data: any) => void,
   onClose: () => void,
-  onError: (err: any) => void
+  onError: (err: any) => void,
+  voiceName?: string
 ) {
   const apiKey = process.env.GOOGLE_API_KEY;
   if (!apiKey) throw new Error('GOOGLE_API_KEY is missing');
@@ -61,10 +62,12 @@ export function createGeminiLiveConnection(
         speechConfig: {
           voiceConfig: {
             prebuiltVoiceConfig: {
-              voiceName: "Aoede"
+              voiceName: voiceName || APP_CONFIG.ai.voices.default
             }
           }
         },
+        outputAudioTranscription: {},
+        inputAudioTranscription: {},
         systemInstruction: {
           parts: [{ text: systemInstruction }]
         }
