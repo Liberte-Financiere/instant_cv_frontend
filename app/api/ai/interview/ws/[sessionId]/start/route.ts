@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { checkAndConsumeCredits } from '@/lib/credits';
 import { createGeminiLiveConnection, connections } from '@/lib/interview-audio';
 import { buildAudioSystemInstruction } from '@/lib/interview';
+import { APP_CONFIG } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs'; // Required for long-lived streams and generic EventEmitter
@@ -39,6 +40,12 @@ export async function GET(
           interviewSession.jobTitle,
           interviewSession.jobContext
         );
+
+        // Resolve voice name from user preference
+        const voicePool = interviewSession.voicePreference === 'female'
+          ? APP_CONFIG.ai.voices.female
+          : APP_CONFIG.ai.voices.male;
+        const voiceName = voicePool[Math.floor(Math.random() * voicePool.length)];
 
         try {
           // Close any existing connection for this session to prevent resource leaks
@@ -82,9 +89,6 @@ export async function GET(
             }, 60000); // 60 seconds
           }
 
-          // Buffer to accumulate AI text transcriptions across streamed chunks
-          let transcriptBuffer = '';
-
           const ws = createGeminiLiveConnection(
             sessionId,
             sessionId,
@@ -93,28 +97,37 @@ export async function GET(
             (data) => {
               if (wsClosed) return;
 
-              // Accumulate text transcriptions from Gemini model turns
-              if (data.serverContent?.modelTurn?.parts) {
-                for (const part of data.serverContent.modelTurn.parts) {
-                  if (part.text) {
-                    transcriptBuffer += part.text;
-                  }
+              // Gemini 3.1: capture native transcriptions
+              // inputTranscription = what the candidate said (speech-to-text)
+              if (data.serverContent?.inputTranscription?.text) {
+                const candidateText = data.serverContent.inputTranscription.text.trim();
+                if (candidateText) {
+                  prisma.interviewMessage.create({
+                    data: {
+                      sessionId,
+                      role: 'candidate',
+                      content: candidateText,
+                    },
+                  }).catch((err: any) => {
+                    console.error('[SSE] Failed to save candidate transcript:', err.message);
+                  });
                 }
               }
 
-              // When the AI finishes speaking, persist the transcript to the database
-              if (data.serverContent?.turnComplete && transcriptBuffer.trim()) {
-                const textToSave = transcriptBuffer.trim();
-                transcriptBuffer = '';
-                prisma.interviewMessage.create({
-                  data: {
-                    sessionId,
-                    role: 'interviewer',
-                    content: textToSave,
-                  },
-                }).catch((err: any) => {
-                  console.error('[SSE] Failed to save transcript:', err.message);
-                });
+              // outputTranscription = what the AI said (speech-to-text)
+              if (data.serverContent?.outputTranscription?.text) {
+                const aiText = data.serverContent.outputTranscription.text.trim();
+                if (aiText) {
+                  prisma.interviewMessage.create({
+                    data: {
+                      sessionId,
+                      role: 'interviewer',
+                      content: aiText,
+                    },
+                  }).catch((err: any) => {
+                    console.error('[SSE] Failed to save AI transcript:', err.message);
+                  });
+                }
               }
 
               // Forward Gemini payload to client via SSE
@@ -131,7 +144,8 @@ export async function GET(
               clearInterval(keepAlive);
               if (billingInterval) clearInterval(billingInterval);
               try { controller.error(err); } catch (e) {}
-            }
+            },
+            voiceName
           );
 
           // Register billing terminator on the connection so endGeminiConnection can stop billing

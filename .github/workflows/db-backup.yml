@@ -1,0 +1,81 @@
+name: Database Backup
+
+on:
+  schedule:
+    # Every day at 02:00 UTC (03:00 WAT)
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual backup'
+        required: false
+        default: 'Manual trigger'
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout backup branch
+        uses: actions/checkout@v4
+        with:
+          ref: backups
+          fetch-depth: 1
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Create backup directory
+        run: |
+          BACKUP_DIR="backups/$(date +%Y-%m-%d)"
+          echo "BACKUP_DIR=$BACKUP_DIR" >> $GITHUB_ENV
+          mkdir -p "$BACKUP_DIR"
+
+      - name: Dump roles
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          supabase db dump \
+            --db-url "$SUPABASE_DB_URL" \
+            -f "${{ env.BACKUP_DIR }}/roles.sql" \
+            --role-only
+
+      - name: Dump schema
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          supabase db dump \
+            --db-url "$SUPABASE_DB_URL" \
+            -f "${{ env.BACKUP_DIR }}/schema.sql"
+
+      - name: Dump data
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          supabase db dump \
+            --db-url "$SUPABASE_DB_URL" \
+            -f "${{ env.BACKUP_DIR }}/data.sql" \
+            --data-only \
+            --use-copy
+
+      - name: Compress backup
+        run: |
+          tar -czf "${{ env.BACKUP_DIR }}.tar.gz" -C "$(dirname ${{ env.BACKUP_DIR }})" "$(basename ${{ env.BACKUP_DIR }})"
+          rm -rf "${{ env.BACKUP_DIR }}"
+
+      - name: Cleanup old backups (keep last 30 days)
+        run: |
+          cd backups
+          ls -1 *.tar.gz 2>/dev/null | sort | head -n -30 | xargs -r rm -f
+          cd ..
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "backup: $(date +%Y-%m-%d) automated database dump" || echo "No changes"
+          git push origin backups

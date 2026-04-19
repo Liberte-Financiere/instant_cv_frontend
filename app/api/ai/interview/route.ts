@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    const { cvId, jobTitle, jobContext, format = 'text' } = await req.json();
+    const { cvId, jobTitle, jobContext, format = 'text', voicePreference } = await req.json();
 
     if (!cvId || !jobTitle?.trim()) {
       return NextResponse.json(
@@ -82,6 +82,7 @@ export async function POST(req: Request) {
           jobContext: jobContext?.trim() || null,
           cvSummary,
           format, // "text" or "audio"
+          voicePreference: format === 'audio' ? (voicePreference || null) : null,
           questionCount: format === 'audio' ? 0 : 1,
         },
       });

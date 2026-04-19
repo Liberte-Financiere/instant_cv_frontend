@@ -12,7 +12,7 @@ export const CREDIT_COSTS = {
   AI_CONTINUE: 0.5,
   AI_CORRECT: 0.5,
 
-  AI_CV_TRANSLATE: 15,
+  AI_CV_TRANSLATE: 10,
 
   AI_INTERVIEW: 5,               // 5 credits for Text Mode (flat rate)
   AI_INTERVIEW_AUDIO_MINUTE: 1,  // 1 credit per minute for Audio Mode (dynamic rate)
