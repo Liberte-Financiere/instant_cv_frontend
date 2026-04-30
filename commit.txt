@@ -1,41 +1,19 @@
-[2026-04-17] — SEO Overhaul & Branding Fix
+[2026-04-30] — Fix Gemini Live API WebSocket Payload
 
 What changed:
-- Replaced default Vercel favicon.ico with proper JobSira brand favicon generated from icon.svg
-- Generated multi-size PNG icons (16, 32, 180, 192, 512) for cross-platform compatibility
-- Added og:image (1200x630 social preview banner) for rich link previews
-- Added metadataBase and canonical URL to prevent duplicate content
-- Added "JobSira" as first keyword for brand recognition in Google
-- Enriched Structured Data: Organization + WebSite (with SearchAction) + SoftwareApplication schemas
-- Updated manifest.json with PNG icons instead of SVG-only
-- Removed leftover Vercel template files (vercel.svg, next.svg, file.svg, globe.svg, window.svg)
+- Changed the root key of the initial WebSocket payload from `config` to `setup`
+- Grouped `responseModalities` and `speechConfig` under `generationConfig`
 
 Why:
-- Google was showing the Vercel triangle logo instead of JobSira's brand icon
-- Google was autocorrecting "jobsira" to "jobsora" (a competitor) due to lack of brand authority signals
-- No social preview image was appearing when sharing links on social media
-- Structured Data was too basic to help Google differentiate JobSira as a distinct brand
+- The Gemini Multimodal Live API (`BidiGenerateContentSetup` schema) strictly requires the initial payload to use the `setup` key.
+- Using `config` caused the Google server to reject the connection immediately with error code 1007: `Unknown name "config": Cannot find field.`
+- The `responseModalities` and `speechConfig` fields are structurally nested under `generationConfig` according to the API specification.
 
 Files affected:
-- app/layout.tsx — Full metadata + Structured Data rewrite
-- app/favicon.ico — Regenerated from brand SVG with 32-bit color
-- public/manifest.json — Updated with PNG icon references
-- public/og-image.png — New social preview image
-- public/icons/icon-16x16.png — New
-- public/icons/icon-32x32.png — New
-- public/icons/icon-180x180.png — New (Apple Touch)
-- public/icons/icon-192x192.png — New (Android)
-- public/icons/icon-512x512.png — New (PWA splash)
-- public/vercel.svg — Deleted
-- public/next.svg — Deleted
-- public/file.svg — Deleted
-- public/globe.svg — Deleted
-- public/window.svg — Deleted
+- lib/interview-audio.ts — Updated the `setupMsg` payload structure.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Google may take 1-2 weeks to update the favicon in search results after deploy
-- Consider submitting updated sitemap in Google Search Console after deploy
-- The aggregateRating in Structured Data uses placeholder values (4.8/150) — update with real data when available
+- The `outputAudioTranscription` and `inputAudioTranscription` fields were kept at the root of `setup` as supported by recent Gemini Live API versions for native transcription features.
