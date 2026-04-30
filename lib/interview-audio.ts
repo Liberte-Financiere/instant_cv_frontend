@@ -54,15 +54,17 @@ export function createGeminiLiveConnection(
 
   ws.on('open', () => {
     console.log(`[Gemini WS] WebSocket OPEN. Sending Setup to Google...`);
-    // 1. Send Setup Message (Gemini 3.1 Live format: "config" replaces "setup")
+    // 1. Send Setup Message
     const setupMsg = {
-      config: {
+      setup: {
         model: APP_CONFIG.ai.models.audioLive,
-        responseModalities: ["AUDIO"],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: {
-              voiceName: voiceName || APP_CONFIG.ai.voices.default
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: {
+                voiceName: voiceName || APP_CONFIG.ai.voices.default
+              }
             }
           }
         },
