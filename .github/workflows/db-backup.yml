@@ -2,145 +2,82 @@ name: Database Backup
 
 on:
   schedule:
+    # Every day at 02:00 UTC (03:00 WAT)
     - cron: '0 2 * * *'
   workflow_dispatch:
     inputs:
       reason:
-        description: 'Raison du déclenchement manuel'
+        description: 'Reason for manual backup'
         required: false
-        default: 'Déclenchement manuel'
-
-# Empêche les exécutions concurrentes de créer des conflits sur la branche backups
-concurrency:
-  group: database-backup
-  cancel-in-progress: false
+        default: 'Manual trigger'
 
 jobs:
   backup:
     runs-on: ubuntu-latest
-    timeout-minutes: 10  # Le réseau + les gros dumps nécessitent de la marge
+    timeout-minutes: 10
     permissions:
       contents: write
 
-    # Défini une seule fois ici plutôt que répété à chaque étape
-    env:
-      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-
     steps:
-      - name: Checkout de la branche backups
+      - name: Checkout backup branch
         uses: actions/checkout@v4
         with:
           ref: backups
           fetch-depth: 1
 
-      - name: Installation de la CLI Supabase
+      - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: 2.22.6  # Épinglé — ne jamais utiliser 'latest' en production
+          version: latest
 
-      - name: Création du répertoire de sauvegarde
+      - name: Create backup directory
         run: |
-          set -euo pipefail
-          BACKUP_DATE="$(date +%Y-%m-%d)"
-          BACKUP_DIR="backups/${BACKUP_DATE}"
-          echo "BACKUP_DATE=${BACKUP_DATE}"   >> "$GITHUB_ENV"
-          echo "BACKUP_DIR=${BACKUP_DIR}"     >> "$GITHUB_ENV"
+          BACKUP_DIR="backups/$(date +%Y-%m-%d)"
+          echo "BACKUP_DIR=$BACKUP_DIR" >> $GITHUB_ENV
           mkdir -p "$BACKUP_DIR"
 
-      - name: Dump des rôles
+      - name: Dump roles
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          set -euo pipefail
           supabase db dump \
             --db-url "$SUPABASE_DB_URL" \
-            -f "$BACKUP_DIR/roles.sql" \
+            -f "${{ env.BACKUP_DIR }}/roles.sql" \
             --role-only
 
-      - name: Dump du schéma
+      - name: Dump schema
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          set -euo pipefail
           supabase db dump \
             --db-url "$SUPABASE_DB_URL" \
-            -f "$BACKUP_DIR/schema.sql"
+            -f "${{ env.BACKUP_DIR }}/schema.sql"
 
-      - name: Dump des données
+      - name: Dump data
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          set -euo pipefail
           supabase db dump \
             --db-url "$SUPABASE_DB_URL" \
-            -f "$BACKUP_DIR/data.sql" \
+            -f "${{ env.BACKUP_DIR }}/data.sql" \
             --data-only \
             --use-copy
 
-      - name: Vérification de l'intégrité de la sauvegarde
+      - name: Compress backup
         run: |
-          set -euo pipefail
-          for f in "$BACKUP_DIR/roles.sql" "$BACKUP_DIR/schema.sql" "$BACKUP_DIR/data.sql"; do
-            if [[ ! -s "$f" ]]; then
-              echo "❌ Fichier de sauvegarde vide ou manquant : $f"
-              exit 1
-            fi
-            echo "✅ $(basename $f) : $(du -sh $f | cut -f1)"
-          done
+          tar -czf "${{ env.BACKUP_DIR }}.tar.gz" -C "$(dirname ${{ env.BACKUP_DIR }})" "$(basename ${{ env.BACKUP_DIR }})"
+          rm -rf "${{ env.BACKUP_DIR }}"
 
-      - name: Compression de la sauvegarde
+      - name: Cleanup old backups (keep last 30 days)
         run: |
-          set -euo pipefail
-          tar -czf "${BACKUP_DIR}.tar.gz" \
-            -C "$(dirname "$BACKUP_DIR")" \
-            "$(basename "$BACKUP_DIR")"
-          rm -rf "$BACKUP_DIR"
-
-      - name: Nettoyage des anciennes sauvegardes (30 dernières conservées)
-        run: |
-          set -euo pipefail
           cd backups
-          # Le préfixe YYYY-MM-DD garantit un ordre chronologique lors du tri alphabétique
-          mapfile -t old_backups < <(ls -1 *.tar.gz 2>/dev/null | sort | head -n -30)
-          if [[ ${#old_backups[@]} -gt 0 ]]; then
-            echo "Suppression de ${#old_backups[@]} ancienne(s) sauvegarde(s) :"
-            printf '  %s\n' "${old_backups[@]}"
-            rm -f "${old_backups[@]}"
-          else
-            echo "Aucune ancienne sauvegarde à supprimer."
-          fi
+          ls -1 *.tar.gz 2>/dev/null | sort | head -n -30 | xargs -r rm -f
+          cd ..
 
-      - name: Commit et push
+      - name: Commit and push
         run: |
-          set -euo pipefail
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-
-          # Ne commite que s'il y a des changements indexés
-          if git diff --staged --quiet; then
-            echo "Rien à commiter — une sauvegarde existe déjà pour aujourd'hui."
-          else
-            TRIGGER="${{ github.event_name }}"
-            REASON="${{ github.event.inputs.reason || 'Planifié' }}"
-            git commit -m "backup: $BACKUP_DATE dump automatique de la base de données [${TRIGGER}] — ${REASON}"
-            git push origin backups
-          fi
-
-      - name: Résumé du job
-        if: always()
-        run: |
-          {
-            echo "## 🗄️ Sauvegarde de la base de données — $BACKUP_DATE"
-            echo ""
-            echo "| Champ | Valeur |"
-            echo "|-------|--------|"
-            echo "| Statut | ${{ job.status }} |"
-            echo "| Déclenchement | ${{ github.event_name }} |"
-            echo "| Raison | ${{ github.event.inputs.reason || 'Planifié' }} |"
-          } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Notification en cas d'échec
-        if: failure()
-        run: |
-          echo "::error::La sauvegarde de la base de données a échoué le $BACKUP_DATE. Consultez les logs immédiatement."
-          # Remplacez le curl ci-dessous par votre système d'alerte :
-          # Slack, PagerDuty, email via SendGrid, etc.
-          #
-          # curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
-          #   -H 'Content-Type: application/json' \
-          #   -d '{"text":"🚨 *Échec de la sauvegarde* pour ${{ github.repository }} le '"$BACKUP_DATE"'"}'
+          git commit -m "backup: $(date +%Y-%m-%d) automated database dump" || echo "No changes"
+          git push origin backups

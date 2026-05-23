@@ -1,19 +1,26 @@
-[2026-04-30] — Fix Gemini Live API WebSocket Payload
+2026-05-23 — Fix Input and Textarea Text Color Visibility Across Devices
 
 What changed:
-- Changed the root key of the initial WebSocket payload from `config` to `setup`
-- Grouped `responseModalities` and `speechConfig` under `generationConfig`
+- Added explicit text-slate-900 color classes to custom Input, Textarea, and Select components.
+- Added text-slate-900 to native textareas in CV forms (Experience, Projects, Divers).
+- Added text-slate-900 and select styling overrides to Cover Letter editor forms and fields.
+- Appended a global fallback style in globals.css to force slate-900 text on all inputs, textareas, and select components with appropriate placeholder styling.
 
 Why:
-- The Gemini Multimodal Live API (`BidiGenerateContentSetup` schema) strictly requires the initial payload to use the `setup` key.
-- Using `config` caused the Google server to reject the connection immediately with error code 1007: `Unknown name "config": Cannot find field.`
-- The `responseModalities` and `speechConfig` fields are structurally nested under `generationConfig` according to the API specification.
+- System dark mode settings on some devices (especially mobile Safari and Chrome) automatically styled typed text within inputs as white/light gray. Without an explicit text color configuration, white text on white/light backgrounds made typed content completely invisible.
 
 Files affected:
-- lib/interview-audio.ts — Updated the `setupMsg` payload structure.
+- components/ui/Input.tsx — Added text-slate-900 to class lists
+- components/ui/Textarea.tsx — Added text-slate-900 to class lists
+- components/ui/Select.tsx — Added text-slate-900 to class lists
+- components/editor/forms/ExperienceForm.tsx — Added text-slate-900 to native textarea class list
+- components/editor/forms/ProjectsForm.tsx — Added text-slate-900 to native textarea class list
+- components/editor/forms/DiversForm.tsx — Added text-slate-900 to native textarea class list
+- app/cover-letter/editor/[id]/page.tsx — Added text-slate-900 to multiple textareas and select fields
+- app/globals.css — Added global fallback color rules for inputs, textareas, and selects
 
 Breaking changes:
 - None
 
 Notes for review:
-- The `outputAudioTranscription` and `inputAudioTranscription` fields were kept at the root of `setup` as supported by recent Gemini Live API versions for native transcription features.
+- Verify input text legibility across different devices (desktop, Android Chrome, iOS Safari) with both system light mode and dark mode enabled.

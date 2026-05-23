@@ -92,7 +92,7 @@ export function ExperienceForm() {
                 value={exp.description} 
                 onChange={(e) => handleUpdate(exp.id, 'description', e.target.value)} 
                 placeholder="Détaillez vos missions et résultats..." 
-                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
               />
             </div>
           </div>
