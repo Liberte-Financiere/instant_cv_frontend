@@ -5,6 +5,7 @@ import { auth } from '@/auth';
 import { cvSchema } from '@/lib/schemas';
 
 import { checkAndConsumeCredits } from '@/lib/credits';
+import { sanitizeCVData } from '@/lib/utils';
 
 export async function POST(req: Request) {
   try {
@@ -14,8 +15,8 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-
-    const validation = cvSchema.safeParse(body);
+    const sanitizedBody = sanitizeCVData(body);
+    const validation = cvSchema.safeParse(sanitizedBody);
 
     if (!validation.success) {
       return new NextResponse("Invalid CV Data: " + JSON.stringify(validation.error.format()), { status: 400 });

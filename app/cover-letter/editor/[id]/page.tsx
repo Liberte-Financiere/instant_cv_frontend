@@ -298,7 +298,7 @@ export default function CoverLetterEditorPage() {
                          <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 uppercase ml-1">Adresse</label>
                             <textarea 
-                              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none resize-none text-sm min-h-[80px]"
+                              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none resize-none text-sm text-slate-900 min-h-[80px]"
                               value={currentCL.content.sender.address}
                               onChange={(e) => updateContent({ sender: { ...currentCL.content.sender, address: e.target.value }})}
                               placeholder="Votre adresse complète..."
@@ -339,7 +339,7 @@ export default function CoverLetterEditorPage() {
                          <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 uppercase ml-1">Adresse de l'entreprise</label>
                             <textarea 
-                              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none resize-none text-sm min-h-[100px]"
+                              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none resize-none text-sm text-slate-900 min-h-[100px]"
                               value={currentCL.content.recipient.address}
                               onChange={(e) => updateContent({ recipient: { ...currentCL.content.recipient, address: e.target.value }})}
                               placeholder="Adresse..."
@@ -391,7 +391,7 @@ export default function CoverLetterEditorPage() {
                             />
 
                             <textarea 
-                              className="w-full px-5 py-4 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none resize-none text-sm leading-7 min-h-[400px] shadow-inner"
+                              className="w-full px-5 py-4 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none resize-none text-sm text-slate-900 leading-7 min-h-[400px] shadow-inner"
                               value={currentCL.content.details.body}
                               onChange={(e) => updateContent({ details: { ...currentCL.content.details, body: e.target.value }})}
                               placeholder="Mesdames, Messieurs..."
@@ -469,7 +469,7 @@ export default function CoverLetterEditorPage() {
                       <select 
                         value={selectedCVId}
                         onChange={(e) => setSelectedCVId(e.target.value)}
-                        className="w-full pl-4 pr-10 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none appearance-none bg-slate-50/50 hover:bg-white transition-colors cursor-pointer"
+                        className="w-full pl-4 pr-10 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none appearance-none bg-slate-50/50 hover:bg-white text-slate-900 transition-colors cursor-pointer"
                       >
                         <option value="">-- Choisir un CV --</option>
                         {cvList.map(cv => (
@@ -487,7 +487,7 @@ export default function CoverLetterEditorPage() {
                     </label>
                     <textarea 
                       placeholder="Collez ici la description du poste (tâches, pré-requis, à propos de l'entreprise)..."
-                      className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none min-h-[160px] resize-none text-sm bg-slate-50/50 hover:bg-white transition-colors"
+                      className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none min-h-[160px] resize-none text-sm text-slate-900 bg-slate-50/50 hover:bg-white transition-colors"
                       value={jobDesc}
                       onChange={(e) => setJobDesc(e.target.value)}
                     />
