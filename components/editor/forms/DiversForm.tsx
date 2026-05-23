@@ -19,7 +19,7 @@ export function DiversForm() {
         <label className="block text-sm font-bold text-slate-700 mb-2">Informations complémentaires</label>
         <textarea
           rows={4}
-          className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+          className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none resize-none"
           placeholder="Permis de conduire, disponibilité, mobilité géographique..."
           value={divers}
           onChange={(e) => updateDivers(e.target.value)}

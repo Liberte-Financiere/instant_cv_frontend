@@ -37,7 +37,7 @@ export function ProjectsForm() {
                 value={project.description} 
                 onChange={(e) => updateProject(project.id, { description: e.target.value })} 
                 placeholder="Décrivez le projet..." 
-                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
               />
             </div>
           </div>
