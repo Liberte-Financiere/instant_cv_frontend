@@ -84,6 +84,7 @@ interface CVState {
   
   // Personal Info
   updateCVTitle: (newTitle: string) => void;
+  updateTemplateId: (templateId: TemplateId) => void;
   updatePersonalInfo: (info: Partial<PersonalInfo>) => void;
   
   // Experiences
@@ -465,10 +466,13 @@ export const useCVStore = create<CVState>()(
         }
       },
 
-      // Personal Info
       updateCVTitle: (newTitle) => set((state) => updateCV(state, (cv) => ({
         ...cv,
         title: newTitle,
+      }))),
+      updateTemplateId: (templateId) => set((state) => updateCV(state, (cv) => ({
+        ...cv,
+        templateId,
       }))),
       updatePersonalInfo: (info) => set((state) => updateCV(state, (cv) => ({
         ...cv,
