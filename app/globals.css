@@ -159,3 +159,13 @@ body {
     pointer-events: none;
   }
 }
+
+/* Fallback color overrides to guarantee text visibility inside inputs, textareas, and selects */
+input, textarea, select {
+  color: #0f172a; /* slate-900 */
+}
+/* Ensure placeholders are visible but appropriately muted */
+input::placeholder, textarea::placeholder {
+  color: #94a3b8; /* slate-400 */
+}
+
