@@ -8,7 +8,7 @@ import type {
   Hobby, CVFooter, EditorStep, Certification, Project, Reference, SocialLink, CVSettings, CVSectionId 
 } from '@/types/cv';
 import { DEFAULT_SECTION_ORDER } from '@/types/cv';
-import { generateId } from '@/lib/utils';
+import { generateId, sanitizeCVData } from '@/lib/utils';
 
 // New Interface for Detailed Analysis
 export interface SectionAudit {
@@ -354,56 +354,25 @@ export const useCVStore = create<CVState>()(
       },
 
       createImportedCV: (data) => {
-        const newCV = createEmptyCV(`CV Importé ${new Date().toLocaleDateString()}`, 'modern');
-        
-        // Helper to ensure all items in an array have an ID
-        const ensureIds = <T>(arr: unknown[]): T[] => {
-            if (!Array.isArray(arr)) return [] as T[];
-            return arr.map(item => {
-                const record = item as Record<string, unknown>;
-                return { 
-                    ...record, 
-                    id: (record.id as string) || generateId() 
-                } as unknown as T;
-            });
-        };
-
-        // Merge imported data with default structure AND ensure IDs
-        const mergedCV: CV = {
-           ...newCV,
-           ...data,
-           id: newCV.id, // Keep generated main ID
-           settings: newCV.settings, // Keep default settings
-           
-           // Sanitize Arrays
-           experiences: ensureIds(data.experiences || []),
-           education: ensureIds(data.education || []),
-           skills: ensureIds(data.skills || []),
-           languages: ensureIds(data.languages || []),
-           hobbies: ensureIds(data.hobbies || []),
-           certifications: ensureIds(data.certifications || []),
-           projects: ensureIds(data.projects || []),
-           references: ensureIds(data.references || []),
-           qualities: ensureIds(data.qualities || []),
-           socialLinks: ensureIds(data.socialLinks || []),
-           
-           createdAt: new Date(),
-           updatedAt: new Date(),
-        };
+        const title = `CV Importé ${new Date().toLocaleDateString()}`;
+        const sanitized = sanitizeCVData({
+          ...data,
+          title: data.title || title,
+        });
 
         set((state) => ({
-          cvList: [...state.cvList, mergedCV],
-          currentCV: mergedCV,
+          cvList: [...state.cvList, sanitized],
+          currentCV: sanitized,
           currentStep: 'personal',
         }));
         
         // Sync with server (fire and forget)
-        CVService.create(mergedCV).catch(err => {
+        CVService.create(sanitized).catch(err => {
           console.error('Failed to save imported CV on server', err);
           toast.error('Échec de sauvegarde du CV importé.');
         });
         
-        return newCV.id;
+        return sanitized.id;
       },
 
       loadCV: async (id) => {
