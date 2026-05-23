@@ -5,7 +5,7 @@ import { CVService } from '@/services/cvService';
 import { toast } from 'sonner';
 import type { 
   CV, PersonalInfo, Experience, Education, Skill, Language, Quality,
-  Hobby, CVFooter, EditorStep, Certification, Project, Reference, SocialLink, CVSettings, CVSectionId 
+  Hobby, CVFooter, EditorStep, Certification, Project, Reference, SocialLink, CVSettings, CVSectionId, TemplateId
 } from '@/types/cv';
 import { DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { generateId, sanitizeCVData } from '@/lib/utils';
