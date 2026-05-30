@@ -140,8 +140,7 @@ export function Sidebar() {
 
       {/* Preferences Section */}
       <div className="px-4 mb-2">
-        <div className="flex items-center gap-2 px-4 mb-2">
-          <Settings className="w-4 h-4 text-slate-500" />
+        <div className="px-4 mb-2">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Préférences</span>
         </div>
         <nav className="space-y-1">
