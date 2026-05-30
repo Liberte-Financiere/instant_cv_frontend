@@ -213,7 +213,7 @@ export type InterviewMessageGroupByOutputType = {
   _max: InterviewMessageMaxAggregateOutputType | null
 }
 
-type GetInterviewMessageGroupByPayload<T extends InterviewMessageGroupByArgs> = Prisma.PrismaPromise<
+export type GetInterviewMessageGroupByPayload<T extends InterviewMessageGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<InterviewMessageGroupByOutputType, T['by']> &
       {

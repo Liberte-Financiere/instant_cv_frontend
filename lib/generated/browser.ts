@@ -82,3 +82,13 @@ export type InterviewSession = Prisma.InterviewSessionModel
  * 
  */
 export type InterviewMessage = Prisma.InterviewMessageModel
+/**
+ * Model CandidateProfile
+ * 
+ */
+export type CandidateProfile = Prisma.CandidateProfileModel
+/**
+ * Model ProfileUnlock
+ * 
+ */
+export type ProfileUnlock = Prisma.ProfileUnlockModel

@@ -161,7 +161,7 @@ export type CoverLetterGroupByOutputType = {
   _max: CoverLetterMaxAggregateOutputType | null
 }
 
-type GetCoverLetterGroupByPayload<T extends CoverLetterGroupByArgs> = Prisma.PrismaPromise<
+export type GetCoverLetterGroupByPayload<T extends CoverLetterGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CoverLetterGroupByOutputType, T['by']> &
       {

@@ -206,7 +206,7 @@ export type PlatformFeedbackGroupByOutputType = {
   _max: PlatformFeedbackMaxAggregateOutputType | null
 }
 
-type GetPlatformFeedbackGroupByPayload<T extends PlatformFeedbackGroupByArgs> = Prisma.PrismaPromise<
+export type GetPlatformFeedbackGroupByPayload<T extends PlatformFeedbackGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PlatformFeedbackGroupByOutputType, T['by']> &
       {

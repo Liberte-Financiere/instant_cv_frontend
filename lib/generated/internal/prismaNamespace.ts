@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.5.0
- * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
+ * Prisma Client JS version: 7.8.0
+ * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.5.0",
-  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
+  client: "7.8.0",
+  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
 }
 
 /**
@@ -396,7 +396,9 @@ export const ModelName = {
   CreditTransaction: 'CreditTransaction',
   AdminTask: 'AdminTask',
   InterviewSession: 'InterviewSession',
-  InterviewMessage: 'InterviewMessage'
+  InterviewMessage: 'InterviewMessage',
+  CandidateProfile: 'CandidateProfile',
+  ProfileUnlock: 'ProfileUnlock'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -412,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage"
+    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1378,6 +1380,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CandidateProfile: {
+      payload: Prisma.$CandidateProfilePayload<ExtArgs>
+      fields: Prisma.CandidateProfileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CandidateProfileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CandidateProfileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload>
+        }
+        findFirst: {
+          args: Prisma.CandidateProfileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CandidateProfileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload>
+        }
+        findMany: {
+          args: Prisma.CandidateProfileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload>[]
+        }
+        create: {
+          args: Prisma.CandidateProfileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload>
+        }
+        createMany: {
+          args: Prisma.CandidateProfileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CandidateProfileCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload>[]
+        }
+        delete: {
+          args: Prisma.CandidateProfileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload>
+        }
+        update: {
+          args: Prisma.CandidateProfileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload>
+        }
+        deleteMany: {
+          args: Prisma.CandidateProfileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CandidateProfileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CandidateProfileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload>[]
+        }
+        upsert: {
+          args: Prisma.CandidateProfileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateProfilePayload>
+        }
+        aggregate: {
+          args: Prisma.CandidateProfileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCandidateProfile>
+        }
+        groupBy: {
+          args: Prisma.CandidateProfileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CandidateProfileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CandidateProfileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CandidateProfileCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProfileUnlock: {
+      payload: Prisma.$ProfileUnlockPayload<ExtArgs>
+      fields: Prisma.ProfileUnlockFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProfileUnlockFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProfileUnlockFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload>
+        }
+        findFirst: {
+          args: Prisma.ProfileUnlockFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProfileUnlockFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload>
+        }
+        findMany: {
+          args: Prisma.ProfileUnlockFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload>[]
+        }
+        create: {
+          args: Prisma.ProfileUnlockCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload>
+        }
+        createMany: {
+          args: Prisma.ProfileUnlockCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProfileUnlockCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload>[]
+        }
+        delete: {
+          args: Prisma.ProfileUnlockDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload>
+        }
+        update: {
+          args: Prisma.ProfileUnlockUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProfileUnlockDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProfileUnlockUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProfileUnlockUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProfileUnlockUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileUnlockPayload>
+        }
+        aggregate: {
+          args: Prisma.ProfileUnlockAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProfileUnlock>
+        }
+        groupBy: {
+          args: Prisma.ProfileUnlockGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProfileUnlockGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProfileUnlockCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProfileUnlockCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1484,7 +1634,10 @@ export const UserScalarFieldEnum = {
   referralCode: 'referralCode',
   referredById: 'referredById',
   referralCount: 'referralCount',
-  premiumUntil: 'premiumUntil'
+  premiumUntil: 'premiumUntil',
+  companyName: 'companyName',
+  recruiterCredits: 'recruiterCredits',
+  freeUnlocksUsed: 'freeUnlocksUsed'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1526,6 +1679,7 @@ export const CVScalarFieldEnum = {
   title: 'title',
   content: 'content',
   isPublic: 'isPublic',
+  isSearchable: 'isSearchable',
   views: 'views',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -1606,6 +1760,39 @@ export const InterviewMessageScalarFieldEnum = {
 } as const
 
 export type InterviewMessageScalarFieldEnum = (typeof InterviewMessageScalarFieldEnum)[keyof typeof InterviewMessageScalarFieldEnum]
+
+
+export const CandidateProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  cvId: 'cvId',
+  anonymousName: 'anonymousName',
+  title: 'title',
+  summary: 'summary',
+  sector: 'sector',
+  skills: 'skills',
+  experienceYears: 'experienceYears',
+  locationCity: 'locationCity',
+  locationCountry: 'locationCountry',
+  completionScore: 'completionScore',
+  lastCvUpdate: 'lastCvUpdate',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CandidateProfileScalarFieldEnum = (typeof CandidateProfileScalarFieldEnum)[keyof typeof CandidateProfileScalarFieldEnum]
+
+
+export const ProfileUnlockScalarFieldEnum = {
+  id: 'id',
+  unlockerUserId: 'unlockerUserId',
+  candidateProfileId: 'candidateProfileId',
+  creditsCost: 'creditsCost',
+  createdAt: 'createdAt'
+} as const
+
+export type ProfileUnlockScalarFieldEnum = (typeof ProfileUnlockScalarFieldEnum)[keyof typeof ProfileUnlockScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1837,6 +2024,21 @@ export type PrismaClientOptions = ({
    * ```
    */
   comments?: runtime.SqlCommenterPlugin[]
+  /**
+   * Optional maximum size for the query plan cache. If not provided, a default size will be used.
+   * A value of `0` can be used to disable the cache entirely. A higher cache size can improve
+   * performance for applications that execute a large number of unique queries, while a smaller
+   * cache size can reduce memory usage.
+   * 
+   * @example
+   * ```
+   * const prisma = new PrismaClient({
+   *   adapter,
+   *   queryPlanCacheMaxSize: 100,
+   * })
+   * ```
+   */
+  queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
   account?: Prisma.AccountOmit
@@ -1852,6 +2054,8 @@ export type GlobalOmitConfig = {
   adminTask?: Prisma.AdminTaskOmit
   interviewSession?: Prisma.InterviewSessionOmit
   interviewMessage?: Prisma.InterviewMessageOmit
+  candidateProfile?: Prisma.CandidateProfileOmit
+  profileUnlock?: Prisma.ProfileUnlockOmit
 }
 
 /* Types for Logging */

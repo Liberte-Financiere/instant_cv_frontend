@@ -1,41 +1,28 @@
-2026-05-23 — Live Template Switching & Secure Robust AI CV Import Validation
+2026-05-30 — Refine Recruiter Portal UI and Sync Search Filters
 
 What changed:
-- Added explicit text-slate-900 color classes to custom Input, Textarea, and Select components.
-- Added text-slate-900 to native textareas in CV forms (Experience, Projects, Divers).
-- Added text-slate-900 and select styling overrides to Cover Letter editor forms and fields.
-- Appended a global fallback style in globals.css to force slate-900 text on all inputs, textareas, and select components with appropriate placeholder styling.
-- Implemented `sanitizeCVData` helper inside `lib/utils.ts` to cleanly normalize, merge, and safe-format raw AI parsed data.
-- Integrated `sanitizeCVData` in client-side `useCVStore.ts` inside `createImportedCV` to sanitize imports prior to state update and persistence.
-- Integrated `sanitizeCVData` as a server-side shield in `app/api/cv/route.ts` right before calling `cvSchema.safeParse`, ensuring 100% database-level safety against minor parsing anomalies (invalid email fields, unrecognized language levels, or malformed social URLs).
-- Added `updateTemplateId` action in `store/useCVStore.ts` store.
-- Built a premium `TemplateSelector` component at `components/editor/TemplateSelector.tsx` rendering all templates with real previews in a smooth modern modal.
-- Integrated the new `TemplateSelector` into the main Editor toolbar (`app/editor/[id]/page.tsx`), enabling users to change their CV template/model dynamically in real-time.
+- Added a `lib/constants.ts` file to store a single source of truth for SECTORS.
+- Refactored `SearchFilters.tsx` and `settings/page.tsx` to use the shared SECTORS constant.
+- Updated `SearchFilters.tsx` to force text color to white (`!text-white`) for search inputs.
+- Updated `SearchBar.tsx` to force text color to white (`!text-white`) for main search input.
+- Added pagination (5 items per page) to the "Visibilité Recruteurs" CV list in `settings/page.tsx`.
+- Refined UI/UX of the "Visibilité Recruteurs" section (replaced indigo colors with brand blue, added document icons, improved privacy banner).
 
 Why:
-- System dark mode settings on some devices (especially mobile Safari and Chrome) automatically styled typed text within inputs as white/light gray. Without an explicit text color configuration, white text on white/light backgrounds made typed content completely invisible.
-- AI-parsed CV imports generated irregular field values (e.g. invalid emails, unrecognized language levels, platform strings outside enums, or non-schema URLs) which strictly failed database validation on the POST /api/cv endpoint, resulting in a 400 Bad Request and causing client creation failure.
-- When users imported a CV via the AI Magic Analyzer, it defaulted to the "Le Moderne" style without offering a way to switch or choose a model, locking the imported CV to one layout forever. Adding a template selector inside the editor solves this restriction for both imported and regular CVs.
+- To fix a search bug where candidate profiles weren't found because sector keywords were mismatched between the frontend filter and the DB records.
+- To prevent text from appearing black in dark mode for search inputs.
+- To improve rendering performance and UX for candidates with dozens or hundreds of CVs.
+- To maintain a professional, high-contrast, "Solid" design aesthetic aligned with the brand's blue primary color, entirely removing unwanted purple/indigo elements.
 
 Files affected:
-- components/ui/Input.tsx — Added text-slate-900 to class lists
-- components/ui/Textarea.tsx — Added text-slate-900 to class lists
-- components/ui/Select.tsx — Added text-slate-900 to class lists
-- components/editor/forms/ExperienceForm.tsx — Added text-slate-900 to native textarea class list
-- components/editor/forms/ProjectsForm.tsx — Added text-slate-900 to native textarea class list
-- components/editor/forms/DiversForm.tsx — Added text-slate-900 to native textarea class list
-- app/cover-letter/editor/[id]/page.tsx — Added text-slate-900 to multiple textareas and select fields
-- app/globals.css — Added global fallback color rules for inputs, textareas, and selects
-- lib/utils.ts — Implemented robust sanitizeCVData helper function
-- store/useCVStore.ts — Imported and utilized sanitizeCVData inside createImportedCV, added updateTemplateId action
-- app/api/cv/route.ts — Imported and utilized sanitizeCVData to shield incoming post requests
-- components/editor/TemplateSelector.tsx — NEW: Added template selector component for editor
-- app/editor/[id]/page.tsx — Integrated TemplateSelector in toolbar header
+- lib/constants.ts — Created to hold the global `SECTORS` array.
+- components/recruiter/SearchFilters.tsx — Applied `!text-white` to inputs, synced with `SECTORS` constant.
+- components/recruiter/SearchBar.tsx — Applied `!text-white` to the input.
+- app/dashboard/settings/page.tsx — Upgraded recruiter visibility UI, implemented pagination, synced sector select with `SECTORS` constant.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Verify input text legibility across different devices with both system light mode and dark mode enabled.
-- Verify that uploading and importing complex CV files with AI works perfectly and saves the imported CV successfully to the database without validation errors.
-- Confirm that the "Modèle" button appears in the editor header, and clicking it allows you to select any template and see the layout change in real-time.
+- The backend API (`/api/cv`) automatically orders CVs by `updatedAt: 'desc'`, so the pagination natively surfaces the most recent CVs on the first page.
+- Recruiter search now matches profiles correctly based on the updated sector constants.
