@@ -8,8 +8,18 @@ export default function LoginPage({
 }: {
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
-  const callbackUrl = typeof searchParams.callbackUrl === 'string' ? searchParams.callbackUrl : '/dashboard';
-
+  let callbackUrl = typeof searchParams.callbackUrl === 'string' ? searchParams.callbackUrl : '/dashboard';
+  
+  // Safely extract just the pathname if an absolute URL is provided
+  try {
+    if (callbackUrl.startsWith('http')) {
+      const parsedUrl = new URL(callbackUrl);
+      callbackUrl = parsedUrl.pathname + parsedUrl.search;
+    }
+  } catch (e) {
+    // If URL parsing fails, fallback to dashboard
+    callbackUrl = '/dashboard';
+  }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-4">
       <div className="w-full max-w-sm space-y-8 bg-white p-8 rounded-xl shadow-lg text-center">
