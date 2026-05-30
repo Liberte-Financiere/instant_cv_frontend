@@ -99,6 +99,20 @@ describe('anonymizeName', () => {
   it('handles compound last names', () => {
     expect(anonymizeName('Jean', 'De La Fontaine')).toBe('J.D.');
   });
+
+  // --- Bizarre Scenarios ---
+  it('handles names with special characters and hyphens', () => {
+    expect(anonymizeName('Jean-Baptiste', 'O\'Connor')).toBe('J.O.');
+    expect(anonymizeName('Marie-Antoinette', 'D\'Arcy')).toBe('M.D.');
+  });
+
+  it('handles names that are just single letters', () => {
+    expect(anonymizeName('A', 'B')).toBe('A.B.');
+  });
+
+  it('handles names with emojis (should still extract first character)', () => {
+    expect(anonymizeName('👨‍💻Dev', '🚀Ninja')).toBe('👨.🚀.');
+  });
 });
 
 // -- sanitizeText -----------------------------------------------------------
@@ -125,6 +139,27 @@ describe('sanitizeText', () => {
   it('preserves clean text unchanged', () => {
     const clean = 'Developpeur Full Stack avec 5 ans experience';
     expect(sanitizeText(clean)).toBe(clean);
+  });
+
+  // --- Bizarre Scenarios ---
+  it('removes bizarrely formatted emails', () => {
+    const input = 'My email is weirdly.formatted+alias@sub.domain.co.uk please email me.';
+    const result = sanitizeText(input);
+    expect(result).not.toContain('weirdly.formatted');
+    expect(result).toContain('[email]');
+  });
+
+  it('removes bizarrely formatted phone numbers', () => {
+    const input = 'Call me: +226.70.12.34.56 or 00226-70-12-34-56';
+    const result = sanitizeText(input);
+    expect(result).not.toContain('70.12');
+    expect(result).not.toContain('70-12');
+  });
+
+  it('handles text with HTML tags and script injections safely', () => {
+    const malicious = '<script>alert("hack")</script> and my phone is +33 6 12 34 56 78';
+    const result = sanitizeText(malicious);
+    expect(result).not.toContain('+33 6');
   });
 });
 
@@ -198,6 +233,32 @@ describe('anonymizeProfile', () => {
     const result = anonymizeProfile(null as any);
     expect(result.anonymousName).toBe('??');
     expect(result.skills).toEqual([]);
+  });
+
+  // --- Bizarre Scenarios ---
+  it('handles CV where personalInfo exists but all fields are null/undefined', () => {
+    const weirdCV = {
+      personalInfo: { firstName: null, lastName: undefined, email: null, phone: undefined },
+      experiences: null,
+      education: undefined,
+    };
+    const result = anonymizeProfile(weirdCV as any);
+    expect(result.anonymousName).toBe('??');
+    expect(result.experiences).toEqual([]);
+    expect(result.education).toEqual([]);
+  });
+
+  it('anonymizes bizarre deep nested descriptions with XSS payloads', () => {
+    const xssCV = {
+      personalInfo: { firstName: 'Hacker', lastName: 'Man' },
+      experiences: [{ 
+        position: 'Dev', 
+        company: 'Corp', 
+        description: 'I hack things <img src="x" onerror="alert(1)"> call me +1 555 123 4567' 
+      }],
+    };
+    const result = anonymizeProfile(xssCV as any);
+    expect(result.experiences[0].description).not.toContain('555');
   });
 });
 

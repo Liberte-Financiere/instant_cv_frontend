@@ -62,7 +62,8 @@ export function anonymizeName(firstName: string, lastName: string): string {
     if (!name || typeof name !== 'string') return '';
     const trimmed = name.trim();
     if (!trimmed) return '';
-    return trimmed.charAt(0).toUpperCase();
+    const firstChar = Array.from(trimmed)[0] || '';
+    return firstChar.toUpperCase();
   };
 
   const firstInitial = extractInitial(firstName);
