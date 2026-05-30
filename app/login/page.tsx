@@ -3,7 +3,13 @@ import { signIn } from "@/auth"
 import { Button } from "@/components/ui/Button"
 import { APP_CONFIG } from '@/lib/config';
 
-export default function LoginPage() {
+export default function LoginPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const callbackUrl = typeof searchParams.callbackUrl === 'string' ? searchParams.callbackUrl : '/dashboard';
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-4">
       <div className="w-full max-w-sm space-y-8 bg-white p-8 rounded-xl shadow-lg text-center">
@@ -15,7 +21,7 @@ export default function LoginPage() {
         <form
           action={async () => {
             "use server"
-            await signIn("google", { redirectTo: "/dashboard" })
+            await signIn("google", { redirectTo: callbackUrl })
           }}
         >
           <Button className="w-full flex items-center justify-center gap-2" size="lg">
