@@ -55,9 +55,12 @@ export const authConfig = {
 
       return true
     },
-    async jwt({ token, user, trigger }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
          token.role = user.role;
+      }
+      if (trigger === "update" && session?.role) {
+         token.role = session.role;
       }
       return token;
     },
