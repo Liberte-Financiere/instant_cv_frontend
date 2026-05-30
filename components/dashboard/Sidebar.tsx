@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap, Building2 } from 'lucide-react';
 import { cn, clearAllLocalData } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
@@ -119,7 +119,7 @@ export function Sidebar() {
           </nav>
         </div> 
 
-        {/* Admin Section */}
+      {/* Admin Section */}
         {session?.user?.role === 'ADMIN' && (
           <div className="mt-8">
             <div className="flex items-center gap-2 px-4 mb-2">
@@ -130,6 +130,20 @@ export function Sidebar() {
               <NavLink item={{ name: 'Gestion Crédits', href: '/dashboard/admin', icon: Zap }} />
               <NavLink item={{ name: 'Gestion des Tâches', href: '/admin/tasks', icon: LayoutList }} />
               <NavLink item={{ name: 'Avis Utilisateurs', href: '/dashboard/admin/feedback', icon: MessageSquare }} />
+            </nav>
+          </div>
+        )}
+
+        {/* Recruiter Section */}
+        {session?.user?.role === 'RECRUITER' && (
+          <div className="mt-8">
+            <div className="flex items-center gap-2 px-4 mb-2">
+              <Building2 className="w-4 h-4 text-emerald-400" />
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Espace Recruteur</span>
+            </div>
+            <nav className="space-y-1">
+              <NavLink item={{ name: 'Portail B2B', href: '/recruiter', icon: Building2 }} />
+              <NavLink item={{ name: 'Mes Profils', href: '/recruiter/unlocks', icon: LayoutList }} />
             </nav>
           </div>
         )}
