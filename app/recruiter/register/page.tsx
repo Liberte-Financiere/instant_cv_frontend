@@ -78,7 +78,7 @@ export default function RecruiterRegisterPage() {
             required
             minLength={2}
             maxLength={100}
-            className="w-full h-11 px-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 transition-colors"
+            className="w-full h-11 px-3 bg-white/5 border border-white/10 rounded-xl text-sm !text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 transition-colors"
           />
         </div>
         {error && <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{error}</p>}
