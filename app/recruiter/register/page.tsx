@@ -7,7 +7,7 @@ import { Building2, Gift, Shield, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export default function RecruiterRegisterPage() {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const router = useRouter();
   const [companyName, setCompanyName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,6 +36,10 @@ export default function RecruiterRegisterPage() {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error); return; }
+      
+      // Update local NextAuth session to reflect the new RECRUITER role
+      await update({ role: 'RECRUITER' });
+      
       router.push('/recruiter');
     } catch {
       setError('Erreur de connexion.');
