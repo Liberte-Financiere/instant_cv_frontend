@@ -96,15 +96,6 @@ export function Sidebar() {
            </div>
            <span className="text-xl font-bold tracking-tight">{APP_CONFIG.name}</span>
         </div>
-
-        {session?.user?.role === 'RECRUITER' && (
-          <Link href="/recruiter/unlocks">
-            <Button variant="outline" className="w-full justify-center bg-slate-800/50 border-slate-700 hover:bg-slate-800 text-emerald-400 hover:text-emerald-300">
-              <Building2 className="w-4 h-4 mr-2" />
-              Espace Recruteur
-            </Button>
-          </Link>
-        )}
       </div>
 
       {/* Navigation */}
