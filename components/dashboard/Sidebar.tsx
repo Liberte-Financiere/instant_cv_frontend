@@ -11,6 +11,7 @@ import { useCreditStore } from '@/store/useCreditStore';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { APP_CONFIG } from '@/lib/config';
+import { Button } from '@/components/ui/Button';
 
 
 
@@ -89,12 +90,21 @@ export function Sidebar() {
     <div className="flex flex-col h-screen w-72 bg-bg-dark border-r border-slate-800 text-white fixed left-0 top-0 z-50">
       {/* Brand */}
       <div className="p-8 pb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mb-6">
            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
              <FileText className="w-5 h-5 text-white" />
            </div>
            <span className="text-xl font-bold tracking-tight">{APP_CONFIG.name}</span>
         </div>
+
+        {session?.user?.role === 'RECRUITER' && (
+          <Link href="/recruiter/unlocks">
+            <Button variant="outline" className="w-full justify-center bg-slate-800/50 border-slate-700 hover:bg-slate-800 text-emerald-400 hover:text-emerald-300">
+              <Building2 className="w-4 h-4 mr-2" />
+              Espace Recruteur
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Navigation */}
@@ -134,19 +144,6 @@ export function Sidebar() {
           </div>
         )}
 
-        {/* Recruiter Section */}
-        {session?.user?.role === 'RECRUITER' && (
-          <div className="mt-8">
-            <div className="flex items-center gap-2 px-4 mb-2">
-              <Building2 className="w-4 h-4 text-emerald-400" />
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Espace Recruteur</span>
-            </div>
-            <nav className="space-y-1">
-              <NavLink item={{ name: 'Portail B2B', href: '/recruiter', icon: Building2 }} />
-              <NavLink item={{ name: 'Mes Profils', href: '/recruiter/unlocks', icon: LayoutList }} />
-            </nav>
-          </div>
-        )}
       </div>
 
 
