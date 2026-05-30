@@ -40,9 +40,13 @@ export const authConfig = {
         return false // Redirect to login
       }
 
-      // 2. Login Page: Redirect to Dashboard if already logged in
+      // 2. Login Page: Redirect to Dashboard (or callbackUrl) if already logged in
       if (isOnLogin) {
         if (isLoggedIn) {
+          const callbackUrl = nextUrl.searchParams.get('callbackUrl')
+          if (callbackUrl) {
+            return Response.redirect(new URL(callbackUrl, nextUrl))
+          }
           return Response.redirect(new URL('/dashboard', nextUrl))
         }
         return true
