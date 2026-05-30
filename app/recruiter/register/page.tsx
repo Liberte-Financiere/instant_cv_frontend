@@ -1,26 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Building2, Gift, Shield, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export default function RecruiterRegisterPage() {
-  const { data: session, update } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const [companyName, setCompanyName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  if (!session) {
-    router.push('/login');
-    return null;
-  }
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login');
+    } else if (status === 'authenticated' && session?.user?.role === 'RECRUITER') {
+      router.push('/recruiter/unlocks');
+    }
+  }, [session, status, router]);
 
-  if (session.user?.role === 'RECRUITER') {
-    router.push('/recruiter/unlocks');
-    return null;
+  if (status === 'loading' || !session || session.user?.role === 'RECRUITER') {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
+      </div>
+    );
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
