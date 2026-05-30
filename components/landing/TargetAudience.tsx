@@ -112,6 +112,31 @@ export function TargetAudience() {
             </Link>
           </motion.div>
           
+          {/* Card 4: Entreprises & Recruteurs (Full Width, Indigo) */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            className="group relative rounded-[2rem] p-8 md:col-span-3 flex flex-col md:flex-row items-center justify-between hover:-translate-y-2 transition-transform duration-300 bg-indigo-950 text-white shadow-xl shadow-indigo-900/20 border border-indigo-800/50 overflow-hidden"
+          >
+            {/* BG Decoration */}
+            <div className="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-[50px] pointer-events-none" />
+
+            <div className="flex-1 md:pr-12 relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-6 border border-indigo-500/30">
+                <Briefcase className="w-4 h-4" /> B2B Portal
+              </div>
+              <h3 className="text-3xl md:text-4xl font-bold mb-4">Entreprises & Recruteurs</h3>
+              <p className="text-indigo-100 leading-relaxed text-lg mb-8 max-w-2xl">
+                Accédez à notre <span className="font-bold text-white">Talent Pool</span> exclusif. Filtrez, trouvez et débloquez les profils qualifiés (anonymisés) qui matchent exactement vos besoins. Gagnez un temps précieux sur votre sourcing.
+              </p>
+              <Link href="/recruiter" className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-400 text-white px-6 py-3 rounded-xl font-bold w-fit transition-all shadow-lg shadow-indigo-500/25">
+                Découvrir le vivier de talents <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+          </motion.div>
+          
         </div>
       </div>
     </div>

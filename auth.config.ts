@@ -25,7 +25,9 @@ export const authConfig = {
          '/templates', 
          '/analysis', 
          '/signature',
-         '/cv'
+         '/cv',
+         '/recruiter/unlocks',
+         '/recruiter/register',
       ]
       
       const isProtected = protectedPaths.some(path => pathname.startsWith(path))
@@ -62,7 +64,7 @@ export const authConfig = {
     session({ session, user, token }) {
       if (session.user && token?.sub) {
         session.user.id = token.sub
-        session.user.role = token.role as 'USER' | 'ADMIN';
+        session.user.role = token.role as import('@/types/next-auth').AppRole;
       }
       return session
     },

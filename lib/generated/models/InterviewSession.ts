@@ -252,7 +252,7 @@ export type InterviewSessionGroupByOutputType = {
   _max: InterviewSessionMaxAggregateOutputType | null
 }
 
-type GetInterviewSessionGroupByPayload<T extends InterviewSessionGroupByArgs> = Prisma.PrismaPromise<
+export type GetInterviewSessionGroupByPayload<T extends InterviewSessionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<InterviewSessionGroupByOutputType, T['by']> &
       {

@@ -63,7 +63,9 @@ export const ModelName = {
   CreditTransaction: 'CreditTransaction',
   AdminTask: 'AdminTask',
   InterviewSession: 'InterviewSession',
-  InterviewMessage: 'InterviewMessage'
+  InterviewMessage: 'InterviewMessage',
+  CandidateProfile: 'CandidateProfile',
+  ProfileUnlock: 'ProfileUnlock'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -149,7 +151,10 @@ export const UserScalarFieldEnum = {
   referralCode: 'referralCode',
   referredById: 'referredById',
   referralCount: 'referralCount',
-  premiumUntil: 'premiumUntil'
+  premiumUntil: 'premiumUntil',
+  companyName: 'companyName',
+  recruiterCredits: 'recruiterCredits',
+  freeUnlocksUsed: 'freeUnlocksUsed'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -191,6 +196,7 @@ export const CVScalarFieldEnum = {
   title: 'title',
   content: 'content',
   isPublic: 'isPublic',
+  isSearchable: 'isSearchable',
   views: 'views',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -271,6 +277,39 @@ export const InterviewMessageScalarFieldEnum = {
 } as const
 
 export type InterviewMessageScalarFieldEnum = (typeof InterviewMessageScalarFieldEnum)[keyof typeof InterviewMessageScalarFieldEnum]
+
+
+export const CandidateProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  cvId: 'cvId',
+  anonymousName: 'anonymousName',
+  title: 'title',
+  summary: 'summary',
+  sector: 'sector',
+  skills: 'skills',
+  experienceYears: 'experienceYears',
+  locationCity: 'locationCity',
+  locationCountry: 'locationCountry',
+  completionScore: 'completionScore',
+  lastCvUpdate: 'lastCvUpdate',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CandidateProfileScalarFieldEnum = (typeof CandidateProfileScalarFieldEnum)[keyof typeof CandidateProfileScalarFieldEnum]
+
+
+export const ProfileUnlockScalarFieldEnum = {
+  id: 'id',
+  unlockerUserId: 'unlockerUserId',
+  candidateProfileId: 'candidateProfileId',
+  creditsCost: 'creditsCost',
+  createdAt: 'createdAt'
+} as const
+
+export type ProfileUnlockScalarFieldEnum = (typeof ProfileUnlockScalarFieldEnum)[keyof typeof ProfileUnlockScalarFieldEnum]
 
 
 export const SortOrder = {

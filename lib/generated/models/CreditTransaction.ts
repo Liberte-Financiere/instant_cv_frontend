@@ -199,7 +199,7 @@ export type CreditTransactionGroupByOutputType = {
   _max: CreditTransactionMaxAggregateOutputType | null
 }
 
-type GetCreditTransactionGroupByPayload<T extends CreditTransactionGroupByArgs> = Prisma.PrismaPromise<
+export type GetCreditTransactionGroupByPayload<T extends CreditTransactionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CreditTransactionGroupByOutputType, T['by']> &
       {

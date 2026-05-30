@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Radar, Zap, FileText, Star, ArrowRight, Download, WifiOff, Mic } from 'lucide-react';
+import { Radar, Zap, FileText, Star, ArrowRight, Download, WifiOff, Mic, Briefcase, Lock } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { FeatureCard } from '@/components/landing/FeatureCard';
 import { APP_CONFIG } from '@/lib/config';
@@ -132,12 +132,12 @@ export function Features() {
              </div>
           </FeatureCard>
 
-          {/* Card 6b: Simulation d'Entretien IA (md:col-span-2) */}
+          {/* Card 6b: Simulation d'Entretien IA (md:col-span-1) */}
           <FeatureCard
-            className="md:col-span-2 border-slate-100"
-            title="Simulation d'Entretien IA"
+            className="md:col-span-1 border-slate-100"
+            title="Entretien IA"
             icon={Mic}
-            description="Entraînez-vous avec notre recruteur IA interactif (vocal et écrit) pour être prêt le jour J."
+            description="Entraînez-vous avec notre recruteur IA interactif pour être prêt le jour J."
           >
              <div className="w-full h-24 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 p-4 relative overflow-hidden flex flex-col items-center justify-center gap-2">
                  <div className="flex gap-1 items-center">
@@ -145,9 +145,31 @@ export function Features() {
                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse delay-75" />
                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse delay-150" />
                  </div>
-                 <div className="text-xs font-bold text-indigo-500 uppercase tracking-wider">
-                    Recruteur IA à l'écoute
+                 <div className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider text-center">
+                    Simulateur<br/>Vocal
                  </div>
+             </div>
+          </FeatureCard>
+
+          {/* Card 6c: B2B Talent Pool (md:col-span-2) */}
+          <FeatureCard
+            className="md:col-span-2 border-slate-100 bg-gradient-to-br from-slate-900 to-slate-800 text-white"
+            title="Vivier de Talents (B2B)"
+            icon={Briefcase}
+            description="Recruteurs : accédez à une base de CVs anonymisés de haute qualité. Débloquez uniquement les profils qui matchent vos critères exacts avec nos crédits d'accès."
+          >
+             <div className="w-full h-24 rounded-xl bg-white/5 border border-white/10 p-3 relative overflow-hidden flex flex-col justify-center">
+                <div className="flex items-center justify-between mb-2 opacity-80">
+                  <div className="text-xs font-mono text-slate-300">Profil: A.S. • DevOps Senior</div>
+                  <div className="text-[10px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded">Score: 98%</div>
+                </div>
+                <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden mb-3">
+                  <div className="w-[85%] h-full bg-blue-400 rounded-full" />
+                </div>
+                <div className="flex items-center justify-between text-xs font-bold text-blue-300">
+                  <span className="flex items-center gap-1"><Lock className="w-3 h-3"/> Contact Masqué</span>
+                  <span className="text-white bg-blue-600 px-2 py-1 rounded text-[10px]">Débloquer (5 cr.)</span>
+                </div>
              </div>
           </FeatureCard>
 
