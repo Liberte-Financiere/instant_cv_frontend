@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Building2, Users, LogIn, Unlock } from 'lucide-react';
+import { Search, Building2, Users, LogIn, Unlock, User } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useSession } from 'next-auth/react';
 
@@ -53,6 +53,14 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
             </nav>
 
             <div className="flex items-center gap-3">
+              {session && (
+                <Link href="/dashboard">
+                  <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white">
+                    <User className="w-4 h-4 mr-2" />
+                    Espace Candidat
+                  </Button>
+                </Link>
+              )}
               {isRecruiter ? (
                 <Link href="/recruiter/unlocks">
                   <Button variant="glass" size="sm">
