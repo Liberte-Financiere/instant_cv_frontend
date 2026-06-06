@@ -32,7 +32,7 @@ export function CompareSearch({ competitors }: CompareSearchProps) {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 border border-slate-200 rounded-2xl shadow-sm">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white/80 backdrop-blur-md p-4 border border-slate-200 rounded-2xl shadow-sm">
         <div className="relative w-full md:max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
@@ -50,8 +50,8 @@ export function CompareSearch({ competitors }: CompareSearchProps) {
               onClick={() => setSelectedCat(cat)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 selectedCat === cat
-                  ? 'bg-primary text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-primary text-white shadow-md shadow-primary/20 hover:bg-primary-dark'
+                  : 'bg-slate-100/80 text-slate-600 hover:bg-slate-200/80 backdrop-blur-sm'
               }`}
             >
               {cat}
@@ -66,7 +66,7 @@ export function CompareSearch({ competitors }: CompareSearchProps) {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-white border border-slate-200 rounded-2xl shadow-sm">
+        <div className="text-center py-12 bg-white/80 backdrop-blur-md border border-slate-200 rounded-2xl shadow-sm">
           <p className="text-slate-500 font-medium">Aucun comparatif trouvé pour votre recherche.</p>
         </div>
       )}
