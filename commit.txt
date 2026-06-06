@@ -1,28 +1,35 @@
-2026-05-30 — Refine Recruiter Portal UI and Sync Search Filters
+2026-05-31 — Implémentation du Jobsira Talent Assistant (IA Recruteur V1)
 
 What changed:
-- Added a `lib/constants.ts` file to store a single source of truth for SECTORS.
-- Refactored `SearchFilters.tsx` and `settings/page.tsx` to use the shared SECTORS constant.
-- Updated `SearchFilters.tsx` to force text color to white (`!text-white`) for search inputs.
-- Updated `SearchBar.tsx` to force text color to white (`!text-white`) for main search input.
-- Added pagination (5 items per page) to the "Visibilité Recruteurs" CV list in `settings/page.tsx`.
-- Refined UI/UX of the "Visibilité Recruteurs" section (replaced indigo colors with brand blue, added document icons, improved privacy banner).
+- Intégration d'un assistant conversationnel (Jobsira Talent Assistant) dans l'espace recruteur propulsé par Gemini (gemini-3-flash-preview).
+- Utilisation du function calling natif de Gemini pour traduire les besoins en langage naturel en critères de recherche.
+- Création d'une fonction de recherche optimisée (`searchCandidatesInternal`) s'appuyant directement sur Prisma pour éliminer la latence réseau interne.
+- Calcul déterministe et robuste du score de compatibilité côté serveur, basé sur une grille de pondération stricte (titre, expérience, compétences, localisation, complétude).
+- Ajout d'une interface utilisateur de type "chat" (slide-in panel) via le composant `TalentChat`, avec des cartes de candidats compactes `ChatCandidateCard`.
+- Intégration d'un rate limiter par `userId` et gestion de contexte tronqué de manière intelligente (par limite de caractères) pour économiser les tokens sans perdre le fil.
+- Ajout du Streaming SSE (Server-Sent Events) pour l'affichage fluide et progressif de la réponse, particulièrement utile pour les connexions lentes.
+- Gestion gracieuse du dépassement de quota Gemini (erreur 429), avec un fallback en Message de chat (plutôt qu'une erreur 500 fatale), permettant une meilleure UX en cas de forte sollicitation.
 
 Why:
-- To fix a search bug where candidate profiles weren't found because sector keywords were mismatched between the frontend filter and the DB records.
-- To prevent text from appearing black in dark mode for search inputs.
-- To improve rendering performance and UX for candidates with dozens or hundreds of CVs.
-- To maintain a professional, high-contrast, "Solid" design aesthetic aligned with the brand's blue primary color, entirely removing unwanted purple/indigo elements.
+- Permettre aux recruteurs de trouver des profils de manière plus intuitive, sans avoir à manipuler manuellement des filtres complexes.
+- Le scoring côté serveur garantit la constance des évaluations, corrigeant l'incapacité inhérente du LLM à attribuer des notes quantitatives de manière déterministe.
+- L'appel Prisma direct et la troncature de contexte assurent une rapidité et une stabilité du service.
+- Le Streaming (via Server-Sent Events) donne un retour visuel instantané qui gomme la perception de latence, crucial en Afrique francophone.
+- Le catch ciblé du 429 évite de faire fuir l'utilisateur avec une page plantée si le quota de la version gratuite `gemini-3-flash-preview` est atteint.
+- Limitation à 2 CVs maximum visibles pour les recruteurs par utilisateur pour maintenir une base de données de candidats qualifiée et pertinente, évitant le spam de profils dupliqués par un même utilisateur.
 
 Files affected:
-- lib/constants.ts — Created to hold the global `SECTORS` array.
-- components/recruiter/SearchFilters.tsx — Applied `!text-white` to inputs, synced with `SECTORS` constant.
-- components/recruiter/SearchBar.tsx — Applied `!text-white` to the input.
-- app/dashboard/settings/page.tsx — Upgraded recruiter visibility UI, implemented pagination, synced sector select with `SECTORS` constant.
+- lib/talent-assistant.ts — [NEW] Cœur du système (system prompt, logique de tool calling Gemini, scoring, interaction DB directe, flux asynchrone SSE).
+- app/api/recruiter/chat/route.ts — [NEW] Route API sécurisée pour les interactions de chat (vérification de rôle, rate limit, renvoi de flux ReadableStream).
+- app/api/cv/[id]/searchable/route.ts — Validation côté serveur pour empêcher un utilisateur d'avoir plus de 2 CVs publics/recherchables.
+- components/recruiter/TalentChat.tsx — [NEW] Interface UI (panel coulissant, parseur de flux SSE `data:`, state React progressif).
+- app/dashboard/settings/page.tsx — Validation côté client avec un Toast empêchant de cocher l'option `isSearchable` si l'utilisateur a déjà 2 CVs en ligne.
+- components/recruiter/ChatCandidateCard.tsx — [NEW] Carte de profil condensée adaptée au format conversationnel.
+- components/recruiter/RecruiterLayout.tsx — Injection globale du chat IA.
+- lib/config.ts — Ajout des paramètres système `ai.talentAssistant`.
 
 Breaking changes:
 - None
 
 Notes for review:
-- The backend API (`/api/cv`) automatically orders CVs by `updatedAt: 'desc'`, so the pagination natively surfaces the most recent CVs on the first page.
-- Recruiter search now matches profiles correctly based on the updated sector constants.
+- V1 finalisée. L'UX est maintenant optimale avec le streaming. La persistance de l'historique en base de données et l'ajout d'alertes proactives sont les prochaines priorités (post-V1).

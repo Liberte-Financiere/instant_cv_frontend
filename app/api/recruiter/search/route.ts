@@ -98,14 +98,23 @@ export async function GET(req: Request) {
       }
     }
 
-    // Free text search (title, sector)
+    // Free text search (title, sector, projects)
     const query = searchParams.get('q');
     if (query) {
-      where.OR = [
-        { title: { contains: query, mode: 'insensitive' } },
-        { sector: { contains: query, mode: 'insensitive' } },
-        { anonymousName: { contains: query, mode: 'insensitive' } },
-      ];
+      const ftsQuery = query.trim().split(/\s+/).filter(Boolean).join(' | ');
+      if (ftsQuery) {
+        where.OR = [
+          { title: { search: ftsQuery } },
+          { sector: { search: ftsQuery } },
+          { anonymousName: { search: ftsQuery } },
+          {
+            anonymousData: {
+              path: ['projects'],
+              string_contains: query,
+            },
+          },
+        ];
+      }
     }
 
     // Execute query with count
@@ -124,6 +133,7 @@ export async function GET(req: Request) {
           completionScore: true,
           lastCvUpdate: true,
           createdAt: true,
+          anonymousData: true,
         },
         orderBy: [
           { completionScore: 'desc' },
@@ -135,8 +145,35 @@ export async function GET(req: Request) {
       prisma.candidateProfile.count({ where }),
     ]);
 
+    const formattedProfiles = profiles.map((profile) => {
+      const data = profile.anonymousData as any;
+      const rawProjects = Array.isArray(data?.projects) ? data.projects : [];
+      const projects = rawProjects.map((proj: any) => ({
+        name: proj.name || '',
+        description: proj.description || '',
+        technologies: proj.technologies || '',
+        url: proj.url || undefined,
+        github: proj.github || undefined,
+      }));
+
+      return {
+        id: profile.id,
+        anonymousName: profile.anonymousName,
+        title: profile.title,
+        sector: profile.sector,
+        skills: profile.skills,
+        experienceYears: profile.experienceYears,
+        locationCity: profile.locationCity,
+        locationCountry: profile.locationCountry,
+        completionScore: profile.completionScore,
+        lastCvUpdate: profile.lastCvUpdate,
+        createdAt: profile.createdAt,
+        projects,
+      };
+    });
+
     return NextResponse.json({
-      profiles,
+      profiles: formattedProfiles,
       pagination: {
         page,
         limit,

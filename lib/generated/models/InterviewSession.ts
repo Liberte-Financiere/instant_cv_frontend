@@ -304,6 +304,7 @@ export type InterviewSessionOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   messages?: Prisma.InterviewMessageOrderByRelationAggregateInput
+  _relevance?: Prisma.InterviewSessionOrderByRelevanceInput
 }
 
 export type InterviewSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -490,6 +491,12 @@ export type InterviewSessionListRelationFilter = {
 
 export type InterviewSessionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type InterviewSessionOrderByRelevanceInput = {
+  fields: Prisma.InterviewSessionOrderByRelevanceFieldEnum | Prisma.InterviewSessionOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type InterviewSessionCountOrderByAggregateInput = {

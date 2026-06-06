@@ -6,9 +6,18 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     include: ['__tests__/**/*.test.ts'],
+    setupFiles: ['__tests__/setup/prisma-mock.ts'],
     coverage: {
       provider: 'v8',
-      include: ['lib/anonymize.ts', 'lib/candidate-profile.ts', 'lib/recruiter-credits.ts'],
+      include: [
+        'lib/anonymize.ts',
+        'lib/candidate-profile.ts',
+        'lib/recruiter-credits.ts',
+        'lib/rate-limit.ts',
+        'lib/referral.ts',
+        'lib/credits.ts',
+        'lib/config.ts',
+      ],
     },
   },
   resolve: {

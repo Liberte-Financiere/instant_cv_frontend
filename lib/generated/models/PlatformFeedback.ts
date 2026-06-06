@@ -244,6 +244,7 @@ export type PlatformFeedbackOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.PlatformFeedbackOrderByRelevanceInput
 }
 
 export type PlatformFeedbackWhereUniqueInput = Prisma.AtLeast<{
@@ -365,6 +366,12 @@ export type PlatformFeedbackListRelationFilter = {
 
 export type PlatformFeedbackOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type PlatformFeedbackOrderByRelevanceInput = {
+  fields: Prisma.PlatformFeedbackOrderByRelevanceFieldEnum | Prisma.PlatformFeedbackOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type PlatformFeedbackCountOrderByAggregateInput = {

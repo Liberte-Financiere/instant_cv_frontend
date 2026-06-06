@@ -39,49 +39,43 @@ export async function GET() {
             locationCountry: true,
             completionScore: true,
             isActive: true,
-            cvId: true,
+            cv: {
+              select: { content: true },
+            },
           },
         },
       },
       orderBy: { createdAt: 'desc' },
     });
 
-    // For each unlock, fetch the real contact info from the CV
-    const enrichedUnlocks = await Promise.all(
-      unlocks.map(async (unlock) => {
-        const cv = await prisma.cV.findUnique({
-          where: { id: unlock.candidateProfile.cvId },
-          select: { content: true },
-        });
+    const enrichedUnlocks = unlocks.map((unlock) => {
+      const cvContent = unlock.candidateProfile.cv?.content as any;
+      const personalInfo = cvContent?.personalInfo || {};
 
-        const cvContent = cv?.content as any;
-        const personalInfo = cvContent?.personalInfo || {};
-
-        return {
-          id: unlock.id,
-          creditsCost: unlock.creditsCost,
-          unlockedAt: unlock.createdAt,
-          profile: {
-            id: unlock.candidateProfile.id,
-            anonymousName: unlock.candidateProfile.anonymousName,
-            title: unlock.candidateProfile.title,
-            sector: unlock.candidateProfile.sector,
-            skills: unlock.candidateProfile.skills,
-            experienceYears: unlock.candidateProfile.experienceYears,
-            locationCity: unlock.candidateProfile.locationCity,
-            locationCountry: unlock.candidateProfile.locationCountry,
-            completionScore: unlock.candidateProfile.completionScore,
-            isActive: unlock.candidateProfile.isActive,
-          },
-          contactInfo: {
-            firstName: personalInfo.firstName || '',
-            lastName: personalInfo.lastName || '',
-            email: personalInfo.email || '',
-            phone: personalInfo.phone || '',
-          },
-        };
-      })
-    );
+      return {
+        id: unlock.id,
+        creditsCost: unlock.creditsCost,
+        unlockedAt: unlock.createdAt,
+        profile: {
+          id: unlock.candidateProfile.id,
+          anonymousName: unlock.candidateProfile.anonymousName,
+          title: unlock.candidateProfile.title,
+          sector: unlock.candidateProfile.sector,
+          skills: unlock.candidateProfile.skills,
+          experienceYears: unlock.candidateProfile.experienceYears,
+          locationCity: unlock.candidateProfile.locationCity,
+          locationCountry: unlock.candidateProfile.locationCountry,
+          completionScore: unlock.candidateProfile.completionScore,
+          isActive: unlock.candidateProfile.isActive,
+        },
+        contactInfo: {
+          firstName: personalInfo.firstName || '',
+          lastName: personalInfo.lastName || '',
+          email: personalInfo.email || '',
+          phone: personalInfo.phone || '',
+        },
+      };
+    });
 
     return NextResponse.json({ unlocks: enrichedUnlocks });
   } catch (error) {

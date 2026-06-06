@@ -43,26 +43,23 @@ export async function POST(
     // Execute unlock (atomic transaction inside)
     const result = await unlockProfile(session.user.id, candidateProfileId);
 
-    // Fetch the real contact info from the CV
+    // Fetch the real contact info in a single query
     const profile = await prisma.candidateProfile.findUnique({
       where: { id: candidateProfileId },
       select: {
-        cvId: true,
         anonymousName: true,
         title: true,
+        cv: {
+          select: { content: true },
+        },
       },
     });
 
-    if (!profile) {
+    if (!profile?.cv) {
       return new NextResponse('Profil introuvable', { status: 404 });
     }
 
-    const cv = await prisma.cV.findUnique({
-      where: { id: profile.cvId },
-      select: { content: true },
-    });
-
-    const cvContent = cv?.content as any;
+    const cvContent = profile.cv.content as any;
     const personalInfo = cvContent?.personalInfo || {};
 
     const contactInfo = {

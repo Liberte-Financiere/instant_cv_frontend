@@ -86,6 +86,7 @@ export type CandidateProfileCountAggregateOutputType = {
   locationCountry: number
   completionScore: number
   lastCvUpdate: number
+  anonymousData: number
   isActive: number
   createdAt: number
   updatedAt: number
@@ -153,6 +154,7 @@ export type CandidateProfileCountAggregateInputType = {
   locationCountry?: true
   completionScore?: true
   lastCvUpdate?: true
+  anonymousData?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -259,6 +261,7 @@ export type CandidateProfileGroupByOutputType = {
   locationCountry: string | null
   completionScore: number
   lastCvUpdate: Date
+  anonymousData: runtime.JsonValue | null
   isActive: boolean
   createdAt: Date
   updatedAt: Date
@@ -301,6 +304,7 @@ export type CandidateProfileWhereInput = {
   locationCountry?: Prisma.StringNullableFilter<"CandidateProfile"> | string | null
   completionScore?: Prisma.IntFilter<"CandidateProfile"> | number
   lastCvUpdate?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string
+  anonymousData?: Prisma.JsonNullableFilter<"CandidateProfile">
   isActive?: Prisma.BoolFilter<"CandidateProfile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string
@@ -323,12 +327,14 @@ export type CandidateProfileOrderByWithRelationInput = {
   locationCountry?: Prisma.SortOrderInput | Prisma.SortOrder
   completionScore?: Prisma.SortOrder
   lastCvUpdate?: Prisma.SortOrder
+  anonymousData?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   cv?: Prisma.CVOrderByWithRelationInput
   unlocks?: Prisma.ProfileUnlockOrderByRelationAggregateInput
+  _relevance?: Prisma.CandidateProfileOrderByRelevanceInput
 }
 
 export type CandidateProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -348,6 +354,7 @@ export type CandidateProfileWhereUniqueInput = Prisma.AtLeast<{
   locationCountry?: Prisma.StringNullableFilter<"CandidateProfile"> | string | null
   completionScore?: Prisma.IntFilter<"CandidateProfile"> | number
   lastCvUpdate?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string
+  anonymousData?: Prisma.JsonNullableFilter<"CandidateProfile">
   isActive?: Prisma.BoolFilter<"CandidateProfile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string
@@ -370,6 +377,7 @@ export type CandidateProfileOrderByWithAggregationInput = {
   locationCountry?: Prisma.SortOrderInput | Prisma.SortOrder
   completionScore?: Prisma.SortOrder
   lastCvUpdate?: Prisma.SortOrder
+  anonymousData?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -397,6 +405,7 @@ export type CandidateProfileScalarWhereWithAggregatesInput = {
   locationCountry?: Prisma.StringNullableWithAggregatesFilter<"CandidateProfile"> | string | null
   completionScore?: Prisma.IntWithAggregatesFilter<"CandidateProfile"> | number
   lastCvUpdate?: Prisma.DateTimeWithAggregatesFilter<"CandidateProfile"> | Date | string
+  anonymousData?: Prisma.JsonNullableWithAggregatesFilter<"CandidateProfile">
   isActive?: Prisma.BoolWithAggregatesFilter<"CandidateProfile"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CandidateProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CandidateProfile"> | Date | string
@@ -414,6 +423,7 @@ export type CandidateProfileCreateInput = {
   locationCountry?: string | null
   completionScore?: number
   lastCvUpdate: Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -436,6 +446,7 @@ export type CandidateProfileUncheckedCreateInput = {
   locationCountry?: string | null
   completionScore?: number
   lastCvUpdate: Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -454,6 +465,7 @@ export type CandidateProfileUpdateInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -476,6 +488,7 @@ export type CandidateProfileUncheckedUpdateInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -496,6 +509,7 @@ export type CandidateProfileCreateManyInput = {
   locationCountry?: string | null
   completionScore?: number
   lastCvUpdate: Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -513,6 +527,7 @@ export type CandidateProfileUpdateManyMutationInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -532,6 +547,7 @@ export type CandidateProfileUncheckedUpdateManyInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -552,6 +568,12 @@ export type CandidateProfileNullableScalarRelationFilter = {
   isNot?: Prisma.CandidateProfileWhereInput | null
 }
 
+export type CandidateProfileOrderByRelevanceInput = {
+  fields: Prisma.CandidateProfileOrderByRelevanceFieldEnum | Prisma.CandidateProfileOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
+}
+
 export type CandidateProfileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -566,6 +588,7 @@ export type CandidateProfileCountOrderByAggregateInput = {
   locationCountry?: Prisma.SortOrder
   completionScore?: Prisma.SortOrder
   lastCvUpdate?: Prisma.SortOrder
+  anonymousData?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -731,6 +754,7 @@ export type CandidateProfileCreateWithoutUserInput = {
   locationCountry?: string | null
   completionScore?: number
   lastCvUpdate: Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -751,6 +775,7 @@ export type CandidateProfileUncheckedCreateWithoutUserInput = {
   locationCountry?: string | null
   completionScore?: number
   lastCvUpdate: Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -800,6 +825,7 @@ export type CandidateProfileScalarWhereInput = {
   locationCountry?: Prisma.StringNullableFilter<"CandidateProfile"> | string | null
   completionScore?: Prisma.IntFilter<"CandidateProfile"> | number
   lastCvUpdate?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string
+  anonymousData?: Prisma.JsonNullableFilter<"CandidateProfile">
   isActive?: Prisma.BoolFilter<"CandidateProfile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string
@@ -817,6 +843,7 @@ export type CandidateProfileCreateWithoutCvInput = {
   locationCountry?: string | null
   completionScore?: number
   lastCvUpdate: Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -837,6 +864,7 @@ export type CandidateProfileUncheckedCreateWithoutCvInput = {
   locationCountry?: string | null
   completionScore?: number
   lastCvUpdate: Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -871,6 +899,7 @@ export type CandidateProfileUpdateWithoutCvInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -891,6 +920,7 @@ export type CandidateProfileUncheckedUpdateWithoutCvInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -909,6 +939,7 @@ export type CandidateProfileCreateWithoutUnlocksInput = {
   locationCountry?: string | null
   completionScore?: number
   lastCvUpdate: Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -930,6 +961,7 @@ export type CandidateProfileUncheckedCreateWithoutUnlocksInput = {
   locationCountry?: string | null
   completionScore?: number
   lastCvUpdate: Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -963,6 +995,7 @@ export type CandidateProfileUpdateWithoutUnlocksInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -984,6 +1017,7 @@ export type CandidateProfileUncheckedUpdateWithoutUnlocksInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1002,6 +1036,7 @@ export type CandidateProfileCreateManyUserInput = {
   locationCountry?: string | null
   completionScore?: number
   lastCvUpdate: Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1019,6 +1054,7 @@ export type CandidateProfileUpdateWithoutUserInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1039,6 +1075,7 @@ export type CandidateProfileUncheckedUpdateWithoutUserInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1058,6 +1095,7 @@ export type CandidateProfileUncheckedUpdateManyWithoutUserInput = {
   locationCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completionScore?: Prisma.IntFieldUpdateOperationsInput | number
   lastCvUpdate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anonymousData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1108,6 +1146,7 @@ export type CandidateProfileSelect<ExtArgs extends runtime.Types.Extensions.Inte
   locationCountry?: boolean
   completionScore?: boolean
   lastCvUpdate?: boolean
+  anonymousData?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1131,6 +1170,7 @@ export type CandidateProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   locationCountry?: boolean
   completionScore?: boolean
   lastCvUpdate?: boolean
+  anonymousData?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1152,6 +1192,7 @@ export type CandidateProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   locationCountry?: boolean
   completionScore?: boolean
   lastCvUpdate?: boolean
+  anonymousData?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1173,12 +1214,13 @@ export type CandidateProfileSelectScalar = {
   locationCountry?: boolean
   completionScore?: boolean
   lastCvUpdate?: boolean
+  anonymousData?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CandidateProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "cvId" | "anonymousName" | "title" | "summary" | "sector" | "skills" | "experienceYears" | "locationCity" | "locationCountry" | "completionScore" | "lastCvUpdate" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["candidateProfile"]>
+export type CandidateProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "cvId" | "anonymousName" | "title" | "summary" | "sector" | "skills" | "experienceYears" | "locationCity" | "locationCountry" | "completionScore" | "lastCvUpdate" | "anonymousData" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["candidateProfile"]>
 export type CandidateProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   cv?: boolean | Prisma.CVDefaultArgs<ExtArgs>
@@ -1215,6 +1257,7 @@ export type $CandidateProfilePayload<ExtArgs extends runtime.Types.Extensions.In
     locationCountry: string | null
     completionScore: number
     lastCvUpdate: Date
+    anonymousData: runtime.JsonValue | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -1657,6 +1700,7 @@ export interface CandidateProfileFieldRefs {
   readonly locationCountry: Prisma.FieldRef<"CandidateProfile", 'String'>
   readonly completionScore: Prisma.FieldRef<"CandidateProfile", 'Int'>
   readonly lastCvUpdate: Prisma.FieldRef<"CandidateProfile", 'DateTime'>
+  readonly anonymousData: Prisma.FieldRef<"CandidateProfile", 'Json'>
   readonly isActive: Prisma.FieldRef<"CandidateProfile", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"CandidateProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CandidateProfile", 'DateTime'>

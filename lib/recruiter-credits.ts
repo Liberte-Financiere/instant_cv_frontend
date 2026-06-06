@@ -82,49 +82,49 @@ export async function unlockProfile(
   recruiterId: string,
   candidateProfileId: string
 ): Promise<UnlockResult> {
-  // 1. Idempotent check: already unlocked?
-  const existingUnlock = await prisma.profileUnlock.findUnique({
-    where: {
-      unlockerUserId_candidateProfileId: {
-        unlockerUserId: recruiterId,
-        candidateProfileId,
+  // Transactional unlock (All checks must be inside to prevent race conditions)
+  return await prisma.$transaction(async (tx) => {
+    // 1. Idempotent check: already unlocked?
+    const existingUnlock = await tx.profileUnlock.findUnique({
+      where: {
+        unlockerUserId_candidateProfileId: {
+          unlockerUserId: recruiterId,
+          candidateProfileId,
+        },
       },
-    },
-  });
-
-  if (existingUnlock) {
-    const user = await prisma.user.findUnique({
-      where: { id: recruiterId },
-      select: { freeUnlocksUsed: true, recruiterCredits: true },
     });
 
-    return {
-      status: 'already_unlocked',
-      wasFree: existingUnlock.creditsCost === 0,
-      creditsCost: 0,
-      remainingFreeUnlocks: Math.max(0, FREE_UNLOCK_LIMIT - (user?.freeUnlocksUsed || 0)),
-      remainingCredits: user?.recruiterCredits || 0,
-      candidateProfileId,
-    };
-  }
+    if (existingUnlock) {
+      const user = await tx.user.findUnique({
+        where: { id: recruiterId },
+        select: { freeUnlocksUsed: true, recruiterCredits: true },
+      });
 
-  // 2. Verify the candidate profile exists and is active
-  const candidateProfile = await prisma.candidateProfile.findUnique({
-    where: { id: candidateProfileId },
-    select: { id: true, isActive: true, userId: true },
-  });
+      return {
+        status: 'already_unlocked',
+        wasFree: existingUnlock.creditsCost === 0,
+        creditsCost: 0,
+        remainingFreeUnlocks: Math.max(0, FREE_UNLOCK_LIMIT - (user?.freeUnlocksUsed || 0)),
+        remainingCredits: user?.recruiterCredits || 0,
+        candidateProfileId,
+      };
+    }
 
-  if (!candidateProfile || !candidateProfile.isActive) {
-    throw new Error('Profil candidat introuvable ou inactif.');
-  }
+    // 2. Verify the candidate profile exists and is active
+    const candidateProfile = await tx.candidateProfile.findUnique({
+      where: { id: candidateProfileId },
+      select: { id: true, isActive: true, userId: true },
+    });
 
-  // 3. Prevent recruiters from unlocking their own profile
-  if (candidateProfile.userId === recruiterId) {
-    throw new Error('Vous ne pouvez pas debloquer votre propre profil.');
-  }
+    if (!candidateProfile || !candidateProfile.isActive) {
+      throw new Error('Profil candidat introuvable ou inactif.');
+    }
 
-  // 4. Transactional unlock
-  return await prisma.$transaction(async (tx) => {
+    // 3. Prevent recruiters from unlocking their own profile
+    if (candidateProfile.userId === recruiterId) {
+      throw new Error('Vous ne pouvez pas debloquer votre propre profil.');
+    }
+
     const recruiter = await tx.user.findUnique({
       where: { id: recruiterId },
       select: { freeUnlocksUsed: true, recruiterCredits: true },

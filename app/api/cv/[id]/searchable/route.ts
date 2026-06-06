@@ -43,8 +43,20 @@ export async function POST(
       return new NextResponse('Forbidden', { status: 403 });
     }
 
-    // If enabling, check quality first
+    // If enabling, check quality and maximum limit first
     if (isSearchable) {
+      // Check maximum limit of 2 searchable CVs
+      const activeCount = await prisma.cV.count({
+        where: { userId: session.user.id, isSearchable: true }
+      });
+      
+      if (activeCount >= 2) {
+        return NextResponse.json({
+          success: false,
+          error: 'Vous avez atteint la limite. Vous ne pouvez avoir que 2 CVs visibles par les recruteurs en même temps.',
+        }, { status: 422 });
+      }
+
       const quality = evaluateQuality(cv.content as any, cv.updatedAt);
 
       if (!quality.passes) {

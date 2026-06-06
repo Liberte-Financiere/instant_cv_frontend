@@ -36,7 +36,7 @@ export function SearchFilters({ filters, onFilterChange, onClear }: SearchFilter
           <select
             value={filters.sector}
             onChange={(e) => onFilterChange('sector', e.target.value)}
-            className="h-12 pl-11 pr-8 bg-white/5 border border-white/10 rounded-xl text-base !text-white focus:outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer hover:border-white/20 w-full sm:w-auto min-w-[200px]"
+            className="h-12 pl-11 pr-8 bg-white/5 border border-white/10 rounded-xl text-base !text-white focus:outline-none focus:border-primary transition-colors appearance-none cursor-pointer hover:border-white/20 w-full sm:w-auto min-w-[200px]"
           >
             <option value="" className="bg-slate-800 text-white">Tous les secteurs</option>
             {SECTORS.map((s) => (
@@ -63,7 +63,7 @@ export function SearchFilters({ filters, onFilterChange, onClear }: SearchFilter
                 onFilterChange('maxExp', range.max);
               }
             }}
-            className="h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-base !text-white focus:outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer hover:border-white/20 w-full sm:w-auto"
+            className="h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-base !text-white focus:outline-none focus:border-primary transition-colors appearance-none cursor-pointer hover:border-white/20 w-full sm:w-auto"
           >
             <option value="" className="bg-slate-800 text-white">Expérience</option>
             {EXP_RANGES.map((r) => (
@@ -84,7 +84,7 @@ export function SearchFilters({ filters, onFilterChange, onClear }: SearchFilter
             value={filters.city}
             onChange={(e) => onFilterChange('city', e.target.value)}
             placeholder="Ville..."
-            className="h-12 pl-11 pr-4 w-full sm:w-44 bg-white/5 border border-white/10 rounded-xl text-base !text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500 transition-colors hover:border-white/20"
+            className="h-12 pl-11 pr-4 w-full sm:w-44 bg-white/5 border border-white/10 rounded-xl text-base !text-white placeholder:text-slate-400 focus:outline-none focus:border-primary transition-colors hover:border-white/20"
           />
         </div>
 
@@ -98,7 +98,7 @@ export function SearchFilters({ filters, onFilterChange, onClear }: SearchFilter
             value={filters.skills}
             onChange={(e) => onFilterChange('skills', e.target.value)}
             placeholder="Compétences (React...)"
-            className="h-12 pl-11 pr-4 w-full sm:w-60 bg-white/5 border border-white/10 rounded-xl text-base !text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500 transition-colors hover:border-white/20"
+            className="h-12 pl-11 pr-4 w-full sm:w-60 bg-white/5 border border-white/10 rounded-xl text-base !text-white placeholder:text-slate-400 focus:outline-none focus:border-primary transition-colors hover:border-white/20"
           />
         </div>
 

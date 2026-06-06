@@ -112,6 +112,14 @@ export default function SettingsPage() {
   };
 
   const toggleSearchable = async (cvId: string, currentValue: boolean) => {
+    if (!currentValue) {
+      const activeCount = userCvs.filter(cv => cv.isSearchable).length;
+      if (activeCount >= 2) {
+        toast.error("Vous ne pouvez rendre que 2 CVs maximum visibles pour les recruteurs.");
+        return;
+      }
+    }
+
     setTogglingCvId(cvId);
     try {
       const res = await fetch(`/api/cv/${cvId}/searchable`, {
