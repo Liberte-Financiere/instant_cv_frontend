@@ -1,5 +1,5 @@
 import { allCompetitors } from '@/data/compare';
-import { CompareHubCard } from '@/components/compare/CompareHubCard';
+import { CompareSearch } from '@/components/compare/CompareSearch';
 import { Sparkles, CheckCircle2, ShieldCheck, Wallet, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
@@ -11,7 +11,7 @@ export const metadata = {
 const differences = [
   { icon: CheckCircle2, bg: 'bg-green-50 text-green-600', title: '100% Optimisé ATS', desc: 'Nos modèles et notre IA sont conçus pour passer les filtres des robots de recrutement.' },
   { icon: Wallet, bg: 'bg-blue-50 text-blue-600', title: 'Paiement Mobile Money', desc: 'Payez en toute simplicité avec Orange Money, Wave ou Moov en Francs CFA (XOF).' },
-  { icon: ShieldCheck, bg: 'bg-purple-50 text-purple-600', title: 'Accompagnement de A à Z', desc: 'Nous générons vos lettres de motivation et vous entraînons aux entretiens d\'embauche.' }
+  { icon: ShieldCheck, bg: 'bg-purple-50 text-purple-600', title: 'Accompagnement de A à Z', desc: 'Nous générons vos lettres de motivation et vous entraînent aux entretiens d\'embauche.' }
 ];
 
 export default function CompareHubPage() {
@@ -32,8 +32,8 @@ export default function CompareHubPage() {
             Découvrez notre comparatif honnête face aux solutions de CV internationales et aux plateformes d'emploi traditionnelles en Afrique francophone.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          {allCompetitors.map((c) => <CompareHubCard key={c.slug} competitor={c} />)}
+        <div className="mb-16">
+          <CompareSearch competitors={allCompetitors} />
         </div>
         <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 shadow-sm">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-8 text-center">Pourquoi Jobsira est-il différent ?</h2>
