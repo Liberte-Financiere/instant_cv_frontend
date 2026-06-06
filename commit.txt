@@ -1,34 +1,50 @@
-2026-06-06 — Professionnalisation de la Suite de Tests Unitaires et Rapport de Couverture
+2026-06-06 — Implement Jobsira Help Center (/help)
 
 What changed:
-- Configuration et mise en place d'un Mock Prisma global (`__tests__/setup/prisma-mock.ts`) interceptant dynamiquement les appels de base de données pour permettre l'exécution fluide de toutes les suites de tests unitaires sans base de données physique ni variable d'environnement DATABASE_URL.
-- Création de 7 nouvelles suites de tests unitaires couvrant les modules métiers critiques de l'application (rate-limiting, système de parrainage/invitation, coûts et soldes de crédits recruteurs/candidats, cohérence de la configuration globale applicative, sanitisation robuste des données CV, schémas de validation Zod, et intégration des callbacks de paiement LigdiCash).
-- Ajout de tests de censure des URLs de dépôts de projets candidats (GitHub/GitLab) dans la logique d'anonymisation de CV afin de préserver l'identité des utilisateurs non débloqués.
-- Installation et configuration de `@vitest/coverage-v8` pour générer un rapport de couverture de code complet au format HTML (`/coverage/index.html`).
-- Nettoyage rigoureux : Retrait du bypass de connexion de développement ("Connexion dev" credentials provider) sur la page `/login` et dans `auth.ts` après validation des tests dans le navigateur pour garantir une sécurité hermétique.
+- Created type definitions for help articles in `data/help/types.ts`.
+- Created modular, feature-specific data files for each system feature under `data/help/`:
+  - `cv-builder.ts` (building and choosing templates)
+  - `lettres-motivation.ts` (AI cover letters)
+  - `analyse-ia.ts` (ATS scoring and matching)
+  - `simulation-entretien.ts` (vocal/text mock interview simulator)
+  - `espace-recruteur.ts` (B2B candidate portal and unlocks)
+  - `mon-compte.ts` (credits, referrals, payments)
+  - `signature.ts` (CV signature pads)
+  - `traduction-cv.ts` (AI translation of CVs)
+  - `partage-cv.ts` (online sharing and PDF exports)
+- Created aggregation index at `data/help/index.ts`.
+- Refactored `app/help/page.tsx` into a Server Component to enable 100% crawlability of help categories and article links by Google.
+- Extracted interactive search logic into `components/help/HelpSearch.tsx` and `components/help/HelpSearchResults.tsx` client components.
+- Extracted detail article sidebar into `components/help/HelpSidebar.tsx` to maintain modularity and keep all component files under the 80 lines limit.
+- Updated metadata inside `app/help/layout.tsx` with optimized target recruitment keywords for French-speaking African countries.
+- Validated server-rendered HTML status codes (200 OK) and title metadata on `/help` and `/help/[slug]` endpoints using curl.
 
 Why:
-- Permettre d'identifier instantanément les régressions et de valider les règles métiers de calcul de solde, quotas et sécurité.
-- Offrir une visibilité complète sur le taux de couverture des fichiers sources via un rapport visuel et interactif standardisé.
-- Éliminer toute faille de sécurité ou backdoor de contournement d'authentification en environnement de développement avant passage en production.
+- To provide a search-friendly, SEO-optimized, highly modular Help Center for Jobsira, ensuring all component/page files remain strictly under 80 lines and crawlable by search engines.
 
 Files affected:
-- vitest.config.ts — Configuration de l'environnement de test avec `setupFiles` et configuration du reporter de couverture (HTML, json, text).
-- __tests__/setup/prisma-mock.ts — Mock global de Prisma.
-- __tests__/rate-limit.test.ts — Tests unitaires de la logique de rate limit.
-- __tests__/referral.test.ts — Tests unitaires du calcul de crédits et génération de codes parrainage.
-- __tests__/credits.test.ts — Tests unitaires de validation des coûts d'actions et erreurs crédits.
-- __tests__/config.test.ts — Tests unitaires de conformité de la configuration globale.
-- __tests__/utils.test.ts — Tests unitaires de la sanitisation des données de CV.
-- __tests__/schemas.test.ts — Tests unitaires de validation de structures via Zod.
-- __tests__/ligdicash.test.ts — Tests unitaires de la logique pure de paiement.
-- __tests__/anonymize.test.ts — Ajout des scénarios de censure des URLs de projets Git.
-- auth.ts — Suppression sécurisée du credentials provider de contournement de dev.
-- app/login/page.tsx — Suppression du formulaire de bypass de développement.
+- frontend/instant_cv/data/help/types.ts — HelpArticle type definition
+- frontend/instant_cv/data/help/cv-builder.ts — CV Builder articles data
+- frontend/instant_cv/data/help/lettres-motivation.ts — Cover Letter articles data
+- frontend/instant_cv/data/help/analyse-ia.ts — AI Analysis and ATS matching articles data
+- frontend/instant_cv/data/help/simulation-entretien.ts — AI Interview Simulator articles data
+- frontend/instant_cv/data/help/espace-recruteur.ts — B2B Recruiter Portal articles data
+- frontend/instant_cv/data/help/mon-compte.ts — User Credits and Referral articles data
+- frontend/instant_cv/data/help/signature.ts — CV Signature articles data
+- frontend/instant_cv/data/help/traduction-cv.ts — CV Translation articles data
+- frontend/instant_cv/data/help/partage-cv.ts — CV Sharing and PDF Export articles data
+- frontend/instant_cv/data/help/index.ts — Aggregator and single export boundary
+- frontend/instant_cv/components/help/HelpCard.tsx — Help Center category card component
+- frontend/instant_cv/components/help/HelpSearch.tsx — Interactive search bar client component
+- frontend/instant_cv/components/help/HelpSearchResults.tsx — Filter matches renderer sub-component
+- frontend/instant_cv/components/help/HelpSidebar.tsx — Detail article sidebar sub-component
+- frontend/instant_cv/components/help/ArticlePage.tsx — Detail article layout component
+- frontend/instant_cv/app/help/layout.tsx — Main layout and optimized SEO metadata
+- frontend/instant_cv/app/help/page.tsx — Help Center hub Server Component page
+- frontend/instant_cv/app/help/[slug]/page.tsx — Dynamic article router with static parameters and metadata
 
 Breaking changes:
 - None
 
 Notes for review:
-- Toutes les suites de tests unitaires (233 tests) passent désormais avec succès en moins de 5 secondes.
-- La couverture de code globale est de 68.18% sur les fichiers de logique métier testés.
+- Verify that the static build renders all slugs correctly by checking generateStaticParams on build.
