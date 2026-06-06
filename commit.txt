@@ -1,50 +1,48 @@
-2026-06-06 — Implement Jobsira Help Center (/help)
+2026-06-06 — Implement SaaS Comparison System (/compare)
 
 What changed:
-- Created type definitions for help articles in `data/help/types.ts`.
-- Created modular, feature-specific data files for each system feature under `data/help/`:
-  - `cv-builder.ts` (building and choosing templates)
-  - `lettres-motivation.ts` (AI cover letters)
-  - `analyse-ia.ts` (ATS scoring and matching)
-  - `simulation-entretien.ts` (vocal/text mock interview simulator)
-  - `espace-recruteur.ts` (B2B candidate portal and unlocks)
-  - `mon-compte.ts` (credits, referrals, payments)
-  - `signature.ts` (CV signature pads)
-  - `traduction-cv.ts` (AI translation of CVs)
-  - `partage-cv.ts` (online sharing and PDF exports)
-- Created aggregation index at `data/help/index.ts`.
-- Refactored `app/help/page.tsx` into a Server Component to enable 100% crawlability of help categories and article links by Google.
-- Extracted interactive search logic into `components/help/HelpSearch.tsx` and `components/help/HelpSearchResults.tsx` client components.
-- Extracted detail article sidebar into `components/help/HelpSidebar.tsx` to maintain modularity and keep all component files under the 80 lines limit.
-- Updated metadata inside `app/help/layout.tsx` with optimized target recruitment keywords for French-speaking African countries.
-- Validated server-rendered HTML status codes (200 OK) and title metadata on `/help` and `/help/[slug]` endpoints using curl.
+- Created data types for comparisons in `data/compare/types.ts`.
+- Created individual data files for 13 global and West-African SaaS/job competitors under `data/compare/` (all under 80 lines):
+  - `canva.ts`, `linkedin.ts`, `resumeio.ts`, `cvdesignr.ts`, `zety.ts`, `novoresume.ts`, `indeed.ts`, `emploiburkina.ts`, `jobgurus.ts`, `africarecruit.ts`, `jobberman.ts`, `rekrute.ts`, `afrikjob.ts`.
+- Created indexing file in `data/compare/index.ts` to export all competitor profiles.
+- Implemented UI comparison components in `components/compare/`:
+  - `CompareHubCard.tsx` (displays brief summary card)
+  - `CompareTable.tsx` (responsive features comparison grid)
+  - `CompareVerdictBadge.tsx` (advantage tags colored via Tailwind design tokens)
+- Created static routes:
+  - `app/compare/page.tsx` (Hub page listing all competitors and differences)
+  - `app/compare/[slug]/page.tsx` (Dynamic detailed article per competitor leveraging static params)
+- Configured dynamic metadata for all pages to include targeted target keyword patterns ("Jobsira vs [Competitor] — Comparaison 2026").
+- Verified type check passes with 0 errors via `npx tsc --noEmit`.
+- Validated pages return 200 OK locally.
 
 Why:
-- To provide a search-friendly, SEO-optimized, highly modular Help Center for Jobsira, ensuring all component/page files remain strictly under 80 lines and crawlable by search engines.
+- To capture search queries for alternatives and comparisons (e.g., "Jobsira vs Canva", "Alternative to LinkedIn CV in Africa") with static, high-performance pages, adhering strictly to design token styling and file size constraints.
 
 Files affected:
-- frontend/instant_cv/data/help/types.ts — HelpArticle type definition
-- frontend/instant_cv/data/help/cv-builder.ts — CV Builder articles data
-- frontend/instant_cv/data/help/lettres-motivation.ts — Cover Letter articles data
-- frontend/instant_cv/data/help/analyse-ia.ts — AI Analysis and ATS matching articles data
-- frontend/instant_cv/data/help/simulation-entretien.ts — AI Interview Simulator articles data
-- frontend/instant_cv/data/help/espace-recruteur.ts — B2B Recruiter Portal articles data
-- frontend/instant_cv/data/help/mon-compte.ts — User Credits and Referral articles data
-- frontend/instant_cv/data/help/signature.ts — CV Signature articles data
-- frontend/instant_cv/data/help/traduction-cv.ts — CV Translation articles data
-- frontend/instant_cv/data/help/partage-cv.ts — CV Sharing and PDF Export articles data
-- frontend/instant_cv/data/help/index.ts — Aggregator and single export boundary
-- frontend/instant_cv/components/help/HelpCard.tsx — Help Center category card component
-- frontend/instant_cv/components/help/HelpSearch.tsx — Interactive search bar client component
-- frontend/instant_cv/components/help/HelpSearchResults.tsx — Filter matches renderer sub-component
-- frontend/instant_cv/components/help/HelpSidebar.tsx — Detail article sidebar sub-component
-- frontend/instant_cv/components/help/ArticlePage.tsx — Detail article layout component
-- frontend/instant_cv/app/help/layout.tsx — Main layout and optimized SEO metadata
-- frontend/instant_cv/app/help/page.tsx — Help Center hub Server Component page
-- frontend/instant_cv/app/help/[slug]/page.tsx — Dynamic article router with static parameters and metadata
+- frontend/instant_cv/data/compare/types.ts — Type schemas
+- frontend/instant_cv/data/compare/canva.ts — Canva comparison content
+- frontend/instant_cv/data/compare/linkedin.ts — LinkedIn comparison content
+- frontend/instant_cv/data/compare/resumeio.ts — Resume.io comparison content
+- frontend/instant_cv/data/compare/cvdesignr.ts — CVDesignr comparison content
+- frontend/instant_cv/data/compare/zety.ts — Zety comparison content
+- frontend/instant_cv/data/compare/novoresume.ts — Novorésumé comparison content
+- frontend/instant_cv/data/compare/indeed.ts — Indeed comparison content
+- frontend/instant_cv/data/compare/emploiburkina.ts — Emploi Burkina comparison content
+- frontend/instant_cv/data/compare/jobgurus.ts — JobGurus Afrique comparison content
+- frontend/instant_cv/data/compare/africarecruit.ts — Africarecruit comparison content
+- frontend/instant_cv/data/compare/jobberman.ts — Jobberman comparison content
+- frontend/instant_cv/data/compare/rekrute.ts — ReKrute comparison content
+- frontend/instant_cv/data/compare/afrikjob.ts — Afrikjob comparison content
+- frontend/instant_cv/data/compare/index.ts — Combined export file
+- frontend/instant_cv/components/compare/CompareVerdictBadge.tsx — Winner outcome badge
+- frontend/instant_cv/components/compare/CompareTable.tsx — Comparison grid component
+- frontend/instant_cv/components/compare/CompareHubCard.tsx — Competitor list card
+- frontend/instant_cv/app/compare/page.tsx — Compare hub Server Component
+- frontend/instant_cv/app/compare/[slug]/page.tsx — Dynamic competitor detail layout
 
 Breaking changes:
 - None
 
 Notes for review:
-- Verify that the static build renders all slugs correctly by checking generateStaticParams on build.
+- Check that build statically compiles all 13 comparison slugs accurately.
