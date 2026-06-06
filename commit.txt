@@ -1,20 +1,17 @@
-2026-06-06 — Enhance Comparison UI with Search Filters and Two-Column Sticky Layout
+2026-06-06 — Upgrade Comparison Pages to Premium Glassmorphic Design
 
 What changed:
-- Created client-side interactive search & category filter component `components/compare/CompareSearch.tsx` to filter the 13 competitors.
-- Refactored `app/compare/page.tsx` (hub) to integrate the `CompareSearch` component, preserving server-side rendering for SEO bots.
-- Refactored `app/compare/[slug]/page.tsx` (detailed comparison page) to implement a two-column desktop editorial layout.
-- Added a sticky sidebar on the right column containing core benefits checklist of Jobsira and a high-converting call-to-action button, ensuring constant visibility on scroll.
-- Validated build succeeds with 0 TypeScript compilation errors.
-- Verified dynamic filtering and sticky behavior on both hub and article pages in browser test sessions.
+- Added relative container mesh glows using blur-3xl backdrops in the comparison hub and detailed comparison routes.
+- Applied glassmorphic styling (bg-white/80 backdrop-blur-md) on cards, table container, target audiences, and the conversion sidebar.
+- Added top-accent glowing color gradient on compare cards that triggers upon hover.
+- Refactored the Comparison Table header typography to uppercase tracking text and added table row hover transitions.
+- Verified TypeScript compilation successfully with 0 errors.
 
 Why:
-- To provide a premium user experience with instant client-side interaction, prevent blank whitespace on large screens, and keep conversion goals highly visible.
+- To align page visual aesthetics with premium UX guidelines, creating a state-of-the-art impression on first launch while retaining type safety and performance constraints.
 
 Files affected:
-- frontend/instant_cv/components/compare/CompareSearch.tsx — Client search and filter pills
-- frontend/instant_cv/app/compare/page.tsx — Integrated search on hub page
-- frontend/instant_cv/app/compare/[slug]/page.tsx — Modernized editorial page structure with sticky sidebar
-
-Breaking changes:
-- None
+- frontend/instant_cv/components/compare/CompareHubCard.tsx — Glowing hover accents
+- frontend/instant_cv/components/compare/CompareTable.tsx — Row hover styles and text tracking
+- frontend/instant_cv/app/compare/page.tsx — Organic mesh glow elements
+- frontend/instant_cv/app/compare/[slug]/page.tsx — Integrated glassmorphic panels

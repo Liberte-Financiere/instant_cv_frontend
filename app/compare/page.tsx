@@ -16,8 +16,12 @@ const differences = [
 
 export default function CompareHubPage() {
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="relative min-h-screen bg-bg-light overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
+      {/* Background Mesh Glows */}
+      <div className="absolute top-[-5%] left-[-10%] w-[50%] h-[40%] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+      <div className="absolute top-[20%] right-[-10%] w-[45%] h-[45%] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-5xl mx-auto">
         <Link href="/help" className="inline-flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" /> Retour au centre d'aide
         </Link>
@@ -35,7 +39,7 @@ export default function CompareHubPage() {
         <div className="mb-16">
           <CompareSearch competitors={allCompetitors} />
         </div>
-        <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 shadow-sm">
+        <div className="bg-white/80 backdrop-blur-md border border-slate-200 rounded-3xl p-8 sm:p-12 shadow-sm">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-8 text-center">Pourquoi Jobsira est-il différent ?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {differences.map((diff, i) => (
