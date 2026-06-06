@@ -1,48 +1,20 @@
-2026-06-06 — Implement SaaS Comparison System (/compare)
+2026-06-06 — Enhance Comparison UI with Search Filters and Two-Column Sticky Layout
 
 What changed:
-- Created data types for comparisons in `data/compare/types.ts`.
-- Created individual data files for 13 global and West-African SaaS/job competitors under `data/compare/` (all under 80 lines):
-  - `canva.ts`, `linkedin.ts`, `resumeio.ts`, `cvdesignr.ts`, `zety.ts`, `novoresume.ts`, `indeed.ts`, `emploiburkina.ts`, `jobgurus.ts`, `africarecruit.ts`, `jobberman.ts`, `rekrute.ts`, `afrikjob.ts`.
-- Created indexing file in `data/compare/index.ts` to export all competitor profiles.
-- Implemented UI comparison components in `components/compare/`:
-  - `CompareHubCard.tsx` (displays brief summary card)
-  - `CompareTable.tsx` (responsive features comparison grid)
-  - `CompareVerdictBadge.tsx` (advantage tags colored via Tailwind design tokens)
-- Created static routes:
-  - `app/compare/page.tsx` (Hub page listing all competitors and differences)
-  - `app/compare/[slug]/page.tsx` (Dynamic detailed article per competitor leveraging static params)
-- Configured dynamic metadata for all pages to include targeted target keyword patterns ("Jobsira vs [Competitor] — Comparaison 2026").
-- Verified type check passes with 0 errors via `npx tsc --noEmit`.
-- Validated pages return 200 OK locally.
+- Created client-side interactive search & category filter component `components/compare/CompareSearch.tsx` to filter the 13 competitors.
+- Refactored `app/compare/page.tsx` (hub) to integrate the `CompareSearch` component, preserving server-side rendering for SEO bots.
+- Refactored `app/compare/[slug]/page.tsx` (detailed comparison page) to implement a two-column desktop editorial layout.
+- Added a sticky sidebar on the right column containing core benefits checklist of Jobsira and a high-converting call-to-action button, ensuring constant visibility on scroll.
+- Validated build succeeds with 0 TypeScript compilation errors.
+- Verified dynamic filtering and sticky behavior on both hub and article pages in browser test sessions.
 
 Why:
-- To capture search queries for alternatives and comparisons (e.g., "Jobsira vs Canva", "Alternative to LinkedIn CV in Africa") with static, high-performance pages, adhering strictly to design token styling and file size constraints.
+- To provide a premium user experience with instant client-side interaction, prevent blank whitespace on large screens, and keep conversion goals highly visible.
 
 Files affected:
-- frontend/instant_cv/data/compare/types.ts — Type schemas
-- frontend/instant_cv/data/compare/canva.ts — Canva comparison content
-- frontend/instant_cv/data/compare/linkedin.ts — LinkedIn comparison content
-- frontend/instant_cv/data/compare/resumeio.ts — Resume.io comparison content
-- frontend/instant_cv/data/compare/cvdesignr.ts — CVDesignr comparison content
-- frontend/instant_cv/data/compare/zety.ts — Zety comparison content
-- frontend/instant_cv/data/compare/novoresume.ts — Novorésumé comparison content
-- frontend/instant_cv/data/compare/indeed.ts — Indeed comparison content
-- frontend/instant_cv/data/compare/emploiburkina.ts — Emploi Burkina comparison content
-- frontend/instant_cv/data/compare/jobgurus.ts — JobGurus Afrique comparison content
-- frontend/instant_cv/data/compare/africarecruit.ts — Africarecruit comparison content
-- frontend/instant_cv/data/compare/jobberman.ts — Jobberman comparison content
-- frontend/instant_cv/data/compare/rekrute.ts — ReKrute comparison content
-- frontend/instant_cv/data/compare/afrikjob.ts — Afrikjob comparison content
-- frontend/instant_cv/data/compare/index.ts — Combined export file
-- frontend/instant_cv/components/compare/CompareVerdictBadge.tsx — Winner outcome badge
-- frontend/instant_cv/components/compare/CompareTable.tsx — Comparison grid component
-- frontend/instant_cv/components/compare/CompareHubCard.tsx — Competitor list card
-- frontend/instant_cv/app/compare/page.tsx — Compare hub Server Component
-- frontend/instant_cv/app/compare/[slug]/page.tsx — Dynamic competitor detail layout
+- frontend/instant_cv/components/compare/CompareSearch.tsx — Client search and filter pills
+- frontend/instant_cv/app/compare/page.tsx — Integrated search on hub page
+- frontend/instant_cv/app/compare/[slug]/page.tsx — Modernized editorial page structure with sticky sidebar
 
 Breaking changes:
 - None
-
-Notes for review:
-- Check that build statically compiles all 13 comparison slugs accurately.

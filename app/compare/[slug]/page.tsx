@@ -2,15 +2,13 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { allCompetitors } from '@/data/compare';
 import { CompareTable } from '@/components/compare/CompareTable';
-import { ArrowLeft, CheckCircle, PlusCircle, UserCircle, Star } from 'lucide-react';
+import { ArrowLeft, CheckCircle, PlusCircle, UserCircle, Star, Sparkles, Send } from 'lucide-react';
 
 export function generateStaticParams() {
   return allCompetitors.map((c) => ({ slug: c.slug }));
 }
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
+type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
@@ -29,39 +27,53 @@ export default async function CompetitorComparePage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <Link href="/compare" className="inline-flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" /> Retour aux comparatifs
         </Link>
-        <article className="space-y-8">
-          <header className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
-            <span className="px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-bold uppercase rounded-lg">{comp.category}</span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-4">Jobsira vs {comp.name} : lequel choisir pour votre carrière en Afrique ?</h1>
-            <p className="mt-2 text-slate-500 italic text-sm">&ldquo;{comp.tagline}&rdquo;</p>
-            <div className="mt-6 p-4 bg-primary/5 rounded-2xl border border-primary/10 text-sm text-slate-700 leading-relaxed"><strong className="text-primary font-bold">Notre verdict : </strong>{comp.verdict}</div>
-          </header>
-          <section className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
-            <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2"><UserCircle className="w-5 h-5 text-slate-500" /> Pour qui est-ce fait ?</h2>
-            <p className="text-slate-700 text-sm leading-relaxed">{comp.targetAudience}</p>
-          </section>
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2"><Star className="w-5 h-5 text-primary" /> Tableau comparatif des fonctionnalités</h2>
-            <CompareTable features={comp.features} competitorName={comp.name} />
-          </section>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <section className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
-              <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2"><PlusCircle className="w-5 h-5 text-slate-400" /> Ce que {comp.name} fait bien</h2>
-              <ul className="space-y-2">{comp.competitorAdvantages.map((adv, idx) => (<li key={idx} className="text-sm text-slate-600 flex items-start gap-2"><span className="text-slate-400 mt-1">•</span>{adv}</li>))}</ul>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          <article className="lg:col-span-2 space-y-8">
+            <header className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+              <span className="px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-bold uppercase rounded-lg">{comp.category}</span>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-4 leading-tight">Jobsira vs {comp.name} : lequel choisir pour votre carrière en Afrique ?</h1>
+              <p className="mt-2 text-slate-500 italic text-sm">&ldquo;{comp.tagline}&rdquo;</p>
+              <div className="mt-6 p-4 bg-primary/5 rounded-2xl border border-primary/10 text-sm text-slate-700 leading-relaxed"><strong className="text-primary font-bold">Notre verdict : </strong>{comp.verdict}</div>
+            </header>
+            <section className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+              <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2"><UserCircle className="w-5 h-5 text-slate-400" /> Pour qui est-ce fait ?</h2>
+              <p className="text-slate-600 text-sm leading-relaxed">{comp.targetAudience}</p>
             </section>
-            <section className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
-              <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5 text-green-500" /> Ce que Jobsira fait mieux</h2>
-              <ul className="space-y-2">{comp.jobsiraAdvantages.map((adv, idx) => (<li key={idx} className="text-sm text-slate-700 flex items-start gap-2"><span className="text-green-500 mt-1">✓</span>{adv}</li>))}</ul>
+            <section className="space-y-4">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2"><Star className="w-5 h-5 text-primary" /> Tableau comparatif des fonctionnalités</h2>
+              <CompareTable features={comp.features} competitorName={comp.name} />
             </section>
-          </div>
-          <footer className="text-center py-8">
-            <Link href="/" className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-extrabold rounded-2xl hover:bg-primary-dark shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all text-base uppercase tracking-wider">{comp.cta}</Link>
-          </footer>
-        </article>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <section className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+                <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2"><PlusCircle className="w-5 h-5 text-slate-400" /> Ce que {comp.name} fait bien</h2>
+                <ul className="space-y-2">{comp.competitorAdvantages.map((adv, i) => (<li key={i} className="text-sm text-slate-600 flex items-start gap-2"><span className="text-slate-400 mt-1">•</span>{adv}</li>))}</ul>
+              </section>
+              <section className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+                <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5 text-green-500" /> Ce que Jobsira fait mieux</h2>
+                <ul className="space-y-2">{comp.jobsiraAdvantages.map((adv, i) => (<li key={i} className="text-sm text-slate-600 flex items-start gap-2"><span className="text-green-500 mt-1">✓</span>{adv}</li>))}</ul>
+              </section>
+            </div>
+          </article>
+          <aside className="lg:sticky lg:top-8 space-y-6">
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider mb-4"><Sparkles className="w-4 h-4" /> Pourquoi choisir Jobsira ?</div>
+                <h3 className="font-extrabold text-lg text-slate-900 mb-3">Prêt à propulser votre carrière ?</h3>
+                <p className="text-xs text-slate-500 leading-relaxed mb-6">Bénéficiez de la puissance de l'intelligence artificielle couplée à des outils adaptés à la réalité du marché de l'emploi en Afrique francophone.</p>
+                <ul className="space-y-3 mb-8">
+                  {['CV certifié ATS-friendly', 'Lettre de motivation sur mesure', 'Simulateur vocal d\'entretiens', 'Paiement local sans carte Visa'].map((text, i) => (
+                    <li key={i} className="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" /> {text}</li>
+                  ))}
+                </ul>
+              </div>
+              <Link href="/" className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary hover:bg-primary-dark text-white font-extrabold text-sm uppercase tracking-wider rounded-2xl shadow-lg shadow-primary/15 hover:shadow-primary/25 transition-all"><Send className="w-4 h-4" /> {comp.cta}</Link>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );
