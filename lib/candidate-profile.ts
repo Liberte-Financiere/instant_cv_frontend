@@ -18,6 +18,7 @@ import {
   anonymizeName,
   calculateExperienceYears,
   calculateCompletionScore,
+  anonymizeProfile,
 } from '@/lib/anonymize';
 
 // -- Constants --------------------------------------------------------------
@@ -170,6 +171,9 @@ export async function syncCandidateProfile(cvId: string) {
   const skills = extractSkillNames(cvContent.skills);
   const experienceYears = calculateExperienceYears(cvContent.experiences);
 
+  // Pre-calculate full anonymized profile for fast retrieval
+  const anonymousData = anonymizeProfile(cvContent);
+
   const profileData = {
     userId: cv.userId,
     anonymousName: anonymizeName(personalInfo.firstName || '', personalInfo.lastName || ''),
@@ -183,6 +187,7 @@ export async function syncCandidateProfile(cvId: string) {
     completionScore: quality.completionScore,
     lastCvUpdate: cv.updatedAt,
     isActive: true,
+    anonymousData: anonymousData as any,
   };
 
   // Upsert: create if new, update if exists

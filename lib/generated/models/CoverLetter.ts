@@ -197,6 +197,7 @@ export type CoverLetterOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.CoverLetterOrderByRelevanceInput
 }
 
 export type CoverLetterWhereUniqueInput = Prisma.AtLeast<{
@@ -306,6 +307,12 @@ export type CoverLetterListRelationFilter = {
 
 export type CoverLetterOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type CoverLetterOrderByRelevanceInput = {
+  fields: Prisma.CoverLetterOrderByRelevanceFieldEnum | Prisma.CoverLetterOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type CoverLetterCountOrderByAggregateInput = {

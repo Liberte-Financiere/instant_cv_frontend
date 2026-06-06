@@ -228,6 +228,7 @@ export type ProfileUnlockOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   unlockerUser?: Prisma.UserOrderByWithRelationInput
   candidateProfile?: Prisma.CandidateProfileOrderByWithRelationInput
+  _relevance?: Prisma.ProfileUnlockOrderByRelevanceInput
 }
 
 export type ProfileUnlockWhereUniqueInput = Prisma.AtLeast<{
@@ -330,6 +331,12 @@ export type ProfileUnlockListRelationFilter = {
 
 export type ProfileUnlockOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ProfileUnlockOrderByRelevanceInput = {
+  fields: Prisma.ProfileUnlockOrderByRelevanceFieldEnum | Prisma.ProfileUnlockOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ProfileUnlockUnlockerUserIdCandidateProfileIdCompoundUniqueInput = {

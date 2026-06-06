@@ -231,6 +231,7 @@ export type AdminTaskOrderByWithRelationInput = {
   tags?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  _relevance?: Prisma.AdminTaskOrderByRelevanceInput
 }
 
 export type AdminTaskWhereUniqueInput = Prisma.AtLeast<{
@@ -378,6 +379,12 @@ export type StringNullableListFilter<$PrismaModel = never> = {
   hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   isEmpty?: boolean
+}
+
+export type AdminTaskOrderByRelevanceInput = {
+  fields: Prisma.AdminTaskOrderByRelevanceFieldEnum | Prisma.AdminTaskOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type AdminTaskCountOrderByAggregateInput = {

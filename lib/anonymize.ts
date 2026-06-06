@@ -25,6 +25,7 @@ export interface AnonymizedProfile {
   education: AnonymizedEducation[];
   languages: { name: string; level?: string }[];
   certifications: { name: string; organization: string; date: string }[];
+  projects: AnonymizedProject[];
 }
 
 interface AnonymizedExperience {
@@ -42,6 +43,14 @@ interface AnonymizedEducation {
   field: string;
   startDate: string;
   endDate: string;
+}
+
+interface AnonymizedProject {
+  name: string;
+  description: string;
+  url?: string;
+  github?: string;
+  technologies?: string;
 }
 
 // -- Core Functions ---------------------------------------------------------
@@ -143,6 +152,7 @@ export function anonymizeProfile(cvContent: any): AnonymizedProfile {
       education: [],
       languages: [],
       certifications: [],
+      projects: [],
     };
   }
 
@@ -185,6 +195,21 @@ export function anonymizeProfile(cvContent: any): AnonymizedProfile {
       }))
     : [];
 
+  const projects = Array.isArray(cvContent.projects)
+    ? cvContent.projects.map((proj: any) => {
+        // Masquer les liens Github/Gitlab car ils contiennent souvent le nom complet,
+        // mais conserver les autres URL de portfolio/site vitrine.
+        const isGitLink = (url?: string) => url && /github|gitlab/i.test(url);
+        return {
+          name: proj.name || '',
+          description: stripName(sanitizeText(proj.description || ''), candidateName),
+          url: isGitLink(proj.url) ? undefined : (proj.url || undefined),
+          github: undefined, // Toujours masquer le champ github dédié
+          technologies: proj.technologies || undefined,
+        };
+      })
+    : [];
+
   const skills = extractSkillNames(cvContent.skills);
   const experienceYears = calculateExperienceYears(cvContent.experiences);
   const completionScore = calculateCompletionScore(cvContent);
@@ -207,6 +232,7 @@ export function anonymizeProfile(cvContent: any): AnonymizedProfile {
     education,
     languages,
     certifications,
+    projects,
   };
 }
 

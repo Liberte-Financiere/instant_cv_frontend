@@ -260,6 +260,7 @@ export type CVOrderByWithRelationInput = {
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   candidateProfile?: Prisma.CandidateProfileOrderByWithRelationInput
+  _relevance?: Prisma.CVOrderByRelevanceInput
 }
 
 export type CVWhereUniqueInput = Prisma.AtLeast<{
@@ -406,6 +407,12 @@ export type CVListRelationFilter = {
 
 export type CVOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type CVOrderByRelevanceInput = {
+  fields: Prisma.CVOrderByRelevanceFieldEnum | Prisma.CVOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type CVCountOrderByAggregateInput = {

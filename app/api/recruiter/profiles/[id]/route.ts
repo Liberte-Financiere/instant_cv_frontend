@@ -33,7 +33,10 @@ export async function GET(
         completionScore: true,
         lastCvUpdate: true,
         isActive: true,
-        cvId: true,
+        anonymousData: true,
+        cv: {
+          select: { content: true },
+        },
       },
     });
 
@@ -41,17 +44,14 @@ export async function GET(
       return new NextResponse('Profil introuvable', { status: 404 });
     }
 
-    // Fetch the CV content for the full anonymized view
-    const cv = await prisma.cV.findUnique({
-      where: { id: profile.cvId },
-      select: { content: true },
-    });
-
-    if (!cv) {
+    if (!profile.cv) {
       return new NextResponse('Profil introuvable', { status: 404 });
     }
 
-    const anonymized = anonymizeProfile(cv.content);
+    // Utiliser la version pré-calculée en priorité, sinon anonymiser à la volée (pour les anciens profils)
+    const anonymized = profile.anonymousData 
+      ? (profile.anonymousData as any) 
+      : anonymizeProfile(profile.cv.content);
 
     return NextResponse.json({
       id: profile.id,

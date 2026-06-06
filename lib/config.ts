@@ -132,10 +132,14 @@ export const APP_CONFIG = {
       female: ['Gacrux'],
       default: 'Fenrir',
     } as const,
+    talentAssistant: {
+      maxMessages: 20,
+      rateLimit: {
+        limit: 20, // max req per window
+        windowMs: 60_000, // 1 min
+      },
+    },
   },
-
-
-
 
   /** Zustand persist keys */
   storageKeys: {

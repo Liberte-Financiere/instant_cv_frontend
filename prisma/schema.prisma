@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated"
+  provider        = "prisma-client"
+  output          = "../lib/generated"
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -247,6 +248,7 @@ model CandidateProfile {
   locationCountry String?
   completionScore Int      @default(0)
   lastCvUpdate    DateTime
+  anonymousData   Json?    @db.JsonB
 
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
@@ -259,6 +261,9 @@ model CandidateProfile {
   @@index([completionScore])
   @@index([userId])
   @@index([isActive])
+  @@index([locationCity])
+  @@index([lastCvUpdate])
+  @@index([isActive, completionScore, lastCvUpdate])
 }
 
 model ProfileUnlock {

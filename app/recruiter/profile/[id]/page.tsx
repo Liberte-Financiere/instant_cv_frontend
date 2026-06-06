@@ -52,6 +52,13 @@ interface ProfileDetail {
   }[];
   languages: { name: string; level?: string }[];
   certifications: { name: string; organization: string; date: string }[];
+  projects: {
+    name: string;
+    description: string;
+    url?: string;
+    github?: string;
+    technologies?: string;
+  }[];
 }
 
 interface ContactInfo {
@@ -130,7 +137,7 @@ export default function CandidateProfilePage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-32">
-        <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
   }
@@ -154,8 +161,8 @@ export default function CandidateProfilePage() {
       <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-500/20 border border-blue-500/20 flex items-center justify-center shrink-0">
-              <span className="text-xl font-bold text-blue-300">{profile.anonymousName}</span>
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/20 border border-primary/20 flex items-center justify-center shrink-0">
+              <span className="text-xl font-bold text-primary">{profile.anonymousName}</span>
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">{profile.title || 'Candidat'}</h1>
@@ -185,8 +192,8 @@ export default function CandidateProfilePage() {
           {/* Unlock CTA */}
           <div className="shrink-0">
             {contactInfo ? (
-              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 space-y-2 min-w-[240px]">
-                <div className="flex items-center gap-2 text-emerald-400 text-sm font-semibold mb-3">
+              <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 space-y-2 min-w-[240px]">
+                <div className="flex items-center gap-2 text-primary text-sm font-semibold mb-3">
                   <CheckCircle2 className="w-4 h-4" />
                   Coordonnees debloquees
                 </div>
@@ -197,13 +204,13 @@ export default function CandidateProfilePage() {
                   </div>
                 )}
                 {contactInfo.email && (
-                  <a href={`mailto:${contactInfo.email}`} className="flex items-center gap-2 text-sm text-blue-300 hover:text-blue-200 transition-colors">
+                  <a href={`mailto:${contactInfo.email}`} className="flex items-center gap-2 text-sm text-primary hover:text-primary-dark transition-colors">
                     <Mail className="w-4 h-4 text-slate-500" />
                     {contactInfo.email}
                   </a>
                 )}
                 {contactInfo.phone && (
-                  <a href={`tel:${contactInfo.phone}`} className="flex items-center gap-2 text-sm text-blue-300 hover:text-blue-200 transition-colors">
+                  <a href={`tel:${contactInfo.phone}`} className="flex items-center gap-2 text-sm text-primary hover:text-primary-dark transition-colors">
                     <Phone className="w-4 h-4 text-slate-500" />
                     {contactInfo.phone}
                   </a>
@@ -214,7 +221,7 @@ export default function CandidateProfilePage() {
                 <Button
                   onClick={handleUnlock}
                   disabled={isUnlocking}
-                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/25"
+                  className="w-full bg-primary hover:bg-primary-dark shadow-lg shadow-primary/25"
                 >
                   {isUnlocking ? (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -237,7 +244,7 @@ export default function CandidateProfilePage() {
               </div>
             )}
             {unlockMessage && !unlockError && (
-              <p className="mt-2 text-xs text-emerald-400 text-center">{unlockMessage}</p>
+              <p className="mt-2 text-xs text-primary text-center">{unlockMessage}</p>
             )}
           </div>
         </div>
@@ -257,9 +264,54 @@ export default function CandidateProfilePage() {
           <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Competences</h2>
           <div className="flex flex-wrap gap-2">
             {profile.skills.map((skill) => (
-              <span key={skill} className="px-3 py-1.5 bg-blue-500/10 text-blue-300 text-sm font-medium rounded-lg border border-blue-500/20">
+              <span key={skill} className="px-3 py-1.5 bg-primary/10 text-primary text-sm font-medium rounded-lg border border-primary/20">
                 {skill}
               </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Projects */}
+      {profile.projects && profile.projects.length > 0 && (
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16.5 9.4 7.55 4.24a1.78 1.78 0 0 0-2.5 1.55v12.42a1.78 1.78 0 0 0 2.5 1.55l8.95-5.17a1.78 1.78 0 0 0 0-3.1Z"/></svg>
+            Projets Réalisés
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {profile.projects.map((proj, i) => (
+              <div key={i} className="bg-white/5 border border-white/5 rounded-xl p-5 hover:border-primary/20 transition-all duration-300">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="text-white font-bold text-sm">{proj.name}</h3>
+                    {proj.technologies && (
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {proj.technologies.split(/, |,/).map((tech, idx) => (
+                          <span key={idx} className="text-[9px] font-bold text-primary bg-primary/5 border border-primary/10 px-2 py-0.5 rounded">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex gap-2 shrink-0">
+                    {proj.github && (
+                      <a href={proj.github} target="_blank" rel="noopener noreferrer" className="text-[10px] text-slate-400 hover:text-white transition-colors bg-white/5 border border-white/5 px-2 py-1 rounded">
+                        GitHub
+                      </a>
+                    )}
+                    {proj.url && (
+                      <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-primary hover:text-primary-dark transition-colors bg-primary/5 border border-primary/10 px-2 py-1 rounded">
+                        Démo
+                      </a>
+                    )}
+                  </div>
+                </div>
+                {proj.description && (
+                  <p className="text-slate-400 text-xs mt-3 leading-relaxed whitespace-pre-line">{proj.description}</p>
+                )}
+              </div>
             ))}
           </div>
         </div>
@@ -275,7 +327,7 @@ export default function CandidateProfilePage() {
             </h2>
             <div className="space-y-4">
               {profile.experiences.map((exp, i) => (
-                <div key={i} className="border-l-2 border-blue-500/30 pl-4">
+                <div key={i} className="border-l-2 border-primary/30 pl-4">
                   <p className="text-white font-semibold text-sm">{exp.position}</p>
                   <p className="text-slate-400 text-xs">{exp.company}</p>
                   <p className="text-slate-500 text-xs mt-0.5">
@@ -299,7 +351,7 @@ export default function CandidateProfilePage() {
             </h2>
             <div className="space-y-4">
               {profile.education.map((edu, i) => (
-                <div key={i} className="border-l-2 border-blue-500/30 pl-4">
+                <div key={i} className="border-l-2 border-primary/30 pl-4">
                   <p className="text-white font-semibold text-sm">{edu.degree}</p>
                   <p className="text-slate-400 text-xs">{edu.institution}</p>
                   {edu.field && <p className="text-slate-500 text-xs">{edu.field}</p>}

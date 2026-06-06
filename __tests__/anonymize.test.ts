@@ -172,7 +172,7 @@ describe('anonymizeProfile', () => {
   });
 
   it('strips PII from personalInfo (no email, phone, address, full name)', () => {
-    const result = anonymizeProfile(FULL_CV_CONTENT);
+    const result = anonymizeProfile(FULL_CV_CONTENT) as any;
     expect(result.email).toBeUndefined();
     expect(result.phone).toBeUndefined();
     expect(result.address).toBeUndefined();
@@ -259,6 +259,52 @@ describe('anonymizeProfile', () => {
     };
     const result = anonymizeProfile(xssCV as any);
     expect(result.experiences[0].description).not.toContain('555');
+  });
+  // --- Github/Gitlab URL censorship ---
+  it('masks github URLs in project url field', () => {
+    const cvWithGithub = {
+      ...FULL_CV_CONTENT,
+      projects: [
+        { name: 'Mon Projet', description: 'Un projet cool', url: 'https://github.com/user/repo', github: 'https://github.com/user/repo' },
+      ],
+    };
+    const result = anonymizeProfile(cvWithGithub);
+    expect(result.projects[0].url).toBeUndefined();
+    expect(result.projects[0].github).toBeUndefined();
+  });
+
+  it('masks gitlab URLs in project url field', () => {
+    const cvWithGitlab = {
+      ...FULL_CV_CONTENT,
+      projects: [
+        { name: 'Projet GL', description: 'Projet Gitlab', url: 'https://gitlab.com/user/repo' },
+      ],
+    };
+    const result = anonymizeProfile(cvWithGitlab);
+    expect(result.projects[0].url).toBeUndefined();
+  });
+
+  it('preserves non-git URLs in projects', () => {
+    const cvWithPortfolio = {
+      ...FULL_CV_CONTENT,
+      projects: [
+        { name: 'Portfolio', description: 'Mon site', url: 'https://monportfolio.com' },
+      ],
+    };
+    const result = anonymizeProfile(cvWithPortfolio);
+    expect(result.projects[0].url).toBe('https://monportfolio.com');
+  });
+
+  it('github field is always undefined regardless of input', () => {
+    const cvWithGithub = {
+      ...FULL_CV_CONTENT,
+      projects: [
+        { name: 'Projet', description: 'Desc', github: 'https://github.com/user/repo', url: 'https://mysite.com' },
+      ],
+    };
+    const result = anonymizeProfile(cvWithGithub);
+    expect(result.projects[0].github).toBeUndefined();
+    expect(result.projects[0].url).toBe('https://mysite.com');
   });
 });
 
