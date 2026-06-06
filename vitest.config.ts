@@ -9,6 +9,7 @@ export default defineConfig({
     setupFiles: ['__tests__/setup/prisma-mock.ts'],
     coverage: {
       provider: 'v8',
+      reporter: ['text', 'json', 'html'],
       include: [
         'lib/anonymize.ts',
         'lib/candidate-profile.ts',

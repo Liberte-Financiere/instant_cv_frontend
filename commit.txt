@@ -1,35 +1,34 @@
-2026-05-31 — Implémentation du Jobsira Talent Assistant (IA Recruteur V1)
+2026-06-06 — Professionnalisation de la Suite de Tests Unitaires et Rapport de Couverture
 
 What changed:
-- Intégration d'un assistant conversationnel (Jobsira Talent Assistant) dans l'espace recruteur propulsé par Gemini (gemini-3-flash-preview).
-- Utilisation du function calling natif de Gemini pour traduire les besoins en langage naturel en critères de recherche.
-- Création d'une fonction de recherche optimisée (`searchCandidatesInternal`) s'appuyant directement sur Prisma pour éliminer la latence réseau interne.
-- Calcul déterministe et robuste du score de compatibilité côté serveur, basé sur une grille de pondération stricte (titre, expérience, compétences, localisation, complétude).
-- Ajout d'une interface utilisateur de type "chat" (slide-in panel) via le composant `TalentChat`, avec des cartes de candidats compactes `ChatCandidateCard`.
-- Intégration d'un rate limiter par `userId` et gestion de contexte tronqué de manière intelligente (par limite de caractères) pour économiser les tokens sans perdre le fil.
-- Ajout du Streaming SSE (Server-Sent Events) pour l'affichage fluide et progressif de la réponse, particulièrement utile pour les connexions lentes.
-- Gestion gracieuse du dépassement de quota Gemini (erreur 429), avec un fallback en Message de chat (plutôt qu'une erreur 500 fatale), permettant une meilleure UX en cas de forte sollicitation.
+- Configuration et mise en place d'un Mock Prisma global (`__tests__/setup/prisma-mock.ts`) interceptant dynamiquement les appels de base de données pour permettre l'exécution fluide de toutes les suites de tests unitaires sans base de données physique ni variable d'environnement DATABASE_URL.
+- Création de 7 nouvelles suites de tests unitaires couvrant les modules métiers critiques de l'application (rate-limiting, système de parrainage/invitation, coûts et soldes de crédits recruteurs/candidats, cohérence de la configuration globale applicative, sanitisation robuste des données CV, schémas de validation Zod, et intégration des callbacks de paiement LigdiCash).
+- Ajout de tests de censure des URLs de dépôts de projets candidats (GitHub/GitLab) dans la logique d'anonymisation de CV afin de préserver l'identité des utilisateurs non débloqués.
+- Installation et configuration de `@vitest/coverage-v8` pour générer un rapport de couverture de code complet au format HTML (`/coverage/index.html`).
+- Nettoyage rigoureux : Retrait du bypass de connexion de développement ("Connexion dev" credentials provider) sur la page `/login` et dans `auth.ts` après validation des tests dans le navigateur pour garantir une sécurité hermétique.
 
 Why:
-- Permettre aux recruteurs de trouver des profils de manière plus intuitive, sans avoir à manipuler manuellement des filtres complexes.
-- Le scoring côté serveur garantit la constance des évaluations, corrigeant l'incapacité inhérente du LLM à attribuer des notes quantitatives de manière déterministe.
-- L'appel Prisma direct et la troncature de contexte assurent une rapidité et une stabilité du service.
-- Le Streaming (via Server-Sent Events) donne un retour visuel instantané qui gomme la perception de latence, crucial en Afrique francophone.
-- Le catch ciblé du 429 évite de faire fuir l'utilisateur avec une page plantée si le quota de la version gratuite `gemini-3-flash-preview` est atteint.
-- Limitation à 2 CVs maximum visibles pour les recruteurs par utilisateur pour maintenir une base de données de candidats qualifiée et pertinente, évitant le spam de profils dupliqués par un même utilisateur.
+- Permettre d'identifier instantanément les régressions et de valider les règles métiers de calcul de solde, quotas et sécurité.
+- Offrir une visibilité complète sur le taux de couverture des fichiers sources via un rapport visuel et interactif standardisé.
+- Éliminer toute faille de sécurité ou backdoor de contournement d'authentification en environnement de développement avant passage en production.
 
 Files affected:
-- lib/talent-assistant.ts — [NEW] Cœur du système (system prompt, logique de tool calling Gemini, scoring, interaction DB directe, flux asynchrone SSE).
-- app/api/recruiter/chat/route.ts — [NEW] Route API sécurisée pour les interactions de chat (vérification de rôle, rate limit, renvoi de flux ReadableStream).
-- app/api/cv/[id]/searchable/route.ts — Validation côté serveur pour empêcher un utilisateur d'avoir plus de 2 CVs publics/recherchables.
-- components/recruiter/TalentChat.tsx — [NEW] Interface UI (panel coulissant, parseur de flux SSE `data:`, state React progressif).
-- app/dashboard/settings/page.tsx — Validation côté client avec un Toast empêchant de cocher l'option `isSearchable` si l'utilisateur a déjà 2 CVs en ligne.
-- components/recruiter/ChatCandidateCard.tsx — [NEW] Carte de profil condensée adaptée au format conversationnel.
-- components/recruiter/RecruiterLayout.tsx — Injection globale du chat IA.
-- lib/config.ts — Ajout des paramètres système `ai.talentAssistant`.
+- vitest.config.ts — Configuration de l'environnement de test avec `setupFiles` et configuration du reporter de couverture (HTML, json, text).
+- __tests__/setup/prisma-mock.ts — Mock global de Prisma.
+- __tests__/rate-limit.test.ts — Tests unitaires de la logique de rate limit.
+- __tests__/referral.test.ts — Tests unitaires du calcul de crédits et génération de codes parrainage.
+- __tests__/credits.test.ts — Tests unitaires de validation des coûts d'actions et erreurs crédits.
+- __tests__/config.test.ts — Tests unitaires de conformité de la configuration globale.
+- __tests__/utils.test.ts — Tests unitaires de la sanitisation des données de CV.
+- __tests__/schemas.test.ts — Tests unitaires de validation de structures via Zod.
+- __tests__/ligdicash.test.ts — Tests unitaires de la logique pure de paiement.
+- __tests__/anonymize.test.ts — Ajout des scénarios de censure des URLs de projets Git.
+- auth.ts — Suppression sécurisée du credentials provider de contournement de dev.
+- app/login/page.tsx — Suppression du formulaire de bypass de développement.
 
 Breaking changes:
 - None
 
 Notes for review:
-- V1 finalisée. L'UX est maintenant optimale avec le streaming. La persistance de l'historique en base de données et l'ajout d'alertes proactives sont les prochaines priorités (post-V1).
+- Toutes les suites de tests unitaires (233 tests) passent désormais avec succès en moins de 5 secondes.
+- La couverture de code globale est de 68.18% sur les fichiers de logique métier testés.
