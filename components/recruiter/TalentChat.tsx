@@ -20,7 +20,7 @@ const DEFAULT_MESSAGE: Message = {
 
 const STORAGE_KEY = 'jobsira_talent_chat_history';
 
-export function TalentChat() {
+export function TalentChat({ isLocked = false }: { isLocked?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([DEFAULT_MESSAGE]);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -58,12 +58,24 @@ export function TalentChat() {
   };
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !isLocked) {
       scrollToBottom();
       // Focus input when opened
       setTimeout(() => inputRef.current?.focus(), 100);
     }
-  }, [messages, isOpen]);
+  }, [messages, isOpen, isLocked]);
+
+  // Keyboard shortcut (Cmd/Ctrl + J or Cmd/Ctrl + K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'j' || e.key === 'k')) {
+        e.preventDefault();
+        setIsOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -200,6 +212,7 @@ export function TalentChat() {
             ? "bg-slate-800 text-slate-400 hover:text-white" 
             : "bg-primary text-white hover:bg-primary/90 hover:scale-105"
         )}
+        title="Assistant IA (Ctrl+J)"
       >
         {isOpen ? <X className="w-6 h-6" /> : <Sparkles className="w-6 h-6" />}
       </button>
@@ -330,34 +343,51 @@ export function TalentChat() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Area */}
+        {/* Input Area / Locked State */}
         <div className="p-4 border-t border-slate-800 bg-slate-950">
-          <form 
-            onSubmit={handleSubmit}
-            className="flex items-center gap-2 bg-slate-900 border border-slate-800 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 rounded-xl p-2 transition-all"
-          >
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ex: Je cherche un développeur à Abidjan..."
-              className="flex-1 w-full bg-transparent border-none focus:outline-none focus:ring-0 text-white !text-white text-sm px-3 py-2 placeholder:text-slate-400 !placeholder-slate-400 outline-none"
-              disabled={isLoading}
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              className="p-3 bg-primary hover:bg-primary/90 disabled:bg-slate-800 disabled:text-slate-500 text-white rounded-lg transition-colors flex items-center justify-center"
-            >
-              <Send className="w-4 h-4" />
-            </button>
-          </form>
-          <div className="text-center mt-3">
-            <span className="text-[10px] text-slate-500">
-              L'IA peut faire des erreurs. Vérifiez toujours les profils.
-            </span>
-          </div>
+          {isLocked ? (
+            <div className="text-center p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-3">
+              <Sparkles className="w-6 h-6 text-primary mx-auto opacity-50" />
+              <p className="text-sm text-slate-300">
+                Connectez-vous avec un compte recruteur pour rechercher des candidats avec l'IA.
+              </p>
+              <a 
+                href="/recruiter/register"
+                className="inline-block px-4 py-2 bg-primary hover:bg-primary/90 text-white text-sm font-bold rounded-lg transition-colors"
+              >
+                Devenir Recruteur
+              </a>
+            </div>
+          ) : (
+            <>
+              <form 
+                onSubmit={handleSubmit}
+                className="flex items-center gap-2 bg-slate-900 border border-slate-800 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 rounded-xl p-2 transition-all"
+              >
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ex: Je cherche un développeur à Abidjan..."
+                  className="flex-1 w-full bg-transparent border-none focus:outline-none focus:ring-0 text-white !text-white text-sm px-3 py-2 placeholder:text-slate-400 !placeholder-slate-400 outline-none"
+                  disabled={isLoading}
+                />
+                <button
+                  type="submit"
+                  disabled={!input.trim() || isLoading}
+                  className="p-3 bg-primary hover:bg-primary/90 disabled:bg-slate-800 disabled:text-slate-500 text-white rounded-lg transition-colors flex items-center justify-center"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </form>
+              <div className="text-center mt-3">
+                <span className="text-[10px] text-slate-500">
+                  L'IA peut faire des erreurs. Vérifiez toujours les profils.
+                </span>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>

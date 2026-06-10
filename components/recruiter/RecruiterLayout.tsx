@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Building2, Users, LogIn, Unlock, User } from 'lucide-react';
+import { Search, Building2, Users, LogIn, LogOut, Unlock, User } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { TalentChat } from './TalentChat';
 
 interface RecruiterLayoutProps {
@@ -55,12 +55,23 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
 
             <div className="flex items-center gap-3">
               {session && (
-                <Link href="/dashboard">
-                  <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-white/5">
-                    <User className="w-4 h-4 mr-2" />
-                    Espace Candidat
+                <>
+                  <Link href="/dashboard">
+                    <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-white/5">
+                      <User className="w-4 h-4 mr-2" />
+                      Espace Candidat
+                    </Button>
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => signOut({ callbackUrl: '/' })}
+                    className="text-slate-400 hover:text-red-400 hover:bg-red-500/10"
+                  >
+                    <LogOut className="w-4 h-4 md:mr-2" />
+                    <span className="hidden md:inline">Déconnexion</span>
                   </Button>
-                </Link>
+                </>
               )}
               {!isRecruiter && session && (
                 <Link href="/recruiter/register">
@@ -71,10 +82,10 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
                 </Link>
               )}
               {!session && (
-                <Link href="/login">
+                <Link href="/recruiter/register">
                   <Button variant="glass" size="sm" className="border-primary/30 text-primary hover:text-white">
                     <LogIn className="w-4 h-4 mr-2" />
-                    Connexion
+                    Espace Recruteur
                   </Button>
                 </Link>
               )}
@@ -87,8 +98,8 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
         {children}
       </main>
       
-      {/* Assistant IA - Visible uniquement pour les recruteurs/admins */}
-      {isRecruiter && <TalentChat />}
+      {/* Assistant IA - Visible par tous, mais bloqué si non recruteur */}
+      <TalentChat isLocked={!isRecruiter} />
     </div>
   );
 }
