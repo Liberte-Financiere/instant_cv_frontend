@@ -222,9 +222,9 @@ export function Features() {
               </div>
               <h3 className="text-bg-dark text-2xl font-bold mb-3">Templates de Classe Mondiale</h3>
               <p className="text-slate-500 mb-6">Modernes, Créatifs ou Exécutifs. Choisissez parmi une galerie conçue par des experts en recrutement.</p>
-              <button className="text-primary font-bold hover:underline flex items-center gap-1">
+              <Link href="/auth" className="text-primary font-bold hover:underline flex items-center gap-1">
                 Voir la galerie <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
             <div className="flex-1 w-full relative h-48 md:h-64 flex items-center justify-center overflow-hidden">
                {/* Gallery of Miniatures */}
