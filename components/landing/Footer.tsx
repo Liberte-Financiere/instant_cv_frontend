@@ -17,7 +17,7 @@ export function Footer() {
           <Link className="hover:text-white transition-colors" href="/help">Astuces & Infos</Link>
           <Link className="hover:text-white transition-colors" href="/terms">Confidentialité</Link>
           <Link className="hover:text-white transition-colors" href="/terms">Conditions</Link>
-          <a className="hover:text-white transition-colors" href="mailto:support@jobsira.com">Support</a>
+          <a className="hover:text-white transition-colors" href="mailto:contact@jobsira.com">Contact</a>
         </div>
         <div>
            © 2026 {APP_CONFIG.name}. Tous droits réservés.

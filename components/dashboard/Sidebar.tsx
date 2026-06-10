@@ -194,15 +194,19 @@ export function Sidebar() {
               className="absolute bottom-full left-4 right-4 mb-2 bg-slate-800 rounded-xl border border-slate-700 shadow-xl overflow-hidden z-20"
             >
               <div className="p-1">
-                <button className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg text-sm transition-colors">
+                <Link 
+                  href="/dashboard/settings"
+                  onClick={() => setShowUserMenu(false)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg text-sm transition-colors"
+                >
                   <Settings className="w-4 h-4" />
                   Paramètres
-                </button>
+                </Link>
                 <div className="h-px bg-slate-700/50 my-1" />
                 <button 
                   onClick={async () => {
                     await clearAllLocalData();
-                    signOut();
+                    signOut({ callbackUrl: '/' });
                   }}
                   className="w-full flex items-center gap-3 px-3 py-2.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg text-sm transition-colors"
                 >

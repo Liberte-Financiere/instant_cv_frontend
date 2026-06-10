@@ -454,10 +454,6 @@ export type PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.PlatformFeedbackScalarWhereInput | Prisma.PlatformFeedbackScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type PlatformFeedbackCreateWithoutUserInput = {
   id?: string
   rating?: number | null
