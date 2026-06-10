@@ -5,13 +5,27 @@ import { Input } from '@/components/ui/Input';
 import { Trash2, Plus, Sparkles } from 'lucide-react';
 
 export function QualitiesForm() {
-  const { currentCV, addQuality, updateQuality, removeQuality } = useCVStore();
+  const { currentCV, updateSettings, addQuality, updateQuality, removeQuality } = useCVStore();
 
   if (!currentCV) return null;
   const qualities = currentCV.qualities || [];
 
   return (
     <div className="space-y-6">
+      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+        <Input 
+          label="Titre de la section (Optionnel)" 
+          value={currentCV.settings?.sectionTitles?.qualities || ''} 
+          onChange={(e) => updateSettings({ 
+            sectionTitles: { 
+              ...currentCV.settings?.sectionTitles,
+              qualities: e.target.value 
+            } 
+          })} 
+          placeholder="Ex: Mes Qualités" 
+        />
+        <p className="text-xs text-slate-500 mt-1">Laissez vide pour garder le titre par défaut.</p>
+      </div>
       {qualities.length === 0 ? (
         <div className="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">
           <Sparkles className="w-10 h-10 text-slate-300 mx-auto mb-3" />

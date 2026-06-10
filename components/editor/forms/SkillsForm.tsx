@@ -5,13 +5,28 @@ import { Input } from '@/components/ui/Input';
 import { Trash2, Plus } from 'lucide-react';
 
 export function SkillsForm() {
-  const { currentCV, addSkill, removeSkill } = useCVStore();
+  const { currentCV, updateSettings, addSkill, removeSkill } = useCVStore();
 
   if (!currentCV) return null;
   const { skills } = currentCV;
 
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="space-y-6">
+      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+        <Input 
+          label="Titre de la section (Optionnel)" 
+          value={currentCV.settings?.sectionTitles?.skills || ''} 
+          onChange={(e) => updateSettings({ 
+            sectionTitles: { 
+              ...currentCV.settings?.sectionTitles,
+              skills: e.target.value 
+            } 
+          })} 
+          placeholder="Ex: Compétences Techniques" 
+        />
+        <p className="text-xs text-slate-500 mt-1">Laissez vide pour garder le titre par défaut.</p>
+      </div>
+      <div className="flex flex-wrap gap-3">
       {skills.map((skill) => (
         <div key={skill.id} className="flex items-center gap-2 bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 group">
           <span className="font-medium text-sm">{skill.name}</span>
@@ -23,6 +38,7 @@ export function SkillsForm() {
         <button className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"><Plus className="w-5 h-5" /></button>
       </div>
       <p className="w-full text-xs text-slate-400 mt-1">Appuyez sur Entrée pour ajouter</p>
+      </div>
     </div>
   );
 }

@@ -54,7 +54,7 @@ export function BoldHeader({ cv }: TemplateProps) {
           <section>
             <h2 className="text-sm font-black uppercase tracking-widest mb-4 flex items-center gap-2" style={{ color: accent }}>
               <span className="w-8 h-0.5" style={{ backgroundColor: accent }} />
-              {getSectionTitle('experience', undefined, lang)}
+              {getSectionTitle('experience', cv.settings, lang)}
             </h2>
             <div className="space-y-4">
               {experiences.map((exp) => (
@@ -76,7 +76,7 @@ export function BoldHeader({ cv }: TemplateProps) {
           <section>
             <h2 className="text-sm font-black uppercase tracking-widest mb-3 flex items-center gap-2" style={{ color: accent }}>
               <span className="w-8 h-0.5" style={{ backgroundColor: accent }} />
-              {getSectionTitle('education', undefined, lang)}
+              {getSectionTitle('education', cv.settings, lang)}
             </h2>
             <div className="grid grid-cols-2 gap-3">
               {education.map((edu) => (
@@ -95,7 +95,7 @@ export function BoldHeader({ cv }: TemplateProps) {
           <section>
             <h2 className="text-sm font-black uppercase tracking-widest mb-3 flex items-center gap-2" style={{ color: accent }}>
               <span className="w-8 h-0.5" style={{ backgroundColor: accent }} />
-              {getSectionTitle('skills', undefined, lang)}
+              {getSectionTitle('skills', cv.settings, lang)}
             </h2>
             <div className="flex flex-wrap gap-2">
               {skills.map((s) => (
@@ -109,28 +109,28 @@ export function BoldHeader({ cv }: TemplateProps) {
         <div className="grid grid-cols-3 gap-6">
           {qualities.length > 0 && (
             <section>
-              <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('qualities', undefined, lang)}</h2>
+              <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('qualities', cv.settings, lang)}</h2>
               {qualities.map((q) => <p key={q.id} className="text-xs text-slate-600 mb-0.5">▸ {q.name}</p>)}
             </section>
           )}
           {languages.length > 0 && (
             <section>
-              <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('languages', undefined, lang)}</h2>
+              <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('languages', cv.settings, lang)}</h2>
               {languages.map((l) => <p key={l.id} className="text-xs text-slate-600 mb-0.5">▸ {l.name} — {l.level}</p>)}
             </section>
           )}
           {hobbies.length > 0 && (
             <section>
-              <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('hobbies', undefined, lang)}</h2>
+              <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('hobbies', cv.settings, lang)}</h2>
               {hobbies.map((h) => <p key={h.id} className="text-xs text-slate-600 mb-0.5">▸ {h.name}</p>)}
             </section>
           )}
         </div>
 
-        <CVCertifications certifications={certifications} variant="modern" accentColor={accent} title={getSectionTitle('certifications', undefined, lang)} />
-        <CVProjects projects={projects} variant="modern" accentColor={accent}  title={getSectionTitle('projects', undefined, lang)} />
-        <CVReferences references={references} variant="modern" accentColor={accent}  title={getSectionTitle('references', undefined, lang)} />
-        <CVDivers divers={divers} variant="modern" accentColor={accent}  title={getSectionTitle('divers', undefined, lang)} />
+        <CVCertifications certifications={certifications} variant="modern" accentColor={accent} title={getSectionTitle('certifications', cv.settings, lang)} />
+        <CVProjects projects={projects} variant="modern" accentColor={accent}  title={getSectionTitle('projects', cv.settings, lang)} />
+        <CVReferences references={references} variant="modern" accentColor={accent}  title={getSectionTitle('references', cv.settings, lang)} />
+        <CVDivers divers={divers} variant="modern" accentColor={accent}  title={getSectionTitle('divers', cv.settings, lang)} />
         <CVFooter footer={footer} variant="modern"  lang={lang}/>
       </div>
     </div>

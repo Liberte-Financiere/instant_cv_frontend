@@ -69,14 +69,14 @@ export function ModernSidebar({ cv }: TemplateProps) {
 
           {/* Contact Info */}
           <div className="mb-6">
-             <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('contact', undefined, lang)}</h3>
+             <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('contact', cv.settings, lang)}</h3>
              <CVContact personalInfo={personalInfo} socialLinks={socialLinks} variant={variant} layout="sidebar" accentColor={accentColor} />
           </div>
 
           {/* Skills - Sidebar version */}
           {skills.length > 0 && (
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('skills', undefined, lang)}</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('skills', cv.settings, lang)}</h3>
               <div className="flex flex-wrap gap-2">
                 {skills.map((skill, index) => (
                   <span key={skill.id || index} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded text-xs font-medium">
@@ -90,7 +90,7 @@ export function ModernSidebar({ cv }: TemplateProps) {
           {/* Languages - Sidebar version */}
           {languages.length > 0 && (
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('languages', undefined, lang)}</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('languages', cv.settings, lang)}</h3>
               <div className="space-y-3">
                  {languages.map((lang, index) => (
                   <div key={lang.id || index} className="flex justify-between items-center text-sm">
@@ -105,7 +105,7 @@ export function ModernSidebar({ cv }: TemplateProps) {
           {/* Hobbies - Sidebar version */}
           {hobbies.length > 0 && (
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('hobbies', undefined, lang)}</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('hobbies', cv.settings, lang)}</h3>
               <div className="flex flex-wrap gap-2">
                  {hobbies.map((hobby, index) => (
                   <span key={hobby.id || index} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded text-xs font-medium">
@@ -119,14 +119,14 @@ export function ModernSidebar({ cv }: TemplateProps) {
 
         {/* Main Content (Right Column) */}
         <div className="flex-1 p-6 sm:p-8 space-y-6 bg-white">
-           <CVSummary summary={personalInfo.summary} variant={variant} accentColor={accentColor}  title={getSectionTitle('summary', undefined, lang)} />
-           <CVExperience experiences={experiences} variant={variant} accentColor={accentColor}  title={getSectionTitle('experience', undefined, lang)}  lang={lang}/>
-           <CVEducation education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', undefined, lang)}  lang={lang}/>
-           <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', undefined, lang)} />
-           <CVProjects projects={projects} variant={variant} accentColor={accentColor}  title={getSectionTitle('projects', undefined, lang)} />
-           <CVQualities qualities={cv.qualities || []} variant={variant} accentColor={accentColor} title={getSectionTitle('qualities', undefined, lang)} />
-           <CVReferences references={references} variant={variant} accentColor={accentColor}  title={getSectionTitle('references', undefined, lang)} />
-           <CVDivers divers={divers} variant={variant} accentColor={accentColor}  title={getSectionTitle('divers', undefined, lang)} />
+           <CVSummary summary={personalInfo.summary} variant={variant} accentColor={accentColor}  title={getSectionTitle('summary', cv.settings, lang)} />
+           <CVExperience experiences={experiences} variant={variant} accentColor={accentColor}  title={getSectionTitle('experience', cv.settings, lang)}  lang={lang}/>
+           <CVEducation education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', cv.settings, lang)}  lang={lang}/>
+           <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', cv.settings, lang)} />
+           <CVProjects projects={projects} variant={variant} accentColor={accentColor}  title={getSectionTitle('projects', cv.settings, lang)} />
+           <CVQualities qualities={cv.qualities || []} variant={variant} accentColor={accentColor} title={getSectionTitle('qualities', cv.settings, lang)} />
+           <CVReferences references={references} variant={variant} accentColor={accentColor}  title={getSectionTitle('references', cv.settings, lang)} />
+           <CVDivers divers={divers} variant={variant} accentColor={accentColor}  title={getSectionTitle('divers', cv.settings, lang)} />
            <CVFooter footer={footer} variant={variant}  lang={lang}/>
         </div>
       </div>
