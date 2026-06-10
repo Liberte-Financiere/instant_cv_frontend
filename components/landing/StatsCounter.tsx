@@ -8,7 +8,7 @@ const stats = [
   { label: 'CV créés', value: 2500, suffix: '+', icon: FileText, color: 'text-blue-400' },
   { label: 'Compatibilité ATS', value: 98, suffix: '%', icon: Target, color: 'text-green-400' },
   { label: 'Temps moyen', value: 2, suffix: ' min', icon: Clock, color: 'text-amber-400' },
-  { label: 'Utilisateurs actifs', value: 500, suffix: '+', icon: Users, color: 'text-purple-400' },
+  { label: 'Utilisateurs actifs', value: 150, suffix: '+', icon: Users, color: 'text-purple-400' },
 ];
 
 function AnimatedCounter({ value, suffix, duration = 2 }: { value: number; suffix: string; duration?: number }) {

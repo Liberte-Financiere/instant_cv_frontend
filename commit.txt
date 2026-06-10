@@ -1,6 +1,11 @@
-fix: refactor en profondeur de la logique des suggestions IA (Match)
+feat: améliorations landing page et structure de l'IA d'entretien
 
-- Correction du chargement asynchrone dans `handleApplyReformulation` (évite de modifier un CV vide).
-- Support étendu des sections (education, skills, projects, certifications) au lieu de juste experience/personalInfo.
-- Sécurisation contre les crashs liés aux index hors limites (utilise l'état en temps réel du store).
-- Mise à jour du prompt système (API) pour inclure les projets et certifications dans le schéma JSON strict de Gemini.
+Landing Page :
+- Mise à jour des statistiques (500+ -> 150+ utilisateurs).
+- Refonte de la section "Cible" (TargetAudience) pour intégrer les recruteurs dans une grille à 4 colonnes homogène.
+- Ajout du composant MarketingLinks avec accroches (JobSira vs Concurrence, Astuces ATS).
+- Ajout des liens "Comparer CV" et "Astuces & Infos" dans la Navbar et le Footer.
+
+IA d'Entretien :
+- Refactorisation du prompt système de l'entretien (texte et audio) pour forcer une structure logique.
+- L'IA commence par des questions techniques/métier, puis pivote obligatoirement vers des questions RH/Comportementales (méthode STAR, culture fit) en seconde moitié d'entretien.
