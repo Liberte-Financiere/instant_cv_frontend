@@ -1626,6 +1626,7 @@ export const UserScalarFieldEnum = {
   image: 'image',
   role: 'role',
   credits: 'credits',
+  acceptsMarketing: 'acceptsMarketing',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   phone: 'phone',

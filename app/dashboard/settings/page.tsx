@@ -36,7 +36,8 @@ export default function SettingsPage() {
     email: '',
     phone: '',
     jobTitle: '',
-    sector: 'Technologie & Informatique'
+    sector: 'Technologie & Informatique',
+    acceptsMarketing: false,
   });
 
   // Fetch complete user profile data from DB upon landing
@@ -55,6 +56,7 @@ export default function SettingsPage() {
                  phone: userData.user.phone || '',
                  jobTitle: userData.user.jobTitle || '',
                  sector: userData.user.sector || prev.sector,
+                 acceptsMarketing: userData.user.acceptsMarketing || false,
               }));
            }
         }
@@ -96,6 +98,7 @@ export default function SettingsPage() {
            phone: formData.phone,
            jobTitle: formData.jobTitle,
            sector: formData.sector,
+           acceptsMarketing: formData.acceptsMarketing,
         }),
       });
 
@@ -274,6 +277,30 @@ export default function SettingsPage() {
                     </select>
                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Newsletter Opt-in */}
+            <div className="pt-4 border-t border-slate-50 mt-4">
+              <div className="flex items-start gap-4">
+                <div className="flex items-center h-6">
+                  <button
+                    onClick={() => setFormData({ ...formData, acceptsMarketing: !formData.acceptsMarketing })}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
+                      formData.acceptsMarketing ? 'bg-indigo-500' : 'bg-slate-200'
+                    }`}
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${
+                      formData.acceptsMarketing ? 'translate-x-6' : 'translate-x-1'
+                    }`} />
+                  </button>
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">S'abonner aux nouveautés Jobsira</h4>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Recevez nos emails concernant les nouvelles fonctionnalités, mises à jour importantes et offres spéciales. Vous pouvez vous désabonner à tout moment.
+                  </p>
                 </div>
               </div>
             </div>

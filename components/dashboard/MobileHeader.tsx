@@ -253,7 +253,7 @@ export function MobileHeader() {
                 <button
                   onClick={async () => {
                     await clearAllLocalData();
-                    signOut();
+                    signOut({ callbackUrl: '/' });
                   }}
                   className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl text-sm font-medium transition-colors"
                 >
