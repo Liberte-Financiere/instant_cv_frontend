@@ -46,8 +46,8 @@ export function Hero() {
 
             {/* PWA Badges */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
-              <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
-                <WifiOff className="w-3 h-3" /> Fonctionne hors-ligne
+              <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full" title="L'IA nécessite internet, mais vous pouvez consulter vos CVs existants, vos lettres de motivation et vos historiques d'analyse sans connexion.">
+                <WifiOff className="w-3 h-3" /> CV accessibles hors-ligne
               </span>
               <span className="flex items-center gap-1.5 text-xs font-medium text-blue-300 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-full">
                 <Smartphone className="w-3 h-3" /> Installable sur mobile

@@ -120,9 +120,9 @@ export function Features() {
           {/* Card 6: Offline / PWA */}
           <FeatureCard
             className="md:col-span-1 border-slate-100"
-            title="Disponible Hors-ligne"
+            title="Accès Hors-ligne"
             icon={WifiOff}
-            description={`Installez ${APP_CONFIG.name} sur votre téléphone. Même sans internet, continuez à éditer votre CV.`}
+            description={`Installez ${APP_CONFIG.name} sur votre téléphone pour consulter vos CVs, lettres et historiques sans connexion.`}
           >
              <div className="w-full h-24 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 p-4 relative overflow-hidden flex items-center justify-center">
                 <div className="flex items-center gap-3">

@@ -3,3 +3,5 @@ fix: corrections typographiques et ajustement des offres Pricing
 - Pricing : Simplification des "features" pour refléter le fait que toutes les fonctionnalités sont disponibles quel que soit le pack (seuls les crédits changent).
 - Pricing : Ajout des accents manquants (Coûte, Crédits, Illimité, etc.).
 - Hero : Remplacement du bouton Démo inactif par une ancre fonctionnelle vers la section #features.
+- Hero : Précision du fonctionnement PWA ("CV accessibles hors-ligne" au lieu de "Fonctionne hors-ligne") avec un tooltip explicatif.
+- Features & FAQ : Correction des textes trompeurs sur l'édition hors-ligne pour refléter la réalité (consultation uniquement).
