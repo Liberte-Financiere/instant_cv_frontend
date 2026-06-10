@@ -1,15 +1,8 @@
-2026-06-06 — Harmonize Comparison Color Badges and Search Elements
+feat: implémentation des titres de sections personnalisables et pagination du dashboard
 
-What changed:
-- Updated `CompareVerdictBadge` colors to use a premium emerald theme (`bg-emerald-50 text-emerald-700 border-emerald-200/60`) for positive outcomes.
-- Configured neutral competitor badges to use semi-transparent slate backgrounds (`bg-slate-100/60 text-slate-700 border-slate-200/50`).
-- Changed the "equality" draw badge to use the core brand primary color with transparency (`bg-primary/5 text-primary border-primary/20`).
-- Updated category button states on `CompareSearch` to implement a glowing brand primary shadow (`shadow-primary/20`) when active.
-- Verified TypeScript compilation successfully with 0 errors.
-
-Why:
-- To match brand identity guidelines and improve color harmony across competitor comparison tables and search filters.
-
-Files affected:
-- frontend/instant_cv/components/compare/CompareVerdictBadge.tsx — Verdict badge color configurations
-- frontend/instant_cv/components/compare/CompareSearch.tsx — Search category button shadow glows
+- Ajout de la propriété `sectionTitles` dans le store Zustand et les types CV.
+- Mise à jour de `getSectionTitle` pour supporter la personnalisation et le fallback.
+- Déploiement de la logique dans les 20+ templates et le SectionRenderer.
+- Ajout d'un champ "Titre de la section (Optionnel)" dans tous les formulaires de l'éditeur.
+- Amélioration du bouton Debug avec plus de données mockées (pour tests de charge).
+- Ajout de la pagination (10 éléments/page) et du tri (plus récent d'abord) sur la liste des CVs du dashboard.

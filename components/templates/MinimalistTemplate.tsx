@@ -76,9 +76,9 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
 
       {/* Content */}
       <main className="px-10 py-6 space-y-6">
-        <CVSummary summary={personalInfo.summary} variant={variant} accentColor={accentColor}  title={getSectionTitle('summary', undefined, lang)} />
-        <CVExperience experiences={experiences} variant={variant} accentColor={accentColor}  title={getSectionTitle('experience', undefined, lang)}  lang={lang}/>
-        <CVEducation education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', undefined, lang)}  lang={lang}/>
+        <CVSummary summary={personalInfo.summary} variant={variant} accentColor={accentColor}  title={getSectionTitle('summary', cv.settings, lang)} />
+        <CVExperience experiences={experiences} variant={variant} accentColor={accentColor}  title={getSectionTitle('experience', cv.settings, lang)}  lang={lang}/>
+        <CVEducation education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', cv.settings, lang)}  lang={lang}/>
         
         {/* Skills inline */}
         {skills.length > 0 && (
@@ -86,7 +86,7 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
             <h2 
               className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b pb-2 mb-3"
               style={{ borderColor: accentColor }}
-            >{getSectionTitle('skills', undefined, lang)}</h2>
+            >{getSectionTitle('skills', cv.settings, lang)}</h2>
             <div className="flex flex-wrap gap-2">
               {skills.map((skill) => (
                 <span 
@@ -108,7 +108,7 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
               className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b pb-2 mb-3"
               style={{ borderColor: accentColor }}
             >
-              {getSectionTitle('qualities', undefined, lang)}
+              {getSectionTitle('qualities', cv.settings, lang)}
             </h2>
             <div className="flex flex-wrap gap-2">
               {cv.qualities.map((quality) => (
@@ -130,7 +130,7 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
             <h2 
               className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b pb-2 mb-3"
               style={{ borderColor: accentColor }}
-            >{getSectionTitle('languages', undefined, lang)}</h2>
+            >{getSectionTitle('languages', cv.settings, lang)}</h2>
             <div className="flex flex-wrap gap-4 text-sm">
               {languages.map((lang) => (
                 <span key={lang.id} className="text-slate-700">
@@ -141,10 +141,10 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
           </section>
         )}
         
-        <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', undefined, lang)} />
-        <CVProjects projects={projects} variant={variant} accentColor={accentColor}  title={getSectionTitle('projects', undefined, lang)} />
-        <CVReferences references={references} variant={variant} accentColor={accentColor}  title={getSectionTitle('references', undefined, lang)} />
-        <CVDivers divers={divers} variant={variant} accentColor={accentColor}  title={getSectionTitle('divers', undefined, lang)} />
+        <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', cv.settings, lang)} />
+        <CVProjects projects={projects} variant={variant} accentColor={accentColor}  title={getSectionTitle('projects', cv.settings, lang)} />
+        <CVReferences references={references} variant={variant} accentColor={accentColor}  title={getSectionTitle('references', cv.settings, lang)} />
+        <CVDivers divers={divers} variant={variant} accentColor={accentColor}  title={getSectionTitle('divers', cv.settings, lang)} />
         <CVFooter footer={footer} variant={variant}  lang={lang}/>
       </main>
     </div>

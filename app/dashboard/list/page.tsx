@@ -14,11 +14,18 @@ export default function CVListPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
     setIsLoading(true);
     fetchUserCVs().finally(() => setIsLoading(false));
   }, [fetchUserCVs]);
+
+  // Reset page on search
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce CV ?')) return;
@@ -72,8 +79,14 @@ export default function CVListPage() {
     }
   };
 
-  const filteredCVs = cvList.filter(cv => 
-    cv.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCVs = cvList
+    .filter(cv => cv.title.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()); // Plus récent d'abord
+
+  const totalPages = Math.ceil(filteredCVs.length / ITEMS_PER_PAGE) || 1;
+  const paginatedCVs = filteredCVs.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
   );
 
   return (
@@ -125,7 +138,7 @@ export default function CVListPage() {
         <>
           {/* Mobile: Card Layout */}
           <div className="md:hidden space-y-3">
-            {filteredCVs.map((cv) => (
+            {paginatedCVs.map((cv) => (
               <motion.div
                 key={cv.id}
                 initial={{ opacity: 0, y: 10 }}
@@ -195,7 +208,7 @@ export default function CVListPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filteredCVs.map((cv) => (
+                {paginatedCVs.map((cv) => (
                   <motion.tr 
                     key={cv.id}
                     initial={{ opacity: 0 }}
@@ -258,6 +271,31 @@ export default function CVListPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Pagination UI */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between py-6 px-2 md:px-0">
+              <p className="text-sm text-slate-500">
+                Page <span className="font-bold text-slate-900">{currentPage}</span> / <span className="font-bold text-slate-900">{totalPages}</span>
+              </p>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 text-sm font-bold rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Précédent
+                </button>
+                <button 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 text-sm font-bold rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Suivant
+                </button>
+              </div>
+            </div>
+          )}
         </>
       )}
 

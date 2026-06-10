@@ -5,13 +5,27 @@ import { Input } from '@/components/ui/Input';
 import { Trash2, Plus } from 'lucide-react';
 
 export function ReferencesForm() {
-  const { currentCV, addReference, updateReference, removeReference } = useCVStore();
+  const { currentCV, updateSettings, addReference, updateReference, removeReference } = useCVStore();
 
   if (!currentCV) return null;
   const references = currentCV.references || [];
 
   return (
     <div className="space-y-4">
+      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-2">
+        <Input 
+          label="Titre de la section (Optionnel)" 
+          value={currentCV.settings?.sectionTitles?.references || ''} 
+          onChange={(e) => updateSettings({ 
+            sectionTitles: { 
+              ...currentCV.settings?.sectionTitles,
+              references: e.target.value 
+            } 
+          })} 
+          placeholder="Ex: Références Professionnelles" 
+        />
+        <p className="text-xs text-slate-500 mt-1">Laissez vide pour garder le titre par défaut.</p>
+      </div>
       {references.map((ref) => (
         <div key={ref.id} className="p-4 bg-white border border-slate-200 rounded-xl relative group hover:border-blue-300 transition-all">
           <button onClick={() => removeReference(ref.id)} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg sm:opacity-0 sm:group-hover:opacity-100"><Trash2 className="w-4 h-4" /></button>

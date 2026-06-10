@@ -97,7 +97,7 @@ export function ATSGlacier({ cv }: TemplateProps) {
       {education.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 min-w-fit">{getSectionTitle('education', undefined, lang)}</h2>
+             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 min-w-fit">{getSectionTitle('education', cv.settings, lang)}</h2>
              <div className="h-px bg-slate-200 w-full" />
           </div>
           
@@ -123,7 +123,7 @@ export function ATSGlacier({ cv }: TemplateProps) {
       {(skills.length > 0 || languages.length > 0) && (
         <section className="mb-8">
            <div className="flex items-center gap-4 mb-4">
-             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 min-w-fit">{getSectionTitle('skills', undefined, lang)}</h2>
+             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 min-w-fit">{getSectionTitle('skills', cv.settings, lang)}</h2>
              <div className="h-px bg-slate-200 w-full" />
           </div>
            
@@ -139,7 +139,7 @@ export function ATSGlacier({ cv }: TemplateProps) {
               
               {languages.length > 0 && (
                   <div>
-                      <h3 className="font-bold text-slate-900 mb-2 text-xs uppercase">{getSectionTitle('languages', undefined, lang)}</h3>
+                      <h3 className="font-bold text-slate-900 mb-2 text-xs uppercase">{getSectionTitle('languages', cv.settings, lang)}</h3>
                       <p className="text-slate-600 leading-relaxed">
                           {languages.map(l => `${l.name} (${l.level})`).join(', ')}
                       </p>
@@ -153,7 +153,7 @@ export function ATSGlacier({ cv }: TemplateProps) {
       {projects.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 min-w-fit">{getSectionTitle('projects', undefined, lang)}</h2>
+             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 min-w-fit">{getSectionTitle('projects', cv.settings, lang)}</h2>
              <div className="h-px bg-slate-200 w-full" />
           </div>
           <div className="space-y-4">

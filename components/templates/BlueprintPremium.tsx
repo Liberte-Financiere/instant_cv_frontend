@@ -139,7 +139,7 @@ export function BlueprintPremium({ cv }: TemplateProps) {
           {education.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-4" style={{ color: accent }}>
-                {getSectionTitle('education', undefined, lang)}
+                {getSectionTitle('education', cv.settings, lang)}
               </h2>
               <div className="space-y-4">
                 {education.map((edu) => (
@@ -157,7 +157,7 @@ export function BlueprintPremium({ cv }: TemplateProps) {
           {skills.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-3" style={{ color: accent }}>
-                {getSectionTitle('skills', undefined, lang)}
+                {getSectionTitle('skills', cv.settings, lang)}
               </h2>
               <div className="space-y-2">
                 {skills.map((s) => (
@@ -176,7 +176,7 @@ export function BlueprintPremium({ cv }: TemplateProps) {
           {hobbies.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-3" style={{ color: accent }}>
-                {getSectionTitle('hobbies', undefined, lang)}
+                {getSectionTitle('hobbies', cv.settings, lang)}
               </h2>
               <ul className="space-y-2">
                 {hobbies.map((h) => (
@@ -193,7 +193,7 @@ export function BlueprintPremium({ cv }: TemplateProps) {
           {languages.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-3" style={{ color: accent }}>
-                {getSectionTitle('languages', undefined, lang)}
+                {getSectionTitle('languages', cv.settings, lang)}
               </h2>
               {languages.map((l) => (
                 <p key={l.id} className="text-xs text-slate-600 mb-1">{l.name} — <span className="font-medium">{l.level}</span></p>
@@ -208,7 +208,7 @@ export function BlueprintPremium({ cv }: TemplateProps) {
           {experiences.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-4" style={{ color: accent }}>
-                {getSectionTitle('experience', undefined, lang)}
+                {getSectionTitle('experience', cv.settings, lang)}
               </h2>
               <div className="space-y-5">
                 {experiences.map((exp) => (
@@ -231,7 +231,7 @@ export function BlueprintPremium({ cv }: TemplateProps) {
           {qualities.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-3" style={{ color: accent }}>
-                {getSectionTitle('qualities', undefined, lang)}
+                {getSectionTitle('qualities', cv.settings, lang)}
               </h2>
               <div className="grid grid-cols-3 gap-2">
                 {qualities.map((q) => (
@@ -247,15 +247,15 @@ export function BlueprintPremium({ cv }: TemplateProps) {
           )}
 
           {/* References */}
-          <CVReferences references={references} variant="professional" accentColor={accent}  title={getSectionTitle('references', undefined, lang)} />
+          <CVReferences references={references} variant="professional" accentColor={accent}  title={getSectionTitle('references', cv.settings, lang)} />
         </div>
       </div>
 
       {/* Extra sections below */}
       <div className="px-10 pb-8 space-y-4">
-        <CVCertifications certifications={certifications} variant="professional" accentColor={accent} title={getSectionTitle('certifications', undefined, lang)} />
-        <CVProjects projects={projects} variant="professional" accentColor={accent}  title={getSectionTitle('projects', undefined, lang)} />
-        <CVDivers divers={divers} variant="professional" accentColor={accent}  title={getSectionTitle('divers', undefined, lang)} />
+        <CVCertifications certifications={certifications} variant="professional" accentColor={accent} title={getSectionTitle('certifications', cv.settings, lang)} />
+        <CVProjects projects={projects} variant="professional" accentColor={accent}  title={getSectionTitle('projects', cv.settings, lang)} />
+        <CVDivers divers={divers} variant="professional" accentColor={accent}  title={getSectionTitle('divers', cv.settings, lang)} />
         <CVFooter footer={footer} variant="professional"  lang={lang}/>
       </div>
 

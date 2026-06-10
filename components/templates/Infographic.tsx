@@ -41,7 +41,7 @@ export function Infographic({ cv }: TemplateProps) {
           {p.photoUrl && (
             <Image src={p.photoUrl} alt={`${p.firstName} ${p.lastName}`} width={160} height={160} className="w-full h-auto rounded-xl object-cover mb-4 border-2 border-white/20" />
           )}
-          <h2 className="text-xs font-bold uppercase tracking-widest text-white/60 mb-2 pb-1 border-b border-white/20">{getSectionTitle('contact', undefined, lang)}</h2>
+          <h2 className="text-xs font-bold uppercase tracking-widest text-white/60 mb-2 pb-1 border-b border-white/20">{getSectionTitle('contact', cv.settings, lang)}</h2>
           <div className="space-y-1.5 text-xs text-white/85 mb-5">
             {p.email && <p className="break-all">{p.email}</p>}
             {p.phone && <p>{p.phone}</p>}
@@ -51,7 +51,7 @@ export function Infographic({ cv }: TemplateProps) {
           {/* Skills with circles */}
           {skills.length > 0 && (
             <>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-white/60 mb-3 pb-1 border-b border-white/20">{getSectionTitle('skills', undefined, lang)}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-white/60 mb-3 pb-1 border-b border-white/20">{getSectionTitle('skills', cv.settings, lang)}</h2>
               <div className="space-y-2 mb-5">
                 {skills.map((s) => (
                   <div key={s.id} className="flex items-center gap-2">
@@ -68,14 +68,14 @@ export function Infographic({ cv }: TemplateProps) {
 
           {languages.length > 0 && (
             <>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-white/60 mb-2 pb-1 border-b border-white/20">{getSectionTitle('languages', undefined, lang)}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-white/60 mb-2 pb-1 border-b border-white/20">{getSectionTitle('languages', cv.settings, lang)}</h2>
               {languages.map((l) => <p key={l.id} className="text-[11px] text-white/80 mb-1">{l.name} — {l.level}</p>)}
             </>
           )}
 
           {hobbies.length > 0 && (
             <div className="mt-4">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-white/60 mb-2 pb-1 border-b border-white/20">{getSectionTitle('hobbies', undefined, lang)}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-white/60 mb-2 pb-1 border-b border-white/20">{getSectionTitle('hobbies', cv.settings, lang)}</h2>
               {hobbies.map((h) => <p key={h.id} className="text-[11px] text-white/80 mb-1">• {h.name}</p>)}
             </div>
           )}
@@ -92,7 +92,7 @@ export function Infographic({ cv }: TemplateProps) {
 
           {experiences.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-3 pb-1 border-b" style={{ color: accent, borderColor: accent }}>{getSectionTitle('experience', undefined, lang)}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-3 pb-1 border-b" style={{ color: accent, borderColor: accent }}>{getSectionTitle('experience', cv.settings, lang)}</h2>
               <div className="space-y-4">
                 {experiences.map((exp) => (
                   <div key={exp.id} className="flex gap-3">
@@ -110,7 +110,7 @@ export function Infographic({ cv }: TemplateProps) {
 
           {education.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-3 pb-1 border-b" style={{ color: accent, borderColor: accent }}>{getSectionTitle('education', undefined, lang)}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-3 pb-1 border-b" style={{ color: accent, borderColor: accent }}>{getSectionTitle('education', cv.settings, lang)}</h2>
               <div className="space-y-2">
                 {education.map((edu) => (
                   <div key={edu.id}>
@@ -124,17 +124,17 @@ export function Infographic({ cv }: TemplateProps) {
 
           {qualities.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('qualities', undefined, lang)}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('qualities', cv.settings, lang)}</h2>
               <div className="flex flex-wrap gap-2">
                 {qualities.map((q) => <span key={q.id} className="px-3 py-1 text-xs rounded-full" style={{ backgroundColor: `${accent}15`, color: accent }}>{q.name}</span>)}
               </div>
             </section>
           )}
 
-          <CVCertifications certifications={certifications} variant="modern" accentColor={accent} title={getSectionTitle('certifications', undefined, lang)} />
-          <CVProjects projects={projects} variant="modern" accentColor={accent}  title={getSectionTitle('projects', undefined, lang)} />
-          <CVReferences references={references} variant="modern" accentColor={accent}  title={getSectionTitle('references', undefined, lang)} />
-          <CVDivers divers={divers} variant="modern" accentColor={accent}  title={getSectionTitle('divers', undefined, lang)} />
+          <CVCertifications certifications={certifications} variant="modern" accentColor={accent} title={getSectionTitle('certifications', cv.settings, lang)} />
+          <CVProjects projects={projects} variant="modern" accentColor={accent}  title={getSectionTitle('projects', cv.settings, lang)} />
+          <CVReferences references={references} variant="modern" accentColor={accent}  title={getSectionTitle('references', cv.settings, lang)} />
+          <CVDivers divers={divers} variant="modern" accentColor={accent}  title={getSectionTitle('divers', cv.settings, lang)} />
           <CVFooter footer={footer} variant="modern"  lang={lang}/>
         </div>
       </div>

@@ -63,7 +63,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 pb-1 border-b"
                 style={{ borderColor: accentColor }}
               >
-                {getSectionTitle('summary', undefined, lang) || 'À PROPOS'}
+                {getSectionTitle('summary', cv.settings, lang) || 'À PROPOS'}
               </h2>
               <p className="text-sm text-slate-700 leading-relaxed ">
                 {personalInfo.summary}
@@ -78,7 +78,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3 pb-1 border-b"
                 style={{ borderColor: accentColor }}
               >
-                {getSectionTitle('experience', undefined, lang) || 'EXPÉRIENCES PROFESSIONNELLES'}
+                {getSectionTitle('experience', cv.settings, lang) || 'EXPÉRIENCES PROFESSIONNELLES'}
               </h2>
               <div className="space-y-4">
                 {experiences.map((exp) => (
@@ -109,7 +109,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 pb-1 border-b"
                 style={{ borderColor: accentColor }}
               >
-                {getSectionTitle('qualities', undefined, lang)}
+                {getSectionTitle('qualities', cv.settings, lang)}
               </h2>
               <div className="flex flex-wrap gap-2 mt-2">
                 {qualities.map((q) => (
@@ -126,10 +126,10 @@ export function ElegantPhoto({ cv }: TemplateProps) {
           )}
 
           {/* Additional sections */}
-          <CVCertifications certifications={certifications} variant="professional" accentColor={accentColor} title={getSectionTitle('certifications', undefined, lang)} />
-          <CVProjects projects={projects} variant="professional" accentColor={accentColor}  title={getSectionTitle('projects', undefined, lang)} />
-          <CVReferences references={references} variant="professional" accentColor={accentColor}  title={getSectionTitle('references', undefined, lang)} />
-          <CVDivers divers={divers} variant="professional" accentColor={accentColor}  title={getSectionTitle('divers', undefined, lang)} />
+          <CVCertifications certifications={certifications} variant="professional" accentColor={accentColor} title={getSectionTitle('certifications', cv.settings, lang)} />
+          <CVProjects projects={projects} variant="professional" accentColor={accentColor}  title={getSectionTitle('projects', cv.settings, lang)} />
+          <CVReferences references={references} variant="professional" accentColor={accentColor}  title={getSectionTitle('references', cv.settings, lang)} />
+          <CVDivers divers={divers} variant="professional" accentColor={accentColor}  title={getSectionTitle('divers', cv.settings, lang)} />
           <CVFooter footer={footer} variant="professional"  lang={lang}/>
         </div>
 
@@ -144,7 +144,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
             <h2 
               className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3 pb-1 border-b"
               style={{ borderColor: accentColor }}
-            >{getSectionTitle('contact', undefined, lang)}</h2>
+            >{getSectionTitle('contact', cv.settings, lang)}</h2>
             <div className="space-y-2 text-sm text-slate-700">
               {personalInfo.phone && (
                 <div className="flex items-center gap-2">
@@ -188,7 +188,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3 pb-1 border-b"
                 style={{ borderColor: accentColor }}
               >
-                {getSectionTitle('education', undefined, lang) || 'FORMATIONS'}
+                {getSectionTitle('education', cv.settings, lang) || 'FORMATIONS'}
               </h2>
               <div className="space-y-3">
                 {education.map((edu) => (
@@ -214,7 +214,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3 pb-1 border-b"
                 style={{ borderColor: accentColor }}
               >
-                {getSectionTitle('skills', undefined, lang) || 'COMPÉTENCES'}
+                {getSectionTitle('skills', cv.settings, lang) || 'COMPÉTENCES'}
               </h2>
               <div className="space-y-2.5">
                 {skills.map((skill) => (
@@ -244,7 +244,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3 pb-1 border-b"
                 style={{ borderColor: accentColor }}
               >
-                {getSectionTitle('languages', undefined, lang) || 'LANGUES'}
+                {getSectionTitle('languages', cv.settings, lang) || 'LANGUES'}
               </h2>
               <div className="space-y-1.5">
                 {languages.map((lang) => (
@@ -265,7 +265,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3 pb-1 border-b"
                 style={{ borderColor: accentColor }}
               >
-                {getSectionTitle('hobbies', undefined, lang) || 'LOISIRS'}
+                {getSectionTitle('hobbies', cv.settings, lang) || 'LOISIRS'}
               </h2>
               <div className="space-y-1.5">
                 {hobbies.map((hobby) => (

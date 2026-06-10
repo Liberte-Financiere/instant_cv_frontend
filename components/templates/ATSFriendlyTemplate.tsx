@@ -53,7 +53,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Summary */}
       {personalInfo.summary && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('summary', undefined, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('summary', cv.settings, lang)}</h2>
           <p className="text-justify">{personalInfo.summary}</p>
         </section>
       )}
@@ -61,7 +61,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Experience */}
       {experiences.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('experience', undefined, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('experience', cv.settings, lang)}</h2>
           <div className="space-y-4">
             {experiences.map((exp) => (
               <div key={exp.id} className="cv-item">
@@ -85,7 +85,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {education.length > 0 && (
         <section className="mb-6">
           <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">
-            {getSectionTitle('education', undefined, lang)}
+            {getSectionTitle('education', cv.settings, lang)}
           </h2>
           <div className="space-y-3">
             {education.map((edu) => (
@@ -106,7 +106,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Skills */}
       {skills.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('skills', undefined, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('skills', cv.settings, lang)}</h2>
           <p>{skills.map((s) => s.name).join(', ')}</p>
         </section>
       )}
@@ -114,7 +114,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Languages */}
       {languages.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('languages', undefined, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('languages', cv.settings, lang)}</h2>
           <p>
             {languages.map((lang) => `${lang.name} (${lang.level})`).join(', ')}
           </p>
@@ -125,7 +125,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {certifications.length > 0 && (
         <section className="mb-6">
           <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">
-            {getSectionTitle('certifications', undefined, lang)}
+            {getSectionTitle('certifications', cv.settings, lang)}
           </h2>
           <div className="space-y-1">
             {certifications.map((cert) => (
@@ -142,7 +142,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {cv.qualities && cv.qualities.length > 0 && (
         <section className="mb-6">
           <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">
-            {getSectionTitle('qualities', undefined, lang)}
+            {getSectionTitle('qualities', cv.settings, lang)}
           </h2>
           <p>{cv.qualities.map((q) => q.name).join(', ')}</p>
         </section>
@@ -151,7 +151,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Projects */}
       {projects.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('projects', undefined, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('projects', cv.settings, lang)}</h2>
           <div className="space-y-2">
             {projects.map((project) => (
               <div key={project.id} className="cv-item">
@@ -169,7 +169,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* References */}
       {references.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('references', undefined, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('references', cv.settings, lang)}</h2>
           <div className="space-y-2">
             {references.map((ref) => (
               <p key={ref.id} className="cv-item">

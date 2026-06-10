@@ -46,25 +46,25 @@ export function CreativeGrid({ cv }: TemplateProps) {
           <div className="grid grid-cols-3 gap-8">
             {/* Main Column (2/3) */}
             <div className="col-span-2 space-y-8">
-              <CVSummary summary={personalInfo.summary} variant={variant}  title={getSectionTitle('summary', undefined, lang)} />
-              <CVExperience experiences={experiences} variant={variant}  title={getSectionTitle('experience', undefined, lang)}  lang={lang}/>
-              <CVEducation education={education} variant={variant} title={getSectionTitle('education', undefined, lang)}  lang={lang}/>
-              <CVProjects projects={projects} variant={variant}  title={getSectionTitle('projects', undefined, lang)} />
+              <CVSummary summary={personalInfo.summary} variant={variant}  title={getSectionTitle('summary', cv.settings, lang)} />
+              <CVExperience experiences={experiences} variant={variant}  title={getSectionTitle('experience', cv.settings, lang)}  lang={lang}/>
+              <CVEducation education={education} variant={variant} title={getSectionTitle('education', cv.settings, lang)}  lang={lang}/>
+              <CVProjects projects={projects} variant={variant}  title={getSectionTitle('projects', cv.settings, lang)} />
             </div>
 
             {/* Sidebar Column (1/3) */}
             <div className="space-y-8">
-              <CVSkills skills={skills} variant={variant} layout="bars"  title={getSectionTitle('skills', undefined, lang)} />
-              <CVLanguages languages={languages} variant={variant}  title={getSectionTitle('languages', undefined, lang)} />
-              <CVCertifications certifications={certifications} variant={variant} title={getSectionTitle('certifications', undefined, lang)} />
-              <CVQualities qualities={cv.qualities || []} variant={variant} title={getSectionTitle('qualities', undefined, lang)} />
-              <CVHobbies hobbies={hobbies} variant={variant}  title={getSectionTitle('hobbies', undefined, lang)} />
-              <CVReferences references={references} variant={variant} showContact={false}  title={getSectionTitle('references', undefined, lang)} />
+              <CVSkills skills={skills} variant={variant} layout="bars"  title={getSectionTitle('skills', cv.settings, lang)} />
+              <CVLanguages languages={languages} variant={variant}  title={getSectionTitle('languages', cv.settings, lang)} />
+              <CVCertifications certifications={certifications} variant={variant} title={getSectionTitle('certifications', cv.settings, lang)} />
+              <CVQualities qualities={cv.qualities || []} variant={variant} title={getSectionTitle('qualities', cv.settings, lang)} />
+              <CVHobbies hobbies={hobbies} variant={variant}  title={getSectionTitle('hobbies', cv.settings, lang)} />
+              <CVReferences references={references} variant={variant} showContact={false}  title={getSectionTitle('references', cv.settings, lang)} />
             </div>
           </div>
 
           <div className="mt-8">
-            <CVDivers divers={divers} variant={variant}  title={getSectionTitle('divers', undefined, lang)} />
+            <CVDivers divers={divers} variant={variant}  title={getSectionTitle('divers', cv.settings, lang)} />
           </div>
         </div>
       </div>

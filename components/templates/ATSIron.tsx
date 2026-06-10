@@ -48,7 +48,7 @@ export function ATSIron({ cv }: TemplateProps) {
       {/* Experience */}
       {experiences.length > 0 && (
         <section className="mb-6">
-          <h2 className="font-bold text-sm uppercase border-b border-black mb-3">{getSectionTitle('experience', undefined, lang)}</h2>
+          <h2 className="font-bold text-sm uppercase border-b border-black mb-3">{getSectionTitle('experience', cv.settings, lang)}</h2>
           <div className="space-y-5">
             {experiences.map((exp) => (
               <div key={exp.id}>
@@ -71,7 +71,7 @@ export function ATSIron({ cv }: TemplateProps) {
       {/* Education */}
       {education.length > 0 && (
         <section className="mb-6">
-          <h2 className="font-bold text-sm uppercase border-b border-black mb-3">{getSectionTitle('education', undefined, lang)}</h2>
+          <h2 className="font-bold text-sm uppercase border-b border-black mb-3">{getSectionTitle('education', cv.settings, lang)}</h2>
           <div className="space-y-3">
             {education.map((edu) => (
               <div key={edu.id} className="flex justify-between">
@@ -123,7 +123,7 @@ export function ATSIron({ cv }: TemplateProps) {
       {/* Projects */}
       {projects.length > 0 && (
         <section className="mb-6">
-           <h2 className="font-bold text-sm uppercase border-b border-black mb-3">{getSectionTitle('projects', undefined, lang)}</h2>
+           <h2 className="font-bold text-sm uppercase border-b border-black mb-3">{getSectionTitle('projects', cv.settings, lang)}</h2>
            <div className="space-y-3">
                {projects.map(p => (
                    <div key={p.id}>
