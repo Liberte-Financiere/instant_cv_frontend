@@ -23,13 +23,6 @@ const plans = [
     price: '0',
     currency: 'FCFA',
     description: `${APP_CONFIG.credits.signupBonus} crédits offerts à l'inscription.`,
-    features: [
-      'IA incluse (25 crédits)',
-      'Accès à toutes les fonctionnalités',
-      'Export PDF Pro illimité',
-      'Templates CV & LM gratuits',
-      'Crédits sans expiration'
-    ],
     cta: 'Créer mon compte',
     popular: false,
     dark: false
@@ -40,12 +33,6 @@ const plans = [
     currency: 'FCFA',
     period: ' / achat unique',
     description: '35 crédits',
-    features: [
-      'Valable à vie',
-      'Accès à toutes les fonctionnalités IA',
-      'Génération ultra-rapide',
-      'Sans abonnement'
-    ],
     cta: 'Explorer',
     popular: true,
     dark: true
@@ -56,12 +43,6 @@ const plans = [
     currency: 'FCFA',
     period: ' / achat unique',
     description: '80 crédits',
-    features: [
-      'Valable à vie',
-      'Accès à toutes les fonctionnalités IA',
-      'Idéal pour des candidatures multiples',
-      'Sans abonnement'
-    ],
     cta: 'En savoir plus',
     popular: false,
     dark: false
@@ -72,12 +53,6 @@ const plans = [
     currency: 'FCFA',
     period: ' / achat unique',
     description: '250 crédits',
-    features: [
-      'Valable à vie',
-      'Accès à toutes les fonctionnalités IA',
-      'Idéal pour les chercheurs actifs',
-      'Sans abonnement'
-    ],
     cta: "Voir l'offre",
     popular: false,
     dark: false
@@ -148,18 +123,7 @@ export function Pricing() {
                 <p className={`mt-2 text-sm ${plan.dark ? 'text-slate-400' : 'text-slate-500'}`}>{plan.description}</p>
               </div>
 
-              <ul className="space-y-4 mb-8">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3 text-sm">
-                    <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                      plan.dark ? 'bg-primary/20 text-primary' : 'bg-green-100 text-green-600'
-                    }`}>
-                      <Check className="w-3 h-3" />
-                    </div>
-                    <span className={plan.dark ? 'text-slate-300' : 'text-slate-600'}>{feature}</span>
-                  </li>
-                ))}
-              </ul>
+
 
               <Link href="/auth">
                 <button className={`w-full py-4 rounded-xl font-bold transition-all ${
