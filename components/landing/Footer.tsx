@@ -12,7 +12,9 @@ export function Footer() {
           <FileText className="w-5 h-5 text-blue-500" />
           <span className="font-bold text-lg">{APP_CONFIG.name}</span>
         </div>
-        <div className="flex gap-8">
+        <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+          <Link className="hover:text-white transition-colors" href="/compare">Comparer CV</Link>
+          <Link className="hover:text-white transition-colors" href="/help">Astuces & Infos</Link>
           <Link className="hover:text-white transition-colors" href="/terms">Confidentialité</Link>
           <Link className="hover:text-white transition-colors" href="/terms">Conditions</Link>
           <a className="hover:text-white transition-colors" href="mailto:support@jobsira.com">Support</a>

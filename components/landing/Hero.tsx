@@ -41,7 +41,7 @@ export function Hero() {
 
             <div className="flex items-center justify-center lg:justify-start gap-4 pt-2">
               <AvatarGroup count={2} />
-              <p className="text-sm text-slate-400">Rejoint par <span className="text-white font-bold">500+</span> personnes</p>
+              <p className="text-sm text-slate-400">Rejoint par <span className="text-white font-bold">150+</span> personnes</p>
             </div>
 
             {/* PWA Badges */}
