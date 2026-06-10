@@ -10,10 +10,10 @@ const creditActions = [
   { icon: BarChart3, label: 'Analyse de CV', cost: '2 cr.', color: 'text-blue-500' },
   { icon: Search, label: 'Match CV vs Offre', cost: '2 cr.', color: 'text-indigo-500' },
   { icon: FileText, label: 'Lettre de motivation', cost: '2 cr.', color: 'text-violet-500' },
-  { icon: PenLine, label: 'Amelioration IA', cost: '1 cr.', color: 'text-emerald-500' },
+  { icon: PenLine, label: 'Amélioration IA', cost: '1 cr.', color: 'text-emerald-500' },
   { icon: Zap, label: 'Correction / Reformulation', cost: '0.5 cr.', color: 'text-amber-500' },
   { icon: Languages, label: 'Traduction de CV', cost: '10 cr.', color: 'text-cyan-500' },
-  { icon: MessageSquare, label: 'Entretien ecrit', cost: '5 cr.', color: 'text-rose-500' },
+  { icon: MessageSquare, label: 'Entretien écrit', cost: '5 cr.', color: 'text-rose-500' },
   { icon: Mic, label: 'Entretien vocal', cost: '1 cr./min', color: 'text-orange-500' },
 ];
 
@@ -22,15 +22,15 @@ const plans = [
     name: 'Essai Gratuit',
     price: '0',
     currency: 'FCFA',
-    description: `${APP_CONFIG.credits.signupBonus} credits offerts a l'inscription.`,
+    description: `${APP_CONFIG.credits.signupBonus} crédits offerts à l'inscription.`,
     features: [
-      'IA incluse (25 credits)',
-      'Creation de CV illimitee',
-      'Export PDF Pro illimite',
+      'IA incluse (25 crédits)',
+      'Accès à toutes les fonctionnalités',
+      'Export PDF Pro illimité',
       'Templates CV & LM gratuits',
-      'Credits sans expiration'
+      'Crédits sans expiration'
     ],
-    cta: 'Creer mon compte',
+    cta: 'Créer mon compte',
     popular: false,
     dark: false
   },
@@ -39,12 +39,12 @@ const plans = [
     price: '1 000',
     currency: 'FCFA',
     period: ' / achat unique',
-    description: '35 credits',
+    description: '35 crédits',
     features: [
-      'Valable a vie',
-      'Analyse + Match IA',
-      'Lettres de motivation IA',
-      'Refonte IA de votre CV'
+      'Valable à vie',
+      'Accès à toutes les fonctionnalités IA',
+      'Génération ultra-rapide',
+      'Sans abonnement'
     ],
     cta: 'Explorer',
     popular: true,
@@ -55,12 +55,12 @@ const plans = [
     price: '2 000',
     currency: 'FCFA',
     period: ' / achat unique',
-    description: '80 credits',
+    description: '80 crédits',
     features: [
-      'Valable a vie',
-      'Correction et traduction IA',
-      'Entretiens simules IA',
-      'Multiples versions de CV'
+      'Valable à vie',
+      'Accès à toutes les fonctionnalités IA',
+      'Idéal pour des candidatures multiples',
+      'Sans abonnement'
     ],
     cta: 'En savoir plus',
     popular: false,
@@ -71,12 +71,12 @@ const plans = [
     price: '5 000',
     currency: 'FCFA',
     period: ' / achat unique',
-    description: '250 credits',
+    description: '250 crédits',
     features: [
-      'Valable a vie',
-      'Coach IA complet',
-      'Entretiens vocaux illimites',
-      'Toutes les options'
+      'Valable à vie',
+      'Accès à toutes les fonctionnalités IA',
+      'Idéal pour les chercheurs actifs',
+      'Sans abonnement'
     ],
     cta: "Voir l'offre",
     popular: false,
@@ -90,7 +90,7 @@ export function Pricing() {
       <div className="max-w-7xl mx-auto">
         <SectionHeader
           title="Finis les abonnements mensuels"
-          description="Achetez des credits et utilisez-les quand vous voulez. Pas d'engagement, pas d'expiration."
+          description="Achetez des crédits et utilisez-les quand vous voulez. Pas d'engagement, pas d'expiration."
         />
 
         <motion.div
@@ -100,7 +100,7 @@ export function Pricing() {
           className="max-w-3xl mx-auto mb-16"
         >
           <h3 className="text-center text-lg font-bold text-slate-800 mb-6">
-            Combien coute chaque action ?
+            Combien coûte chaque action ?
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {creditActions.map((action) => (

@@ -1,10 +1,5 @@
-feat: ajout des Analytics et de la génération d'images de partage (Open Graph)
+fix: corrections typographiques et ajustement des offres Pricing
 
-Analytics (Vues des CV) :
-- Ajout de l'incrémentation asynchrone du compteur `views` via Prisma dans la route `/share/[id]`.
-- Les vues s'actualisent désormais en temps réel sur le Dashboard du candidat.
-
-SEO & Partage (Open Graph) :
-- Création de la route `opengraph-image.tsx` pour le dossier `/share/[id]`.
-- Utilisation de `next/og` pour générer dynamiquement une miniature 1200x630 (Nom du candidat, Titre, Effet glassmorphism).
-- Optimisation du partage sur LinkedIn, X, et WhatsApp pour les CVs publics.
+- Pricing : Simplification des "features" pour refléter le fait que toutes les fonctionnalités sont disponibles quel que soit le pack (seuls les crédits changent).
+- Pricing : Ajout des accents manquants (Coûte, Crédits, Illimité, etc.).
+- Hero : Remplacement du bouton Démo inactif par une ancre fonctionnelle vers la section #features.
