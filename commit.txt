@@ -1,12 +1,9 @@
-fix: corrections typographiques et ajustement des offres Pricing
+feat: Améliorations UX/UI de l'Espace Recruteur et Landing Page
 
-- Pricing : Simplification des "features" pour refléter le fait que toutes les fonctionnalités sont disponibles quel que soit le pack (seuls les crédits changent).
-- Pricing : Ajout des accents manquants (Coûte, Crédits, Illimité, etc.).
-- Hero : Remplacement du bouton Démo inactif par une ancre fonctionnelle vers la section #features.
-- Hero : Précision du fonctionnement PWA ("CV accessibles hors-ligne" au lieu de "Fonctionne hors-ligne") avec un tooltip explicatif.
 - Features & FAQ : Correction des textes trompeurs sur l'édition hors-ligne pour refléter la réalité (consultation uniquement).
 - Features : Réparation du bouton "Voir la galerie" (redirection vers /auth).
 - Espace Recruteur : Le bouton "Connexion" de la navbar redirige désormais vers /recruiter/register pour un meilleur ciblage B2B, et s'intitule "Espace Recruteur".
 - Espace Recruteur : Ajout d'un bouton de "Déconnexion" rapide dans la navbar pour les utilisateurs connectés.
 - Espace Recruteur (IA) : Ajout du raccourci clavier (Ctrl+J ou Cmd+J) pour ouvrir/fermer le chat.
 - Espace Recruteur (IA) : Mise en place d'un "Teaser". Le chat IA reste visible pour les non-recruteurs mais affiche un Call-To-Action bloquant les incitant à créer un compte recruteur pour l'utiliser.
+- Automatisation : Ajout d'un script push.bat pour simplifier les commits sous Windows.
