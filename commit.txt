@@ -1,11 +1,10 @@
-feat: améliorations landing page et structure de l'IA d'entretien
+feat: ajout des Analytics et de la génération d'images de partage (Open Graph)
 
-Landing Page :
-- Mise à jour des statistiques (500+ -> 150+ utilisateurs).
-- Refonte de la section "Cible" (TargetAudience) pour intégrer les recruteurs dans une grille à 4 colonnes homogène.
-- Ajout du composant MarketingLinks avec accroches (JobSira vs Concurrence, Astuces ATS).
-- Ajout des liens "Comparer CV" et "Astuces & Infos" dans la Navbar et le Footer.
+Analytics (Vues des CV) :
+- Ajout de l'incrémentation asynchrone du compteur `views` via Prisma dans la route `/share/[id]`.
+- Les vues s'actualisent désormais en temps réel sur le Dashboard du candidat.
 
-IA d'Entretien :
-- Refactorisation du prompt système de l'entretien (texte et audio) pour forcer une structure logique.
-- L'IA commence par des questions techniques/métier, puis pivote obligatoirement vers des questions RH/Comportementales (méthode STAR, culture fit) en seconde moitié d'entretien.
+SEO & Partage (Open Graph) :
+- Création de la route `opengraph-image.tsx` pour le dossier `/share/[id]`.
+- Utilisation de `next/og` pour générer dynamiquement une miniature 1200x630 (Nom du candidat, Titre, Effet glassmorphism).
+- Optimisation du partage sur LinkedIn, X, et WhatsApp pour les CVs publics.
