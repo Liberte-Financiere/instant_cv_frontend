@@ -1,8 +1,6 @@
-feat: implémentation des titres de sections personnalisables et pagination du dashboard
+fix: refactor en profondeur de la logique des suggestions IA (Match)
 
-- Ajout de la propriété `sectionTitles` dans le store Zustand et les types CV.
-- Mise à jour de `getSectionTitle` pour supporter la personnalisation et le fallback.
-- Déploiement de la logique dans les 20+ templates et le SectionRenderer.
-- Ajout d'un champ "Titre de la section (Optionnel)" dans tous les formulaires de l'éditeur.
-- Amélioration du bouton Debug avec plus de données mockées (pour tests de charge).
-- Ajout de la pagination (10 éléments/page) et du tri (plus récent d'abord) sur la liste des CVs du dashboard.
+- Correction du chargement asynchrone dans `handleApplyReformulation` (évite de modifier un CV vide).
+- Support étendu des sections (education, skills, projects, certifications) au lieu de juste experience/personalInfo.
+- Sécurisation contre les crashs liés aux index hors limites (utilise l'état en temps réel du store).
+- Mise à jour du prompt système (API) pour inclure les projets et certifications dans le schéma JSON strict de Gemini.
