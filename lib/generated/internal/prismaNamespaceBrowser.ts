@@ -65,7 +65,8 @@ export const ModelName = {
   InterviewSession: 'InterviewSession',
   InterviewMessage: 'InterviewMessage',
   CandidateProfile: 'CandidateProfile',
-  ProfileUnlock: 'ProfileUnlock'
+  ProfileUnlock: 'ProfileUnlock',
+  MarketingCampaign: 'MarketingCampaign'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -314,6 +315,29 @@ export const ProfileUnlockScalarFieldEnum = {
 export type ProfileUnlockScalarFieldEnum = (typeof ProfileUnlockScalarFieldEnum)[keyof typeof ProfileUnlockScalarFieldEnum]
 
 
+export const MarketingCampaignScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  subject: 'subject',
+  preheader: 'preheader',
+  content: 'content',
+  type: 'type',
+  status: 'status',
+  templateId: 'templateId',
+  targetAudience: 'targetAudience',
+  externalEmails: 'externalEmails',
+  scheduledAt: 'scheduledAt',
+  sentAt: 'sentAt',
+  recipientsCount: 'recipientsCount',
+  openRate: 'openRate',
+  clickRate: 'clickRate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MarketingCampaignScalarFieldEnum = (typeof MarketingCampaignScalarFieldEnum)[keyof typeof MarketingCampaignScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -536,4 +560,20 @@ export const ProfileUnlockOrderByRelevanceFieldEnum = {
 } as const
 
 export type ProfileUnlockOrderByRelevanceFieldEnum = (typeof ProfileUnlockOrderByRelevanceFieldEnum)[keyof typeof ProfileUnlockOrderByRelevanceFieldEnum]
+
+
+export const MarketingCampaignOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  subject: 'subject',
+  preheader: 'preheader',
+  content: 'content',
+  type: 'type',
+  status: 'status',
+  templateId: 'templateId',
+  targetAudience: 'targetAudience',
+  externalEmails: 'externalEmails'
+} as const
+
+export type MarketingCampaignOrderByRelevanceFieldEnum = (typeof MarketingCampaignOrderByRelevanceFieldEnum)[keyof typeof MarketingCampaignOrderByRelevanceFieldEnum]
 

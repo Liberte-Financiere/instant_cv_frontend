@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { User, Check, ChevronDown, CheckCircle, Sparkles, Eye, EyeOff, Shield, AlertTriangle, Loader2, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { User, Check, ChevronDown, Sparkles, Eye, Shield, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
@@ -297,7 +297,7 @@ export default function SettingsPage() {
                   </button>
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900">S'abonner aux nouveautés Jobsira</h4>
+                  <h4 className="text-sm font-bold text-slate-900">S&apos;abonner aux nouveautés Jobsira</h4>
                   <p className="text-xs text-slate-500 mt-1">
                     Recevez nos emails concernant les nouvelles fonctionnalités, mises à jour importantes et offres spéciales. Vous pouvez vous désabonner à tout moment.
                   </p>

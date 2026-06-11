@@ -280,3 +280,29 @@ model ProfileUnlock {
   @@index([unlockerUserId])
   @@index([candidateProfileId])
 }
+
+// Admin / HQ Ops Models
+
+model MarketingCampaign {
+  id             String   @id @default(cuid())
+  name           String   // Internal name
+  subject        String   // Email subject
+  preheader      String?  // Preheader text
+  content        String   @db.Text // The HTML or plaintext content
+  type           String   @default("Newsletter") // "Newsletter", "Annonce", "Transactionnel", "Promotion"
+  status         String   @default("draft") // "draft", "scheduled", "sent"
+  templateId     String?
+  targetAudience String   @default("all") // "all", "segment"
+  externalEmails String[] @default([]) // Custom emails added
+  
+  scheduledAt    DateTime?
+  sentAt         DateTime?
+  
+  // Basic stats caching
+  recipientsCount Int     @default(0)
+  openRate        Float?
+  clickRate       Float?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

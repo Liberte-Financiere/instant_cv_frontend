@@ -7,9 +7,10 @@ interface CVHobbiesProps {
   hobbies: Hobby[];
   variant: CVVariant;
   title?: string;
+  accentColor?: string;
 }
 
-export function CVHobbies({ hobbies, variant, title = "Centres d'intérêt" }: CVHobbiesProps) {
+export function CVHobbies({ hobbies, variant, title = "Centres d'intérêt", accentColor }: CVHobbiesProps) {
   const styles = variantStyles[variant];
   
   if (hobbies.length === 0) return null;

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Plus, Trash2, GripVertical, X, ArrowLeft, Search, Filter, Calendar, Tag as TagIcon, Clock, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
-import { format, isPast, isToday, formatDistanceToNow } from 'date-fns';
+import { format, isPast, isToday } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 interface Task {
@@ -581,7 +581,7 @@ export default function AdminTasksPage() {
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link
-              href="/dashboard"
+              href="/dashboard/hq-ops"
               className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
             >
               <ArrowLeft className="w-5 h-5 text-slate-500" />

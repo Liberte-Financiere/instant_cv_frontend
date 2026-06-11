@@ -9,7 +9,7 @@ export default function HqOpsDashboard() {
       title: 'Gestion des Crédits',
       description: 'Superviser les transactions, annuler des paiements, et recréditer des comptes manuellement.',
       icon: Zap,
-      href: '/dashboard/admin',
+      href: '/dashboard/hq-ops/credits',
       color: 'text-amber-500',
       bg: 'bg-amber-100',
       borderColor: 'border-amber-200 hover:border-amber-400'
@@ -18,7 +18,7 @@ export default function HqOpsDashboard() {
       title: 'Gestion des Tâches',
       description: 'Suivi des tâches internes de développement et des objectifs (Tickets).',
       icon: LayoutList,
-      href: '/admin/tasks',
+      href: '/dashboard/hq-ops/tasks',
       color: 'text-blue-500',
       bg: 'bg-blue-100',
       borderColor: 'border-blue-200 hover:border-blue-400'
@@ -27,7 +27,7 @@ export default function HqOpsDashboard() {
       title: 'Avis Utilisateurs',
       description: 'Modérer et lire les feedbacks laissés par les utilisateurs de Jobsira.',
       icon: MessageSquare,
-      href: '/dashboard/admin/feedback',
+      href: '/dashboard/hq-ops/feedback',
       color: 'text-purple-500',
       bg: 'bg-purple-100',
       borderColor: 'border-purple-200 hover:border-purple-400'

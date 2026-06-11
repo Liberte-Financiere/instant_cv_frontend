@@ -7,6 +7,7 @@ interface CVLanguagesProps {
   languages: Language[];
   variant: CVVariant;
   title?: string;
+  accentColor?: string;
 }
 
 const levelBars: Record<string, number> = {
@@ -16,7 +17,7 @@ const levelBars: Record<string, number> = {
   'Natif': 4,
 };
 
-export function CVLanguages({ languages, variant, title = 'Langues' }: CVLanguagesProps) {
+export function CVLanguages({ languages, variant, title = 'Langues', accentColor }: CVLanguagesProps) {
   const styles = variantStyles[variant];
   
   if (languages.length === 0) return null;
