@@ -21,6 +21,8 @@ export default defineConfig({
         'lib/utils.ts',
         'lib/schemas.ts',
         'lib/ligdicash.ts',
+        'lib/email-templates.ts',
+        'app/api/hq-ops/marketing/**/*.ts',
       ],
     },
   },

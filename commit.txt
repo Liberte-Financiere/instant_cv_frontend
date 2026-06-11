@@ -1,9 +1,10 @@
-feat: Améliorations UX/UI de l'Espace Recruteur et Landing Page
+feat: Hub Marketing, Templates Emails SaaS & Tests Unitaires
 
-- Features & FAQ : Correction des textes trompeurs sur l'édition hors-ligne pour refléter la réalité (consultation uniquement).
-- Features : Réparation du bouton "Voir la galerie" (redirection vers /auth).
-- Espace Recruteur : Le bouton "Connexion" de la navbar redirige désormais vers /recruiter/register pour un meilleur ciblage B2B, et s'intitule "Espace Recruteur".
-- Espace Recruteur : Ajout d'un bouton de "Déconnexion" rapide dans la navbar pour les utilisateurs connectés.
-- Espace Recruteur (IA) : Ajout du raccourci clavier (Ctrl+J ou Cmd+J) pour ouvrir/fermer le chat.
-- Espace Recruteur (IA) : Mise en place d'un "Teaser". Le chat IA reste visible pour les non-recruteurs mais affiche un Call-To-Action bloquant les incitant à créer un compte recruteur pour l'utiliser.
-- Automatisation : Ajout d'un script push.bat pour simplifier les commits sous Windows.
+- Hub Marketing : Création d'un espace dédié aux administrateurs pour gérer l'envoi de newsletters et emails promotionnels (/dashboard/hq-ops/marketing).
+- Editeur de Campagne : Interface pour créer, cibler, et tester l'envoi d'emails en masse avec gestion d'une liste de test (Bypass de la DB pour l'envoi test).
+- Intégration Brevo (Sendinblue) : Câblage complet de l'API pour l'envoi d'emails via le endpoint SMTP (POST /api/hq-ops/marketing/send).
+- Statistiques Brevo : Récupération des taux d'ouverture, clics, et emails délivrés directement depuis l'API Brevo.
+- Templates Emails : Refonte complète des templates (Annonce, Promo, Minimaliste) vers un design "SaaS Premium" responsif, avec balise de désabonnement {{ unsubscribe }} et couleurs de la marque Jobsira.
+- Aperçu Templates : Ajout d'une modale avec iFrame pour prévisualiser le rendu des templates HTML en temps réel.
+- Tests Unitaires : Création de la Phase 1 de tests unitaires pour fiabiliser le Hub Marketing (email-templates.test.ts et marketing-api.test.ts).
+- Configuration Vitest : Mise à jour de vitest.config.ts pour inclure les routes d'API marketing et le générateur de templates dans la couverture de code.

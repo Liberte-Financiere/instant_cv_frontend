@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    const { subject, message, templateId = 'annonce', buttonText, buttonUrl, externalEmails = [] } = await req.json();
+    const { subject, message, templateId = 'annonce', targetAudience = 'all', buttonText, buttonUrl, externalEmails = [] } = await req.json();
 
     if (!subject || !message) {
       return NextResponse.json({ error: 'Sujet et message requis' }, { status: 400 });
@@ -36,19 +36,21 @@ export async function POST(req: Request) {
 
     const htmlContent = getHtmlForTemplate(templateId, { subject, message, buttonText, buttonUrl });
 
-    // 1. Récupérer les emails des abonnés Jobsira (opt-in)
-    const users = await prisma.user.findMany({
-      where: { acceptsMarketing: true, email: { not: null } },
-      select: { email: true }
-    });
-
-    const dbEmails = users.map(u => u.email).filter(Boolean) as string[];
+    // 1. Récupérer les emails des abonnés Jobsira (opt-in) seulement si on ne cible pas le segment de test
+    let dbEmails: string[] = [];
+    if (targetAudience !== 'test') {
+      const users = await prisma.user.findMany({
+        where: { acceptsMarketing: true, email: { not: null } },
+        select: { email: true }
+      });
+      dbEmails = users.map(u => u.email).filter(Boolean) as string[];
+    }
 
     // 2. Fusionner et dé-dupliquer (DB + Externes)
     const allEmails = Array.from(new Set([...dbEmails, ...externalEmails]));
 
     if (allEmails.length === 0) {
-      return NextResponse.json({ error: 'Aucun destinataire valide trouvé' }, { status: 400 });
+      return NextResponse.json({ error: 'Aucun destinataire valide trouvé. Veuillez ajouter des emails personnalisés si vous êtes en mode test.' }, { status: 400 });
     }
 
     // 1. Récupération de la clé API depuis .env
@@ -83,6 +85,21 @@ export async function POST(req: Request) {
       console.error('Erreur Brevo API:', errorData);
       return NextResponse.json({ error: 'Erreur lors de la communication avec Brevo' }, { status: 500 });
     }
+
+    // 3. Sauvegarder l'historique dans la base de données
+    await prisma.marketingCampaign.create({
+      data: {
+        name: subject, // On utilise le sujet comme nom par défaut s'il n'est pas fourni
+        subject: subject,
+        content: message,
+        type: 'Newsletter',
+        status: 'sent',
+        targetAudience: 'all',
+        externalEmails: externalEmails,
+        sentAt: new Date(),
+        recipientsCount: allEmails.length
+      }
+    });
 
     return NextResponse.json({ 
       success: true, 

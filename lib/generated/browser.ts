@@ -92,3 +92,8 @@ export type CandidateProfile = Prisma.CandidateProfileModel
  * 
  */
 export type ProfileUnlock = Prisma.ProfileUnlockModel
+/**
+ * Model MarketingCampaign
+ * 
+ */
+export type MarketingCampaign = Prisma.MarketingCampaignModel

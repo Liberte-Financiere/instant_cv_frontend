@@ -120,20 +120,7 @@ export function Sidebar() {
           </nav>
         </div> 
 
-      {/* Admin Section */}
-        {session?.user?.role === 'ADMIN' && (
-          <div className="mt-8">
-            <div className="flex items-center gap-2 px-4 mb-2">
-              <ShieldAlert className="w-4 h-4 text-red-500" />
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Administration</span>
-            </div>
-            <nav className="space-y-1">
-              <NavLink item={{ name: 'Gestion Crédits', href: '/dashboard/admin', icon: Zap }} />
-              <NavLink item={{ name: 'Gestion des Tâches', href: '/admin/tasks', icon: LayoutList }} />
-              <NavLink item={{ name: 'Avis Utilisateurs', href: '/dashboard/admin/feedback', icon: MessageSquare }} />
-            </nav>
-          </div>
-        )}
+      {/* Admin Section Removed */}
 
       </div>
 

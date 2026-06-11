@@ -8,9 +8,10 @@ interface CVSkillsProps {
   variant: CVVariant;
   title?: string;
   layout?: 'tags' | 'list' | 'bars';
+  accentColor?: string;
 }
 
-export function CVSkills({ skills, variant, title = 'Compétences', layout = 'tags' }: CVSkillsProps) {
+export function CVSkills({ skills, variant, title = 'Compétences', layout = 'tags', accentColor }: CVSkillsProps) {
   const styles = variantStyles[variant];
   
   if (skills.length === 0) return null;

@@ -1,6 +1,7 @@
 'use client';
 
 import { Sidebar } from '@/components/dashboard/Sidebar';
+import { HqSidebar } from '@/components/dashboard/HqSidebar';
 import { MobileHeader } from '@/components/dashboard/MobileHeader';
 import { OutOfCreditsModal } from '@/components/shared/OutOfCreditsModal';
 import { usePathname } from 'next/navigation';
@@ -17,7 +18,11 @@ export default function DashboardLayout({
     return (
       <div className="min-h-screen bg-slate-50">
         <div className="fixed inset-0 bg-slate-50 -z-50" aria-hidden="true" />
-        <main className="w-full min-h-screen">
+        <div className="hidden lg:block">
+          <HqSidebar />
+        </div>
+        {/* We can reuse MobileHeader or create HqMobileHeader. For now we use the main layout padding */}
+        <main className="lg:pl-72 w-full min-h-screen bg-slate-50">
           {children}
         </main>
       </div>

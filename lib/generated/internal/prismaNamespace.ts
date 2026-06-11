@@ -398,7 +398,8 @@ export const ModelName = {
   InterviewSession: 'InterviewSession',
   InterviewMessage: 'InterviewMessage',
   CandidateProfile: 'CandidateProfile',
-  ProfileUnlock: 'ProfileUnlock'
+  ProfileUnlock: 'ProfileUnlock',
+  MarketingCampaign: 'MarketingCampaign'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock"
+    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1528,6 +1529,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MarketingCampaign: {
+      payload: Prisma.$MarketingCampaignPayload<ExtArgs>
+      fields: Prisma.MarketingCampaignFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MarketingCampaignFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MarketingCampaignFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+        }
+        findFirst: {
+          args: Prisma.MarketingCampaignFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MarketingCampaignFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+        }
+        findMany: {
+          args: Prisma.MarketingCampaignFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>[]
+        }
+        create: {
+          args: Prisma.MarketingCampaignCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+        }
+        createMany: {
+          args: Prisma.MarketingCampaignCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MarketingCampaignCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>[]
+        }
+        delete: {
+          args: Prisma.MarketingCampaignDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+        }
+        update: {
+          args: Prisma.MarketingCampaignUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+        }
+        deleteMany: {
+          args: Prisma.MarketingCampaignDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MarketingCampaignUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MarketingCampaignUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>[]
+        }
+        upsert: {
+          args: Prisma.MarketingCampaignUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketingCampaignPayload>
+        }
+        aggregate: {
+          args: Prisma.MarketingCampaignAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMarketingCampaign>
+        }
+        groupBy: {
+          args: Prisma.MarketingCampaignGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MarketingCampaignGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MarketingCampaignCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MarketingCampaignCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1797,6 +1872,29 @@ export const ProfileUnlockScalarFieldEnum = {
 export type ProfileUnlockScalarFieldEnum = (typeof ProfileUnlockScalarFieldEnum)[keyof typeof ProfileUnlockScalarFieldEnum]
 
 
+export const MarketingCampaignScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  subject: 'subject',
+  preheader: 'preheader',
+  content: 'content',
+  type: 'type',
+  status: 'status',
+  templateId: 'templateId',
+  targetAudience: 'targetAudience',
+  externalEmails: 'externalEmails',
+  scheduledAt: 'scheduledAt',
+  sentAt: 'sentAt',
+  recipientsCount: 'recipientsCount',
+  openRate: 'openRate',
+  clickRate: 'clickRate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MarketingCampaignScalarFieldEnum = (typeof MarketingCampaignScalarFieldEnum)[keyof typeof MarketingCampaignScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2021,6 +2119,22 @@ export const ProfileUnlockOrderByRelevanceFieldEnum = {
 export type ProfileUnlockOrderByRelevanceFieldEnum = (typeof ProfileUnlockOrderByRelevanceFieldEnum)[keyof typeof ProfileUnlockOrderByRelevanceFieldEnum]
 
 
+export const MarketingCampaignOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  subject: 'subject',
+  preheader: 'preheader',
+  content: 'content',
+  type: 'type',
+  status: 'status',
+  templateId: 'templateId',
+  targetAudience: 'targetAudience',
+  externalEmails: 'externalEmails'
+} as const
+
+export type MarketingCampaignOrderByRelevanceFieldEnum = (typeof MarketingCampaignOrderByRelevanceFieldEnum)[keyof typeof MarketingCampaignOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -2242,6 +2356,7 @@ export type GlobalOmitConfig = {
   interviewMessage?: Prisma.InterviewMessageOmit
   candidateProfile?: Prisma.CandidateProfileOmit
   profileUnlock?: Prisma.ProfileUnlockOmit
+  marketingCampaign?: Prisma.MarketingCampaignOmit
 }
 
 /* Types for Logging */
