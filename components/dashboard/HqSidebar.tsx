@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ShieldAlert, LogOut, Zap, LayoutList, MessageSquare, Mail, User, ChevronUp } from 'lucide-react';
+import { ShieldAlert, LogOut, Zap, LayoutList, MessageSquare, Mail, User, ChevronUp, Receipt } from 'lucide-react';
 import { cn, clearAllLocalData } from '@/lib/utils';
 import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
@@ -12,6 +12,7 @@ import { APP_CONFIG } from '@/lib/config';
 
 const adminNavigation = [
   { name: 'Gestion des Crédits', href: '/dashboard/hq-ops/credits', icon: Zap },
+  { name: 'Transactions & Paiements', href: '/dashboard/hq-ops/transactions', icon: Receipt },
   { name: 'Gestion des Tâches', href: '/dashboard/hq-ops/tasks', icon: LayoutList },
   { name: 'Avis Utilisateurs', href: '/dashboard/hq-ops/feedback', icon: MessageSquare },
   { 
