@@ -58,15 +58,20 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: 'Montant payé insuffisant.' }, { status: 400 });
       }
 
-      // Payment verified & amount confirmed! Credit the user
-      await prisma.paymentTransaction.update({
-        where: { id: transaction.id },
+      // Payment verified & amount confirmed! Credit the user atomically
+      const updateResult = await prisma.paymentTransaction.updateMany({
+        where: { id: transaction.id, status: 'pending' },
         data: {
           status: 'completed',
           transactionId: status.transaction_id,
           operatorName: status.operator_name || 'Inconnu',
         },
       });
+
+      if (updateResult.count === 0) {
+        // Already completed by webhook callback
+        return NextResponse.json({ status: 'completed', credits: transaction.credits });
+      }
 
       const pack = APP_CONFIG.pricing.packs.find((p) => p.id === transaction.packId);
 

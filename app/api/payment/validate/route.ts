@@ -31,7 +31,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { phone, otp, packId } = await req.json();
+    const { phone, otp, packId, credits: requestedCredits } = await req.json();
 
     if (!phone || !otp || !packId) {
       return NextResponse.json({ error: 'Téléphone, code OTP et pack requis.' }, { status: 400 });
@@ -44,19 +44,44 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Numéro de téléphone invalide.' }, { status: 400 });
     }
 
-    // Find pack for pricing
-    const pack = APP_CONFIG.pricing.packs.find((p) => p.id === packId);
-    if (!pack) {
-      return NextResponse.json({ error: 'Pack invalide.' }, { status: 400 });
+    // Determine pricing: À la carte or Pack
+    let packName: string;
+    let packPrice: number;
+    let packCredits: number;
+
+    if (packId === 'alacarte') {
+      // À la carte: validate credits amount
+      const { alaCarte } = APP_CONFIG.pricing;
+      const numCredits = parseInt(requestedCredits, 10);
+
+      if (!numCredits || numCredits < alaCarte.minCredits || numCredits > alaCarte.maxCredits) {
+        return NextResponse.json(
+          { error: `Le nombre de crédits doit être compris entre ${alaCarte.minCredits} et ${alaCarte.maxCredits}.` },
+          { status: 400 }
+        );
+      }
+
+      packName = 'À la carte';
+      packCredits = numCredits;
+      packPrice = numCredits * alaCarte.pricePerCredit;
+    } else {
+      // Standard pack lookup
+      const pack = APP_CONFIG.pricing.packs.find((p) => p.id === packId);
+      if (!pack) {
+        return NextResponse.json({ error: 'Pack invalide.' }, { status: 400 });
+      }
+      packName = pack.name;
+      packCredits = pack.credits;
+      packPrice = pack.price;
     }
 
     // Create a new pending transaction
     const transaction = await prisma.paymentTransaction.create({
       data: {
         userId: session.user.id,
-        packId: pack.id,
-        amount: pack.price,
-        credits: pack.credits,
+        packId,
+        amount: packPrice,
+        credits: packCredits,
         phone: cleanPhone,
         status: 'pending',
       },
@@ -69,14 +94,14 @@ export async function POST(req: Request) {
         invoice: {
           items: [
             {
-              name: pack.name,
-              description: `${pack.credits} crédits IA ${APP_CONFIG.name}`,
+              name: packName,
+              description: `${packCredits} crédits IA ${APP_CONFIG.name}`,
               quantity: 1,
-              unit_price: pack.price,
-              total_price: pack.price,
+              unit_price: packPrice,
+              total_price: packPrice,
             },
           ],
-          total_amount: pack.price,
+          total_amount: packPrice,
           devise: 'XOF',
           description: `Achat de crédits ${APP_CONFIG.name}`,
           customer: cleanPhone,
@@ -142,7 +167,7 @@ export async function POST(req: Request) {
         transaction.userId,
         transaction.credits,
         'PURCHASE',
-        `Achat ${pack.name} — ${transaction.amount} ${APP_CONFIG.pricing.currency}`
+        `Achat ${packName} — ${transaction.amount} ${APP_CONFIG.pricing.currency}`
       );
 
       return NextResponse.json({
