@@ -76,15 +76,21 @@ export async function POST(req: Request) {
         return NextResponse.json({ status: 'fraud_prevented' }, { status: 200 });
       }
 
-      // Update status and credit the user
-      await prisma.paymentTransaction.update({
-        where: { id: transaction.id },
+      // Update status atomically (Race Condition prevention)
+      const updateResult = await prisma.paymentTransaction.updateMany({
+        where: { id: transaction.id, status: 'pending' },
         data: {
           status: 'completed',
           transactionId: lgdTransactionId || null,
           operatorName: payload.operator_name || null,
         },
       });
+
+      // If count is 0, it means the transaction was already completed by a concurrent request
+      if (updateResult.count === 0) {
+        console.log(`[Callback] ℹ️ Transaction ${transaction.id} already completed by another thread. Skipping.`);
+        return NextResponse.json({ status: 'already_processed' });
+      }
 
       const pack = APP_CONFIG.pricing.packs.find((p) => p.id === transaction.packId);
 

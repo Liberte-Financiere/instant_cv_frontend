@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useCreditStore } from '@/store/useCreditStore';
 import { useSession } from 'next-auth/react';
-import { Sparkles, Check, Star, Zap, CreditCard, Gift } from 'lucide-react';
+import { Sparkles, Check, Star, Zap, CreditCard, Gift, Minus, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { APP_CONFIG } from '@/lib/config';
 import { PaymentModal } from '@/components/payment/PaymentModal';
@@ -70,10 +70,23 @@ export default function DashboardPricingPage() {
         </div>
       </motion.div>
 
+      {/* À la carte */}
+      <AlaCarteSection onPurchase={(credits: number) => {
+        const price = credits * APP_CONFIG.pricing.alaCarte.pricePerCredit;
+        setSelectedPack({
+          id: 'alacarte',
+          name: 'À la carte',
+          credits,
+          price,
+          priceLabel: price.toLocaleString('fr-FR'),
+        } as any);
+        setIsModalOpen(true);
+      }} />
+
       {/* Packs Payants */}
       <div>
-        <h2 className="text-lg font-bold text-slate-900 mb-1">Besoin de plus de crédits ?</h2>
-        <p className="text-sm text-slate-500 mb-6">Choisissez le pack qui vous convient. Paiement unique, crédits valables à vie.</p>
+        <h2 className="text-lg font-bold text-slate-900 mb-1">Packs crédits — Meilleur rapport qualité-prix</h2>
+        <p className="text-sm text-slate-500 mb-6">Plus vous achetez en pack, moins le crédit coûte cher. Paiement unique, crédits valables à vie.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {creditPacks.map((pack, index) => (
@@ -108,8 +121,13 @@ export default function DashboardPricingPage() {
                   <span className={`text-sm font-medium ${pack.popular ? 'text-slate-400' : 'text-slate-500'}`}>{APP_CONFIG.pricing.currency}</span>
                 </div>
                 
-                <div className="mt-3 inline-block px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                  <p className={`text-sm font-bold ${pack.popular ? 'text-blue-400' : 'text-blue-600'}`}>+{pack.credits} crédits</p>
+                <div className="mt-3 flex items-center gap-2">
+                  <span className={`inline-block px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-sm font-bold ${pack.popular ? 'text-blue-400' : 'text-blue-600'}`}>
+                    +{pack.credits} crédits
+                  </span>
+                  <span className={`text-xs font-semibold px-2 py-1 rounded-md ${pack.popular ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}`}>
+                    {Math.round(pack.price / pack.credits)}F/cr.
+                  </span>
                 </div>
 
                 <p className={`mt-3 text-sm ${pack.popular ? 'text-slate-400' : 'text-slate-500'}`}>{pack.description}</p>
@@ -168,5 +186,93 @@ export default function DashboardPricingPage() {
         />
       )}
     </div>
+  );
+}
+
+// ─── À la carte Component ──────────────────────
+function AlaCarteSection({ onPurchase }: { onPurchase: (credits: number) => void }) {
+  const [credits, setCredits] = useState(APP_CONFIG.pricing.alaCarte.minCredits);
+  const pricePerCredit = APP_CONFIG.pricing.alaCarte.pricePerCredit;
+  const minCredits = APP_CONFIG.pricing.alaCarte.minCredits;
+  const totalPrice = credits * pricePerCredit;
+
+  const adjustCredits = (delta: number) => {
+    setCredits(prev => Math.max(minCredits, prev + delta));
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white rounded-2xl border border-slate-200 shadow-lg p-6 sm:p-8"
+    >
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        {/* Left: Info */}
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-indigo-600" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900">Achat à la carte</h3>
+          </div>
+          <p className="text-sm text-slate-500">Achetez uniquement le nombre de crédits dont vous avez besoin. Minimum {minCredits} crédits.</p>
+          <p className="text-xs text-slate-400 mt-1">{pricePerCredit} {APP_CONFIG.pricing.currency} par crédit</p>
+        </div>
+
+        {/* Right: Selector + CTA */}
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          {/* Credit Selector */}
+          <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-2">
+            <button
+              onClick={() => adjustCredits(-5)}
+              disabled={credits <= minCredits}
+              className="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 hover:bg-slate-100 disabled:opacity-30 transition-colors"
+            >
+              <Minus className="w-4 h-4 text-slate-700" />
+            </button>
+
+            <div className="text-center min-w-[80px]">
+              <input
+                type="number"
+                value={credits}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value, 10);
+                  if (!isNaN(val) && val >= minCredits) setCredits(val);
+                  else if (!isNaN(val) && val >= 1) setCredits(val);
+                }}
+                onBlur={() => {
+                  if (credits < minCredits) setCredits(minCredits);
+                }}
+                min={minCredits}
+                className="w-20 text-center text-2xl font-black text-slate-900 bg-transparent outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider -mt-1">crédits</p>
+            </div>
+
+            <button
+              onClick={() => adjustCredits(5)}
+              className="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition-colors"
+            >
+              <Plus className="w-4 h-4 text-slate-700" />
+            </button>
+          </div>
+
+          {/* Price + CTA */}
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-2xl font-black text-slate-900">
+              {totalPrice.toLocaleString('fr-FR')} <span className="text-sm font-semibold text-slate-500">{APP_CONFIG.pricing.currency}</span>
+            </p>
+            <button
+              onClick={() => onPurchase(credits)}
+              disabled={credits < minCredits}
+              className="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-sm"
+            >
+              <CreditCard className="w-4 h-4" />
+              Acheter {credits} crédits
+            </button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 }

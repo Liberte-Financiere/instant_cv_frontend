@@ -1,11 +1,14 @@
-feat: Dashboard de Monitoring Financier & Gestion des Transactions (HQ-Ops)
+feat(payment): implémentation de l'achat de crédits à la carte et renforcement de la sécurité
 
-- Transactions & Paiements : Création d'une nouvelle interface complète dans le panel HQ-Ops pour le suivi financier (/dashboard/hq-ops/transactions).
-- KPIs Financiers : Mise en place de compteurs en temps réel calculant le chiffre d'affaires, le nombre de ventes, les crédits vendus et les crédits offerts manuellement.
-- Séparation des flux : Distinction claire entre les paiements réels (LigdiCash / Mobile Money) et les recharges manuelles (cadeaux) via un système d'onglets pour ne pas fausser la comptabilité.
-- Graphique d'Évolution (CSS Natif) : Création d'un graphique à barres 100% natif en CSS (sans librairie externe) affichant la courbe des revenus générés sur la période sélectionnée.
-- Filtrage Temporel : Ajout d'un sélecteur de dates (Aujourd'hui, 7 jours, Ce mois-ci, Depuis le début) qui met à jour instantanément les KPIs, le graphique et le tableau.
-- Export CSV : Fonctionnalité permettant de télécharger l'historique complet des transactions au format CSV pour la comptabilité.
-- Détails Transactions : Ajout d'une vue détaillée (Modale) au clic sur une transaction affichant l'opérateur, l'ID LigdiCash, le pack acheté et les informations du client.
-- Moteur de Recherche : Recherche en temps réel par email, nom ou numéro de téléphone pour retrouver rapidement un paiement.
-- API Transactions : Création du endpoint sécurisé `GET /api/hq-ops/transactions` (réservé aux admins) pour consolider les données PaymentTransaction et CreditTransaction.
+Nouvelles fonctionnalités :
+- Ajout de l'achat "À la carte" (min 5 crédits, 30F/crédit) dans lib/config.ts.
+- Création du composant AlaCarteSection dans la page Pricing avec sélecteur dynamique (+/- par paliers de 5).
+- Modification de validate/route.ts pour calculer dynamiquement le prix si packId === 'alacarte'.
+- Mise à jour du PaymentModal pour transmettre le champ 'credits' requis par le backend.
+
+Sécurité (Niveau Bancaire) :
+- Ajout d'une limite maxCredits (5000) pour prévenir les attaques par dépassement d'entier (Integer Overflow).
+- Correction de la faille de "Course aux requêtes" (Race Condition) : passage à des requêtes Prisma atomiques (updateMany avec clause status: 'pending') dans le webhook callback et le polling de statut pour empêcher les doubles crédits.
+
+Tests :
+- Ajout de __tests__/payment.test.ts (Vitest) pour couvrir la logique de calcul dynamique, les validations strictes, l'idempotence et les cas de fraude.
