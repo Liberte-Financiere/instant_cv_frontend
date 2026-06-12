@@ -1,10 +1,11 @@
-feat: Hub Marketing, Templates Emails SaaS & Tests Unitaires
+feat: Dashboard de Monitoring Financier & Gestion des Transactions (HQ-Ops)
 
-- Hub Marketing : Création d'un espace dédié aux administrateurs pour gérer l'envoi de newsletters et emails promotionnels (/dashboard/hq-ops/marketing).
-- Editeur de Campagne : Interface pour créer, cibler, et tester l'envoi d'emails en masse avec gestion d'une liste de test (Bypass de la DB pour l'envoi test).
-- Intégration Brevo (Sendinblue) : Câblage complet de l'API pour l'envoi d'emails via le endpoint SMTP (POST /api/hq-ops/marketing/send).
-- Statistiques Brevo : Récupération des taux d'ouverture, clics, et emails délivrés directement depuis l'API Brevo.
-- Templates Emails : Refonte complète des templates (Annonce, Promo, Minimaliste) vers un design "SaaS Premium" responsif, avec balise de désabonnement {{ unsubscribe }} et couleurs de la marque Jobsira.
-- Aperçu Templates : Ajout d'une modale avec iFrame pour prévisualiser le rendu des templates HTML en temps réel.
-- Tests Unitaires : Création de la Phase 1 de tests unitaires pour fiabiliser le Hub Marketing (email-templates.test.ts et marketing-api.test.ts).
-- Configuration Vitest : Mise à jour de vitest.config.ts pour inclure les routes d'API marketing et le générateur de templates dans la couverture de code.
+- Transactions & Paiements : Création d'une nouvelle interface complète dans le panel HQ-Ops pour le suivi financier (/dashboard/hq-ops/transactions).
+- KPIs Financiers : Mise en place de compteurs en temps réel calculant le chiffre d'affaires, le nombre de ventes, les crédits vendus et les crédits offerts manuellement.
+- Séparation des flux : Distinction claire entre les paiements réels (LigdiCash / Mobile Money) et les recharges manuelles (cadeaux) via un système d'onglets pour ne pas fausser la comptabilité.
+- Graphique d'Évolution (CSS Natif) : Création d'un graphique à barres 100% natif en CSS (sans librairie externe) affichant la courbe des revenus générés sur la période sélectionnée.
+- Filtrage Temporel : Ajout d'un sélecteur de dates (Aujourd'hui, 7 jours, Ce mois-ci, Depuis le début) qui met à jour instantanément les KPIs, le graphique et le tableau.
+- Export CSV : Fonctionnalité permettant de télécharger l'historique complet des transactions au format CSV pour la comptabilité.
+- Détails Transactions : Ajout d'une vue détaillée (Modale) au clic sur une transaction affichant l'opérateur, l'ID LigdiCash, le pack acheté et les informations du client.
+- Moteur de Recherche : Recherche en temps réel par email, nom ou numéro de téléphone pour retrouver rapidement un paiement.
+- API Transactions : Création du endpoint sécurisé `GET /api/hq-ops/transactions` (réservé aux admins) pour consolider les données PaymentTransaction et CreditTransaction.
