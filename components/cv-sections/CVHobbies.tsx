@@ -17,12 +17,18 @@ export function CVHobbies({ hobbies, variant, title = "Centres d'intérêt", acc
 
   return (
     <section>
-      <h2 className={`${styles.sectionTitle} mb-4`}>{title}</h2>
+      <h2 
+        className={`${styles.sectionTitle} mb-4`}
+        style={accentColor ? { borderColor: accentColor } : undefined}
+      >
+        {title}
+      </h2>
       <div className="flex flex-wrap gap-2">
         {hobbies.map((hobby) => (
           <span 
             key={hobby.id} 
             className={`${styles.tagBg} ${styles.tagText} px-3 py-1.5 rounded text-xs font-medium`}
+            style={accentColor ? { backgroundColor: `${accentColor}20`, color: accentColor } : undefined}
           >
             {hobby.name}
           </span>

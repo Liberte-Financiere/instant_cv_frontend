@@ -58,13 +58,18 @@ export function BoldHeader({ cv }: TemplateProps) {
             </h2>
             <div className="space-y-4">
               {experiences.map((exp) => (
-                <div key={exp.id} className="pl-4 border-l-3" style={{ borderLeftWidth: '3px', borderColor: `${accent}30` }}>
+                <div key={exp.id} className="pl-4 border-l-3 break-inside-avoid" style={{ borderLeftWidth: '3px', borderColor: `${accent}30` }}>
                   <div className="flex justify-between items-baseline">
                     <h3 className="font-bold text-sm">{exp.position}</h3>
                     <span className="text-xs text-slate-400">{exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}</span>
                   </div>
                   <p className="text-xs font-semibold" style={{ color: accent }}>{exp.company}</p>
-                  {exp.description && <p className="text-xs text-slate-600 mt-1 ">{exp.description}</p>}
+                  {exp.description && (
+                    <div 
+                      className="text-xs text-slate-600 mt-1 leading-relaxed prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
+                      dangerouslySetInnerHTML={{ __html: exp.description }}
+                    />
+                  )}
                 </div>
               ))}
             </div>
@@ -78,9 +83,9 @@ export function BoldHeader({ cv }: TemplateProps) {
               <span className="w-8 h-0.5" style={{ backgroundColor: accent }} />
               {getSectionTitle('education', cv.settings, lang)}
             </h2>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-wrap gap-y-3">
               {education.map((edu) => (
-                <div key={edu.id}>
+                <div key={edu.id} className="w-1/2 pr-2 break-inside-avoid">
                   <p className="font-bold text-sm">{edu.degree}</p>
                   <p className="text-xs text-slate-500">{edu.institution}</p>
                   <p className="text-xs" style={{ color: accent }}>{edu.startDate} — {edu.endDate}</p>
@@ -105,27 +110,37 @@ export function BoldHeader({ cv }: TemplateProps) {
           </section>
         )}
 
-        {/* 3 col: Qualities, Languages, Hobbies */}
-        <div className="grid grid-cols-3 gap-6">
-          {qualities.length > 0 && (
-            <section>
-              <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('qualities', cv.settings, lang)}</h2>
-              {qualities.map((q) => <p key={q.id} className="text-xs text-slate-600 mb-0.5">▸ {q.name}</p>)}
-            </section>
-          )}
-          {languages.length > 0 && (
-            <section>
-              <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('languages', cv.settings, lang)}</h2>
-              {languages.map((l) => <p key={l.id} className="text-xs text-slate-600 mb-0.5">▸ {l.name} — {l.level}</p>)}
-            </section>
-          )}
-          {hobbies.length > 0 && (
-            <section>
-              <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('hobbies', cv.settings, lang)}</h2>
-              {hobbies.map((h) => <p key={h.id} className="text-xs text-slate-600 mb-0.5">▸ {h.name}</p>)}
-            </section>
-          )}
-        </div>
+        {/* 3 col: Qualities, Languages, Hobbies via Table */}
+        <table className="w-full" style={{ tableLayout: 'fixed' }}>
+          <tbody>
+            <tr>
+              <td className="align-top pr-4 w-1/3">
+                {qualities.length > 0 && (
+                  <section>
+                    <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('qualities', cv.settings, lang)}</h2>
+                    {qualities.map((q) => <p key={q.id} className="text-xs text-slate-600 mb-0.5 break-inside-avoid">▸ {q.name}</p>)}
+                  </section>
+                )}
+              </td>
+              <td className="align-top px-2 w-1/3">
+                {languages.length > 0 && (
+                  <section>
+                    <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('languages', cv.settings, lang)}</h2>
+                    {languages.map((l) => <p key={l.id} className="text-xs text-slate-600 mb-0.5 break-inside-avoid">▸ {l.name} — {l.level}</p>)}
+                  </section>
+                )}
+              </td>
+              <td className="align-top pl-4 w-1/3">
+                {hobbies.length > 0 && (
+                  <section>
+                    <h2 className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: accent }}>{getSectionTitle('hobbies', cv.settings, lang)}</h2>
+                    {hobbies.map((h) => <p key={h.id} className="text-xs text-slate-600 mb-0.5 break-inside-avoid">▸ {h.name}</p>)}
+                  </section>
+                )}
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <CVCertifications certifications={certifications} variant="modern" accentColor={accent} title={getSectionTitle('certifications', cv.settings, lang)} />
         <CVProjects projects={projects} variant="modern" accentColor={accent}  title={getSectionTitle('projects', cv.settings, lang)} />

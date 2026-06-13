@@ -24,11 +24,38 @@ export function ElegantPhoto({ cv }: TemplateProps) {
   const socialLinks = cv.socialLinks || [];
   const divers = cv.divers || '';
   const footer = cv.footer || { showFooter: false, madeAt: '', madeDate: '' };
-
   const accentColor = getAccentColor('professional', cv.settings?.accentColor);
 
+  const getSkillLabel = (level: number, lang: string) => {
+    if (lang === 'en') {
+      if (level <= 1) return 'Basics';
+      if (level === 2) return 'Beginner';
+      if (level === 3) return 'Intermediate';
+      if (level === 4) return 'Advanced';
+      return 'Expert';
+    }
+    if (level <= 1) return 'Notions';
+    if (level === 2) return 'Débutant';
+    if (level === 3) return 'Intermédiaire';
+    if (level === 4) return 'Avancé';
+    return 'Expert';
+  };
+
   return (
-    <div className="cv-template w-full h-full bg-white text-slate-900 font-sans text-sm leading-relaxed min-h-[297mm]">
+    <div className="cv-template w-full h-full bg-white text-slate-900 font-sans text-sm leading-relaxed min-h-[297mm] print:bg-transparent">
+      <style>{`
+        @media print {
+          @page { margin: 0 !important; }
+          html, body {
+            background: linear-gradient(to left, #f8fafc 0%, #f8fafc 230px, white 230px, white 100%) !important;
+          }
+          .cv-template section, .cv-item {
+            border-top: 10mm solid transparent !important;
+            margin-top: -10mm !important;
+            background-clip: padding-box !important;
+          }
+        }
+      `}</style>
       <div className="flex min-h-[297mm]">
 
         {/* ===== LEFT COLUMN (Main Content) ===== */}
@@ -82,7 +109,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
               </h2>
               <div className="space-y-4">
                 {experiences.map((exp) => (
-                  <div key={exp.id} className="relative pl-4 border-l-2" style={{ borderColor: `${accentColor}30` }}>
+                  <div key={exp.id} className="relative pl-4 border-l-2 break-inside-avoid" style={{ borderColor: `${accentColor}30` }}>
                     <div className="flex items-baseline justify-between gap-2">
                       <h3 className="font-bold text-slate-900 text-sm">
                         {exp.position} — <span className="font-semibold">{exp.company}</span>
@@ -92,9 +119,10 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                       {exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}
                     </p>
                     {exp.description && (
-                      <p className="text-sm text-slate-600 mt-1.5  leading-relaxed">
-                        {exp.description}
-                      </p>
+                      <div 
+                        className="text-sm text-slate-600 mt-1.5 leading-relaxed prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
+                        dangerouslySetInnerHTML={{ __html: exp.description }}
+                      />
                     )}
                   </div>
                 ))}
@@ -137,7 +165,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
         <div className="w-px bg-slate-200" />
 
         {/* ===== RIGHT COLUMN (Sidebar) ===== */}
-        <div className="w-[230px] shrink-0 bg-slate-50 p-6 space-y-6">
+        <div className="w-[230px] shrink-0 bg-slate-50 p-6 space-y-6 print:bg-transparent">
 
           {/* Contact */}
           <section>
@@ -192,7 +220,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
               </h2>
               <div className="space-y-3">
                 {education.map((edu) => (
-                  <div key={edu.id}>
+                  <div key={edu.id} className="break-inside-avoid">
                     <p className="text-xs font-semibold" style={{ color: accentColor }}>
                       {edu.startDate} — {edu.endDate}
                     </p>
@@ -218,19 +246,16 @@ export function ElegantPhoto({ cv }: TemplateProps) {
               </h2>
               <div className="space-y-2.5">
                 {skills.map((skill) => (
-                  <div key={skill.id}>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-xs text-slate-700">{skill.name}</span>
+                  <div key={skill.id} className="flex justify-between items-start gap-2 break-inside-avoid">
+                    <div className="flex items-start gap-2 mt-0.5">
+                      <span className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style={{ backgroundColor: accentColor }} />
+                      <span className="text-sm text-slate-700 leading-snug">{skill.name}</span>
                     </div>
-                    <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full rounded-full transition-all"
-                        style={{ 
-                          width: `${(skill.level / 5) * 100}%`,
-                          backgroundColor: accentColor 
-                        }}
-                      />
-                    </div>
+                    {skill.level ? (
+                      <span className="text-xs text-slate-400 shrink-0 whitespace-nowrap mt-1">
+                        {getSkillLabel(skill.level, lang)}
+                      </span>
+                    ) : null}
                   </div>
                 ))}
               </div>
@@ -248,10 +273,10 @@ export function ElegantPhoto({ cv }: TemplateProps) {
               </h2>
               <div className="space-y-1.5">
                 {languages.map((lang) => (
-                  <div key={lang.id} className="flex items-center gap-2 text-sm">
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accentColor }} />
+                  <div key={lang.id} className="flex items-center gap-2 text-sm break-inside-avoid">
+                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: accentColor }} />
                     <span className="text-slate-700">{lang.name}</span>
-                    <span className="text-xs text-slate-400">— {lang.level}</span>
+                    <span className="text-xs text-slate-400 ml-auto">{lang.level}</span>
                   </div>
                 ))}
               </div>
@@ -269,8 +294,8 @@ export function ElegantPhoto({ cv }: TemplateProps) {
               </h2>
               <div className="space-y-1.5">
                 {hobbies.map((hobby) => (
-                  <div key={hobby.id} className="flex items-center gap-2 text-sm text-slate-700">
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accentColor }} />
+                  <div key={hobby.id} className="flex items-center gap-2 text-sm text-slate-700 break-inside-avoid">
+                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: accentColor }} />
                     <span>{hobby.name}</span>
                   </div>
                 ))}

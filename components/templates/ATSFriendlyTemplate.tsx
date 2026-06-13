@@ -19,6 +19,7 @@ interface TemplateProps {
  */
 export function ATSFriendlyTemplate({ cv }: TemplateProps) {
   const lang = cv.settings?.language || 'fr';
+  const accentColor = cv.settings?.accentColor;
   const personalInfo = cv.personalInfo || {};
   const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const certifications = cv.certifications || [];
@@ -31,8 +32,14 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
   return (
     <div className="cv-template w-full h-full bg-white text-black font-serif text-sm leading-relaxed min-h-[297mm] p-10">
       {/* Header - Name and Contact */}
-      <header className="text-center border-b-2 border-black pb-4 mb-6">
-        <h1 className="text-2xl font-bold uppercase tracking-wide">
+      <header 
+        className="text-center border-b-2 pb-4 mb-6"
+        style={accentColor ? { borderColor: accentColor } : { borderColor: 'black' }}
+      >
+        <h1 
+          className="text-2xl font-bold uppercase tracking-wide"
+          style={accentColor ? { color: accentColor } : undefined}
+        >
           {personalInfo.firstName} {personalInfo.lastName}
         </h1>
         <p className="text-base mt-1">{personalInfo.title}</p>
@@ -53,7 +60,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Summary */}
       {personalInfo.summary && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('summary', cv.settings, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('summary', cv.settings, lang)}</h2>
           <p className="text-justify">{personalInfo.summary}</p>
         </section>
       )}
@@ -61,7 +68,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Experience */}
       {experiences.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('experience', cv.settings, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('experience', cv.settings, lang)}</h2>
           <div className="space-y-4">
             {experiences.map((exp) => (
               <div key={exp.id} className="cv-item">
@@ -84,7 +91,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Education */}
       {education.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">
+          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>
             {getSectionTitle('education', cv.settings, lang)}
           </h2>
           <div className="space-y-3">
@@ -106,7 +113,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Skills */}
       {skills.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('skills', cv.settings, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('skills', cv.settings, lang)}</h2>
           <p>{skills.map((s) => s.name).join(', ')}</p>
         </section>
       )}
@@ -114,7 +121,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Languages */}
       {languages.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('languages', cv.settings, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('languages', cv.settings, lang)}</h2>
           <p>
             {languages.map((lang) => `${lang.name} (${lang.level})`).join(', ')}
           </p>
@@ -124,7 +131,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Certifications */}
       {certifications.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">
+          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>
             {getSectionTitle('certifications', cv.settings, lang)}
           </h2>
           <div className="space-y-1">
@@ -141,7 +148,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Qualities */}
       {cv.qualities && cv.qualities.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">
+          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>
             {getSectionTitle('qualities', cv.settings, lang)}
           </h2>
           <p>{cv.qualities.map((q) => q.name).join(', ')}</p>
@@ -151,7 +158,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Projects */}
       {projects.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('projects', cv.settings, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('projects', cv.settings, lang)}</h2>
           <div className="space-y-2">
             {projects.map((project) => (
               <div key={project.id} className="cv-item">
@@ -169,7 +176,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* References */}
       {references.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">{getSectionTitle('references', cv.settings, lang)}</h2>
+          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('references', cv.settings, lang)}</h2>
           <div className="space-y-2">
             {references.map((ref) => (
               <p key={ref.id} className="cv-item">
@@ -186,7 +193,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Divers */}
       {divers && (
         <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b border-gray-400 pb-1 mb-3">
+          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>
             INFORMATIONS COMPLÉMENTAIRES
           </h2>
           <p className="">{divers}</p>
