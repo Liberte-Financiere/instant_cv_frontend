@@ -191,7 +191,7 @@ export default function DashboardPricingPage() {
 
 // ─── À la carte Component ──────────────────────
 function AlaCarteSection({ onPurchase }: { onPurchase: (credits: number) => void }) {
-  const [credits, setCredits] = useState(APP_CONFIG.pricing.alaCarte.minCredits);
+  const [credits, setCredits] = useState<number>(APP_CONFIG.pricing.alaCarte.minCredits);
   const pricePerCredit = APP_CONFIG.pricing.alaCarte.pricePerCredit;
   const minCredits = APP_CONFIG.pricing.alaCarte.minCredits;
   const totalPrice = credits * pricePerCredit;

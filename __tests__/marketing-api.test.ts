@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { GET as getStats } from '../app/api/hq-ops/marketing/stats/route';
 import { POST as sendMarketing, GET as getCount } from '../app/api/hq-ops/marketing/send/route';
 import { prisma } from '../lib/prisma';
@@ -42,7 +42,7 @@ describe('Marketing HQ Ops API', () => {
     it('should return 403 if user is not ADMIN', async () => {
       (auth as any).mockResolvedValue({ user: { role: 'USER' } });
       const req = new Request('http://localhost/api/hq-ops/marketing/stats');
-      const res = await getStats(req);
+      const res = await getStats();
       
       expect(res.status).toBe(403);
       const json = await res.json();
@@ -65,7 +65,7 @@ describe('Marketing HQ Ops API', () => {
       });
 
       const req = new Request('http://localhost/api/hq-ops/marketing/stats');
-      const res = await getStats(req);
+      const res = await getStats();
       
       expect(res.status).toBe(200);
       const json = await res.json();
@@ -84,7 +84,7 @@ describe('Marketing HQ Ops API', () => {
       });
 
       const req = new Request('http://localhost/api/hq-ops/marketing/stats');
-      const res = await getStats(req);
+      const res = await getStats();
       
       expect(res.status).toBe(200);
       const json = await res.json();
@@ -96,14 +96,14 @@ describe('Marketing HQ Ops API', () => {
     it('should return 401 if user is not ADMIN', async () => {
       (auth as any).mockResolvedValue(null);
       const req = new Request('http://localhost/api/hq-ops/marketing/send');
-      const res = await getCount(req);
+      const res = await getCount();
       expect(res.status).toBe(401);
     });
 
     it('should return the correct count of users from DB', async () => {
       (prisma.user.count as any).mockResolvedValue(1234);
       const req = new Request('http://localhost/api/hq-ops/marketing/send');
-      const res = await getCount(req);
+      const res = await getCount();
       
       expect(res.status).toBe(200);
       const json = await res.json();
