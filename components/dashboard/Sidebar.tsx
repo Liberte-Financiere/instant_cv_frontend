@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap, Building2 } from 'lucide-react';
 import { cn, clearAllLocalData } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
@@ -11,6 +11,7 @@ import { useCreditStore } from '@/store/useCreditStore';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { APP_CONFIG } from '@/lib/config';
+import { Button } from '@/components/ui/Button';
 
 
 
@@ -89,7 +90,7 @@ export function Sidebar() {
     <div className="flex flex-col h-screen w-72 bg-bg-dark border-r border-slate-800 text-white fixed left-0 top-0 z-50">
       {/* Brand */}
       <div className="p-8 pb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mb-6">
            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
              <FileText className="w-5 h-5 text-white" />
            </div>
@@ -119,27 +120,14 @@ export function Sidebar() {
           </nav>
         </div> 
 
-        {/* Admin Section */}
-        {session?.user?.role === 'ADMIN' && (
-          <div className="mt-8">
-            <div className="flex items-center gap-2 px-4 mb-2">
-              <ShieldAlert className="w-4 h-4 text-red-500" />
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Administration</span>
-            </div>
-            <nav className="space-y-1">
-              <NavLink item={{ name: 'Gestion Crédits', href: '/dashboard/admin', icon: Zap }} />
-              <NavLink item={{ name: 'Gestion des Tâches', href: '/admin/tasks', icon: LayoutList }} />
-              <NavLink item={{ name: 'Avis Utilisateurs', href: '/dashboard/admin/feedback', icon: MessageSquare }} />
-            </nav>
-          </div>
-        )}
+      {/* Admin Section Removed */}
+
       </div>
 
 
       {/* Preferences Section */}
       <div className="px-4 mb-2">
-        <div className="flex items-center gap-2 px-4 mb-2">
-          <Settings className="w-4 h-4 text-slate-500" />
+        <div className="px-4 mb-2">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Préférences</span>
         </div>
         <nav className="space-y-1">
@@ -193,15 +181,19 @@ export function Sidebar() {
               className="absolute bottom-full left-4 right-4 mb-2 bg-slate-800 rounded-xl border border-slate-700 shadow-xl overflow-hidden z-20"
             >
               <div className="p-1">
-                <button className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg text-sm transition-colors">
+                <Link 
+                  href="/dashboard/settings"
+                  onClick={() => setShowUserMenu(false)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg text-sm transition-colors"
+                >
                   <Settings className="w-4 h-4" />
                   Paramètres
-                </button>
+                </Link>
                 <div className="h-px bg-slate-700/50 my-1" />
                 <button 
                   onClick={async () => {
                     await clearAllLocalData();
-                    signOut();
+                    signOut({ callbackUrl: '/' });
                   }}
                   className="w-full flex items-center gap-3 px-3 py-2.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg text-sm transition-colors"
                 >

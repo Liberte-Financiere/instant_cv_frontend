@@ -26,37 +26,51 @@ interface ColorPickerProps {
 export function ColorPicker({ onColorChange }: ColorPickerProps) {
   const { currentCV, updateSettings } = useCVStore();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'accent' | 'sidebar'>('accent');
+  const [activeTab, setActiveTab] = useState<'accent' | 'sidebar' | 'tags'>('accent');
   
   const currentColor = activeTab === 'accent' 
     ? (currentCV?.settings?.accentColor || '#2563eb')
-    : (currentCV?.settings?.sidebarColor || '#0f172a');
+    : activeTab === 'sidebar' 
+      ? (currentCV?.settings?.sidebarColor || '#0f172a')
+      : (currentCV?.settings?.tagsColor || 'transparent');
 
   const handleColorSelect = (color: string) => {
     if (activeTab === 'accent') {
       updateSettings({ accentColor: color });
       onColorChange?.(color);
-    } else {
+    } else if (activeTab === 'sidebar') {
       updateSettings({ sidebarColor: color });
+    } else {
+      updateSettings({ tagsColor: color });
     }
     // Don't close immediately so user can see change
     // setIsOpen(false); 
   };
 
   const SIDEBAR_PRESETS = [
-    { name: 'Slate Dark', value: '#0f172a' },
-    { name: 'Slate Light', value: '#f1f5f9' },
-    { name: 'Blue Dark', value: '#1e3a8a' },
-    { name: 'Blue Light', value: '#eff6ff' },
-    { name: 'Teal Dark', value: '#134e4a' },
-    { name: 'Teal Light', value: '#f0fdfa' },
-    { name: 'Neutral Dark', value: '#171717' },
-    { name: 'Neutral Light', value: '#fafafa' },
-    { name: 'Indigo Dark', value: '#312e81' },
-    { name: 'Purple Dark', value: '#581c87' },
+    { name: 'Ardoise Foncée', value: '#0f172a' },
+    { name: 'Bleu Marine', value: '#1e3a8a' },
+    { name: 'Vert Canard', value: '#134e4a' },
+    { name: 'Indigo Nuit', value: '#312e81' },
+    { name: 'Violet Profond', value: '#581c87' },
+    { name: 'Gris Neutre', value: '#334155' },
+    { name: 'Émeraude', value: '#064e3b' },
+    { name: 'Bordeaux', value: '#7f1d1d' },
+    { name: 'Marron Cuir', value: '#78350f' },
+    { name: 'Gris Clair', value: '#f1f5f9' },
   ];
 
-  const colorsToDisplay = activeTab === 'accent' ? PRESET_COLORS : SIDEBAR_PRESETS;
+  const TAGS_PRESETS = [
+    { name: 'Transparent (Par défaut)', value: 'transparent' },
+    { name: 'Blanc pur', value: '#ffffff' },
+    { name: 'Noir', value: '#000000' },
+    { name: 'Ardoise Foncée', value: '#0f172a' },
+    { name: 'Bleu Marine', value: '#1e3a8a' },
+    { name: 'Gris Neutre', value: '#334155' },
+    { name: 'Gris Clair', value: '#f1f5f9' },
+  ];
+
+  const colorsToDisplay = activeTab === 'accent' ? PRESET_COLORS : activeTab === 'sidebar' ? SIDEBAR_PRESETS : TAGS_PRESETS;
 
   return (
     <div className="relative">
@@ -110,10 +124,20 @@ export function ColorPicker({ onColorChange }: ColorPickerProps) {
               >
                 Sidebar
               </button>
+              <button
+                onClick={() => setActiveTab('tags')}
+                className={`flex-1 py-1 text-xs font-semibold rounded-md transition-all ${
+                  activeTab === 'tags' 
+                    ? 'bg-white text-blue-600 shadow-sm' 
+                    : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                Badges
+              </button>
             </div>
 
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-              {activeTab === 'accent' ? "Couleur principale" : "Couleur de fond sidebar"}
+              {activeTab === 'accent' ? "Couleur principale" : activeTab === 'sidebar' ? "Couleur de fond sidebar" : "Couleur des badges"}
             </p>
 
             <div className="grid grid-cols-5 gap-2">

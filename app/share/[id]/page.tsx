@@ -14,6 +14,12 @@ export default async function PublicCVPage({ params }: { params: Promise<{ id: s
     notFound();
   }
 
+  // Increment views in background
+  prisma.cV.update({
+    where: { id },
+    data: { views: { increment: 1 } },
+  }).catch((err) => console.error("Error incrementing view count:", err));
+
   // Format prisma CV for frontend
   const formattedCV = {
     ...(cv.content as any),

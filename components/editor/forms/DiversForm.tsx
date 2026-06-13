@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { SignatureModal } from '../SignatureModal';
 
 export function DiversForm() {
-  const { currentCV, updateDivers, updateFooter } = useCVStore();
+  const { currentCV, updateSettings, updateDivers, updateFooter } = useCVStore();
   const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   if (!currentCV) return null;
@@ -15,6 +15,20 @@ export function DiversForm() {
 
   return (
     <div className="space-y-6">
+      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+        <Input 
+          label="Titre de la section (Optionnel)" 
+          value={currentCV.settings?.sectionTitles?.divers || ''} 
+          onChange={(e) => updateSettings({ 
+            sectionTitles: { 
+              ...currentCV.settings?.sectionTitles,
+              divers: e.target.value 
+            } 
+          })} 
+          placeholder="Ex: Informations Complémentaires" 
+        />
+        <p className="text-xs text-slate-500 mt-1">Laissez vide pour garder le titre par défaut.</p>
+      </div>
       <div>
         <label className="block text-sm font-bold text-slate-700 mb-2">Informations complémentaires</label>
         <textarea

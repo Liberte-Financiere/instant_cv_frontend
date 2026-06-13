@@ -199,7 +199,7 @@ export type CreditTransactionGroupByOutputType = {
   _max: CreditTransactionMaxAggregateOutputType | null
 }
 
-type GetCreditTransactionGroupByPayload<T extends CreditTransactionGroupByArgs> = Prisma.PrismaPromise<
+export type GetCreditTransactionGroupByPayload<T extends CreditTransactionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CreditTransactionGroupByOutputType, T['by']> &
       {
@@ -235,6 +235,7 @@ export type CreditTransactionOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.CreditTransactionOrderByRelevanceInput
 }
 
 export type CreditTransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -346,6 +347,12 @@ export type CreditTransactionListRelationFilter = {
 
 export type CreditTransactionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type CreditTransactionOrderByRelevanceInput = {
+  fields: Prisma.CreditTransactionOrderByRelevanceFieldEnum | Prisma.CreditTransactionOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type CreditTransactionCountOrderByAggregateInput = {

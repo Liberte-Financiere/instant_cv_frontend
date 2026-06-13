@@ -28,7 +28,7 @@ export function CVExperience({ experiences, variant, title = 'Expérience Profes
       </h2>
       <div className="space-y-6">
         {experiences.map((exp, index) => (
-          <div key={exp.id || index} className="cv-item relative pl-2">
+          <div key={exp.id || index} className="cv-item relative pl-2 break-inside-avoid">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-2">
               <h3 className={`font-bold text-lg ${variant === 'tech' ? 'text-white' : 'text-slate-800'}`}>
                 {exp.position}
@@ -44,9 +44,10 @@ export function CVExperience({ experiences, variant, title = 'Expérience Profes
               {exp.company}
             </div>
             {exp.description && (
-              <div className={`text-sm leading-relaxed  break-words ${variant === 'tech' ? 'text-gray-400' : 'text-slate-600'}`}>
-                {exp.description}
-              </div>
+              <div 
+                className={`text-sm leading-relaxed break-words prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 ${variant === 'tech' ? 'text-gray-400' : 'text-slate-600'}`}
+                dangerouslySetInnerHTML={{ __html: exp.description }}
+              />
             )}
           </div>
         ))}

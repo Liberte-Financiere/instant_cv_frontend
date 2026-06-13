@@ -245,7 +245,7 @@ export type PaymentTransactionGroupByOutputType = {
   _max: PaymentTransactionMaxAggregateOutputType | null
 }
 
-type GetPaymentTransactionGroupByPayload<T extends PaymentTransactionGroupByArgs> = Prisma.PrismaPromise<
+export type GetPaymentTransactionGroupByPayload<T extends PaymentTransactionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PaymentTransactionGroupByOutputType, T['by']> &
       {
@@ -293,6 +293,7 @@ export type PaymentTransactionOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.PaymentTransactionOrderByRelevanceInput
 }
 
 export type PaymentTransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -464,6 +465,12 @@ export type PaymentTransactionListRelationFilter = {
 
 export type PaymentTransactionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type PaymentTransactionOrderByRelevanceInput = {
+  fields: Prisma.PaymentTransactionOrderByRelevanceFieldEnum | Prisma.PaymentTransactionOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type PaymentTransactionCountOrderByAggregateInput = {

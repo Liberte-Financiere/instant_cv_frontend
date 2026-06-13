@@ -45,6 +45,15 @@ export const APP_CONFIG = {
   pricing: {
     /** Currency code displayed on the pricing page */
     currency: 'FCFA',
+    /** À la carte pricing (pay per credit) */
+    alaCarte: {
+      /** Price per credit in FCFA */
+      pricePerCredit: 30,
+      /** Minimum number of credits that can be purchased */
+      minCredits: 5,
+      /** Maximum number of credits to prevent integer overflow attacks */
+      maxCredits: 5000,
+    },
     /** Credit packs available for purchase */
     packs: [
       {
@@ -132,10 +141,14 @@ export const APP_CONFIG = {
       female: ['Gacrux'],
       default: 'Fenrir',
     } as const,
+    talentAssistant: {
+      maxMessages: 20,
+      rateLimit: {
+        limit: 20, // max req per window
+        windowMs: 60_000, // 1 min
+      },
+    },
   },
-
-
-
 
   /** Zustand persist keys */
   storageKeys: {

@@ -7,7 +7,7 @@ import { Trash2, Plus, Briefcase } from 'lucide-react';
 import { MagicButton } from '../MagicButton';
 
 export function ExperienceForm() {
-  const { currentCV, addExperience, updateExperience, removeExperience } = useCVStore();
+  const { currentCV, updateSettings, addExperience, updateExperience, removeExperience } = useCVStore();
 
   const handleAdd = useCallback(() => {
     addExperience({ company: '', position: '', startDate: '', endDate: '', current: false, description: '' });
@@ -26,6 +26,20 @@ export function ExperienceForm() {
 
   return (
     <div className="space-y-6">
+      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+        <Input 
+          label="Titre de la section (Optionnel)" 
+          value={currentCV.settings?.sectionTitles?.experience || ''} 
+          onChange={(e) => updateSettings({ 
+            sectionTitles: { 
+              ...currentCV.settings?.sectionTitles,
+              experience: e.target.value 
+            } 
+          })} 
+          placeholder="Ex: Mes expériences" 
+        />
+        <p className="text-xs text-slate-500 mt-1">Laissez vide pour garder le titre par défaut.</p>
+      </div>
       {experiences.length === 0 ? (
         <div className="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">
           <Briefcase className="w-10 h-10 text-slate-300 mx-auto mb-3" />

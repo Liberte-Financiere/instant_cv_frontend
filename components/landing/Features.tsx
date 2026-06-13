@@ -1,7 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Radar, Zap, FileText, Star, ArrowRight, Download, WifiOff, Mic } from 'lucide-react';
+import { Radar, Zap, FileText, Star, ArrowRight, Download, WifiOff, Mic, Briefcase, Lock, Unlock } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { FeatureCard } from '@/components/landing/FeatureCard';
 import { APP_CONFIG } from '@/lib/config';
@@ -118,9 +120,9 @@ export function Features() {
           {/* Card 6: Offline / PWA */}
           <FeatureCard
             className="md:col-span-1 border-slate-100"
-            title="Disponible Hors-ligne"
+            title="Accès Hors-ligne"
             icon={WifiOff}
-            description={`Installez ${APP_CONFIG.name} sur votre téléphone. Même sans internet, continuez à éditer votre CV.`}
+            description={`Installez ${APP_CONFIG.name} sur votre téléphone pour consulter vos CVs, lettres et historiques sans connexion.`}
           >
              <div className="w-full h-24 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 p-4 relative overflow-hidden flex items-center justify-center">
                 <div className="flex items-center gap-3">
@@ -135,9 +137,9 @@ export function Features() {
           {/* Card 6b: Simulation d'Entretien IA (md:col-span-2) */}
           <FeatureCard
             className="md:col-span-2 border-slate-100"
-            title="Simulation d'Entretien IA"
+            title="Entretien IA"
             icon={Mic}
-            description="Entraînez-vous avec notre recruteur IA interactif (vocal et écrit) pour être prêt le jour J."
+            description="Entraînez-vous avec notre recruteur IA interactif pour être prêt le jour J."
           >
              <div className="w-full h-24 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 p-4 relative overflow-hidden flex flex-col items-center justify-center gap-2">
                  <div className="flex gap-1 items-center">
@@ -145,11 +147,72 @@ export function Features() {
                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse delay-75" />
                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse delay-150" />
                  </div>
-                 <div className="text-xs font-bold text-indigo-500 uppercase tracking-wider">
-                    Recruteur IA à l'écoute
+                 <div className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider text-center">
+                    Simulateur<br/>Vocal
                  </div>
              </div>
           </FeatureCard>
+
+          {/* B2B Promo Banner (Full Width) */}
+          <div className="md:col-span-3 mt-4 bg-gradient-to-r from-blue-950 via-slate-900 to-slate-900 rounded-3xl p-8 md:p-12 shadow-2xl border border-blue-500/20 flex flex-col md:flex-row items-center gap-12 hover:border-blue-500/40 transition-colors">
+            <div className="flex-1 text-left space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-sm font-bold border border-blue-500/20">
+                <Briefcase className="w-4 h-4" /> Espace Recruteurs (B2B)
+              </div>
+              <h3 className="text-white text-3xl md:text-4xl font-bold tracking-tight">Accédez à notre vivier de talents cachés</h3>
+              <p className="text-slate-300 text-lg leading-relaxed">
+                Ne perdez plus de temps à chercher. Débloquez instantanément les coordonnées des profils pré-qualifiés qui matchent exactement avec vos besoins techniques.
+              </p>
+              <Link href="/recruiter/register" className="inline-block mt-2">
+                <Button className="bg-white text-slate-900 hover:bg-slate-100 h-12 px-8 text-base font-bold">
+                  Devenir Recruteur
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+            </div>
+            
+            <div className="flex-1 w-full max-w-md perspective-1000">
+               {/* UI Mockup for B2B */}
+               <div className="w-full rounded-2xl bg-white/5 border border-white/10 p-5 space-y-5 backdrop-blur-md transform rotate-y-[-5deg] rotate-x-[5deg] hover:rotate-0 transition-transform duration-500 shadow-2xl shadow-black/50">
+                  <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center border border-blue-500/30">
+                        <span className="text-blue-400 font-bold text-lg">A.S.</span>
+                      </div>
+                      <div>
+                        <div className="text-base font-bold text-white">Profil Anonymisé</div>
+                        <div className="text-xs text-slate-400">DevOps Senior • Paris</div>
+                      </div>
+                    </div>
+                    <div className="text-xs font-bold bg-green-500/10 text-green-400 px-2.5 py-1.5 rounded-lg border border-green-500/20">
+                      Match: 98%
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap gap-2">
+                      <span className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-white/5 text-slate-300 border border-white/10">Kubernetes</span>
+                      <span className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-white/5 text-slate-300 border border-white/10">Docker</span>
+                      <span className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-white/5 text-slate-300 border border-white/10">AWS</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-white/5 rounded-full mt-5">
+                      <div className="w-[98%] h-full bg-gradient-to-r from-blue-500 to-green-400 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-3">
+                    <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
+                      <Lock className="w-4 h-4" />
+                      Contact masqué
+                    </div>
+                    <div className="text-sm font-bold text-white bg-blue-600 px-4 py-2 rounded-lg flex items-center gap-2 shadow-lg shadow-blue-500/20">
+                      <Unlock className="w-4 h-4" />
+                      Débloquer (1 cr.)
+                    </div>
+                  </div>
+               </div>
+            </div>
+          </div>
 
           {/* Card 7: Templates Premium (Full Width) */}
           <div className="md:col-span-3 bg-white rounded-2xl p-8 shadow-lg border border-slate-100 flex flex-col md:flex-row items-center gap-8 hover:-translate-y-1 transition-transform">
@@ -159,9 +222,9 @@ export function Features() {
               </div>
               <h3 className="text-bg-dark text-2xl font-bold mb-3">Templates de Classe Mondiale</h3>
               <p className="text-slate-500 mb-6">Modernes, Créatifs ou Exécutifs. Choisissez parmi une galerie conçue par des experts en recrutement.</p>
-              <button className="text-primary font-bold hover:underline flex items-center gap-1">
+              <Link href="/auth" className="text-primary font-bold hover:underline flex items-center gap-1">
                 Voir la galerie <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
             <div className="flex-1 w-full relative h-48 md:h-64 flex items-center justify-center overflow-hidden">
                {/* Gallery of Miniatures */}

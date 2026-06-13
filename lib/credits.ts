@@ -58,10 +58,10 @@ export async function checkAndConsumeCredits(
 
       const newBalance = user.credits - cost;
 
-      // 1. Decrement user balance
+      // 1. Décrément atomique pour éviter les conditions de course (Race conditions)
       await tx.user.update({
         where: { id: userId },
-        data: { credits: newBalance },
+        data: { credits: { decrement: cost } },
       });
 
       // 2. Log transaction (non-blocking — if this fails, don't block the action)

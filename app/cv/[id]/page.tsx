@@ -179,7 +179,7 @@ export default function PublicCVPage({ params }: PageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-200">
+    <div className="min-h-screen bg-slate-200 print:bg-transparent">
       {/* Header - Hidden in print */}
       <header className="print:hidden bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -223,7 +223,7 @@ export default function PublicCVPage({ params }: PageProps) {
             marginBottom: scale < 1 ? `calc((${scale} - 1) * 1123px)` : undefined,
           }}
         >
-          <div className="bg-white shadow-2xl print:shadow-none">
+          <div className="bg-white shadow-2xl print:shadow-none print:bg-transparent">
             {renderTemplate()}
           </div>
         </div>

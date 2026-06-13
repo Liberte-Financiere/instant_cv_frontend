@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { CV } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
-import { CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter } from '@/components/cv-sections';
+import { CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter, CVQualities } from '@/components/cv-sections';
 
 interface TemplateProps { cv: CV; }
 
@@ -29,7 +29,7 @@ export function BlueprintPremium({ cv }: TemplateProps) {
   );
 
   return (
-    <div className="cv-template w-full h-full bg-white text-slate-800 min-h-[297mm] font-sans relative overflow-hidden" style={{ hyphens: 'none', overflowWrap: 'break-word' }}>
+    <div className="cv-template w-full bg-white text-slate-800 min-h-[297mm] font-sans relative" style={{ hyphens: 'none', overflowWrap: 'break-word' }}>
       
       {/* Decorative squares - top left cluster */}
       <div className="absolute top-4 left-4 flex flex-col gap-1.5">
@@ -87,7 +87,7 @@ export function BlueprintPremium({ cv }: TemplateProps) {
       </div>
 
       {/* ─── CONTACT BAR ─── */}
-      <div className="mx-8 px-4 py-3 rounded-xl grid grid-cols-3 gap-3" style={{ backgroundColor: '#f3f6fa' }}>
+      <div className="mx-8 px-4 py-3 rounded-xl grid grid-cols-3 gap-3" style={{ backgroundColor: `${accent}10` }}>
         {p.phone && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: accent }}>
@@ -131,19 +131,21 @@ export function BlueprintPremium({ cv }: TemplateProps) {
       </div>
 
       {/* ─── MAIN 2-COLUMN CONTENT ─── */}
-      <div className="px-10 pt-8 pb-10 grid grid-cols-[1fr_1fr] gap-x-10 gap-y-6">
-        
-        {/* LEFT COLUMN: Formations, Compétences, Centres d'intérêts */}
-        <div className="space-y-6">
+      <div className="px-10">
+        <table className="w-full mt-8 mb-10" style={{ tableLayout: 'fixed' }}>
+        <tbody>
+          <tr>
+            {/* LEFT COLUMN: Formations, Compétences, Centres d'intérêts */}
+            <td className="w-1/2 align-top pr-5 space-y-6">
           {/* Education / Formations */}
           {education.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-4" style={{ color: accent }}>
-                {getSectionTitle('education', undefined, lang)}
+                {getSectionTitle('education', cv.settings, lang)}
               </h2>
               <div className="space-y-4">
                 {education.map((edu) => (
-                  <div key={edu.id}>
+                  <div key={edu.id} className="break-inside-avoid">
                     <h3 className="font-bold text-sm text-slate-800">{edu.degree}</h3>
                     <p className="text-xs text-slate-500">{edu.institution} {edu.field && `— ${edu.field}`}</p>
                     <p className="text-xs text-slate-400 mt-0.5">{edu.startDate}{edu.endDate && `/${edu.endDate}`}</p>
@@ -157,15 +159,17 @@ export function BlueprintPremium({ cv }: TemplateProps) {
           {skills.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-3" style={{ color: accent }}>
-                {getSectionTitle('skills', undefined, lang)}
+                {getSectionTitle('skills', cv.settings, lang)}
               </h2>
               <div className="space-y-2">
                 {skills.map((s) => (
-                  <div key={s.id} className="flex items-center gap-2">
+                  <div key={s.id} className="flex items-center gap-2 break-inside-avoid">
                     <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke={accent} strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="text-xs text-slate-600">{s.name}</span>
+                    <span className="text-xs text-slate-600">
+                      {s.name}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -176,11 +180,11 @@ export function BlueprintPremium({ cv }: TemplateProps) {
           {hobbies.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-3" style={{ color: accent }}>
-                {getSectionTitle('hobbies', undefined, lang)}
+                {getSectionTitle('hobbies', cv.settings, lang)}
               </h2>
               <ul className="space-y-2">
                 {hobbies.map((h) => (
-                  <li key={h.id} className="text-xs text-slate-600 flex items-start gap-2">
+                  <li key={h.id} className="text-xs text-slate-600 flex items-start gap-2 break-inside-avoid">
                     <span className="mt-1 w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: accent }} />
                     {h.name}
                   </li>
@@ -193,33 +197,36 @@ export function BlueprintPremium({ cv }: TemplateProps) {
           {languages.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-3" style={{ color: accent }}>
-                {getSectionTitle('languages', undefined, lang)}
+                {getSectionTitle('languages', cv.settings, lang)}
               </h2>
               {languages.map((l) => (
-                <p key={l.id} className="text-xs text-slate-600 mb-1">{l.name} — <span className="font-medium">{l.level}</span></p>
+                <p key={l.id} className="text-xs text-slate-600 mb-1 break-inside-avoid">{l.name} — <span className="font-medium">{l.level}</span></p>
               ))}
             </section>
           )}
-        </div>
+            </td>
 
-        {/* RIGHT COLUMN: Expériences, Qualités, Références */}
-        <div className="space-y-6">
-          {/* Experiences */}
+            {/* RIGHT COLUMN: Expériences, Qualités */}
+            <td className="w-1/2 align-top pl-5 space-y-6">
+              {/* Experiences */}
           {experiences.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-4" style={{ color: accent }}>
-                {getSectionTitle('experience', undefined, lang)}
+                {getSectionTitle('experience', cv.settings, lang)}
               </h2>
               <div className="space-y-5">
                 {experiences.map((exp) => (
-                  <div key={exp.id}>
+                  <div key={exp.id} className="break-inside-avoid">
                     <h3 className="font-extrabold text-sm text-slate-800">{exp.company}</h3>
                     <p className="text-xs text-slate-500 font-medium">{exp.position}</p>
                     <p className="text-xs mt-0.5" style={{ color: accent }}>
                       {exp.startDate} - {exp.current ? getPresentLabel(lang) : exp.endDate}
                     </p>
                     {exp.description && (
-                      <p className="text-xs text-slate-500 mt-2 leading-relaxed">{exp.description}</p>
+                      <div 
+                        className="text-xs text-slate-500 mt-2 leading-relaxed prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
+                        dangerouslySetInnerHTML={{ __html: exp.description }}
+                      />
                     )}
                   </div>
                 ))}
@@ -227,35 +234,35 @@ export function BlueprintPremium({ cv }: TemplateProps) {
             </section>
           )}
 
-          {/* Qualities as grid */}
+          {/* Qualities */}
           {qualities.length > 0 && (
             <section>
               <h2 className="text-sm font-extrabold uppercase tracking-[0.15em] mb-3" style={{ color: accent }}>
-                {getSectionTitle('qualities', undefined, lang)}
+                {getSectionTitle('qualities', cv.settings, lang)}
               </h2>
-              <div className="grid grid-cols-3 gap-2">
+              <ul className="space-y-2">
                 {qualities.map((q) => (
-                  <div key={q.id} className="flex flex-col items-center p-2 rounded-lg border" style={{ borderColor: `${accent}25` }}>
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold mb-1" style={{ backgroundColor: accent }}>
-                      {q.name.substring(0, 2).toUpperCase()}
-                    </div>
-                    <span className="text-[10px] text-center text-slate-500 leading-tight">{q.name}</span>
-                  </div>
+                  <li key={q.id} className="text-xs text-slate-600 flex items-start gap-2 break-inside-avoid">
+                    <span className="mt-1 w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: accent }} />
+                    {q.name}
+                  </li>
                 ))}
-              </div>
+              </ul>
             </section>
           )}
 
-          {/* References */}
-          <CVReferences references={references} variant="professional" accentColor={accent}  title={getSectionTitle('references', undefined, lang)} />
-        </div>
+            </td>
+          </tr>
+        </tbody>
+        </table>
       </div>
 
       {/* Extra sections below */}
       <div className="px-10 pb-8 space-y-4">
-        <CVCertifications certifications={certifications} variant="professional" accentColor={accent} title={getSectionTitle('certifications', undefined, lang)} />
-        <CVProjects projects={projects} variant="professional" accentColor={accent}  title={getSectionTitle('projects', undefined, lang)} />
-        <CVDivers divers={divers} variant="professional" accentColor={accent}  title={getSectionTitle('divers', undefined, lang)} />
+        <CVCertifications certifications={certifications} variant="professional" accentColor={accent} title={getSectionTitle('certifications', cv.settings, lang)} />
+        <CVProjects projects={projects} variant="professional" accentColor={accent}  title={getSectionTitle('projects', cv.settings, lang)} />
+        <CVDivers divers={divers} variant="professional" accentColor={accent}  title={getSectionTitle('divers', cv.settings, lang)} />
+        <CVReferences references={references} variant="professional" accentColor={accent}  title={getSectionTitle('references', cv.settings, lang)} />
         <CVFooter footer={footer} variant="professional"  lang={lang}/>
       </div>
 

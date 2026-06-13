@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated"
+  provider        = "prisma-client"
+  output          = "../lib/generated"
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -60,6 +61,7 @@ model AnalysisHistory {
 enum Role {
   USER
   ADMIN
+  RECRUITER
 }
 
 model User {
@@ -70,6 +72,7 @@ model User {
   image         String?
   role          Role      @default(USER)
   credits       Float     @default(20) // Utilisation de Float pour supporter les retraits de 0.5
+  acceptsMarketing Boolean @default(false) // Opt-in pour les newsletters et alertes
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -86,16 +89,22 @@ model User {
   referralCount Int       @default(0) // Count of successful referrals
   premiumUntil  DateTime? // Premium access expiry date (reward)
 
+  // Recruiter-specific fields (populated when role = RECRUITER)
+  companyName       String?
+  recruiterCredits  Int       @default(0)
+  freeUnlocksUsed   Int       @default(0) // Max 3 free unlocks
+
   accounts            Account[]
   sessions            Session[]
   cvs                 CV[]
   coverLetters        CoverLetter[]
-  analyses            AnalysisHistory[] // Relation
+  analyses            AnalysisHistory[]
   creditTransactions  CreditTransaction[]
-  // Feedback System
   feedbacks           PlatformFeedback[]
   paymentTransactions PaymentTransaction[]
   interviewSessions   InterviewSession[]
+  candidateProfiles   CandidateProfile[]
+  profileUnlocks      ProfileUnlock[]
 }
 
 model PlatformFeedback {
@@ -131,18 +140,22 @@ model PaymentTransaction {
 }
 
 model CV {
-  id        String   @id @default(cuid())
-  title     String
-  content   Json // Stores the full CV data structure (PersonalInfo, Experience, etc.)
-  isPublic  Boolean  @default(false)
-  views     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  title        String
+  content      Json
+  isPublic     Boolean  @default(false)
+  isSearchable Boolean  @default(false)
+  views        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  candidateProfile CandidateProfile?
+
   @@index([userId])
+  @@index([isSearchable])
 }
 
 model CoverLetter {
@@ -215,4 +228,81 @@ model InterviewMessage {
   createdAt  DateTime @default(now())
 
   @@index([sessionId])
+}
+
+// Recruiter Portal Models
+
+model CandidateProfile {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cvId            String   @unique
+  cv              CV       @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  anonymousName   String
+  title           String
+  summary         String?  @db.Text
+  sector          String?
+  skills          String[]
+  experienceYears Int      @default(0)
+  locationCity    String?
+  locationCountry String?
+  completionScore Int      @default(0)
+  lastCvUpdate    DateTime
+  anonymousData   Json?    @db.JsonB
+
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  unlocks         ProfileUnlock[]
+
+  @@index([sector])
+  @@index([experienceYears])
+  @@index([completionScore])
+  @@index([userId])
+  @@index([isActive])
+  @@index([locationCity])
+  @@index([lastCvUpdate])
+  @@index([isActive, completionScore, lastCvUpdate])
+}
+
+model ProfileUnlock {
+  id                 String           @id @default(cuid())
+  unlockerUserId     String
+  unlockerUser       User             @relation(fields: [unlockerUserId], references: [id], onDelete: Cascade)
+  candidateProfileId String
+  candidateProfile   CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
+  creditsCost        Int              @default(0)
+  createdAt          DateTime         @default(now())
+
+  @@unique([unlockerUserId, candidateProfileId])
+  @@index([unlockerUserId])
+  @@index([candidateProfileId])
+}
+
+// Admin / HQ Ops Models
+
+model MarketingCampaign {
+  id             String   @id @default(cuid())
+  name           String   // Internal name
+  subject        String   // Email subject
+  preheader      String?  // Preheader text
+  content        String   @db.Text // The HTML or plaintext content
+  type           String   @default("Newsletter") // "Newsletter", "Annonce", "Transactionnel", "Promotion"
+  status         String   @default("draft") // "draft", "scheduled", "sent"
+  templateId     String?
+  targetAudience String   @default("all") // "all", "segment"
+  externalEmails String[] @default([]) // Custom emails added
+  
+  scheduledAt    DateTime?
+  sentAt         DateTime?
+  
+  // Basic stats caching
+  recipientsCount Int     @default(0)
+  openRate        Float?
+  clickRate       Float?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

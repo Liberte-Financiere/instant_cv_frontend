@@ -25,7 +25,9 @@ export const authConfig = {
          '/templates', 
          '/analysis', 
          '/signature',
-         '/cv'
+         '/cv',
+         '/recruiter/unlocks',
+         '/recruiter/register',
       ]
       
       const isProtected = protectedPaths.some(path => pathname.startsWith(path))
@@ -38,9 +40,13 @@ export const authConfig = {
         return false // Redirect to login
       }
 
-      // 2. Login Page: Redirect to Dashboard if already logged in
+      // 2. Login Page: Redirect to Dashboard (or callbackUrl) if already logged in
       if (isOnLogin) {
         if (isLoggedIn) {
+          const callbackUrl = nextUrl.searchParams.get('callbackUrl')
+          if (callbackUrl) {
+            return Response.redirect(new URL(callbackUrl, nextUrl))
+          }
           return Response.redirect(new URL('/dashboard', nextUrl))
         }
         return true
@@ -53,19 +59,29 @@ export const authConfig = {
 
       return true
     },
-    async jwt({ token, user, trigger }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
          token.role = user.role;
+      }
+      if (trigger === "update" && session?.role) {
+         token.role = session.role;
       }
       return token;
     },
     session({ session, user, token }) {
       if (session.user && token?.sub) {
         session.user.id = token.sub
-        session.user.role = token.role as 'USER' | 'ADMIN';
+        session.user.role = token.role as import('@/types/next-auth').AppRole;
       }
       return session
     },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    }
   },
   session: { strategy: "jwt" }, // Algorithm compatible with Edge
 } satisfies NextAuthConfig

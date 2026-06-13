@@ -55,6 +55,21 @@ const BoldHeader = dynamic(() => import('@/components/templates/BoldHeader').the
 const ClassicSerif = dynamic(() => import('@/components/templates/ClassicSerif').then(mod => mod.ClassicSerif), {
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
+const Infographic = dynamic(() => import('@/components/templates/Infographic').then(mod => mod.Infographic), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
+const PastelModern = dynamic(() => import('@/components/templates/PastelModern').then(mod => mod.PastelModern), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
+const BlueprintPremium = dynamic(() => import('@/components/templates/BlueprintPremium').then(mod => mod.BlueprintPremium), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
+const ATSGlacier = dynamic(() => import('@/components/templates/ATSGlacier').then(mod => mod.ATSGlacier), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
+const ATSIron = dynamic(() => import('@/components/templates/ATSIron').then(mod => mod.ATSIron), {
+  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
+});
 
 interface CVPreviewProps {
   data?: CV; // Optional prop for read-only mode (e.g., share page)
@@ -124,6 +139,16 @@ export function CVPreview({ data, hideToolbar }: CVPreviewProps) {
         return <BoldHeader cv={debouncedCV} />;
       case 'classic-serif':
         return <ClassicSerif cv={debouncedCV} />;
+      case 'infographic':
+        return <Infographic cv={debouncedCV} />;
+      case 'pastel':
+        return <PastelModern cv={debouncedCV} />;
+      case 'blueprint-premium':
+        return <BlueprintPremium cv={debouncedCV} />;
+      case 'ats-glacier':
+        return <ATSGlacier cv={debouncedCV} />;
+      case 'ats-iron':
+        return <ATSIron cv={debouncedCV} />;
       default:
         return <ModernSidebar cv={debouncedCV} />;
     }

@@ -111,6 +111,7 @@ export async function GET(req: Request) {
           updatedAt: cv.updatedAt,
           createdAt: cv.createdAt,
           isPublic: cv.isPublic,
+          isSearchable: cv.isSearchable,
           views: cv.views,
         };
       }
@@ -123,6 +124,7 @@ export async function GET(req: Request) {
         updatedAt: cv.updatedAt,
         createdAt: cv.createdAt,
         isPublic: cv.isPublic,
+        isSearchable: cv.isSearchable,
         views: cv.views,
       };
     });

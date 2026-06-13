@@ -18,9 +18,10 @@ interface CVFooterProps {
   footer: CVFooterType;
   variant: CVVariant;
   lang?: string;
+  accentColor?: string;
 }
 
-export function CVFooter({ footer, variant, lang = 'fr' }: CVFooterProps) {
+export function CVFooter({ footer, variant, lang = 'fr', accentColor }: CVFooterProps) {
   const styles = variantStyles[variant];
   
   if (!footer.showFooter || (!footer.madeAt && !footer.madeDate)) return null;
