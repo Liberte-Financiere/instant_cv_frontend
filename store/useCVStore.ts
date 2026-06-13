@@ -155,6 +155,7 @@ interface CVState {
 const DEFAULT_SETTINGS: CVSettings = {
   accentColor: '#2563eb', // Blue
   sidebarColor: '#0f172a', // Slate 900
+  tagsColor: 'transparent', // Transparent par défaut pour laisser le ModernSidebar utiliser black/20
   fontFamily: 'sans',
 };
 

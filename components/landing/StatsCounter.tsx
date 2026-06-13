@@ -5,7 +5,7 @@ import { motion, useInView } from 'framer-motion';
 import { FileText, Target, Clock, Users } from 'lucide-react';
 
 const stats = [
-  { label: 'CV créés', value: 2500, suffix: '+', icon: FileText, color: 'text-blue-400' },
+  { label: 'CV créés', value: 200, suffix: '+', icon: FileText, color: 'text-blue-400' },
   { label: 'Compatibilité ATS', value: 98, suffix: '%', icon: Target, color: 'text-green-400' },
   { label: 'Temps moyen', value: 2, suffix: ' min', icon: Clock, color: 'text-amber-400' },
   { label: 'Utilisateurs actifs', value: 150, suffix: '+', icon: Users, color: 'text-purple-400' },

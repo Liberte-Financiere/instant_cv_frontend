@@ -24,7 +24,7 @@ export function DebugFillButton() {
             phone: '+33 6 12 34 56 78',
             address: 'Paris, France',
             title: 'Développeur Fullstack Sénior',
-            summary: 'Développeur passionné avec plus de 10 ans d\'expérience dans la création d\'applications web performantes. Expert en React, Node.js et architecture cloud. Toujours à la recherche de nouveaux défis techniques.',
+            summary: 'Développeur passionné avec 12 ans d\'expérience dans la création d\'applications web performantes. Expert en React, Node.js et architecture cloud. Toujours à la recherche de nouveaux défis techniques.',
           },
           experiences: [
             {
@@ -191,8 +191,8 @@ export function DebugFillButton() {
           divers: 'Permis B, Véhiculé. Mobile dans toute la France. Possibilité de télétravail à 100%.',
           footer: {
             showFooter: true,
-            madeAt: 'Fait à Paris',
-            madeDate: 'Le ' + new Date().toLocaleDateString('fr-FR'),
+            madeAt: 'Paris',
+            madeDate: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
             signatureUrl: ''
           }
         }
