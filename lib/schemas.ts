@@ -97,6 +97,7 @@ export const footerSchema = z.object({
 export const settingsSchema = z.object({
   accentColor: z.string(),
   sidebarColor: z.string().optional(),
+  tagsColor: z.string().optional(),
   fontFamily: z.enum(['sans', 'serif', 'mono']).optional(),
   hideContact: z.boolean().optional(),
 });

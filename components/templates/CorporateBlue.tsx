@@ -64,7 +64,7 @@ export function CorporateBlue({ cv }: TemplateProps) {
           <div className="px-6 pb-6 space-y-5 flex-1">
             {/* Profil / Contact */}
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">{getSectionTitle('summary', undefined, lang)}</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">{getSectionTitle('summary', cv.settings, lang)}</h2>
               <div className="space-y-2 text-xs text-white/90">
                 {personalInfo.address && (
                   <div>
@@ -91,7 +91,7 @@ export function CorporateBlue({ cv }: TemplateProps) {
             {skills.length > 0 && (
               <section>
                 <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
-                  {getSectionTitle('skills', undefined, lang) || 'COMPÉTENCES'}
+                  {getSectionTitle('skills', cv.settings, lang) || 'COMPÉTENCES'}
                 </h2>
                 <div className="space-y-2">
                   {skills.map((skill) => (
@@ -108,7 +108,7 @@ export function CorporateBlue({ cv }: TemplateProps) {
             {languages.length > 0 && (
               <section>
                 <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
-                  {getSectionTitle('languages', undefined, lang) || 'LANGUES'}
+                  {getSectionTitle('languages', cv.settings, lang) || 'LANGUES'}
                 </h2>
                 <div className="space-y-1.5">
                   {languages.map((lang) => (
@@ -125,7 +125,7 @@ export function CorporateBlue({ cv }: TemplateProps) {
             {hobbies.length > 0 && (
               <section>
                 <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
-                  {getSectionTitle('hobbies', undefined, lang) || 'LOISIRS'}
+                  {getSectionTitle('hobbies', cv.settings, lang) || 'LOISIRS'}
                 </h2>
                 <div className="space-y-1.5">
                   {hobbies.map((hobby) => (
@@ -142,7 +142,7 @@ export function CorporateBlue({ cv }: TemplateProps) {
             {qualities.length > 0 && (
               <section>
                 <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
-                  {getSectionTitle('qualities', undefined, lang)}
+                  {getSectionTitle('qualities', cv.settings, lang)}
                 </h2>
                 <div className="space-y-1.5">
                   {qualities.map((q) => (
@@ -190,7 +190,7 @@ export function CorporateBlue({ cv }: TemplateProps) {
                   className="text-sm font-bold uppercase tracking-widest text-center py-1.5 px-4 border-2 mb-4"
                   style={{ borderColor: sidebarColor, color: sidebarColor }}
                 >
-                  {getSectionTitle('experience', undefined, lang) || 'EXPÉRIENCES PROFESSIONNELLES'}
+                  {getSectionTitle('experience', cv.settings, lang) || 'EXPÉRIENCES PROFESSIONNELLES'}
                 </h2>
                 <div className="space-y-4">
                   {experiences.map((exp) => (
@@ -228,7 +228,7 @@ export function CorporateBlue({ cv }: TemplateProps) {
                   className="text-sm font-bold uppercase tracking-widest text-center py-1.5 px-4 border-2 mb-4"
                   style={{ borderColor: sidebarColor, color: sidebarColor }}
                 >
-                  {getSectionTitle('education', undefined, lang) || 'FORMATIONS'}
+                  {getSectionTitle('education', cv.settings, lang) || 'FORMATIONS'}
                 </h2>
                 <div className="space-y-4">
                   {education.map((edu) => (
@@ -253,10 +253,10 @@ export function CorporateBlue({ cv }: TemplateProps) {
             )}
 
             {/* Additional sections */}
-            <CVCertifications certifications={certifications} variant="professional" accentColor={sidebarColor} title={getSectionTitle('certifications', undefined, lang)} />
-            <CVProjects projects={projects} variant="professional" accentColor={sidebarColor}  title={getSectionTitle('projects', undefined, lang)} />
-            <CVReferences references={references} variant="professional" accentColor={sidebarColor}  title={getSectionTitle('references', undefined, lang)} />
-            <CVDivers divers={divers} variant="professional" accentColor={sidebarColor}  title={getSectionTitle('divers', undefined, lang)} />
+            <CVCertifications certifications={certifications} variant="professional" accentColor={sidebarColor} title={getSectionTitle('certifications', cv.settings, lang)} />
+            <CVProjects projects={projects} variant="professional" accentColor={sidebarColor}  title={getSectionTitle('projects', cv.settings, lang)} />
+            <CVReferences references={references} variant="professional" accentColor={sidebarColor}  title={getSectionTitle('references', cv.settings, lang)} />
+            <CVDivers divers={divers} variant="professional" accentColor={sidebarColor}  title={getSectionTitle('divers', cv.settings, lang)} />
             <CVFooter footer={footer} variant="professional"  lang={lang}/>
           </div>
         </div>

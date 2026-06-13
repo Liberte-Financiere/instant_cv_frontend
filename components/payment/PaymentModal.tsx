@@ -97,7 +97,12 @@ export function PaymentModal({ isOpen, onClose, pack, onCreditsUpdated }: Paymen
       const res = await fetch('/api/payment/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: `${countryCode}${phone.trim()}`, otp: otp.trim(), packId: pack.id }),
+        body: JSON.stringify({
+          phone: `${countryCode}${phone.trim()}`,
+          otp: otp.trim(),
+          packId: pack.id,
+          ...(pack.id === 'alacarte' && { credits: pack.credits }),
+        }),
       });
 
       const data = await res.json();

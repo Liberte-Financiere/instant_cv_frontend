@@ -108,7 +108,7 @@ export async function POST(req: Request) {
       2. RÉSUMÉ : 2-3 phrases synthétisant la compatibilité.
       3. COMPÉTENCES MATCHÉES : Liste des compétences du CV qui correspondent à l'offre.
       4. COMPÉTENCES MANQUANTES : Compétences demandées dans l'offre mais absentes du CV.
-      5. REFORMULATIONS : Pour chaque élément du CV qui pourrait être mieux formulé pour cette offre, propose une reformulation. Indique la section (experiences, education, skills, personalInfo), l'index dans le tableau, le champ (description, position, summary, etc.), le texte original, la suggestion, et la raison.
+      5. REFORMULATIONS : Pour chaque élément du CV qui pourrait être mieux formulé pour cette offre, propose une reformulation. Indique la section (experiences, education, skills, projects, certifications, personalInfo), l'index dans le tableau (commence à 0), le champ précis (description, position, summary, name, technologies, etc.), le texte original complet (exactement comme dans le CV), la suggestion d'amélioration, et la raison. Ne modifie pas la structure du JSON, uniquement le contenu textuel des valeurs.
       6. RECOMMANDATIONS : Conseils concrets pour maximiser les chances.
 
       SCHÉMA JSON DE SORTIE :
@@ -119,7 +119,7 @@ export async function POST(req: Request) {
         "missingSkills": string[],
         "reformulations": [
           {
-            "section": "experiences" | "education" | "skills" | "personalInfo",
+            "section": "experiences" | "education" | "skills" | "projects" | "certifications" | "personalInfo",
             "index": number,
             "field": string,
             "original": string,

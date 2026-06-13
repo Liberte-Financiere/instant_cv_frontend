@@ -1,0 +1,158 @@
+'use client';
+
+import { MapPin, Briefcase, Star, Clock, Lock, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+
+interface CandidateCardProps {
+  profile: {
+    id: string;
+    anonymousName: string;
+    title: string;
+    sector: string | null;
+    skills: string[];
+    experienceYears: number;
+    locationCity: string | null;
+    locationCountry: string | null;
+    completionScore: number;
+    lastCvUpdate: string;
+    projects?: {
+      name: string;
+      description: string;
+      technologies?: string;
+    }[];
+  };
+}
+
+export function CandidateCard({ profile }: CandidateCardProps) {
+  const scoreColor =
+    profile.completionScore >= 80
+      ? 'text-primary bg-primary/10 border-primary/30'
+      : profile.completionScore >= 60
+        ? 'text-indigo-400 bg-indigo-400/10 border-indigo-500/20'
+        : 'text-slate-400 bg-slate-400/10 border-slate-400/20';
+
+  const location = [profile.locationCity, profile.locationCountry]
+    .filter(Boolean)
+    .join(', ');
+
+  const timeAgo = getTimeAgo(profile.lastCvUpdate);
+
+  return (
+    <Link href={`/recruiter/profile/${profile.id}`}>
+      <div className="group relative bg-slate-900/60 border border-slate-800 hover:bg-slate-900/80 hover:border-primary/50 rounded-[1.5rem] p-8 transition-all duration-300 cursor-pointer overflow-hidden shadow-sm hover:shadow-xl hover:shadow-primary/5 flex flex-col justify-between h-full">
+        
+        <div>
+          <div className="flex items-start justify-between mb-6 relative z-10">
+            <div className="flex items-center gap-5">
+              <div className="relative">
+                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center relative">
+                  <span className="text-2xl font-bold text-primary">
+                    {profile.anonymousName}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <h3 className="text-white font-bold text-xl group-hover:text-primary transition-colors line-clamp-1 mb-2">
+                  {profile.title || 'Candidat'}
+                </h3>
+                <div className="flex items-center gap-3">
+                  {profile.sector && (
+                    <p className="text-base text-slate-400">{profile.sector}</p>
+                  )}
+                  <span className="flex items-center gap-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider bg-slate-800/50 px-2.5 py-1 rounded border border-slate-700">
+                    <Lock className="w-3.5 h-3.5" /> Anonyme
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className={`px-4 py-2 rounded-xl text-sm font-bold border ${scoreColor} flex flex-col items-center shrink-0`}>
+              <span>{profile.completionScore}%</span>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mb-6 relative z-10">
+            {profile.skills.slice(0, 5).map((skill) => (
+              <span
+                key={skill}
+                className="px-3 py-1 bg-white/5 hover:bg-primary/10 text-slate-300 hover:text-primary text-xs font-semibold rounded-lg border border-white/5 hover:border-primary/30 transition-colors cursor-default"
+              >
+                {skill}
+              </span>
+            ))}
+            {profile.skills.length > 5 && (
+              <span className="px-3 py-1 bg-white/5 text-slate-400 text-xs font-semibold rounded-lg border border-white/5">
+                +{profile.skills.length - 5}
+              </span>
+            )}
+          </div>
+
+          {/* Key Projects Section */}
+          {profile.projects && profile.projects.length > 0 && (
+            <div className="mb-6 pt-4 border-t border-white/5 relative z-10">
+              <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-3">
+                Projets Clés
+              </h4>
+              <div className="space-y-3">
+                {profile.projects.slice(0, 2).map((proj, idx) => (
+                  <div key={idx} className="text-xs bg-white/5 border border-white/5 rounded-xl p-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold text-slate-200">{proj.name}</span>
+                      {proj.technologies && (
+                        <span className="text-[9px] font-bold text-primary bg-primary/5 border border-primary/10 px-2 py-0.5 rounded">
+                          {proj.technologies}
+                        </span>
+                      )}
+                    </div>
+                    {proj.description && (
+                      <p className="text-slate-400 mt-1 line-clamp-1 leading-relaxed">
+                        {proj.description}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between mt-auto pt-5 border-t border-white/5 relative z-10">
+          <div className="flex items-center gap-4 text-sm font-medium text-slate-400">
+            {profile.experienceYears > 0 && (
+              <span className="flex items-center gap-1.5">
+                <Briefcase className="w-4 h-4 text-slate-500" />
+                {profile.experienceYears} an{profile.experienceYears > 1 ? 's' : ''}
+              </span>
+            )}
+            {location && (
+              <span className="flex items-center gap-1.5 truncate max-w-[120px]">
+                <MapPin className="w-4 h-4 text-slate-500" />
+                <span className="truncate">{location}</span>
+              </span>
+            )}
+            <span className="flex items-center gap-1.5 hidden sm:flex">
+              <Clock className="w-4 h-4 text-slate-500" />
+              {timeAgo}
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-1 text-sm font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Profil <ArrowRight className="w-4 h-4" />
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function getTimeAgo(dateStr: string): string {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return "Aujourd'hui";
+  if (diffDays === 1) return 'Hier';
+  if (diffDays < 7) return `Il y a ${diffDays}j`;
+  if (diffDays < 30) return `Il y a ${Math.floor(diffDays / 7)} sem.`;
+  if (diffDays < 365) return `Il y a ${Math.floor(diffDays / 30)} mois`;
+  return `Il y a ${Math.floor(diffDays / 365)} an(s)`;
+}

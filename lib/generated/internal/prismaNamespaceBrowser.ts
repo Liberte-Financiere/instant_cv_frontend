@@ -63,7 +63,10 @@ export const ModelName = {
   CreditTransaction: 'CreditTransaction',
   AdminTask: 'AdminTask',
   InterviewSession: 'InterviewSession',
-  InterviewMessage: 'InterviewMessage'
+  InterviewMessage: 'InterviewMessage',
+  CandidateProfile: 'CandidateProfile',
+  ProfileUnlock: 'ProfileUnlock',
+  MarketingCampaign: 'MarketingCampaign'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -141,6 +144,7 @@ export const UserScalarFieldEnum = {
   image: 'image',
   role: 'role',
   credits: 'credits',
+  acceptsMarketing: 'acceptsMarketing',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   phone: 'phone',
@@ -149,7 +153,10 @@ export const UserScalarFieldEnum = {
   referralCode: 'referralCode',
   referredById: 'referredById',
   referralCount: 'referralCount',
-  premiumUntil: 'premiumUntil'
+  premiumUntil: 'premiumUntil',
+  companyName: 'companyName',
+  recruiterCredits: 'recruiterCredits',
+  freeUnlocksUsed: 'freeUnlocksUsed'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -191,6 +198,7 @@ export const CVScalarFieldEnum = {
   title: 'title',
   content: 'content',
   isPublic: 'isPublic',
+  isSearchable: 'isSearchable',
   views: 'views',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -273,6 +281,63 @@ export const InterviewMessageScalarFieldEnum = {
 export type InterviewMessageScalarFieldEnum = (typeof InterviewMessageScalarFieldEnum)[keyof typeof InterviewMessageScalarFieldEnum]
 
 
+export const CandidateProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  cvId: 'cvId',
+  anonymousName: 'anonymousName',
+  title: 'title',
+  summary: 'summary',
+  sector: 'sector',
+  skills: 'skills',
+  experienceYears: 'experienceYears',
+  locationCity: 'locationCity',
+  locationCountry: 'locationCountry',
+  completionScore: 'completionScore',
+  lastCvUpdate: 'lastCvUpdate',
+  anonymousData: 'anonymousData',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CandidateProfileScalarFieldEnum = (typeof CandidateProfileScalarFieldEnum)[keyof typeof CandidateProfileScalarFieldEnum]
+
+
+export const ProfileUnlockScalarFieldEnum = {
+  id: 'id',
+  unlockerUserId: 'unlockerUserId',
+  candidateProfileId: 'candidateProfileId',
+  creditsCost: 'creditsCost',
+  createdAt: 'createdAt'
+} as const
+
+export type ProfileUnlockScalarFieldEnum = (typeof ProfileUnlockScalarFieldEnum)[keyof typeof ProfileUnlockScalarFieldEnum]
+
+
+export const MarketingCampaignScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  subject: 'subject',
+  preheader: 'preheader',
+  content: 'content',
+  type: 'type',
+  status: 'status',
+  templateId: 'templateId',
+  targetAudience: 'targetAudience',
+  externalEmails: 'externalEmails',
+  scheduledAt: 'scheduledAt',
+  sentAt: 'sentAt',
+  recipientsCount: 'recipientsCount',
+  openRate: 'openRate',
+  clickRate: 'clickRate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MarketingCampaignScalarFieldEnum = (typeof MarketingCampaignScalarFieldEnum)[keyof typeof MarketingCampaignScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -286,6 +351,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -304,6 +377,40 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
+export const AccountOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  provider: 'provider',
+  providerAccountId: 'providerAccountId',
+  refresh_token: 'refresh_token',
+  access_token: 'access_token',
+  token_type: 'token_type',
+  scope: 'scope',
+  id_token: 'id_token',
+  session_state: 'session_state'
+} as const
+
+export type AccountOrderByRelevanceFieldEnum = (typeof AccountOrderByRelevanceFieldEnum)[keyof typeof AccountOrderByRelevanceFieldEnum]
+
+
+export const SessionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  sessionToken: 'sessionToken',
+  userId: 'userId'
+} as const
+
+export type SessionOrderByRelevanceFieldEnum = (typeof SessionOrderByRelevanceFieldEnum)[keyof typeof SessionOrderByRelevanceFieldEnum]
+
+
+export const VerificationTokenOrderByRelevanceFieldEnum = {
+  identifier: 'identifier',
+  token: 'token'
+} as const
+
+export type VerificationTokenOrderByRelevanceFieldEnum = (typeof VerificationTokenOrderByRelevanceFieldEnum)[keyof typeof VerificationTokenOrderByRelevanceFieldEnum]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -311,4 +418,162 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const AnalysisHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title'
+} as const
+
+export type AnalysisHistoryOrderByRelevanceFieldEnum = (typeof AnalysisHistoryOrderByRelevanceFieldEnum)[keyof typeof AnalysisHistoryOrderByRelevanceFieldEnum]
+
+
+export const UserOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  image: 'image',
+  phone: 'phone',
+  jobTitle: 'jobTitle',
+  sector: 'sector',
+  referralCode: 'referralCode',
+  referredById: 'referredById',
+  companyName: 'companyName'
+} as const
+
+export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const PlatformFeedbackOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  content: 'content'
+} as const
+
+export type PlatformFeedbackOrderByRelevanceFieldEnum = (typeof PlatformFeedbackOrderByRelevanceFieldEnum)[keyof typeof PlatformFeedbackOrderByRelevanceFieldEnum]
+
+
+export const PaymentTransactionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  packId: 'packId',
+  phone: 'phone',
+  status: 'status',
+  ligdicashToken: 'ligdicashToken',
+  transactionId: 'transactionId',
+  operatorName: 'operatorName'
+} as const
+
+export type PaymentTransactionOrderByRelevanceFieldEnum = (typeof PaymentTransactionOrderByRelevanceFieldEnum)[keyof typeof PaymentTransactionOrderByRelevanceFieldEnum]
+
+
+export const CVOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  userId: 'userId'
+} as const
+
+export type CVOrderByRelevanceFieldEnum = (typeof CVOrderByRelevanceFieldEnum)[keyof typeof CVOrderByRelevanceFieldEnum]
+
+
+export const CoverLetterOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  userId: 'userId'
+} as const
+
+export type CoverLetterOrderByRelevanceFieldEnum = (typeof CoverLetterOrderByRelevanceFieldEnum)[keyof typeof CoverLetterOrderByRelevanceFieldEnum]
+
+
+export const CreditTransactionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  description: 'description'
+} as const
+
+export type CreditTransactionOrderByRelevanceFieldEnum = (typeof CreditTransactionOrderByRelevanceFieldEnum)[keyof typeof CreditTransactionOrderByRelevanceFieldEnum]
+
+
+export const AdminTaskOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  assignee: 'assignee',
+  tags: 'tags'
+} as const
+
+export type AdminTaskOrderByRelevanceFieldEnum = (typeof AdminTaskOrderByRelevanceFieldEnum)[keyof typeof AdminTaskOrderByRelevanceFieldEnum]
+
+
+export const InterviewSessionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  jobTitle: 'jobTitle',
+  jobContext: 'jobContext',
+  cvSummary: 'cvSummary',
+  status: 'status',
+  format: 'format',
+  voicePreference: 'voicePreference',
+  summary: 'summary'
+} as const
+
+export type InterviewSessionOrderByRelevanceFieldEnum = (typeof InterviewSessionOrderByRelevanceFieldEnum)[keyof typeof InterviewSessionOrderByRelevanceFieldEnum]
+
+
+export const InterviewMessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  role: 'role',
+  content: 'content',
+  audioUrl: 'audioUrl',
+  transcript: 'transcript'
+} as const
+
+export type InterviewMessageOrderByRelevanceFieldEnum = (typeof InterviewMessageOrderByRelevanceFieldEnum)[keyof typeof InterviewMessageOrderByRelevanceFieldEnum]
+
+
+export const CandidateProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  cvId: 'cvId',
+  anonymousName: 'anonymousName',
+  title: 'title',
+  summary: 'summary',
+  sector: 'sector',
+  skills: 'skills',
+  locationCity: 'locationCity',
+  locationCountry: 'locationCountry'
+} as const
+
+export type CandidateProfileOrderByRelevanceFieldEnum = (typeof CandidateProfileOrderByRelevanceFieldEnum)[keyof typeof CandidateProfileOrderByRelevanceFieldEnum]
+
+
+export const ProfileUnlockOrderByRelevanceFieldEnum = {
+  id: 'id',
+  unlockerUserId: 'unlockerUserId',
+  candidateProfileId: 'candidateProfileId'
+} as const
+
+export type ProfileUnlockOrderByRelevanceFieldEnum = (typeof ProfileUnlockOrderByRelevanceFieldEnum)[keyof typeof ProfileUnlockOrderByRelevanceFieldEnum]
+
+
+export const MarketingCampaignOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  subject: 'subject',
+  preheader: 'preheader',
+  content: 'content',
+  type: 'type',
+  status: 'status',
+  templateId: 'templateId',
+  targetAudience: 'targetAudience',
+  externalEmails: 'externalEmails'
+} as const
+
+export type MarketingCampaignOrderByRelevanceFieldEnum = (typeof MarketingCampaignOrderByRelevanceFieldEnum)[keyof typeof MarketingCampaignOrderByRelevanceFieldEnum]
 

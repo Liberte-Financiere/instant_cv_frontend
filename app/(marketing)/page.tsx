@@ -9,6 +9,7 @@ import { Pricing } from '@/components/landing/Pricing';
 import { FAQ } from '@/components/landing/FAQ';
 import { CallToAction } from '@/components/landing/CallToAction';
 import { Footer } from '@/components/landing/Footer';
+import { MarketingLinks } from '@/components/landing/MarketingLinks';
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
       <Testimonials />
       <Pricing />
       <FAQ />
+      <MarketingLinks />
       <CallToAction />
       <Footer />
     </div>

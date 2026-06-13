@@ -17,6 +17,7 @@ interface TemplateProps {
  */
 export function ATSGlacier({ cv }: TemplateProps) {
   const lang = cv.settings?.language || 'fr';
+  const accentColor = cv.settings?.accentColor;
   const personalInfo = cv.personalInfo || {};
   const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const certifications = cv.certifications || [];
@@ -31,7 +32,10 @@ export function ATSGlacier({ cv }: TemplateProps) {
       
       {/* Header - Left Aligned with bold name */}
       <header className="mb-10">
-        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-2 uppercase">
+        <h1 
+          className="text-4xl font-extrabold tracking-tight mb-2 uppercase"
+          style={accentColor ? { color: accentColor } : { color: '#0f172a' }}
+        >
           {personalInfo.firstName} {personalInfo.lastName}
         </h1>
         <p className="text-xl text-slate-600 font-medium mb-4">{personalInfo.title}</p>
@@ -70,8 +74,8 @@ export function ATSGlacier({ cv }: TemplateProps) {
       {experiences.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 min-w-fit">Expérience</h2>
-             <div className="h-px bg-slate-200 w-full" />
+             <h2 className="text-sm font-bold uppercase tracking-wider min-w-fit" style={accentColor ? { color: accentColor } : { color: '#94a3b8' }}>Expérience</h2>
+             <div className="h-px w-full" style={accentColor ? { backgroundColor: `${accentColor}40` } : { backgroundColor: '#e2e8f0' }} />
           </div>
 
           <div className="space-y-6">
@@ -83,7 +87,7 @@ export function ATSGlacier({ cv }: TemplateProps) {
                     {exp.startDate && formatDate(exp.startDate, lang)} — {exp.current ? getPresentLabel(lang) : (exp.endDate && formatDate(exp.endDate, lang))}
                   </span>
                 </div>
-                <div className="text-blue-600 font-medium mb-2">{exp.company}</div>
+                <div className="font-medium mb-2" style={accentColor ? { color: accentColor } : { color: '#2563eb' }}>{exp.company}</div>
                 {exp.description && (
                   <p className="text-slate-600 ">{exp.description}</p>
                 )}
@@ -97,8 +101,8 @@ export function ATSGlacier({ cv }: TemplateProps) {
       {education.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 min-w-fit">{getSectionTitle('education', undefined, lang)}</h2>
-             <div className="h-px bg-slate-200 w-full" />
+             <h2 className="text-sm font-bold uppercase tracking-wider min-w-fit" style={accentColor ? { color: accentColor } : { color: '#94a3b8' }}>{getSectionTitle('education', cv.settings, lang)}</h2>
+             <div className="h-px w-full" style={accentColor ? { backgroundColor: `${accentColor}40` } : { backgroundColor: '#e2e8f0' }} />
           </div>
           
           <div className="space-y-4">
@@ -123,8 +127,8 @@ export function ATSGlacier({ cv }: TemplateProps) {
       {(skills.length > 0 || languages.length > 0) && (
         <section className="mb-8">
            <div className="flex items-center gap-4 mb-4">
-             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 min-w-fit">{getSectionTitle('skills', undefined, lang)}</h2>
-             <div className="h-px bg-slate-200 w-full" />
+             <h2 className="text-sm font-bold uppercase tracking-wider min-w-fit" style={accentColor ? { color: accentColor } : { color: '#94a3b8' }}>{getSectionTitle('skills', cv.settings, lang)}</h2>
+             <div className="h-px w-full" style={accentColor ? { backgroundColor: `${accentColor}40` } : { backgroundColor: '#e2e8f0' }} />
           </div>
            
            <div className="grid grid-cols-2 gap-x-12 gap-y-4">
@@ -139,7 +143,7 @@ export function ATSGlacier({ cv }: TemplateProps) {
               
               {languages.length > 0 && (
                   <div>
-                      <h3 className="font-bold text-slate-900 mb-2 text-xs uppercase">{getSectionTitle('languages', undefined, lang)}</h3>
+                      <h3 className="font-bold text-slate-900 mb-2 text-xs uppercase">{getSectionTitle('languages', cv.settings, lang)}</h3>
                       <p className="text-slate-600 leading-relaxed">
                           {languages.map(l => `${l.name} (${l.level})`).join(', ')}
                       </p>
@@ -153,8 +157,8 @@ export function ATSGlacier({ cv }: TemplateProps) {
       {projects.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 min-w-fit">{getSectionTitle('projects', undefined, lang)}</h2>
-             <div className="h-px bg-slate-200 w-full" />
+             <h2 className="text-sm font-bold uppercase tracking-wider min-w-fit" style={accentColor ? { color: accentColor } : { color: '#94a3b8' }}>{getSectionTitle('projects', cv.settings, lang)}</h2>
+             <div className="h-px w-full" style={accentColor ? { backgroundColor: `${accentColor}40` } : { backgroundColor: '#e2e8f0' }} />
           </div>
           <div className="space-y-4">
             {projects.map((proj) => (

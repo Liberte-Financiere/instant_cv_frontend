@@ -2,17 +2,21 @@ import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from './generated/client';
 
-import { cvSchema } from './schemas';
-
-const connectionString = process.env.DATABASE_URL!;
-
-const pool = new Pool({ connectionString });
-const adapter = new PrismaPg(pool);
-
 const prismaClientSingleton = () => {
-  const client = new PrismaClient({ adapter });
+  const connectionString = process.env.DATABASE_URL;
   
-  return client;
+  if (!connectionString) {
+    throw new Error("La variable d'environnement DATABASE_URL est manquante.");
+  }
+
+  // 1. On crée un pool de connexion Node-Postgres natif
+  const pool = new Pool({ connectionString });
+  
+  // 2. On crée l'adaptateur requis par Prisma 7
+  const adapter = new PrismaPg(pool);
+
+  // 3. On injecte l'adaptateur dans le constructeur
+  return new PrismaClient({ adapter });
 };
 
 type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;

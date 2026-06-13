@@ -1,9 +1,30 @@
+'use client';
+
 import Image from "next/image"
-import { signIn } from "@/auth"
+import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/Button"
 import { APP_CONFIG } from '@/lib/config';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function LoginPage() {
+function LoginContent() {
+  const searchParams = useSearchParams();
+  const rawCallbackUrl = searchParams.get('callbackUrl');
+  
+  let callbackUrl = '/dashboard';
+  if (rawCallbackUrl) {
+    try {
+      if (rawCallbackUrl.startsWith('http')) {
+        const parsedUrl = new URL(rawCallbackUrl);
+        callbackUrl = parsedUrl.pathname + parsedUrl.search;
+      } else {
+        callbackUrl = rawCallbackUrl;
+      }
+    } catch (e) {
+      callbackUrl = '/dashboard';
+    }
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-4">
       <div className="w-full max-w-sm space-y-8 bg-white p-8 rounded-xl shadow-lg text-center">
@@ -12,24 +33,29 @@ export default function LoginPage() {
           <p className="text-slate-500">Connectez-vous pour sauvegarder vos CVs</p>
         </div>
         
-        <form
-          action={async () => {
-            "use server"
-            await signIn("google", { redirectTo: "/dashboard" })
-          }}
+        <Button 
+          className="w-full flex items-center justify-center gap-2" 
+          size="lg"
+          onClick={() => signIn("google", { callbackUrl })}
         >
-          <Button className="w-full flex items-center justify-center gap-2" size="lg">
-            <Image 
-              src="https://authjs.dev/img/providers/google.svg" 
-              alt="Google" 
-              width={20} 
-              height={20} 
-              className="w-5 h-5" 
-            />
-            Continuer avec Google
-          </Button>
-        </form>
+          <Image 
+            src="https://authjs.dev/img/providers/google.svg" 
+            alt="Google" 
+            width={20} 
+            height={20} 
+            className="w-5 h-5" 
+          />
+          Continuer avec Google
+        </Button>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Chargement...</div>}>
+      <LoginContent />
+    </Suspense>
   )
 }

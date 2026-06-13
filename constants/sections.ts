@@ -46,8 +46,12 @@ export const SECTION_TITLES: Record<string, Record<string, string>> = {
   }
 };
 
-export const getSectionTitle = (sectionId: string, customTitle?: string, language: string = 'fr'): string => {
-  if (customTitle) return customTitle;
+import { CVSettings } from '@/types/cv';
+
+export const getSectionTitle = (sectionId: string, settings?: CVSettings, language: string = 'fr'): string => {
+  const customTitle = settings?.sectionTitles?.[sectionId];
+  if (customTitle?.trim()) return customTitle.trim();
+  
   const langDict = SECTION_TITLES[language] || SECTION_TITLES['fr'];
   return langDict[sectionId] || sectionId.toUpperCase();
 };

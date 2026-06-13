@@ -10,10 +10,10 @@ const creditActions = [
   { icon: BarChart3, label: 'Analyse de CV', cost: '2 cr.', color: 'text-blue-500' },
   { icon: Search, label: 'Match CV vs Offre', cost: '2 cr.', color: 'text-indigo-500' },
   { icon: FileText, label: 'Lettre de motivation', cost: '2 cr.', color: 'text-violet-500' },
-  { icon: PenLine, label: 'Amelioration IA', cost: '1 cr.', color: 'text-emerald-500' },
+  { icon: PenLine, label: 'Amélioration IA', cost: '1 cr.', color: 'text-emerald-500' },
   { icon: Zap, label: 'Correction / Reformulation', cost: '0.5 cr.', color: 'text-amber-500' },
   { icon: Languages, label: 'Traduction de CV', cost: '10 cr.', color: 'text-cyan-500' },
-  { icon: MessageSquare, label: 'Entretien ecrit', cost: '5 cr.', color: 'text-rose-500' },
+  { icon: MessageSquare, label: 'Entretien écrit', cost: '5 cr.', color: 'text-rose-500' },
   { icon: Mic, label: 'Entretien vocal', cost: '1 cr./min', color: 'text-orange-500' },
 ];
 
@@ -22,15 +22,8 @@ const plans = [
     name: 'Essai Gratuit',
     price: '0',
     currency: 'FCFA',
-    description: `${APP_CONFIG.credits.signupBonus} credits offerts a l'inscription.`,
-    features: [
-      'IA incluse (25 credits)',
-      'Creation de CV illimitee',
-      'Export PDF Pro illimite',
-      'Templates CV & LM gratuits',
-      'Credits sans expiration'
-    ],
-    cta: 'Creer mon compte',
+    description: `${APP_CONFIG.credits.signupBonus} crédits offerts à l'inscription.`,
+    cta: 'Créer mon compte',
     popular: false,
     dark: false
   },
@@ -39,13 +32,7 @@ const plans = [
     price: '1 000',
     currency: 'FCFA',
     period: ' / achat unique',
-    description: '35 credits',
-    features: [
-      'Valable a vie',
-      'Analyse + Match IA',
-      'Lettres de motivation IA',
-      'Refonte IA de votre CV'
-    ],
+    description: '35 crédits',
     cta: 'Explorer',
     popular: true,
     dark: true
@@ -55,13 +42,7 @@ const plans = [
     price: '2 000',
     currency: 'FCFA',
     period: ' / achat unique',
-    description: '80 credits',
-    features: [
-      'Valable a vie',
-      'Correction et traduction IA',
-      'Entretiens simules IA',
-      'Multiples versions de CV'
-    ],
+    description: '80 crédits',
     cta: 'En savoir plus',
     popular: false,
     dark: false
@@ -71,13 +52,7 @@ const plans = [
     price: '5 000',
     currency: 'FCFA',
     period: ' / achat unique',
-    description: '250 credits',
-    features: [
-      'Valable a vie',
-      'Coach IA complet',
-      'Entretiens vocaux illimites',
-      'Toutes les options'
-    ],
+    description: '250 crédits',
     cta: "Voir l'offre",
     popular: false,
     dark: false
@@ -90,7 +65,7 @@ export function Pricing() {
       <div className="max-w-7xl mx-auto">
         <SectionHeader
           title="Finis les abonnements mensuels"
-          description="Achetez des credits et utilisez-les quand vous voulez. Pas d'engagement, pas d'expiration."
+          description="Achetez des crédits et utilisez-les quand vous voulez. Pas d'engagement, pas d'expiration."
         />
 
         <motion.div
@@ -100,7 +75,7 @@ export function Pricing() {
           className="max-w-3xl mx-auto mb-16"
         >
           <h3 className="text-center text-lg font-bold text-slate-800 mb-6">
-            Combien coute chaque action ?
+            Combien coûte chaque action ?
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {creditActions.map((action) => (
@@ -148,18 +123,7 @@ export function Pricing() {
                 <p className={`mt-2 text-sm ${plan.dark ? 'text-slate-400' : 'text-slate-500'}`}>{plan.description}</p>
               </div>
 
-              <ul className="space-y-4 mb-8">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3 text-sm">
-                    <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                      plan.dark ? 'bg-primary/20 text-primary' : 'bg-green-100 text-green-600'
-                    }`}>
-                      <Check className="w-3 h-3" />
-                    </div>
-                    <span className={plan.dark ? 'text-slate-300' : 'text-slate-600'}>{feature}</span>
-                  </li>
-                ))}
-              </ul>
+
 
               <Link href="/auth">
                 <button className={`w-full py-4 rounded-xl font-bold transition-all ${

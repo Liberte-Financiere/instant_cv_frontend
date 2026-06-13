@@ -209,7 +209,7 @@ export type AnalysisHistoryGroupByOutputType = {
   _max: AnalysisHistoryMaxAggregateOutputType | null
 }
 
-type GetAnalysisHistoryGroupByPayload<T extends AnalysisHistoryGroupByArgs> = Prisma.PrismaPromise<
+export type GetAnalysisHistoryGroupByPayload<T extends AnalysisHistoryGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AnalysisHistoryGroupByOutputType, T['by']> &
       {
@@ -249,6 +249,7 @@ export type AnalysisHistoryOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.AnalysisHistoryOrderByRelevanceInput
 }
 
 export type AnalysisHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -370,6 +371,12 @@ export type AnalysisHistoryUncheckedUpdateManyInput = {
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AnalysisHistoryOrderByRelevanceInput = {
+  fields: Prisma.AnalysisHistoryOrderByRelevanceFieldEnum | Prisma.AnalysisHistoryOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type AnalysisHistoryCountOrderByAggregateInput = {

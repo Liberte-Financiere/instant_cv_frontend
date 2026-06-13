@@ -6,13 +6,27 @@ import { Trash2, Plus } from 'lucide-react';
 import { MagicButton } from '../MagicButton';
 
 export function ProjectsForm() {
-  const { currentCV, addProject, updateProject, removeProject } = useCVStore();
+  const { currentCV, updateSettings, addProject, updateProject, removeProject } = useCVStore();
 
   if (!currentCV) return null;
   const projects = currentCV.projects || [];
 
   return (
     <div className="space-y-4">
+      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-2">
+        <Input 
+          label="Titre de la section (Optionnel)" 
+          value={currentCV.settings?.sectionTitles?.projects || ''} 
+          onChange={(e) => updateSettings({ 
+            sectionTitles: { 
+              ...currentCV.settings?.sectionTitles,
+              projects: e.target.value 
+            } 
+          })} 
+          placeholder="Ex: Projets Personnels" 
+        />
+        <p className="text-xs text-slate-500 mt-1">Laissez vide pour garder le titre par défaut.</p>
+      </div>
       {projects.map((project) => (
         <div key={project.id} className="p-4 bg-white border border-slate-200 rounded-xl relative group hover:border-blue-300 transition-all">
           <button onClick={() => removeProject(project.id)} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg sm:opacity-0 sm:group-hover:opacity-100"><Trash2 className="w-4 h-4" /></button>

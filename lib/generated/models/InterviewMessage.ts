@@ -213,7 +213,7 @@ export type InterviewMessageGroupByOutputType = {
   _max: InterviewMessageMaxAggregateOutputType | null
 }
 
-type GetInterviewMessageGroupByPayload<T extends InterviewMessageGroupByArgs> = Prisma.PrismaPromise<
+export type GetInterviewMessageGroupByPayload<T extends InterviewMessageGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<InterviewMessageGroupByOutputType, T['by']> &
       {
@@ -253,6 +253,7 @@ export type InterviewMessageOrderByWithRelationInput = {
   transcript?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   session?: Prisma.InterviewSessionOrderByWithRelationInput
+  _relevance?: Prisma.InterviewMessageOrderByRelevanceInput
 }
 
 export type InterviewMessageWhereUniqueInput = Prisma.AtLeast<{
@@ -384,6 +385,12 @@ export type InterviewMessageListRelationFilter = {
 
 export type InterviewMessageOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type InterviewMessageOrderByRelevanceInput = {
+  fields: Prisma.InterviewMessageOrderByRelevanceFieldEnum | Prisma.InterviewMessageOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type InterviewMessageCountOrderByAggregateInput = {

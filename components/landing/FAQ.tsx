@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     question: `${APP_CONFIG.name} fonctionne-t-il sans connexion internet ?`,
-    answer: `Oui ! ${APP_CONFIG.name} est une application web installable (PWA). Ajoutez-la à votre écran d'accueil depuis votre navigateur, et vous pourrez continuer à consulter et éditer vos CV même hors-ligne. Les modifications seront synchronisées dès que vous retrouverez une connexion.`
+    answer: `Oui ! ${APP_CONFIG.name} est une application web installable (PWA). Ajoutez-la à votre écran d'accueil depuis votre navigateur, et vous pourrez continuer à consulter vos CV, lettres et historiques d'analyse même hors-ligne.`
   }
 ];
 

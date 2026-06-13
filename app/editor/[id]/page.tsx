@@ -15,6 +15,7 @@ import { TemplateSelector } from '@/components/editor/TemplateSelector';
 import { TranslateCVButton } from '@/components/editor/TranslateCVButton';
 import { LanguageSelector } from '@/components/editor/LanguageSelector';
 import { MobilePreviewModal } from '@/components/editor/MobilePreviewModal';
+import { DebugFillButton } from '@/components/editor/DebugFillButton';
 import { EDITOR_STEPS } from '@/types/cv';
 
 export default function EditorPage() {
@@ -244,6 +245,7 @@ export default function EditorPage() {
 
            <div className="h-6 w-px bg-slate-200 mx-1 lg:hidden" />
 
+           <DebugFillButton />
            <TranslateCVButton />
            <LanguageSelector />
            <TemplateSelector />

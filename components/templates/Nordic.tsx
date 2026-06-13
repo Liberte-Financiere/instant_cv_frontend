@@ -49,7 +49,7 @@ export function Nordic({ cv }: TemplateProps) {
         {/* Experience - clean, airy */}
         {experiences.length > 0 && (
           <section className="mb-8">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: accent }}>{getSectionTitle('experience', undefined, lang)}</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: accent }}>{getSectionTitle('experience', cv.settings, lang)}</h2>
             <div className="space-y-5">
               {experiences.map((exp) => (
                 <div key={exp.id} className="grid grid-cols-[100px_1fr] gap-4">
@@ -70,7 +70,7 @@ export function Nordic({ cv }: TemplateProps) {
         {/* Education */}
         {education.length > 0 && (
           <section className="mb-8">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: accent }}>{getSectionTitle('education', undefined, lang)}</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: accent }}>{getSectionTitle('education', cv.settings, lang)}</h2>
             <div className="space-y-3">
               {education.map((edu) => (
                 <div key={edu.id} className="grid grid-cols-[100px_1fr] gap-4">
@@ -88,7 +88,7 @@ export function Nordic({ cv }: TemplateProps) {
         {/* Skills */}
         {skills.length > 0 && (
           <section className="mb-6">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-3" style={{ color: accent }}>{getSectionTitle('skills', undefined, lang)}</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-3" style={{ color: accent }}>{getSectionTitle('skills', cv.settings, lang)}</h2>
             <div className="flex flex-wrap gap-2">
               {skills.map((s) => (
                 <span key={s.id} className="px-3 py-1 text-xs rounded-full text-slate-600 bg-white border border-slate-200">{s.name}</span>
@@ -101,28 +101,28 @@ export function Nordic({ cv }: TemplateProps) {
         <div className="grid grid-cols-3 gap-6 mb-6">
           {languages.length > 0 && (
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-2" style={{ color: accent }}>{getSectionTitle('languages', undefined, lang)}</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-2" style={{ color: accent }}>{getSectionTitle('languages', cv.settings, lang)}</h2>
               {languages.map((l) => <p key={l.id} className="text-xs text-slate-500">{l.name} — {l.level}</p>)}
             </section>
           )}
           {qualities.length > 0 && (
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-2" style={{ color: accent }}>{getSectionTitle('qualities', undefined, lang)}</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-2" style={{ color: accent }}>{getSectionTitle('qualities', cv.settings, lang)}</h2>
               {qualities.map((q) => <p key={q.id} className="text-xs text-slate-500">{q.name}</p>)}
             </section>
           )}
           {hobbies.length > 0 && (
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-2" style={{ color: accent }}>{getSectionTitle('hobbies', undefined, lang)}</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-2" style={{ color: accent }}>{getSectionTitle('hobbies', cv.settings, lang)}</h2>
               {hobbies.map((h) => <p key={h.id} className="text-xs text-slate-500">{h.name}</p>)}
             </section>
           )}
         </div>
 
-        <CVCertifications certifications={certifications} variant="professional" accentColor={accent} title={getSectionTitle('certifications', undefined, lang)} />
-        <CVProjects projects={projects} variant="professional" accentColor={accent}  title={getSectionTitle('projects', undefined, lang)} />
-        <CVReferences references={references} variant="professional" accentColor={accent}  title={getSectionTitle('references', undefined, lang)} />
-        <CVDivers divers={divers} variant="professional" accentColor={accent}  title={getSectionTitle('divers', undefined, lang)} />
+        <CVCertifications certifications={certifications} variant="professional" accentColor={accent} title={getSectionTitle('certifications', cv.settings, lang)} />
+        <CVProjects projects={projects} variant="professional" accentColor={accent}  title={getSectionTitle('projects', cv.settings, lang)} />
+        <CVReferences references={references} variant="professional" accentColor={accent}  title={getSectionTitle('references', cv.settings, lang)} />
+        <CVDivers divers={divers} variant="professional" accentColor={accent}  title={getSectionTitle('divers', cv.settings, lang)} />
         <CVFooter footer={footer} variant="professional"  lang={lang}/>
       </div>
     </div>

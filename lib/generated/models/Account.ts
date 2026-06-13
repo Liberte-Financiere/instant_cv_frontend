@@ -241,7 +241,7 @@ export type AccountGroupByOutputType = {
   _max: AccountMaxAggregateOutputType | null
 }
 
-type GetAccountGroupByPayload<T extends AccountGroupByArgs> = Prisma.PrismaPromise<
+export type GetAccountGroupByPayload<T extends AccountGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AccountGroupByOutputType, T['by']> &
       {
@@ -289,6 +289,7 @@ export type AccountOrderByWithRelationInput = {
   id_token?: Prisma.SortOrderInput | Prisma.SortOrder
   session_state?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.AccountOrderByRelevanceInput
 }
 
 export type AccountWhereUniqueInput = Prisma.AtLeast<{
@@ -451,6 +452,12 @@ export type AccountUncheckedUpdateManyInput = {
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   session_state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type AccountOrderByRelevanceInput = {
+  fields: Prisma.AccountOrderByRelevanceFieldEnum | Prisma.AccountOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type AccountProviderProviderAccountIdCompoundUniqueInput = {

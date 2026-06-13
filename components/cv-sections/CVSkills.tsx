@@ -8,16 +8,22 @@ interface CVSkillsProps {
   variant: CVVariant;
   title?: string;
   layout?: 'tags' | 'list' | 'bars';
+  accentColor?: string;
 }
 
-export function CVSkills({ skills, variant, title = 'Compétences', layout = 'tags' }: CVSkillsProps) {
+export function CVSkills({ skills, variant, title = 'Compétences', layout = 'tags', accentColor }: CVSkillsProps) {
   const styles = variantStyles[variant];
   
   if (skills.length === 0) return null;
 
   return (
     <section>
-      <h2 className={`${styles.sectionTitle} mb-4`}>{title}</h2>
+      <h2 
+        className={`${styles.sectionTitle} mb-4`}
+        style={accentColor ? { borderColor: accentColor } : undefined}
+      >
+        {title}
+      </h2>
       
       {layout === 'tags' && (
         <div className="flex flex-wrap gap-2">
@@ -25,6 +31,7 @@ export function CVSkills({ skills, variant, title = 'Compétences', layout = 'ta
             <span 
               key={skill.id} 
               className={`${styles.tagBg} ${styles.tagText} px-3 py-1.5 rounded text-xs font-medium`}
+              style={accentColor ? { backgroundColor: `${accentColor}20`, color: accentColor } : undefined}
             >
               {skill.name}
             </span>
@@ -53,7 +60,7 @@ export function CVSkills({ skills, variant, title = 'Compétences', layout = 'ta
               <div className={`h-2 ${variant === 'tech' ? 'bg-gray-700' : 'bg-slate-200'} rounded-full overflow-hidden`}>
                 <div 
                   className={`h-full ${styles.accentBg} rounded-full transition-all`}
-                  style={{ width: `${(skill.level / 5) * 100}%` }}
+                  style={{ width: `${(skill.level / 5) * 100}%`, backgroundColor: accentColor || undefined }}
                 />
               </div>
             </div>

@@ -22,6 +22,9 @@ const GradientHeader = dynamic(() => import('@/components/templates/GradientHead
 const TimelinePro = dynamic(() => import('@/components/templates/TimelinePro').then(mod => mod.TimelinePro));
 const BoldHeader = dynamic(() => import('@/components/templates/BoldHeader').then(mod => mod.BoldHeader));
 const ClassicSerif = dynamic(() => import('@/components/templates/ClassicSerif').then(mod => mod.ClassicSerif));
+const Infographic = dynamic(() => import('@/components/templates/Infographic').then(mod => mod.Infographic));
+const PastelModern = dynamic(() => import('@/components/templates/PastelModern').then(mod => mod.PastelModern));
+const BlueprintPremium = dynamic(() => import('@/components/templates/BlueprintPremium').then(mod => mod.BlueprintPremium));
 
 interface CVThumbnailProps {
   cv: CV;
@@ -48,6 +51,9 @@ export const CVThumbnail = memo(function CVThumbnail({ cv, scale = 0.15 }: CVThu
       case 'timeline': return <TimelinePro cv={cv} />;
       case 'bold-header': return <BoldHeader cv={cv} />;
       case 'classic-serif': return <ClassicSerif cv={cv} />;
+      case 'infographic': return <Infographic cv={cv} />;
+      case 'pastel': return <PastelModern cv={cv} />;
+      case 'blueprint-premium': return <BlueprintPremium cv={cv} />;
       default: return <ModernSidebar cv={cv} />;
     }
   };

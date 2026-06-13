@@ -10,14 +10,7 @@ export async function GET() {
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: {
-        name: true,
-        email: true,
-        phone: true,
-        jobTitle: true,
-        sector: true,
-      }
+      where: { id: session.user.id }
     });
 
     return NextResponse.json({ user });
@@ -38,7 +31,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    const { firstName, lastName, phone, jobTitle, sector } = await req.json();
+    const { firstName, lastName, phone, jobTitle, sector, acceptsMarketing } = await req.json();
 
     // Prepare update data
     const updateData: any = {};
@@ -50,6 +43,7 @@ export async function PUT(req: Request) {
     if (phone !== undefined) updateData.phone = phone;
     if (jobTitle !== undefined) updateData.jobTitle = jobTitle;
     if (sector !== undefined) updateData.sector = sector;
+    if (acceptsMarketing !== undefined) updateData.acceptsMarketing = acceptsMarketing;
 
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
@@ -63,6 +57,7 @@ export async function PUT(req: Request) {
         phone: updatedUser.phone,
         jobTitle: updatedUser.jobTitle,
         sector: updatedUser.sector,
+        acceptsMarketing: updatedUser.acceptsMarketing,
       },
     });
   } catch (error) {

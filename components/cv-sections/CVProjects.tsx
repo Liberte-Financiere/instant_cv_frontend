@@ -46,6 +46,7 @@ export function CVProjects({ projects, variant, title = 'Projets', accentColor }
                     <span 
                       key={idx} 
                       className={`text-xs px-2 py-0.5 rounded ${styles.tagBg} ${styles.tagText}`}
+                      style={accentColor ? { backgroundColor: `${accentColor}20`, color: accentColor } : undefined}
                     >
                       {tech.trim()}
                     </span>

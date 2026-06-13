@@ -10,6 +10,8 @@ import { APP_CONFIG } from '@/lib/config';
 
 const navLinks = [
   { href: '#features', label: 'Fonctionnalités' },
+  { href: '/compare', label: 'Comparer' },
+  { href: '/help', label: 'Astuces & Infos' },
   { href: '#pricing', label: 'Tarifs' },
 ];
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Plus, FileText, Download, Search, ArrowLeft, ArrowRight, Edit, Sparkles } from 'lucide-react';
+import { Plus, FileText, Download, Search, ArrowLeft, ArrowRight, Edit, Sparkles, Building2 } from 'lucide-react';
 import Link from 'next/link';
 import { useCVStore } from '@/store/useCVStore';
 import { useState, useEffect } from 'react';
@@ -12,6 +12,7 @@ import { TemplateId } from '@/types/cv';
 import { Pagination } from '@/components/ui/Pagination';
 
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { useCoverLetterStore } from '@/store/useCoverLetterStore';
 import { CoverLetterService } from '@/services/coverLetterService';
@@ -21,6 +22,7 @@ import { useCreditStore } from '@/store/useCreditStore';
 
 
 export default function DashboardPage() {
+  const { data: session } = useSession();
   const router = useRouter();
   const { createNewCV, cvList, setAnalysisData, deleteCV, addToHistory } = useCVStore();
   const { clList, createNewCL, deleteCL } = useCoverLetterStore();
@@ -153,13 +155,24 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold text-slate-900">Tableau de Bord</h1>
           <p className="text-slate-500 mt-2">Bienvenue. Voici un aperçu de vos activités.</p>
         </div>
-        <Link 
-          href="/dashboard/templates"
-          className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap"
-        >
-          <Plus className="w-5 h-5" />
-          Nouveau CV
-        </Link>
+        <div className="flex flex-wrap items-center gap-3">
+          {session?.user?.role === 'RECRUITER' && (
+            <Link 
+              href="/recruiter/unlocks"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-xl shadow-sm transition-all active:scale-95 whitespace-nowrap"
+            >
+              <Building2 className="w-5 h-5" />
+              Espace Recruteur
+            </Link>
+          )}
+          <Link 
+            href="/dashboard/templates"
+            className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap"
+          >
+            <Plus className="w-5 h-5" />
+            Nouveau CV
+          </Link>
+        </div>
       </div>
 
       {/* Stats Row */}

@@ -29,11 +29,15 @@ export type AggregateUser = {
 export type UserAvgAggregateOutputType = {
   credits: number | null
   referralCount: number | null
+  recruiterCredits: number | null
+  freeUnlocksUsed: number | null
 }
 
 export type UserSumAggregateOutputType = {
   credits: number | null
   referralCount: number | null
+  recruiterCredits: number | null
+  freeUnlocksUsed: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -44,6 +48,7 @@ export type UserMinAggregateOutputType = {
   image: string | null
   role: $Enums.Role | null
   credits: number | null
+  acceptsMarketing: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   phone: string | null
@@ -53,6 +58,9 @@ export type UserMinAggregateOutputType = {
   referredById: string | null
   referralCount: number | null
   premiumUntil: Date | null
+  companyName: string | null
+  recruiterCredits: number | null
+  freeUnlocksUsed: number | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -63,6 +71,7 @@ export type UserMaxAggregateOutputType = {
   image: string | null
   role: $Enums.Role | null
   credits: number | null
+  acceptsMarketing: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   phone: string | null
@@ -72,6 +81,9 @@ export type UserMaxAggregateOutputType = {
   referredById: string | null
   referralCount: number | null
   premiumUntil: Date | null
+  companyName: string | null
+  recruiterCredits: number | null
+  freeUnlocksUsed: number | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -82,6 +94,7 @@ export type UserCountAggregateOutputType = {
   image: number
   role: number
   credits: number
+  acceptsMarketing: number
   createdAt: number
   updatedAt: number
   phone: number
@@ -91,6 +104,9 @@ export type UserCountAggregateOutputType = {
   referredById: number
   referralCount: number
   premiumUntil: number
+  companyName: number
+  recruiterCredits: number
+  freeUnlocksUsed: number
   _all: number
 }
 
@@ -98,11 +114,15 @@ export type UserCountAggregateOutputType = {
 export type UserAvgAggregateInputType = {
   credits?: true
   referralCount?: true
+  recruiterCredits?: true
+  freeUnlocksUsed?: true
 }
 
 export type UserSumAggregateInputType = {
   credits?: true
   referralCount?: true
+  recruiterCredits?: true
+  freeUnlocksUsed?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -113,6 +133,7 @@ export type UserMinAggregateInputType = {
   image?: true
   role?: true
   credits?: true
+  acceptsMarketing?: true
   createdAt?: true
   updatedAt?: true
   phone?: true
@@ -122,6 +143,9 @@ export type UserMinAggregateInputType = {
   referredById?: true
   referralCount?: true
   premiumUntil?: true
+  companyName?: true
+  recruiterCredits?: true
+  freeUnlocksUsed?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -132,6 +156,7 @@ export type UserMaxAggregateInputType = {
   image?: true
   role?: true
   credits?: true
+  acceptsMarketing?: true
   createdAt?: true
   updatedAt?: true
   phone?: true
@@ -141,6 +166,9 @@ export type UserMaxAggregateInputType = {
   referredById?: true
   referralCount?: true
   premiumUntil?: true
+  companyName?: true
+  recruiterCredits?: true
+  freeUnlocksUsed?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -151,6 +179,7 @@ export type UserCountAggregateInputType = {
   image?: true
   role?: true
   credits?: true
+  acceptsMarketing?: true
   createdAt?: true
   updatedAt?: true
   phone?: true
@@ -160,6 +189,9 @@ export type UserCountAggregateInputType = {
   referredById?: true
   referralCount?: true
   premiumUntil?: true
+  companyName?: true
+  recruiterCredits?: true
+  freeUnlocksUsed?: true
   _all?: true
 }
 
@@ -257,6 +289,7 @@ export type UserGroupByOutputType = {
   image: string | null
   role: $Enums.Role
   credits: number
+  acceptsMarketing: boolean
   createdAt: Date
   updatedAt: Date
   phone: string | null
@@ -266,6 +299,9 @@ export type UserGroupByOutputType = {
   referredById: string | null
   referralCount: number
   premiumUntil: Date | null
+  companyName: string | null
+  recruiterCredits: number
+  freeUnlocksUsed: number
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -273,7 +309,7 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null
 }
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -299,6 +335,7 @@ export type UserWhereInput = {
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   credits?: Prisma.FloatFilter<"User"> | number
+  acceptsMarketing?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   phone?: Prisma.StringNullableFilter<"User"> | string | null
@@ -308,6 +345,9 @@ export type UserWhereInput = {
   referredById?: Prisma.StringNullableFilter<"User"> | string | null
   referralCount?: Prisma.IntFilter<"User"> | number
   premiumUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  companyName?: Prisma.StringNullableFilter<"User"> | string | null
+  recruiterCredits?: Prisma.IntFilter<"User"> | number
+  freeUnlocksUsed?: Prisma.IntFilter<"User"> | number
   referredBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   referredUsers?: Prisma.UserListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
@@ -319,6 +359,8 @@ export type UserWhereInput = {
   feedbacks?: Prisma.PlatformFeedbackListRelationFilter
   paymentTransactions?: Prisma.PaymentTransactionListRelationFilter
   interviewSessions?: Prisma.InterviewSessionListRelationFilter
+  candidateProfiles?: Prisma.CandidateProfileListRelationFilter
+  profileUnlocks?: Prisma.ProfileUnlockListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -329,6 +371,7 @@ export type UserOrderByWithRelationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -338,6 +381,9 @@ export type UserOrderByWithRelationInput = {
   referredById?: Prisma.SortOrderInput | Prisma.SortOrder
   referralCount?: Prisma.SortOrder
   premiumUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyName?: Prisma.SortOrderInput | Prisma.SortOrder
+  recruiterCredits?: Prisma.SortOrder
+  freeUnlocksUsed?: Prisma.SortOrder
   referredBy?: Prisma.UserOrderByWithRelationInput
   referredUsers?: Prisma.UserOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
@@ -349,6 +395,9 @@ export type UserOrderByWithRelationInput = {
   feedbacks?: Prisma.PlatformFeedbackOrderByRelationAggregateInput
   paymentTransactions?: Prisma.PaymentTransactionOrderByRelationAggregateInput
   interviewSessions?: Prisma.InterviewSessionOrderByRelationAggregateInput
+  candidateProfiles?: Prisma.CandidateProfileOrderByRelationAggregateInput
+  profileUnlocks?: Prisma.ProfileUnlockOrderByRelationAggregateInput
+  _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -363,6 +412,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   credits?: Prisma.FloatFilter<"User"> | number
+  acceptsMarketing?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   phone?: Prisma.StringNullableFilter<"User"> | string | null
@@ -371,6 +421,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   referredById?: Prisma.StringNullableFilter<"User"> | string | null
   referralCount?: Prisma.IntFilter<"User"> | number
   premiumUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  companyName?: Prisma.StringNullableFilter<"User"> | string | null
+  recruiterCredits?: Prisma.IntFilter<"User"> | number
+  freeUnlocksUsed?: Prisma.IntFilter<"User"> | number
   referredBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   referredUsers?: Prisma.UserListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
@@ -382,6 +435,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   feedbacks?: Prisma.PlatformFeedbackListRelationFilter
   paymentTransactions?: Prisma.PaymentTransactionListRelationFilter
   interviewSessions?: Prisma.InterviewSessionListRelationFilter
+  candidateProfiles?: Prisma.CandidateProfileListRelationFilter
+  profileUnlocks?: Prisma.ProfileUnlockListRelationFilter
 }, "id" | "email" | "referralCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -392,6 +447,7 @@ export type UserOrderByWithAggregationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -401,6 +457,9 @@ export type UserOrderByWithAggregationInput = {
   referredById?: Prisma.SortOrderInput | Prisma.SortOrder
   referralCount?: Prisma.SortOrder
   premiumUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyName?: Prisma.SortOrderInput | Prisma.SortOrder
+  recruiterCredits?: Prisma.SortOrder
+  freeUnlocksUsed?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -419,6 +478,7 @@ export type UserScalarWhereWithAggregatesInput = {
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   credits?: Prisma.FloatWithAggregatesFilter<"User"> | number
+  acceptsMarketing?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -428,6 +488,9 @@ export type UserScalarWhereWithAggregatesInput = {
   referredById?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   referralCount?: Prisma.IntWithAggregatesFilter<"User"> | number
   premiumUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  companyName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  recruiterCredits?: Prisma.IntWithAggregatesFilter<"User"> | number
+  freeUnlocksUsed?: Prisma.IntWithAggregatesFilter<"User"> | number
 }
 
 export type UserCreateInput = {
@@ -438,6 +501,7 @@ export type UserCreateInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -446,6 +510,9 @@ export type UserCreateInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -457,6 +524,8 @@ export type UserCreateInput = {
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -467,6 +536,7 @@ export type UserUncheckedCreateInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -476,6 +546,9 @@ export type UserUncheckedCreateInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -486,6 +559,8 @@ export type UserUncheckedCreateInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUpdateInput = {
@@ -496,6 +571,7 @@ export type UserUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -504,6 +580,9 @@ export type UserUpdateInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -515,6 +594,8 @@ export type UserUpdateInput = {
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -525,6 +606,7 @@ export type UserUncheckedUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -534,6 +616,9 @@ export type UserUncheckedUpdateInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -544,6 +629,8 @@ export type UserUncheckedUpdateInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -554,6 +641,7 @@ export type UserCreateManyInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -563,6 +651,9 @@ export type UserCreateManyInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
 }
 
 export type UserUpdateManyMutationInput = {
@@ -573,6 +664,7 @@ export type UserUpdateManyMutationInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -581,6 +673,9 @@ export type UserUpdateManyMutationInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -591,6 +686,7 @@ export type UserUncheckedUpdateManyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -600,6 +696,9 @@ export type UserUncheckedUpdateManyInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type UserScalarRelationFilter = {
@@ -622,6 +721,12 @@ export type UserOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type UserOrderByRelevanceInput = {
+  fields: Prisma.UserOrderByRelevanceFieldEnum | Prisma.UserOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
+}
+
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -630,6 +735,7 @@ export type UserCountOrderByAggregateInput = {
   image?: Prisma.SortOrder
   role?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -639,11 +745,16 @@ export type UserCountOrderByAggregateInput = {
   referredById?: Prisma.SortOrder
   referralCount?: Prisma.SortOrder
   premiumUntil?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
+  recruiterCredits?: Prisma.SortOrder
+  freeUnlocksUsed?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   credits?: Prisma.SortOrder
   referralCount?: Prisma.SortOrder
+  recruiterCredits?: Prisma.SortOrder
+  freeUnlocksUsed?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -654,6 +765,7 @@ export type UserMaxOrderByAggregateInput = {
   image?: Prisma.SortOrder
   role?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -663,6 +775,9 @@ export type UserMaxOrderByAggregateInput = {
   referredById?: Prisma.SortOrder
   referralCount?: Prisma.SortOrder
   premiumUntil?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
+  recruiterCredits?: Prisma.SortOrder
+  freeUnlocksUsed?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -673,6 +788,7 @@ export type UserMinOrderByAggregateInput = {
   image?: Prisma.SortOrder
   role?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -682,11 +798,16 @@ export type UserMinOrderByAggregateInput = {
   referredById?: Prisma.SortOrder
   referralCount?: Prisma.SortOrder
   premiumUntil?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
+  recruiterCredits?: Prisma.SortOrder
+  freeUnlocksUsed?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   credits?: Prisma.SortOrder
   referralCount?: Prisma.SortOrder
+  recruiterCredits?: Prisma.SortOrder
+  freeUnlocksUsed?: Prisma.SortOrder
 }
 
 export type UserCreateNestedOneWithoutAccountsInput = {
@@ -757,6 +878,10 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
 
 export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -891,6 +1016,34 @@ export type UserUpdateOneRequiredWithoutInterviewSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInterviewSessionsInput, Prisma.UserUpdateWithoutInterviewSessionsInput>, Prisma.UserUncheckedUpdateWithoutInterviewSessionsInput>
 }
 
+export type UserCreateNestedOneWithoutCandidateProfilesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCandidateProfilesInput, Prisma.UserUncheckedCreateWithoutCandidateProfilesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCandidateProfilesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCandidateProfilesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCandidateProfilesInput, Prisma.UserUncheckedCreateWithoutCandidateProfilesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCandidateProfilesInput
+  upsert?: Prisma.UserUpsertWithoutCandidateProfilesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCandidateProfilesInput, Prisma.UserUpdateWithoutCandidateProfilesInput>, Prisma.UserUncheckedUpdateWithoutCandidateProfilesInput>
+}
+
+export type UserCreateNestedOneWithoutProfileUnlocksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileUnlocksInput, Prisma.UserUncheckedCreateWithoutProfileUnlocksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileUnlocksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutProfileUnlocksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileUnlocksInput, Prisma.UserUncheckedCreateWithoutProfileUnlocksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileUnlocksInput
+  upsert?: Prisma.UserUpsertWithoutProfileUnlocksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProfileUnlocksInput, Prisma.UserUpdateWithoutProfileUnlocksInput>, Prisma.UserUncheckedUpdateWithoutProfileUnlocksInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -899,6 +1052,7 @@ export type UserCreateWithoutAccountsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -907,6 +1061,9 @@ export type UserCreateWithoutAccountsInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -917,6 +1074,8 @@ export type UserCreateWithoutAccountsInput = {
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -927,6 +1086,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -936,6 +1096,9 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
@@ -945,6 +1108,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -971,6 +1136,7 @@ export type UserUpdateWithoutAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -979,6 +1145,9 @@ export type UserUpdateWithoutAccountsInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -989,6 +1158,8 @@ export type UserUpdateWithoutAccountsInput = {
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -999,6 +1170,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1008,6 +1180,9 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
@@ -1017,6 +1192,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1027,6 +1204,7 @@ export type UserCreateWithoutSessionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1035,6 +1213,9 @@ export type UserCreateWithoutSessionsInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1045,6 +1226,8 @@ export type UserCreateWithoutSessionsInput = {
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1055,6 +1238,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1064,6 +1248,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
@@ -1073,6 +1260,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1099,6 +1288,7 @@ export type UserUpdateWithoutSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1107,6 +1297,9 @@ export type UserUpdateWithoutSessionsInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1117,6 +1310,8 @@ export type UserUpdateWithoutSessionsInput = {
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1127,6 +1322,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1136,6 +1332,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
@@ -1145,6 +1344,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserCreateWithoutAnalysesInput = {
@@ -1155,6 +1356,7 @@ export type UserCreateWithoutAnalysesInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1163,6 +1365,9 @@ export type UserCreateWithoutAnalysesInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1173,6 +1378,8 @@ export type UserCreateWithoutAnalysesInput = {
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutAnalysesInput = {
@@ -1183,6 +1390,7 @@ export type UserUncheckedCreateWithoutAnalysesInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1192,6 +1400,9 @@ export type UserUncheckedCreateWithoutAnalysesInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1201,6 +1412,8 @@ export type UserUncheckedCreateWithoutAnalysesInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutAnalysesInput = {
@@ -1227,6 +1440,7 @@ export type UserUpdateWithoutAnalysesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1235,6 +1449,9 @@ export type UserUpdateWithoutAnalysesInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1245,6 +1462,8 @@ export type UserUpdateWithoutAnalysesInput = {
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAnalysesInput = {
@@ -1255,6 +1474,7 @@ export type UserUncheckedUpdateWithoutAnalysesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1264,6 +1484,9 @@ export type UserUncheckedUpdateWithoutAnalysesInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1273,6 +1496,8 @@ export type UserUncheckedUpdateWithoutAnalysesInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserCreateWithoutReferredUsersInput = {
@@ -1283,6 +1508,7 @@ export type UserCreateWithoutReferredUsersInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1291,6 +1517,9 @@ export type UserCreateWithoutReferredUsersInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1301,6 +1530,8 @@ export type UserCreateWithoutReferredUsersInput = {
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -1311,6 +1542,7 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1320,6 +1552,9 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
@@ -1329,6 +1564,8 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -1344,6 +1581,7 @@ export type UserCreateWithoutReferredByInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1352,6 +1590,9 @@ export type UserCreateWithoutReferredByInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1362,6 +1603,8 @@ export type UserCreateWithoutReferredByInput = {
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredByInput = {
@@ -1372,6 +1615,7 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1380,6 +1624,9 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1390,6 +1637,8 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredByInput = {
@@ -1421,6 +1670,7 @@ export type UserUpdateWithoutReferredUsersInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1429,6 +1679,9 @@ export type UserUpdateWithoutReferredUsersInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1439,6 +1692,8 @@ export type UserUpdateWithoutReferredUsersInput = {
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -1449,6 +1704,7 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1458,6 +1714,9 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
@@ -1467,6 +1726,8 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutReferredByInput = {
@@ -1496,6 +1757,7 @@ export type UserScalarWhereInput = {
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   credits?: Prisma.FloatFilter<"User"> | number
+  acceptsMarketing?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   phone?: Prisma.StringNullableFilter<"User"> | string | null
@@ -1505,6 +1767,9 @@ export type UserScalarWhereInput = {
   referredById?: Prisma.StringNullableFilter<"User"> | string | null
   referralCount?: Prisma.IntFilter<"User"> | number
   premiumUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  companyName?: Prisma.StringNullableFilter<"User"> | string | null
+  recruiterCredits?: Prisma.IntFilter<"User"> | number
+  freeUnlocksUsed?: Prisma.IntFilter<"User"> | number
 }
 
 export type UserCreateWithoutFeedbacksInput = {
@@ -1515,6 +1780,7 @@ export type UserCreateWithoutFeedbacksInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1523,6 +1789,9 @@ export type UserCreateWithoutFeedbacksInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1533,6 +1802,8 @@ export type UserCreateWithoutFeedbacksInput = {
   creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutFeedbacksInput = {
@@ -1543,6 +1814,7 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1552,6 +1824,9 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1561,6 +1836,8 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutFeedbacksInput = {
@@ -1587,6 +1864,7 @@ export type UserUpdateWithoutFeedbacksInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1595,6 +1873,9 @@ export type UserUpdateWithoutFeedbacksInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1605,6 +1886,8 @@ export type UserUpdateWithoutFeedbacksInput = {
   creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeedbacksInput = {
@@ -1615,6 +1898,7 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1624,6 +1908,9 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1633,6 +1920,8 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserCreateWithoutPaymentTransactionsInput = {
@@ -1643,6 +1932,7 @@ export type UserCreateWithoutPaymentTransactionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1651,6 +1941,9 @@ export type UserCreateWithoutPaymentTransactionsInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1661,6 +1954,8 @@ export type UserCreateWithoutPaymentTransactionsInput = {
   creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentTransactionsInput = {
@@ -1671,6 +1966,7 @@ export type UserUncheckedCreateWithoutPaymentTransactionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1680,6 +1976,9 @@ export type UserUncheckedCreateWithoutPaymentTransactionsInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1689,6 +1988,8 @@ export type UserUncheckedCreateWithoutPaymentTransactionsInput = {
   creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentTransactionsInput = {
@@ -1715,6 +2016,7 @@ export type UserUpdateWithoutPaymentTransactionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1723,6 +2025,9 @@ export type UserUpdateWithoutPaymentTransactionsInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1733,6 +2038,8 @@ export type UserUpdateWithoutPaymentTransactionsInput = {
   creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentTransactionsInput = {
@@ -1743,6 +2050,7 @@ export type UserUncheckedUpdateWithoutPaymentTransactionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1752,6 +2060,9 @@ export type UserUncheckedUpdateWithoutPaymentTransactionsInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1761,6 +2072,8 @@ export type UserUncheckedUpdateWithoutPaymentTransactionsInput = {
   creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserCreateWithoutCvsInput = {
@@ -1771,6 +2084,7 @@ export type UserCreateWithoutCvsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1779,6 +2093,9 @@ export type UserCreateWithoutCvsInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1789,6 +2106,8 @@ export type UserCreateWithoutCvsInput = {
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutCvsInput = {
@@ -1799,6 +2118,7 @@ export type UserUncheckedCreateWithoutCvsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1808,6 +2128,9 @@ export type UserUncheckedCreateWithoutCvsInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1817,6 +2140,8 @@ export type UserUncheckedCreateWithoutCvsInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutCvsInput = {
@@ -1843,6 +2168,7 @@ export type UserUpdateWithoutCvsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1851,6 +2177,9 @@ export type UserUpdateWithoutCvsInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1861,6 +2190,8 @@ export type UserUpdateWithoutCvsInput = {
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCvsInput = {
@@ -1871,6 +2202,7 @@ export type UserUncheckedUpdateWithoutCvsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1880,6 +2212,9 @@ export type UserUncheckedUpdateWithoutCvsInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1889,6 +2224,8 @@ export type UserUncheckedUpdateWithoutCvsInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserCreateWithoutCoverLettersInput = {
@@ -1899,6 +2236,7 @@ export type UserCreateWithoutCoverLettersInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1907,6 +2245,9 @@ export type UserCreateWithoutCoverLettersInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1917,6 +2258,8 @@ export type UserCreateWithoutCoverLettersInput = {
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutCoverLettersInput = {
@@ -1927,6 +2270,7 @@ export type UserUncheckedCreateWithoutCoverLettersInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -1936,6 +2280,9 @@ export type UserUncheckedCreateWithoutCoverLettersInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1945,6 +2292,8 @@ export type UserUncheckedCreateWithoutCoverLettersInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutCoverLettersInput = {
@@ -1971,6 +2320,7 @@ export type UserUpdateWithoutCoverLettersInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1979,6 +2329,9 @@ export type UserUpdateWithoutCoverLettersInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1989,6 +2342,8 @@ export type UserUpdateWithoutCoverLettersInput = {
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCoverLettersInput = {
@@ -1999,6 +2354,7 @@ export type UserUncheckedUpdateWithoutCoverLettersInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2008,6 +2364,9 @@ export type UserUncheckedUpdateWithoutCoverLettersInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2017,6 +2376,8 @@ export type UserUncheckedUpdateWithoutCoverLettersInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserCreateWithoutCreditTransactionsInput = {
@@ -2027,6 +2388,7 @@ export type UserCreateWithoutCreditTransactionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -2035,6 +2397,9 @@ export type UserCreateWithoutCreditTransactionsInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -2045,6 +2410,8 @@ export type UserCreateWithoutCreditTransactionsInput = {
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutCreditTransactionsInput = {
@@ -2055,6 +2422,7 @@ export type UserUncheckedCreateWithoutCreditTransactionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -2064,6 +2432,9 @@ export type UserUncheckedCreateWithoutCreditTransactionsInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2073,6 +2444,8 @@ export type UserUncheckedCreateWithoutCreditTransactionsInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutCreditTransactionsInput = {
@@ -2099,6 +2472,7 @@ export type UserUpdateWithoutCreditTransactionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2107,6 +2481,9 @@ export type UserUpdateWithoutCreditTransactionsInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -2117,6 +2494,8 @@ export type UserUpdateWithoutCreditTransactionsInput = {
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreditTransactionsInput = {
@@ -2127,6 +2506,7 @@ export type UserUncheckedUpdateWithoutCreditTransactionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2136,6 +2516,9 @@ export type UserUncheckedUpdateWithoutCreditTransactionsInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2145,6 +2528,8 @@ export type UserUncheckedUpdateWithoutCreditTransactionsInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserCreateWithoutInterviewSessionsInput = {
@@ -2155,6 +2540,7 @@ export type UserCreateWithoutInterviewSessionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -2163,6 +2549,9 @@ export type UserCreateWithoutInterviewSessionsInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -2173,6 +2562,8 @@ export type UserCreateWithoutInterviewSessionsInput = {
   creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
   feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserUncheckedCreateWithoutInterviewSessionsInput = {
@@ -2183,6 +2574,7 @@ export type UserUncheckedCreateWithoutInterviewSessionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -2192,6 +2584,9 @@ export type UserUncheckedCreateWithoutInterviewSessionsInput = {
   referredById?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2201,6 +2596,8 @@ export type UserUncheckedCreateWithoutInterviewSessionsInput = {
   creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
   feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
 }
 
 export type UserCreateOrConnectWithoutInterviewSessionsInput = {
@@ -2227,6 +2624,7 @@ export type UserUpdateWithoutInterviewSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2235,6 +2633,9 @@ export type UserUpdateWithoutInterviewSessionsInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -2245,6 +2646,8 @@ export type UserUpdateWithoutInterviewSessionsInput = {
   creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInterviewSessionsInput = {
@@ -2255,6 +2658,7 @@ export type UserUncheckedUpdateWithoutInterviewSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2264,6 +2668,9 @@ export type UserUncheckedUpdateWithoutInterviewSessionsInput = {
   referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2273,9 +2680,11 @@ export type UserUncheckedUpdateWithoutInterviewSessionsInput = {
   creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
-export type UserCreateManyReferredByInput = {
+export type UserCreateWithoutCandidateProfilesInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2283,6 +2692,7 @@ export type UserCreateManyReferredByInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   phone?: string | null
@@ -2291,9 +2701,74 @@ export type UserCreateManyReferredByInput = {
   referralCode?: string | null
   referralCount?: number
   premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
+  referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  cvs?: Prisma.CVCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
+  analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
+  paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
 }
 
-export type UserUpdateWithoutReferredByInput = {
+export type UserUncheckedCreateWithoutCandidateProfilesInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.Role
+  credits?: number
+  acceptsMarketing?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  phone?: string | null
+  jobTitle?: string | null
+  sector?: string | null
+  referralCode?: string | null
+  referredById?: string | null
+  referralCount?: number
+  premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
+  analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
+  paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
+}
+
+export type UserCreateOrConnectWithoutCandidateProfilesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCandidateProfilesInput, Prisma.UserUncheckedCreateWithoutCandidateProfilesInput>
+}
+
+export type UserUpsertWithoutCandidateProfilesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCandidateProfilesInput, Prisma.UserUncheckedUpdateWithoutCandidateProfilesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCandidateProfilesInput, Prisma.UserUncheckedCreateWithoutCandidateProfilesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCandidateProfilesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCandidateProfilesInput, Prisma.UserUncheckedUpdateWithoutCandidateProfilesInput>
+}
+
+export type UserUpdateWithoutCandidateProfilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2301,6 +2776,7 @@ export type UserUpdateWithoutReferredByInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2309,6 +2785,10 @@ export type UserUpdateWithoutReferredByInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2319,9 +2799,10 @@ export type UserUpdateWithoutReferredByInput = {
   feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutReferredByInput = {
+export type UserUncheckedUpdateWithoutCandidateProfilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2329,14 +2810,19 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2347,6 +2833,249 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
   paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
+}
+
+export type UserCreateWithoutProfileUnlocksInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.Role
+  credits?: number
+  acceptsMarketing?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  phone?: string | null
+  jobTitle?: string | null
+  sector?: string | null
+  referralCode?: string | null
+  referralCount?: number
+  premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
+  referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  cvs?: Prisma.CVCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
+  analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
+  paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutProfileUnlocksInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.Role
+  credits?: number
+  acceptsMarketing?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  phone?: string | null
+  jobTitle?: string | null
+  sector?: string | null
+  referralCode?: string | null
+  referredById?: string | null
+  referralCount?: number
+  premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
+  analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
+  paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutProfileUnlocksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProfileUnlocksInput, Prisma.UserUncheckedCreateWithoutProfileUnlocksInput>
+}
+
+export type UserUpsertWithoutProfileUnlocksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProfileUnlocksInput, Prisma.UserUncheckedUpdateWithoutProfileUnlocksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProfileUnlocksInput, Prisma.UserUncheckedCreateWithoutProfileUnlocksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProfileUnlocksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProfileUnlocksInput, Prisma.UserUncheckedUpdateWithoutProfileUnlocksInput>
+}
+
+export type UserUpdateWithoutProfileUnlocksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCount?: Prisma.IntFieldUpdateOperationsInput | number
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
+  analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
+  paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProfileUnlocksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCount?: Prisma.IntFieldUpdateOperationsInput | number
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
+  analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateManyReferredByInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.Role
+  credits?: number
+  acceptsMarketing?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  phone?: string | null
+  jobTitle?: string | null
+  sector?: string | null
+  referralCode?: string | null
+  referralCount?: number
+  premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
+}
+
+export type UserUpdateWithoutReferredByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCount?: Prisma.IntFieldUpdateOperationsInput | number
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
+  analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
+  paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReferredByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCount?: Prisma.IntFieldUpdateOperationsInput | number
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
+  analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutReferredByInput = {
@@ -2357,6 +3086,7 @@ export type UserUncheckedUpdateManyWithoutReferredByInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2365,6 +3095,9 @@ export type UserUncheckedUpdateManyWithoutReferredByInput = {
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -2383,6 +3116,8 @@ export type UserCountOutputType = {
   feedbacks: number
   paymentTransactions: number
   interviewSessions: number
+  candidateProfiles: number
+  profileUnlocks: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2396,6 +3131,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   feedbacks?: boolean | UserCountOutputTypeCountFeedbacksArgs
   paymentTransactions?: boolean | UserCountOutputTypeCountPaymentTransactionsArgs
   interviewSessions?: boolean | UserCountOutputTypeCountInterviewSessionsArgs
+  candidateProfiles?: boolean | UserCountOutputTypeCountCandidateProfilesArgs
+  profileUnlocks?: boolean | UserCountOutputTypeCountProfileUnlocksArgs
 }
 
 /**
@@ -2478,6 +3215,20 @@ export type UserCountOutputTypeCountInterviewSessionsArgs<ExtArgs extends runtim
   where?: Prisma.InterviewSessionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCandidateProfilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CandidateProfileWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProfileUnlocksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProfileUnlockWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2487,6 +3238,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   image?: boolean
   role?: boolean
   credits?: boolean
+  acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   phone?: boolean
@@ -2496,6 +3248,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   referredById?: boolean
   referralCount?: boolean
   premiumUntil?: boolean
+  companyName?: boolean
+  recruiterCredits?: boolean
+  freeUnlocksUsed?: boolean
   referredBy?: boolean | Prisma.User$referredByArgs<ExtArgs>
   referredUsers?: boolean | Prisma.User$referredUsersArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -2507,6 +3262,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   feedbacks?: boolean | Prisma.User$feedbacksArgs<ExtArgs>
   paymentTransactions?: boolean | Prisma.User$paymentTransactionsArgs<ExtArgs>
   interviewSessions?: boolean | Prisma.User$interviewSessionsArgs<ExtArgs>
+  candidateProfiles?: boolean | Prisma.User$candidateProfilesArgs<ExtArgs>
+  profileUnlocks?: boolean | Prisma.User$profileUnlocksArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2518,6 +3275,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   role?: boolean
   credits?: boolean
+  acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   phone?: boolean
@@ -2527,6 +3285,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   referredById?: boolean
   referralCount?: boolean
   premiumUntil?: boolean
+  companyName?: boolean
+  recruiterCredits?: boolean
+  freeUnlocksUsed?: boolean
   referredBy?: boolean | Prisma.User$referredByArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2538,6 +3299,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   role?: boolean
   credits?: boolean
+  acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   phone?: boolean
@@ -2547,6 +3309,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   referredById?: boolean
   referralCount?: boolean
   premiumUntil?: boolean
+  companyName?: boolean
+  recruiterCredits?: boolean
+  freeUnlocksUsed?: boolean
   referredBy?: boolean | Prisma.User$referredByArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2558,6 +3323,7 @@ export type UserSelectScalar = {
   image?: boolean
   role?: boolean
   credits?: boolean
+  acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   phone?: boolean
@@ -2567,9 +3333,12 @@ export type UserSelectScalar = {
   referredById?: boolean
   referralCount?: boolean
   premiumUntil?: boolean
+  companyName?: boolean
+  recruiterCredits?: boolean
+  freeUnlocksUsed?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "credits" | "createdAt" | "updatedAt" | "phone" | "jobTitle" | "sector" | "referralCode" | "referredById" | "referralCount" | "premiumUntil", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "credits" | "acceptsMarketing" | "createdAt" | "updatedAt" | "phone" | "jobTitle" | "sector" | "referralCode" | "referredById" | "referralCount" | "premiumUntil" | "companyName" | "recruiterCredits" | "freeUnlocksUsed", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   referredBy?: boolean | Prisma.User$referredByArgs<ExtArgs>
   referredUsers?: boolean | Prisma.User$referredUsersArgs<ExtArgs>
@@ -2582,6 +3351,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   feedbacks?: boolean | Prisma.User$feedbacksArgs<ExtArgs>
   paymentTransactions?: boolean | Prisma.User$paymentTransactionsArgs<ExtArgs>
   interviewSessions?: boolean | Prisma.User$interviewSessionsArgs<ExtArgs>
+  candidateProfiles?: boolean | Prisma.User$candidateProfilesArgs<ExtArgs>
+  profileUnlocks?: boolean | Prisma.User$profileUnlocksArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2605,6 +3376,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     feedbacks: Prisma.$PlatformFeedbackPayload<ExtArgs>[]
     paymentTransactions: Prisma.$PaymentTransactionPayload<ExtArgs>[]
     interviewSessions: Prisma.$InterviewSessionPayload<ExtArgs>[]
+    candidateProfiles: Prisma.$CandidateProfilePayload<ExtArgs>[]
+    profileUnlocks: Prisma.$ProfileUnlockPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2614,6 +3387,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     image: string | null
     role: $Enums.Role
     credits: number
+    acceptsMarketing: boolean
     createdAt: Date
     updatedAt: Date
     phone: string | null
@@ -2623,6 +3397,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     referredById: string | null
     referralCount: number
     premiumUntil: Date | null
+    companyName: string | null
+    recruiterCredits: number
+    freeUnlocksUsed: number
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -3028,6 +3805,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   feedbacks<T extends Prisma.User$feedbacksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paymentTransactions<T extends Prisma.User$paymentTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   interviewSessions<T extends Prisma.User$interviewSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$interviewSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InterviewSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  candidateProfiles<T extends Prisma.User$candidateProfilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$candidateProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CandidateProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  profileUnlocks<T extends Prisma.User$profileUnlocksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileUnlocksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileUnlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3064,6 +3843,7 @@ export interface UserFieldRefs {
   readonly image: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly credits: Prisma.FieldRef<"User", 'Float'>
+  readonly acceptsMarketing: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly phone: Prisma.FieldRef<"User", 'String'>
@@ -3073,6 +3853,9 @@ export interface UserFieldRefs {
   readonly referredById: Prisma.FieldRef<"User", 'String'>
   readonly referralCount: Prisma.FieldRef<"User", 'Int'>
   readonly premiumUntil: Prisma.FieldRef<"User", 'DateTime'>
+  readonly companyName: Prisma.FieldRef<"User", 'String'>
+  readonly recruiterCredits: Prisma.FieldRef<"User", 'Int'>
+  readonly freeUnlocksUsed: Prisma.FieldRef<"User", 'Int'>
 }
     
 
@@ -3730,6 +4513,54 @@ export type User$interviewSessionsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.InterviewSessionScalarFieldEnum | Prisma.InterviewSessionScalarFieldEnum[]
+}
+
+/**
+ * User.candidateProfiles
+ */
+export type User$candidateProfilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CandidateProfile
+   */
+  select?: Prisma.CandidateProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CandidateProfile
+   */
+  omit?: Prisma.CandidateProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CandidateProfileInclude<ExtArgs> | null
+  where?: Prisma.CandidateProfileWhereInput
+  orderBy?: Prisma.CandidateProfileOrderByWithRelationInput | Prisma.CandidateProfileOrderByWithRelationInput[]
+  cursor?: Prisma.CandidateProfileWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CandidateProfileScalarFieldEnum | Prisma.CandidateProfileScalarFieldEnum[]
+}
+
+/**
+ * User.profileUnlocks
+ */
+export type User$profileUnlocksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProfileUnlock
+   */
+  select?: Prisma.ProfileUnlockSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProfileUnlock
+   */
+  omit?: Prisma.ProfileUnlockOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProfileUnlockInclude<ExtArgs> | null
+  where?: Prisma.ProfileUnlockWhereInput
+  orderBy?: Prisma.ProfileUnlockOrderByWithRelationInput | Prisma.ProfileUnlockOrderByWithRelationInput[]
+  cursor?: Prisma.ProfileUnlockWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProfileUnlockScalarFieldEnum | Prisma.ProfileUnlockScalarFieldEnum[]
 }
 
 /**

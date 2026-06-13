@@ -100,9 +100,11 @@ export interface CVFooter {
 export interface CVSettings {
   accentColor: string; // hex color
   sidebarColor?: string; // hex color
+  tagsColor?: string; // hex color
   fontFamily?: 'sans' | 'serif' | 'mono';
   hideContact?: boolean; // Cache les infos de contact sur le Web
   language?: 'fr' | 'en' | 'zh'; // Langue du CV pour les en-têtes
+  sectionTitles?: Record<string, string>; // Titres de sections personnalisés
 }
 
 // TemplateId is derived from TEMPLATES in lib/templates.ts (single source of truth)

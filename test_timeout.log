@@ -1,0 +1,13 @@
+Fetching profile cmpsort2m000003iwaj4k7tfs...
+fetchProfile: 1.715s
+Found profile: M.B., Title: DevSecOps 工程师
+anonymize: 7.764ms
+Anonymized keys: [
+  'anonymousName',   'title',
+  'summary',         'sector',
+  'skills',          'experienceYears',
+  'locationCity',    'locationCountry',
+  'completionScore', 'experiences',
+  'education',       'languages',
+  'certifications',  'projects'
+]

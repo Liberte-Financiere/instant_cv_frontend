@@ -5,13 +5,28 @@ import { Input } from '@/components/ui/Input';
 import { Trash2, Plus } from 'lucide-react';
 
 export function HobbiesForm() {
-  const { currentCV, addHobby, removeHobby } = useCVStore();
+  const { currentCV, updateSettings, addHobby, removeHobby } = useCVStore();
 
   if (!currentCV) return null;
   const hobbies = currentCV.hobbies || [];
 
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="space-y-6">
+      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+        <Input 
+          label="Titre de la section (Optionnel)" 
+          value={currentCV.settings?.sectionTitles?.hobbies || ''} 
+          onChange={(e) => updateSettings({ 
+            sectionTitles: { 
+              ...currentCV.settings?.sectionTitles,
+              hobbies: e.target.value 
+            } 
+          })} 
+          placeholder="Ex: Centres d'intérêt" 
+        />
+        <p className="text-xs text-slate-500 mt-1">Laissez vide pour garder le titre par défaut.</p>
+      </div>
+      <div className="flex flex-wrap gap-3">
       {hobbies.map((hobby) => (
         <div key={hobby.id} className="flex items-center gap-2 bg-pink-50 text-pink-700 px-3 py-1.5 rounded-lg border border-pink-200 group">
           <span className="font-medium text-sm">{hobby.name}</span>
@@ -23,6 +38,7 @@ export function HobbiesForm() {
         <button className="p-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600"><Plus className="w-5 h-5" /></button>
       </div>
       <p className="w-full text-xs text-slate-400 mt-1">Appuyez sur Entrée pour ajouter</p>
+      </div>
     </div>
   );
 }

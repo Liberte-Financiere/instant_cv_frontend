@@ -206,7 +206,7 @@ export type PlatformFeedbackGroupByOutputType = {
   _max: PlatformFeedbackMaxAggregateOutputType | null
 }
 
-type GetPlatformFeedbackGroupByPayload<T extends PlatformFeedbackGroupByArgs> = Prisma.PrismaPromise<
+export type GetPlatformFeedbackGroupByPayload<T extends PlatformFeedbackGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PlatformFeedbackGroupByOutputType, T['by']> &
       {
@@ -244,6 +244,7 @@ export type PlatformFeedbackOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.PlatformFeedbackOrderByRelevanceInput
 }
 
 export type PlatformFeedbackWhereUniqueInput = Prisma.AtLeast<{
@@ -367,6 +368,12 @@ export type PlatformFeedbackOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type PlatformFeedbackOrderByRelevanceInput = {
+  fields: Prisma.PlatformFeedbackOrderByRelevanceFieldEnum | Prisma.PlatformFeedbackOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
+}
+
 export type PlatformFeedbackCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -445,10 +452,6 @@ export type PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput = {
   update?: Prisma.PlatformFeedbackUpdateWithWhereUniqueWithoutUserInput | Prisma.PlatformFeedbackUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.PlatformFeedbackUpdateManyWithWhereWithoutUserInput | Prisma.PlatformFeedbackUpdateManyWithWhereWithoutUserInput[]
   deleteMany?: Prisma.PlatformFeedbackScalarWhereInput | Prisma.PlatformFeedbackScalarWhereInput[]
-}
-
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
 }
 
 export type PlatformFeedbackCreateWithoutUserInput = {

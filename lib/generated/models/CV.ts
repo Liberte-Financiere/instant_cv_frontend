@@ -38,6 +38,7 @@ export type CVMinAggregateOutputType = {
   id: string | null
   title: string | null
   isPublic: boolean | null
+  isSearchable: boolean | null
   views: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -48,6 +49,7 @@ export type CVMaxAggregateOutputType = {
   id: string | null
   title: string | null
   isPublic: boolean | null
+  isSearchable: boolean | null
   views: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -59,6 +61,7 @@ export type CVCountAggregateOutputType = {
   title: number
   content: number
   isPublic: number
+  isSearchable: number
   views: number
   createdAt: number
   updatedAt: number
@@ -79,6 +82,7 @@ export type CVMinAggregateInputType = {
   id?: true
   title?: true
   isPublic?: true
+  isSearchable?: true
   views?: true
   createdAt?: true
   updatedAt?: true
@@ -89,6 +93,7 @@ export type CVMaxAggregateInputType = {
   id?: true
   title?: true
   isPublic?: true
+  isSearchable?: true
   views?: true
   createdAt?: true
   updatedAt?: true
@@ -100,6 +105,7 @@ export type CVCountAggregateInputType = {
   title?: true
   content?: true
   isPublic?: true
+  isSearchable?: true
   views?: true
   createdAt?: true
   updatedAt?: true
@@ -198,6 +204,7 @@ export type CVGroupByOutputType = {
   title: string
   content: runtime.JsonValue
   isPublic: boolean
+  isSearchable: boolean
   views: number
   createdAt: Date
   updatedAt: Date
@@ -209,7 +216,7 @@ export type CVGroupByOutputType = {
   _max: CVMaxAggregateOutputType | null
 }
 
-type GetCVGroupByPayload<T extends CVGroupByArgs> = Prisma.PrismaPromise<
+export type GetCVGroupByPayload<T extends CVGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CVGroupByOutputType, T['by']> &
       {
@@ -232,11 +239,13 @@ export type CVWhereInput = {
   title?: Prisma.StringFilter<"CV"> | string
   content?: Prisma.JsonFilter<"CV">
   isPublic?: Prisma.BoolFilter<"CV"> | boolean
+  isSearchable?: Prisma.BoolFilter<"CV"> | boolean
   views?: Prisma.IntFilter<"CV"> | number
   createdAt?: Prisma.DateTimeFilter<"CV"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CV"> | Date | string
   userId?: Prisma.StringNullableFilter<"CV"> | string | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  candidateProfile?: Prisma.XOR<Prisma.CandidateProfileNullableScalarRelationFilter, Prisma.CandidateProfileWhereInput> | null
 }
 
 export type CVOrderByWithRelationInput = {
@@ -244,11 +253,14 @@ export type CVOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
+  isSearchable?: Prisma.SortOrder
   views?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  candidateProfile?: Prisma.CandidateProfileOrderByWithRelationInput
+  _relevance?: Prisma.CVOrderByRelevanceInput
 }
 
 export type CVWhereUniqueInput = Prisma.AtLeast<{
@@ -259,11 +271,13 @@ export type CVWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"CV"> | string
   content?: Prisma.JsonFilter<"CV">
   isPublic?: Prisma.BoolFilter<"CV"> | boolean
+  isSearchable?: Prisma.BoolFilter<"CV"> | boolean
   views?: Prisma.IntFilter<"CV"> | number
   createdAt?: Prisma.DateTimeFilter<"CV"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CV"> | Date | string
   userId?: Prisma.StringNullableFilter<"CV"> | string | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  candidateProfile?: Prisma.XOR<Prisma.CandidateProfileNullableScalarRelationFilter, Prisma.CandidateProfileWhereInput> | null
 }, "id">
 
 export type CVOrderByWithAggregationInput = {
@@ -271,6 +285,7 @@ export type CVOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
+  isSearchable?: Prisma.SortOrder
   views?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -290,6 +305,7 @@ export type CVScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"CV"> | string
   content?: Prisma.JsonWithAggregatesFilter<"CV">
   isPublic?: Prisma.BoolWithAggregatesFilter<"CV"> | boolean
+  isSearchable?: Prisma.BoolWithAggregatesFilter<"CV"> | boolean
   views?: Prisma.IntWithAggregatesFilter<"CV"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CV"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CV"> | Date | string
@@ -301,10 +317,12 @@ export type CVCreateInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: boolean
+  isSearchable?: boolean
   views?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutCvsInput
+  candidateProfile?: Prisma.CandidateProfileCreateNestedOneWithoutCvInput
 }
 
 export type CVUncheckedCreateInput = {
@@ -312,10 +330,12 @@ export type CVUncheckedCreateInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: boolean
+  isSearchable?: boolean
   views?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   userId?: string | null
+  candidateProfile?: Prisma.CandidateProfileUncheckedCreateNestedOneWithoutCvInput
 }
 
 export type CVUpdateInput = {
@@ -323,10 +343,12 @@ export type CVUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSearchable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   views?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutCvsNestedInput
+  candidateProfile?: Prisma.CandidateProfileUpdateOneWithoutCvNestedInput
 }
 
 export type CVUncheckedUpdateInput = {
@@ -334,10 +356,12 @@ export type CVUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSearchable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   views?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateProfile?: Prisma.CandidateProfileUncheckedUpdateOneWithoutCvNestedInput
 }
 
 export type CVCreateManyInput = {
@@ -345,6 +369,7 @@ export type CVCreateManyInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: boolean
+  isSearchable?: boolean
   views?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -356,6 +381,7 @@ export type CVUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSearchable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   views?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -366,6 +392,7 @@ export type CVUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSearchable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   views?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -382,11 +409,18 @@ export type CVOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type CVOrderByRelevanceInput = {
+  fields: Prisma.CVOrderByRelevanceFieldEnum | Prisma.CVOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
+}
+
 export type CVCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
+  isSearchable?: Prisma.SortOrder
   views?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -401,6 +435,7 @@ export type CVMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
+  isSearchable?: Prisma.SortOrder
   views?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -411,6 +446,7 @@ export type CVMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
+  isSearchable?: Prisma.SortOrder
   views?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -419,6 +455,11 @@ export type CVMinOrderByAggregateInput = {
 
 export type CVSumOrderByAggregateInput = {
   views?: Prisma.SortOrder
+}
+
+export type CVScalarRelationFilter = {
+  is?: Prisma.CVWhereInput
+  isNot?: Prisma.CVWhereInput
 }
 
 export type CVCreateNestedManyWithoutUserInput = {
@@ -463,14 +504,30 @@ export type CVUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.CVScalarWhereInput | Prisma.CVScalarWhereInput[]
 }
 
+export type CVCreateNestedOneWithoutCandidateProfileInput = {
+  create?: Prisma.XOR<Prisma.CVCreateWithoutCandidateProfileInput, Prisma.CVUncheckedCreateWithoutCandidateProfileInput>
+  connectOrCreate?: Prisma.CVCreateOrConnectWithoutCandidateProfileInput
+  connect?: Prisma.CVWhereUniqueInput
+}
+
+export type CVUpdateOneRequiredWithoutCandidateProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.CVCreateWithoutCandidateProfileInput, Prisma.CVUncheckedCreateWithoutCandidateProfileInput>
+  connectOrCreate?: Prisma.CVCreateOrConnectWithoutCandidateProfileInput
+  upsert?: Prisma.CVUpsertWithoutCandidateProfileInput
+  connect?: Prisma.CVWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CVUpdateToOneWithWhereWithoutCandidateProfileInput, Prisma.CVUpdateWithoutCandidateProfileInput>, Prisma.CVUncheckedUpdateWithoutCandidateProfileInput>
+}
+
 export type CVCreateWithoutUserInput = {
   id?: string
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: boolean
+  isSearchable?: boolean
   views?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  candidateProfile?: Prisma.CandidateProfileCreateNestedOneWithoutCvInput
 }
 
 export type CVUncheckedCreateWithoutUserInput = {
@@ -478,9 +535,11 @@ export type CVUncheckedCreateWithoutUserInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: boolean
+  isSearchable?: boolean
   views?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  candidateProfile?: Prisma.CandidateProfileUncheckedCreateNestedOneWithoutCvInput
 }
 
 export type CVCreateOrConnectWithoutUserInput = {
@@ -517,10 +576,75 @@ export type CVScalarWhereInput = {
   title?: Prisma.StringFilter<"CV"> | string
   content?: Prisma.JsonFilter<"CV">
   isPublic?: Prisma.BoolFilter<"CV"> | boolean
+  isSearchable?: Prisma.BoolFilter<"CV"> | boolean
   views?: Prisma.IntFilter<"CV"> | number
   createdAt?: Prisma.DateTimeFilter<"CV"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CV"> | Date | string
   userId?: Prisma.StringNullableFilter<"CV"> | string | null
+}
+
+export type CVCreateWithoutCandidateProfileInput = {
+  id?: string
+  title: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  isPublic?: boolean
+  isSearchable?: boolean
+  views?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user?: Prisma.UserCreateNestedOneWithoutCvsInput
+}
+
+export type CVUncheckedCreateWithoutCandidateProfileInput = {
+  id?: string
+  title: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  isPublic?: boolean
+  isSearchable?: boolean
+  views?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId?: string | null
+}
+
+export type CVCreateOrConnectWithoutCandidateProfileInput = {
+  where: Prisma.CVWhereUniqueInput
+  create: Prisma.XOR<Prisma.CVCreateWithoutCandidateProfileInput, Prisma.CVUncheckedCreateWithoutCandidateProfileInput>
+}
+
+export type CVUpsertWithoutCandidateProfileInput = {
+  update: Prisma.XOR<Prisma.CVUpdateWithoutCandidateProfileInput, Prisma.CVUncheckedUpdateWithoutCandidateProfileInput>
+  create: Prisma.XOR<Prisma.CVCreateWithoutCandidateProfileInput, Prisma.CVUncheckedCreateWithoutCandidateProfileInput>
+  where?: Prisma.CVWhereInput
+}
+
+export type CVUpdateToOneWithWhereWithoutCandidateProfileInput = {
+  where?: Prisma.CVWhereInput
+  data: Prisma.XOR<Prisma.CVUpdateWithoutCandidateProfileInput, Prisma.CVUncheckedUpdateWithoutCandidateProfileInput>
+}
+
+export type CVUpdateWithoutCandidateProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSearchable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneWithoutCvsNestedInput
+}
+
+export type CVUncheckedUpdateWithoutCandidateProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSearchable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CVCreateManyUserInput = {
@@ -528,6 +652,7 @@ export type CVCreateManyUserInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: boolean
+  isSearchable?: boolean
   views?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -538,9 +663,11 @@ export type CVUpdateWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSearchable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   views?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  candidateProfile?: Prisma.CandidateProfileUpdateOneWithoutCvNestedInput
 }
 
 export type CVUncheckedUpdateWithoutUserInput = {
@@ -548,9 +675,11 @@ export type CVUncheckedUpdateWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSearchable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   views?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  candidateProfile?: Prisma.CandidateProfileUncheckedUpdateOneWithoutCvNestedInput
 }
 
 export type CVUncheckedUpdateManyWithoutUserInput = {
@@ -558,6 +687,7 @@ export type CVUncheckedUpdateManyWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSearchable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   views?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -570,11 +700,13 @@ export type CVSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
   title?: boolean
   content?: boolean
   isPublic?: boolean
+  isSearchable?: boolean
   views?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
   user?: boolean | Prisma.CV$userArgs<ExtArgs>
+  candidateProfile?: boolean | Prisma.CV$candidateProfileArgs<ExtArgs>
 }, ExtArgs["result"]["cV"]>
 
 export type CVSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -582,6 +714,7 @@ export type CVSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions
   title?: boolean
   content?: boolean
   isPublic?: boolean
+  isSearchable?: boolean
   views?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -594,6 +727,7 @@ export type CVSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions
   title?: boolean
   content?: boolean
   isPublic?: boolean
+  isSearchable?: boolean
   views?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -606,15 +740,17 @@ export type CVSelectScalar = {
   title?: boolean
   content?: boolean
   isPublic?: boolean
+  isSearchable?: boolean
   views?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
 }
 
-export type CVOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "isPublic" | "views" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["cV"]>
+export type CVOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "isPublic" | "isSearchable" | "views" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["cV"]>
 export type CVInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.CV$userArgs<ExtArgs>
+  candidateProfile?: boolean | Prisma.CV$candidateProfileArgs<ExtArgs>
 }
 export type CVIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.CV$userArgs<ExtArgs>
@@ -627,12 +763,14 @@ export type $CVPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name: "CV"
   objects: {
     user: Prisma.$UserPayload<ExtArgs> | null
+    candidateProfile: Prisma.$CandidateProfilePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
     content: runtime.JsonValue
     isPublic: boolean
+    isSearchable: boolean
     views: number
     createdAt: Date
     updatedAt: Date
@@ -1032,6 +1170,7 @@ readonly fields: CVFieldRefs;
 export interface Prisma__CVClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.CV$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CV$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  candidateProfile<T extends Prisma.CV$candidateProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CV$candidateProfileArgs<ExtArgs>>): Prisma.Prisma__CandidateProfileClient<runtime.Types.Result.GetResult<Prisma.$CandidateProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1065,6 +1204,7 @@ export interface CVFieldRefs {
   readonly title: Prisma.FieldRef<"CV", 'String'>
   readonly content: Prisma.FieldRef<"CV", 'Json'>
   readonly isPublic: Prisma.FieldRef<"CV", 'Boolean'>
+  readonly isSearchable: Prisma.FieldRef<"CV", 'Boolean'>
   readonly views: Prisma.FieldRef<"CV", 'Int'>
   readonly createdAt: Prisma.FieldRef<"CV", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CV", 'DateTime'>
@@ -1486,6 +1626,25 @@ export type CV$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * CV.candidateProfile
+ */
+export type CV$candidateProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CandidateProfile
+   */
+  select?: Prisma.CandidateProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CandidateProfile
+   */
+  omit?: Prisma.CandidateProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CandidateProfileInclude<ExtArgs> | null
+  where?: Prisma.CandidateProfileWhereInput
 }
 
 /**

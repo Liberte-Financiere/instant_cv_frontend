@@ -5,13 +5,28 @@ import { Input } from '@/components/ui/Input';
 import { Trash2, Plus } from 'lucide-react';
 
 export function LanguagesForm() {
-  const { currentCV, addLanguage, updateLanguage, removeLanguage } = useCVStore();
+  const { currentCV, updateSettings, addLanguage, updateLanguage, removeLanguage } = useCVStore();
 
   if (!currentCV) return null;
   const { languages } = currentCV;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-6">
+      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+        <Input 
+          label="Titre de la section (Optionnel)" 
+          value={currentCV.settings?.sectionTitles?.languages || ''} 
+          onChange={(e) => updateSettings({ 
+            sectionTitles: { 
+              ...currentCV.settings?.sectionTitles,
+              languages: e.target.value 
+            } 
+          })} 
+          placeholder="Ex: Langues Parlées" 
+        />
+        <p className="text-xs text-slate-500 mt-1">Laissez vide pour garder le titre par défaut.</p>
+      </div>
+      <div className="space-y-3">
       {languages.map((lang) => (
         <div key={lang.id} className="flex items-center gap-3 p-3 border border-slate-200 rounded-xl bg-white">
           <Input value={lang.name} onChange={(e) => updateLanguage(lang.id, { name: e.target.value })} placeholder="Langue" className="h-9 border-none bg-transparent shadow-none px-0 focus:ring-0" />
@@ -25,6 +40,7 @@ export function LanguagesForm() {
         </div>
       ))}
       <button onClick={() => addLanguage({ name: '', level: 'Intermédiaire' })} className="text-blue-600 text-sm font-bold hover:underline flex items-center gap-1 mt-2"><Plus className="w-4 h-4" />Ajouter une langue</button>
+      </div>
     </div>
   );
 }
