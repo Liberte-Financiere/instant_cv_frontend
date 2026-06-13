@@ -9,6 +9,7 @@ interface CVContactProps {
   variant: CVVariant;
   layout?: 'vertical' | 'horizontal' | 'sidebar';
   accentColor?: string;
+  textColorClass?: string;
 }
 
 const platformIcons: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -19,7 +20,7 @@ const platformIcons: Record<string, React.ComponentType<{ className?: string }>>
   other: Globe,
 };
 
-export function CVContact({ personalInfo, socialLinks = [], variant, layout = 'vertical', accentColor }: CVContactProps) {
+export function CVContact({ personalInfo, socialLinks = [], variant, layout = 'vertical', accentColor, textColorClass }: CVContactProps) {
   const isSidebar = layout === 'sidebar';
   
   const contactItems = [
@@ -30,7 +31,7 @@ export function CVContact({ personalInfo, socialLinks = [], variant, layout = 'v
 
   if (contactItems.length === 0 && socialLinks.length === 0) return null;
 
-  const baseTextClass = isSidebar ? 'text-slate-300' : 'text-slate-600';
+  const baseTextClass = textColorClass || (isSidebar ? 'text-slate-300' : 'text-slate-600');
 
   return (
     <div className={layout === 'horizontal' ? 'flex flex-wrap gap-4' : 'space-y-3'}>

@@ -17,6 +17,7 @@ interface TemplateProps {
  */
 export function ATSIron({ cv }: TemplateProps) {
   const lang = cv.settings?.language || 'fr';
+  const accentColor = cv.settings?.accentColor;
   const personalInfo = cv.personalInfo || {};
   const { experiences = [], education = [], skills = [], languages = [] } = cv;
   const projects = cv.projects || [];
@@ -27,7 +28,10 @@ export function ATSIron({ cv }: TemplateProps) {
       
       {/* Header - Centered & Authoritative */}
       <header className="text-center mb-8">
-        <h1 className="text-3xl font-bold uppercase tracking-widest mb-1 border-b-2 border-black pb-4">
+        <h1 
+          className="text-3xl font-bold uppercase tracking-widest mb-1 border-b-2 pb-4"
+          style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}
+        >
           {personalInfo.firstName} {personalInfo.lastName}
         </h1>
         <div className="mt-3 flex justify-center gap-4 text-sm font-medium">
@@ -40,7 +44,7 @@ export function ATSIron({ cv }: TemplateProps) {
       {/* Summary */}
       {personalInfo.summary && (
         <section className="mb-6">
-           <h2 className="font-bold text-sm uppercase border-b border-black mb-3">Résumé</h2>
+           <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>Résumé</h2>
            <p className="text-justify">{personalInfo.summary}</p>
         </section>
       )}
@@ -48,7 +52,7 @@ export function ATSIron({ cv }: TemplateProps) {
       {/* Experience */}
       {experiences.length > 0 && (
         <section className="mb-6">
-          <h2 className="font-bold text-sm uppercase border-b border-black mb-3">{getSectionTitle('experience', cv.settings, lang)}</h2>
+          <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>{getSectionTitle('experience', cv.settings, lang)}</h2>
           <div className="space-y-5">
             {experiences.map((exp) => (
               <div key={exp.id}>
@@ -71,7 +75,7 @@ export function ATSIron({ cv }: TemplateProps) {
       {/* Education */}
       {education.length > 0 && (
         <section className="mb-6">
-          <h2 className="font-bold text-sm uppercase border-b border-black mb-3">{getSectionTitle('education', cv.settings, lang)}</h2>
+          <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>{getSectionTitle('education', cv.settings, lang)}</h2>
           <div className="space-y-3">
             {education.map((edu) => (
               <div key={edu.id} className="flex justify-between">
@@ -91,7 +95,7 @@ export function ATSIron({ cv }: TemplateProps) {
       {/* Skills in columns */}
       {(skills.length > 0 || languages.length > 0) && (
         <section className="mb-6">
-            <h2 className="font-bold text-sm uppercase border-b border-black mb-3">Compétences & Langues</h2>
+            <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>Compétences & Langues</h2>
             <div className="flex gap-12">
                {skills.length > 0 && (
                    <div className="flex-1">
@@ -123,7 +127,7 @@ export function ATSIron({ cv }: TemplateProps) {
       {/* Projects */}
       {projects.length > 0 && (
         <section className="mb-6">
-           <h2 className="font-bold text-sm uppercase border-b border-black mb-3">{getSectionTitle('projects', cv.settings, lang)}</h2>
+           <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>{getSectionTitle('projects', cv.settings, lang)}</h2>
            <div className="space-y-3">
                {projects.map(p => (
                    <div key={p.id}>

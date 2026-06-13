@@ -4,7 +4,7 @@ import Image from "next/image";
 import { CV } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
-  CVSkills, CVLanguages, CVCertifications, 
+  CVSkills, CVLanguages, CVCertifications, CVHobbies,
   CVProjects, CVReferences, CVDivers, CVFooter, CVQualities 
 } from '@/components/cv-sections';
 import { getAccentColor } from '@/components/cv-sections/styles';
@@ -19,6 +19,7 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
   const lang = cv.settings?.language || 'fr';
   const personalInfo = cv.personalInfo || {};
   const { experiences = [], education = [], skills = [], languages = [] } = cv;
+  const hobbies = cv.hobbies || [];
   const certifications = cv.certifications || [];
   const projects = cv.projects || [];
   const references = cv.references || [];
@@ -143,6 +144,7 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
         
         <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', cv.settings, lang)} />
         <CVProjects projects={projects} variant={variant} accentColor={accentColor}  title={getSectionTitle('projects', cv.settings, lang)} />
+        <CVHobbies hobbies={hobbies} variant={variant} accentColor={accentColor}  title={getSectionTitle('hobbies', cv.settings, lang)} />
         <CVReferences references={references} variant={variant} accentColor={accentColor}  title={getSectionTitle('references', cv.settings, lang)} />
         <CVDivers divers={divers} variant={variant} accentColor={accentColor}  title={getSectionTitle('divers', cv.settings, lang)} />
         <CVFooter footer={footer} variant={variant}  lang={lang}/>

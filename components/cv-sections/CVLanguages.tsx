@@ -24,7 +24,12 @@ export function CVLanguages({ languages, variant, title = 'Langues', accentColor
 
   return (
     <section>
-      <h2 className={`${styles.sectionTitle} mb-4`}>{title}</h2>
+      <h2 
+        className={`${styles.sectionTitle} mb-4`}
+        style={accentColor ? { borderColor: accentColor } : undefined}
+      >
+        {title}
+      </h2>
       <div className="space-y-3">
         {languages.map((lang) => (
           <div key={lang.id} className="flex justify-between items-center text-sm">
@@ -42,6 +47,7 @@ export function CVLanguages({ languages, variant, title = 'Langues', accentColor
                         ? styles.accentBg
                         : variant === 'tech' ? 'bg-gray-700' : 'bg-slate-200'
                     }`}
+                    style={i <= levelBars[lang.level] ? { backgroundColor: accentColor || undefined } : undefined}
                   />
                 ))}
               </div>

@@ -1,14 +1,13 @@
-feat(payment): implémentation de l'achat de crédits à la carte et renforcement de la sécurité
+fix(templates): sécurisation du rendu PDF et refonte de l'affichage des compétences
 
-Nouvelles fonctionnalités :
-- Ajout de l'achat "À la carte" (min 5 crédits, 30F/crédit) dans lib/config.ts.
-- Création du composant AlaCarteSection dans la page Pricing avec sélecteur dynamique (+/- par paliers de 5).
-- Modification de validate/route.ts pour calculer dynamiquement le prix si packId === 'alacarte'.
-- Mise à jour du PaymentModal pour transmettre le champ 'credits' requis par le backend.
+Templates & UI :
+- Remplacement des barres de progression horizontales (skills) par des textes descriptifs clairs (ex: "Expert", "Avancé") pour un rendu plus premium.
+- Ajout de la classe whitespace-nowrap pour éviter les sauts de ligne inesthétiques sur les niveaux de compétences (ex: Intermé-diaire).
+- Sécurisation du rendu PDF : remplacement des conteneurs Flex/Grid par des structures <table> dans les templates pour empêcher la pagination anarchique par Chromium.
+- Ajout généralisé de la classe break-inside-avoid sur les blocs d'expérience et d'éducation pour empêcher la coupe des paragraphes au milieu des pages.
+- Remplacement des blocs de texte simple par dangerouslySetInnerHTML dans les descriptions d'expériences (via CVExperience.tsx et templates custom) pour supporter le texte riche (gras, puces).
 
-Sécurité (Niveau Bancaire) :
-- Ajout d'une limite maxCredits (5000) pour prévenir les attaques par dépassement d'entier (Integer Overflow).
-- Correction de la faille de "Course aux requêtes" (Race Condition) : passage à des requêtes Prisma atomiques (updateMany avec clause status: 'pending') dans le webhook callback et le polling de statut pour empêcher les doubles crédits.
-
-Tests :
-- Ajout de __tests__/payment.test.ts (Vitest) pour couvrir la logique de calcul dynamique, les validations strictes, l'idempotence et les cas de fraude.
+CI/CD & DevOps :
+- GitHub Actions (build-deploy) : Intégration du cache Next.js (.next/cache) pour accélérer drastiquement les builds.
+- GitHub Actions (build-deploy) : Ajout d'étapes strictes pour le Linter (ESLint) et les Tests (Vitest) avant la génération de l'artefact.
+- GitHub Actions (db-backup) : Ajout de l'upload de la base de données en tant qu'Artifact GitHub téléchargeable et d'un résumé de tâche (Step Summary) pour une meilleure observabilité.

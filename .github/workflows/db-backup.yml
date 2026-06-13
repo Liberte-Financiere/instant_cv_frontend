@@ -68,6 +68,13 @@ jobs:
           tar -czf "${{ env.BACKUP_DIR }}.tar.gz" -C "$(dirname ${{ env.BACKUP_DIR }})" "$(basename ${{ env.BACKUP_DIR }})"
           rm -rf "${{ env.BACKUP_DIR }}"
 
+      - name: Sauvegarde dans GitHub Actions (Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-backup-${{ env.BACKUP_DIR }}
+          path: ${{ env.BACKUP_DIR }}.tar.gz
+          retention-days: 30
+
       - name: Cleanup old backups (keep last 30 days)
         run: |
           cd backups
@@ -81,3 +88,13 @@ jobs:
           git add -A
           git commit -m "backup: $(date +%Y-%m-%d) automated database dump" || echo "No changes"
           git push origin backups
+
+      - name: Resume du backup
+        if: always()
+        run: |
+          {
+            echo "## Sauvegarde Base de Donnees Supabase"
+            echo ""
+            echo "| Statut | ${{ job.status }} |"
+            echo "| Date | $(date) |"
+          } >> "$GITHUB_STEP_SUMMARY"
