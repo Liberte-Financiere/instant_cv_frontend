@@ -149,13 +149,13 @@ export default function CandidateProfilePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Back */}
-      <button
-        onClick={() => router.back()}
+      <Link
+        href="/recruiter"
         className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Retour aux resultats
-      </button>
+      </Link>
 
       {/* Header */}
       <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">

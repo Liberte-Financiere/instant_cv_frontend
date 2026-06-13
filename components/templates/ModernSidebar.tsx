@@ -27,18 +27,53 @@ export function ModernSidebar({ cv }: TemplateProps) {
   const footer = cv.footer || { showFooter: false, madeAt: '', madeDate: '' };
   const lang = cv.settings?.language || 'fr';
   
-  // Get custom accent color or default
   const accentColor = getAccentColor('modern', cv.settings?.accentColor);
   const sidebarColor = cv.settings?.sidebarColor || '#0f172a'; // Default to Slate 900
+  const tagsColor = cv.settings?.tagsColor || 'transparent';
+  
+  // Fonction pour déterminer si une couleur hex est claire
+  const isColorLight = (color: string) => {
+    if (!color || color === 'transparent') return false;
+    const hex = color.replace('#', '');
+    if (hex.length !== 6 && hex.length !== 3) return false;
+    const r = parseInt(hex.length === 3 ? hex[0]+hex[0] : hex.substring(0, 2), 16);
+    const g = parseInt(hex.length === 3 ? hex[1]+hex[1] : hex.substring(2, 4), 16);
+    const b = parseInt(hex.length === 3 ? hex[2]+hex[2] : hex.substring(4, 6), 16);
+    const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return luma > 160; // Seuil de clarté
+  };
+
+  const isTagsTransparent = tagsColor === 'transparent';
+  const tagTextColorClass = isTagsTransparent 
+    ? 'text-white/90' 
+    : (isColorLight(tagsColor) ? 'text-slate-800' : 'text-white');
+  const tagBgClass = isTagsTransparent ? 'bg-black/20' : '';
 
   const variant = 'modern';
 
   return (
-    <div className="cv-template w-full h-full bg-white text-slate-800 font-sans text-sm leading-relaxed flex flex-col min-h-[297mm]">
+    <div className="cv-template w-full h-full text-slate-800 font-sans text-sm leading-relaxed flex flex-col min-h-[297mm] bg-white print:bg-transparent">
+      <style>{`
+        @media print {
+          @page {
+            margin: 0 !important;
+          }
+          html, body {
+            background: linear-gradient(to right, ${sidebarColor} 0%, ${sidebarColor} 30%, white 30%, white 100%) !important;
+          }
+          /* Empêche le texte de coller au bord lors d'un saut de page */
+          .cv-template section, .cv-item {
+            border-top: 10mm solid transparent !important;
+            margin-top: -10mm !important;
+            background-clip: padding-box !important;
+          }
+        }
+      `}</style>
+      
       <div className="flex flex-col sm:flex-row flex-1">
         {/* Sidebar (Left Column) */}
         <div 
-          className="w-[30%] text-white p-5 space-y-5 flex-shrink-0 print:text-white"
+          className="w-full sm:w-[30%] text-white p-5 space-y-5 flex-shrink-0 print:text-white print:bg-transparent"
           style={{ backgroundColor: sidebarColor }}
         >          {/* Avatar & Name */}
           <div className="text-center sm:text-left">
@@ -48,12 +83,12 @@ export function ModernSidebar({ cv }: TemplateProps) {
                  alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
                  width={96}
                  height={96}
-                 className="w-24 h-24 mx-auto sm:mx-0 rounded-full object-cover mb-6 ring-4 ring-slate-800 ring-offset-2 ring-offset-slate-900"
+                 className="w-24 h-24 mx-auto sm:mx-0 rounded-full object-cover mb-6 ring-4 ring-black/10 ring-offset-2 ring-offset-transparent"
                />
              ) : (
                <div 
-                 className="w-24 h-24 mx-auto sm:mx-0 bg-slate-800 rounded-full flex items-center justify-center text-3xl font-bold mb-6 ring-4 ring-slate-800 ring-offset-2 ring-offset-slate-900"
-                 style={{ color: accentColor }}
+                 className={`w-24 h-24 mx-auto sm:mx-0 rounded-full flex items-center justify-center text-3xl font-bold mb-6 ring-4 ring-black/10 ring-offset-2 ring-offset-transparent ${tagBgClass}`}
+                 style={{ color: accentColor, backgroundColor: !isTagsTransparent ? tagsColor : undefined }}
                >
                  {personalInfo.firstName?.[0]}{personalInfo.lastName?.[0]}
                </div>
@@ -69,17 +104,21 @@ export function ModernSidebar({ cv }: TemplateProps) {
 
           {/* Contact Info */}
           <div className="mb-6">
-             <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('contact', cv.settings, lang)}</h3>
+             <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('contact', cv.settings, lang)}</h3>
              <CVContact personalInfo={personalInfo} socialLinks={socialLinks} variant={variant} layout="sidebar" accentColor={accentColor} />
           </div>
 
           {/* Skills - Sidebar version */}
           {skills.length > 0 && (
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('skills', cv.settings, lang)}</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('skills', cv.settings, lang)}</h3>
               <div className="flex flex-wrap gap-2">
                 {skills.map((skill, index) => (
-                  <span key={skill.id || index} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded text-xs font-medium">
+                  <span 
+                    key={skill.id || index} 
+                    className={`px-3 py-1.5 rounded text-xs font-medium ${tagBgClass} ${tagTextColorClass}`}
+                    style={{ backgroundColor: !isTagsTransparent ? tagsColor : undefined }}
+                  >
                     {skill.name}
                   </span>
                 ))}
@@ -90,12 +129,12 @@ export function ModernSidebar({ cv }: TemplateProps) {
           {/* Languages - Sidebar version */}
           {languages.length > 0 && (
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('languages', cv.settings, lang)}</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('languages', cv.settings, lang)}</h3>
               <div className="space-y-3">
                  {languages.map((lang, index) => (
                   <div key={lang.id || index} className="flex justify-between items-center text-sm">
-                    <span className="text-slate-300">{lang.name}</span>
-                    <span className="text-xs text-slate-500 font-medium">{lang.level}</span>
+                    <span className="text-white/90">{lang.name}</span>
+                    <span className="text-xs text-white/60 font-medium">{lang.level}</span>
                   </div>
                 ))}
               </div>
@@ -105,10 +144,14 @@ export function ModernSidebar({ cv }: TemplateProps) {
           {/* Hobbies - Sidebar version */}
           {hobbies.length > 0 && (
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-2 mb-4">{getSectionTitle('hobbies', cv.settings, lang)}</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('hobbies', cv.settings, lang)}</h3>
               <div className="flex flex-wrap gap-2">
                  {hobbies.map((hobby, index) => (
-                  <span key={hobby.id || index} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded text-xs font-medium">
+                  <span 
+                    key={hobby.id || index} 
+                    className={`px-3 py-1.5 rounded text-xs font-medium ${tagBgClass} ${tagTextColorClass}`}
+                    style={{ backgroundColor: !isTagsTransparent ? tagsColor : undefined }}
+                  >
                     {hobby.name}
                   </span>
                 ))}

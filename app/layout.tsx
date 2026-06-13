@@ -17,7 +17,7 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   metadataBase: new URL('https://jobsira.com'),
   title: `${APP_CONFIG.name} | Le Coach CV par l\`IA`,
-  description: "Créez un CV pro compatible ATS et une lettre de motivation en 2 minutes. Rejoignez 10000+ candidats qui ont décroché leur job de rêve.",
+  description: "Créez un CV pro compatible ATS et une lettre de motivation en 2 minutes. Rejoignez 150+ candidats qui ont décroché leur job de rêve.",
   keywords: ["JobSira", "CV", "créateur CV", "resume builder", "IA", "ATS", "emploi", "lettre de motivation", "coach carrière", "CV en ligne"],
   alternates: {
     canonical: '/',
