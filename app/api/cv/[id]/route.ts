@@ -9,7 +9,7 @@ export async function GET(
   try {
     const url = new URL(req.url);
     const headlessKey = url.searchParams.get('headlessToken');
-    const isServerGenerator = headlessKey === process.env.GOOGLE_API_KEY?.slice(0, 10); // Simple secure static proxy token without relying on new ENVs
+    const isServerGenerator = headlessKey === process.env.MY_GEMINI_KEY?.slice(0, 10); // Simple secure static proxy token without relying on new ENVs
     
     const session = await auth();
     if (!session?.user?.id && !isServerGenerator) {
