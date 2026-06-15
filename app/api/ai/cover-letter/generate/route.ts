@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
-import { generateObject } from 'ai';
+import { streamObject } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { z } from 'zod'; 
 
@@ -64,13 +64,13 @@ export async function POST(req: Request) {
       closing: z.string()
     });
 
-    const { object } = await generateObject({
+    const result = await streamObject({
       model: google(APP_CONFIG.ai.models.fast),
       schema: clSchema,
       prompt: prompt,
     });
 
-    return NextResponse.json(object);
+    return result.toTextStreamResponse();
 
   } catch (error: any) {
     console.error('AI Generation Detailed Error:', error);
