@@ -376,6 +376,7 @@ export async function* chatWithAssistant(
       let toolCallDetected = false;
       let currentToolCallId = '';
       let currentToolArgs = {};
+      let currentToolProviderOptions: any = undefined;
       let currentToolSummary = '';
 
       const result = streamText({
@@ -431,6 +432,7 @@ export async function* chatWithAssistant(
           toolCallDetected = true;
           currentToolCallId = part.toolCallId;
           currentToolArgs = (part as any).args || (part as any).input;
+          currentToolProviderOptions = (part as any).providerOptions;
         } else if (part.type === 'tool-result' && part.toolName === 'search_candidates') {
           const toolOutput = (part as any).result || (part as any).output;
           currentToolSummary = toolOutput?.summary || '';
@@ -447,14 +449,20 @@ export async function* chatWithAssistant(
       }
 
       if (toolCallDetected) {
+        const toolCallPart: any = {
+          type: 'tool-call',
+          toolCallId: currentToolCallId,
+          toolName: 'search_candidates',
+          args: currentToolArgs,
+          input: currentToolArgs
+        };
+        if (currentToolProviderOptions) {
+          toolCallPart.providerOptions = currentToolProviderOptions;
+        }
+
         currentMessages.push({
           role: 'assistant',
-          content: [{
-            type: 'tool-call',
-            toolCallId: currentToolCallId,
-            toolName: 'search_candidates',
-            args: currentToolArgs
-          }]
+          content: [toolCallPart]
         });
         currentMessages.push({
           role: 'tool',
