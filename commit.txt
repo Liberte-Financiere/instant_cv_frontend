@@ -1,14 +1,12 @@
-[2026-06-15] — Tweak: Ajustement de la tolérance vectorielle à 0.45
+[2026-06-15] — Tweak: Masquage de l'ID technique dans les réponses de l'IA
 
 What changed:
-- Ajustement du seuil de la distance Cosine (`distance < 0.40` devient `distance < 0.45`) dans `app/api/recruiter/search/route.ts` et `lib/talent-assistant.ts`.
+- Ajout d'une règle stricte dans le System Prompt de `lib/talent-assistant.ts` interdisant à l'IA d'afficher l'ID technique de la base de données (ex: `cmqbd...`) dans ses réponses.
 
 Why:
-- Le seuil de 0.40 s'est avéré trop punitif pour les recherches conceptuelles avancées (ex: "Tech Lead").
-- Le seuil de 0.45 laisse passer les recherches conceptuelles pertinentes, tout en continuant de bloquer les aberrations (ex: "Database Administrator" ou "Soudeur").
+- L'outil de recherche de la base de données renvoie l'ID à l'IA pour qu'elle puisse différencier les profils, mais l'IA croyait bien faire en l'affichant au recruteur. Cela polluait la lecture.
 
 Files affected:
-- app/api/recruiter/search/route.ts
 - lib/talent-assistant.ts
 
 Breaking changes:
