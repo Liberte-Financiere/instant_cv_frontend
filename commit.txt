@@ -1,14 +1,14 @@
-[2026-06-15] — Fix: Réduction de la tolérance vectorielle (Faux positifs)
+[2026-06-15] — Fix: Retour texte garanti si boucle de recherche
 
 What changed:
-- Réduction du seuil de la distance Cosine (`distance < 0.55` devient `distance < 0.40`) dans `app/api/recruiter/search/route.ts` et `lib/talent-assistant.ts`.
+- Modification du message de retour de l'outil `search_candidates` quand il y a 0 résultat. L'outil hurle littéralement "STOP_SEARCH" à Gemini pour le forcer à s'arrêter et à répondre.
+- Ajout d'une sécurité de dernier recours : si le moteur atteint la limite des itérations (3 tentatives) sans jamais parler à l'utilisateur, on force l'envoi d'un message d'excuse au lieu de couper la connexion silencieusement.
 
 Why:
-- Le seuil de 0.55 était trop permissif. La base de données renvoyait un "Développeur Fullstack" même pour la requête "soudeur métallurgique" (car la distance sémantique mathématique évaluée par Gemini était de 0.48, ce qui passait sous le radar de 0.55).
-- Avec un seuil de 0.40, la recherche sémantique devient beaucoup plus stricte et rejette les profils n'ayant aucun lien métier réel.
+- Le Chatbot ne répondait pas ("pas de réponse") après avoir cherché 3 fois sans succès car la boucle Vercel AI SDK s'arrêtait d'elle-même sans rien émettre (yield) vers le frontend.
+- Cela garantit que le recruteur aura TOUJOURS une réponse textuelle lisible à l'écran, quoi que fasse l'IA en arrière-plan.
 
 Files affected:
-- app/api/recruiter/search/route.ts
 - lib/talent-assistant.ts
 
 Breaking changes:
