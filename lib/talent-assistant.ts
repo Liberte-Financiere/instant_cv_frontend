@@ -16,18 +16,11 @@
  * not by the LLM, to ensure consistency across calls.
  */
 
-import {
-  GoogleGenerativeAI,
-  SchemaType,
-  Content,
-  FunctionDeclaration,
-  Tool,
-  FunctionCallingMode,
-} from '@google/generative-ai';
+import { streamText, tool } from 'ai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { APP_CONFIG } from '@/lib/config';
-
-// Global genAI removed
 
 // -- Constants ----------------------------------------------------------------
 
@@ -169,53 +162,7 @@ Apres avoir presente les resultats, tu peux conseiller a l'utilisateur de :
 - Nombre de profils deja debloques : ${ctx.unlockedProfileIds.length}`;
 }
 
-// -- Gemini Tool Declaration --------------------------------------------------
-
-const SEARCH_CANDIDATES_DECLARATION: FunctionDeclaration = {
-  name: 'search_candidates',
-  description:
-    'Recherche des candidats dans la base de profils Jobsira selon des criteres structures. ' +
-    'Utilise cet outil quand tu as suffisamment d\'informations pour lancer une recherche.',
-  parameters: {
-    type: SchemaType.OBJECT,
-    properties: {
-      query: {
-        type: SchemaType.STRING,
-        description: 'Mots-cles principaux pour la recherche textuelle (titre, secteur, projets)',
-      },
-      sector: {
-        type: SchemaType.STRING,
-        description: 'Secteur d\'activite exact (ex: Tech, Finance, Sante, BTP, Agriculture)',
-      },
-      experienceMin: {
-        type: SchemaType.INTEGER,
-        description: 'Nombre minimum d\'annees d\'experience',
-      },
-      experienceMax: {
-        type: SchemaType.INTEGER,
-        description: 'Nombre maximum d\'annees d\'experience',
-      },
-      locationCity: {
-        type: SchemaType.STRING,
-        description: 'Ville de localisation (recherche partielle, ex: Ouagadougou, Abidjan)',
-      },
-      locationCountry: {
-        type: SchemaType.STRING,
-        description: 'Pays de localisation (ex: Burkina Faso, Cote d\'Ivoire)',
-      },
-      skills: {
-        type: SchemaType.ARRAY,
-        items: { type: SchemaType.STRING },
-        description: 'Liste de competences techniques recherchees',
-      },
-    },
-    required: ['query'],
-  },
-};
-
-const SEARCH_TOOL: Tool = {
-  functionDeclarations: [SEARCH_CANDIDATES_DECLARATION],
-};
+// Tools are now defined directly in chatWithAssistant using Vercel AI SDK
 
 // -- Compatibility Scoring (server-side, deterministic) -----------------------
 
@@ -393,37 +340,14 @@ async function searchCandidatesInternal(
   return { candidates, total };
 }
 
-// -- Conversation History Formatting ------------------------------------------
-
-/**
- * Truncates conversation history to stay within a character budget.
- * Keeps the most recent messages, discarding older ones first.
- */
-function truncateHistory(messages: ChatMessage[]): Content[] {
-  const contents: Content[] = [];
-  let totalChars = 0;
-
-  for (let i = messages.length - 1; i >= 0; i--) {
-    const msg = messages[i];
-    const charCount = msg.content.length;
-
-    if (totalChars + charCount > MAX_CONTEXT_CHARS) {
-      break;
-    }
-
-    totalChars += charCount;
-    contents.unshift({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.content }],
-    });
-  }
-
-  // Gemini expects history to start with a user message
-  if (contents.length > 0 && contents[0].role === 'model') {
-    contents.shift();
-  }
-
-  return contents;
+// Truncate function simplified
+function truncateHistory(messages: ChatMessage[]): { role: 'user' | 'assistant'; content: string }[] {
+  // Keep the last 10 messages to avoid token bloat
+  const recent = messages.slice(-10);
+  return recent.map(msg => ({
+    role: msg.role === 'user' ? 'user' : 'assistant',
+    content: msg.content
+  }));
 }
 
 // -- Main Chat Function -------------------------------------------------------
@@ -433,161 +357,126 @@ export async function* chatWithAssistant(
   history: ChatMessage[],
   recruiterContext: RecruiterContext
 ): AsyncGenerator<StreamEvent> {
-  console.log('[GEMINI] Démarrage de chatWithAssistant. Initialisation du modèle...');
+  console.log('[GEMINI] Démarrage de chatWithAssistant via Vercel AI SDK.');
   const systemInstruction = buildSystemPrompt(recruiterContext);
   const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
-  const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({
-    model: APP_CONFIG.ai.models.fast,
-    systemInstruction,
-    tools: [SEARCH_TOOL],
-    toolConfig: {
-      functionCallingConfig: {
-        mode: FunctionCallingMode.AUTO,
-      },
-    },
-    generationConfig: {
-      temperature: 0.7,
-      maxOutputTokens: 4096,
-    },
-  });
+  const google = createGoogleGenerativeAI({ apiKey });
 
   const formattedHistory = truncateHistory(history);
-  console.log(`[GEMINI] Historique tronqué. Envoi de ${formattedHistory.length} éléments de contexte au modèle.`);
-  const chat = model.startChat({ history: formattedHistory });
-
-  let currentStream;
-  console.log('[GEMINI] Envoi de la requête de flux initiale pour le message :', message.substring(0, 50) + '...');
-  try {
-    currentStream = await chat.sendMessageStream(message);
-    console.log('[GEMINI] Requête de flux initiale réussie.');
-  } catch (error: any) {
-    console.error('[GEMINI_QUOTA_ERROR] Échec du flux initial :', error);
-    if (error?.status === 429 || error?.message?.includes('429')) {
-      yield { type: 'error', data: "Notre assistant IA est actuellement très sollicité. Veuillez réessayer dans quelques instants." };
-      return;
-    }
-    throw error;
-  }
-
+  let currentMessages: any[] = [...formattedHistory, { role: 'user', content: message }];
   let iteration = 0;
   const MAX_ITERATIONS = 3;
-  let allCandidates: ScoredCandidate[] = [];
 
-  while (true) {
-    iteration++;
-    let functionCallFound: any = null;
+  try {
+    while (iteration < MAX_ITERATIONS) {
+      iteration++;
+      console.log(`[GEMINI] Démarrage de l'itération ${iteration}...`);
+      
+      let allCandidates: ScoredCandidate[] = [];
+      let toolCallDetected = false;
+      let currentToolCallId = '';
+      let currentToolArgs = {};
+      let currentToolSummary = '';
 
-    console.log(`[GEMINI] Lecture des morceaux du flux (itération ${iteration})...`);
-    for await (const chunk of currentStream.stream) {
-      const parts = chunk.candidates?.[0]?.content?.parts;
-      if (parts) {
-        for (const part of parts) {
-          if (part.functionCall) {
-            console.log(`[GEMINI] Appel de fonction détecté : ${part.functionCall.name}`);
-            functionCallFound = part.functionCall;
-          } else if (part.text) {
-            yield { type: 'text', data: part.text };
+      const result = streamText({
+        model: google(APP_CONFIG.ai.models.fast),
+        system: systemInstruction,
+        messages: currentMessages,
+        temperature: 0.7,
+        tools: {
+          search_candidates: {
+            description: 'Recherche des candidats dans la base de profils Jobsira selon des criteres structures.',
+            inputSchema: z.object({
+              query: z.string().describe('Mots-cles principaux pour la recherche textuelle'),
+              sector: z.string().optional().describe('Secteur d\'activite exact'),
+              experienceMin: z.number().optional().describe('Experience minimum en annees'),
+              experienceMax: z.number().optional().describe('Experience maximum en annees'),
+              locationCity: z.string().optional().describe('Ville (ex: Abidjan, Dakar)'),
+              locationCountry: z.string().optional().describe('Pays'),
+              skills: z.array(z.string()).optional().describe('Liste des competences techniques'),
+            }),
+            execute: async (params: any) => {
+              console.log(`[GEMINI] Exécution de la recherche DB avec : ${JSON.stringify(params)}`);
+              const { candidates, total } = await searchCandidatesInternal(params as SearchParams);
+              
+              for (const c of candidates) {
+                if (!allCandidates.find((existing) => existing.id === c.id)) {
+                  allCandidates.push(c);
+                }
+              }
+
+              const resultSummary = candidates.length === 0
+                ? 'Aucun profil trouvé avec ces critères.'
+                : `${total} profils trouvés pour cette requête. Voici les résultats :\n\n` +
+                  candidates.map((c, i) =>
+                    `Profil #${i + 1} (ID: ${c.id}):\n` +
+                    `  Titre: ${c.title}\n` +
+                    `  Secteur: ${c.sector || 'Non renseigné'}\n` +
+                    `  Experience: ${c.experienceYears} ans\n` +
+                    `  Localisation: ${c.locationCity || '?'}, ${c.locationCountry || '?'}\n` +
+                    `  Competences: ${c.skills.slice(0, 8).join(', ')}\n` +
+                    `  Score: ${c.compatibilityScore}/100`
+                  ).join('\n\n');
+
+              return { summary: resultSummary, newCandidates: allCandidates };
+            }
           }
         }
+      });
+
+      for await (const part of result.fullStream) {
+        if (part.type === 'text-delta') {
+          yield { type: 'text', data: (part as any).textDelta || (part as any).text };
+        } else if (part.type === 'tool-call') {
+          toolCallDetected = true;
+          currentToolCallId = part.toolCallId;
+          currentToolArgs = (part as any).args || (part as any).input;
+        } else if (part.type === 'tool-result' && part.toolName === 'search_candidates') {
+          const toolOutput = (part as any).result || (part as any).output;
+          currentToolSummary = toolOutput?.summary || '';
+          const candidatesToYield = toolOutput?.newCandidates || [];
+          
+          if (candidatesToYield.length > 0) {
+             yield { type: 'candidates', data: candidatesToYield };
+          }
+        } else if (part.type === 'error') {
+          console.error('[GEMINI] Stream error part:', part.error);
+          yield { type: 'error', data: "Erreur inattendue de l'IA." };
+          return;
+        }
       }
-    }
 
-    console.log(`[GEMINI] Lecture du flux terminée (itération ${iteration}). En attente de la résolution de la promesse finale...`);
-    try {
-      await currentStream.response;
-      console.log(`[GEMINI] Promesse de réponse finale résolue avec succès (itération ${iteration}).`);
-    } catch (e) {
-      console.error(`[GEMINI] Erreur lors de l'attente de la réponse (itération ${iteration}) :`, e);
-    }
-
-    if (!functionCallFound) {
-      // No more function calls, the model has finished its response.
-      break;
-    }
-
-    if (iteration >= MAX_ITERATIONS) {
-      console.log('[GEMINI] Limite d\'itérations atteinte pour les appels de fonctions.');
-      if (allCandidates.length > 0) {
-        yield { type: 'text', data: "\n\n*J'ai arrêté d'approfondir la recherche. Voici les meilleurs profils trouvés ci-dessus.*" };
+      if (toolCallDetected) {
+        currentMessages.push({
+          role: 'assistant',
+          content: [{
+            type: 'tool-call',
+            toolCallId: currentToolCallId,
+            toolName: 'search_candidates',
+            args: currentToolArgs
+          }]
+        });
+        currentMessages.push({
+          role: 'tool',
+          content: [{
+            type: 'tool-result',
+            toolCallId: currentToolCallId,
+            toolName: 'search_candidates',
+            result: currentToolSummary,
+            output: { type: 'text', value: currentToolSummary }
+          }]
+        });
       } else {
-        yield { type: 'text', data: "\n\n*Je n'ai pas pu trouver de profils précis après plusieurs recherches successives. N'hésitez pas à élargir vos critères.*" };
+        // No tool called, generation is complete
+        break;
       }
-      break;
     }
-
-    if (functionCallFound.name === 'search_candidates') {
-      console.log('[GEMINI] Analyse des arguments de search_candidates :', JSON.stringify(functionCallFound.args));
-      const searchParams: SearchParams = {
-        query: (functionCallFound.args as any).query || '',
-        sector: (functionCallFound.args as any).sector || undefined,
-        experienceMin: (functionCallFound.args as any).experienceMin ?? undefined,
-        experienceMax: (functionCallFound.args as any).experienceMax ?? undefined,
-        locationCity: (functionCallFound.args as any).locationCity || undefined,
-        locationCountry: (functionCallFound.args as any).locationCountry || undefined,
-        skills: (functionCallFound.args as any).skills || undefined,
-      };
-
-      console.log(`[GEMINI] Exécution de la recherche DB en interne avec la requête : "${searchParams.query}"`);
-      const { candidates, total } = await searchCandidatesInternal(searchParams);
-      console.log(`[GEMINI] La recherche DB a retourné ${candidates.length} résultats sur ${total} correspondances totales.`);
-
-      // Accumulate candidates, avoiding duplicates by ID
-      for (const c of candidates) {
-        if (!allCandidates.find((existing) => existing.id === c.id)) {
-          allCandidates.push(c);
-        }
-      }
-
-      // Yield all accumulated candidates to the client
-      yield { type: 'candidates', data: allCandidates };
-      console.log(`[GEMINI] ${allCandidates.length} candidats cumulés envoyés au flux client.`);
-
-      // Build a text summary for the model based ONLY on the current search results
-      // so the model knows what *this specific* search returned.
-      const resultSummary =
-        candidates.length === 0
-          ? 'Aucun profil trouve avec ces criteres.'
-          : `${total} profils trouves pour cette requete. Voici les resultats :\n\n` +
-            candidates
-              .map(
-                (c, i) =>
-                  `Profil #${i + 1} (ID: ${c.id}):\n` +
-                  `  Titre: ${c.title}\n` +
-                  `  Initiales: ${c.anonymousName}\n` +
-                  `  Secteur: ${c.sector || 'Non renseigne'}\n` +
-                  `  Experience: ${c.experienceYears} ans\n` +
-                  `  Localisation: ${c.locationCity || '?'}, ${c.locationCountry || '?'}\n` +
-                  `  Competences: ${c.skills.slice(0, 8).join(', ')}${c.skills.length > 8 ? '...' : ''}\n` +
-                  (c.companies && c.companies.length > 0 ? `  Entreprises passees: ${c.companies.join(', ')}\n` : '') +
-                  `  Completude du profil: ${c.completionScore}%\n` +
-                  `  Score de compatibilite: ${c.compatibilityScore}/100`
-              )
-              .join('\n\n');
-
-      console.log('[GEMINI] Envoi de la requête de flux de suivi avec la réponse de la fonction (functionResponse)...');
-      try {
-        currentStream = await chat.sendMessageStream([
-          {
-            functionResponse: {
-              name: 'search_candidates',
-              response: { result: resultSummary },
-            },
-          },
-        ]);
-        console.log('[GEMINI] Requête de flux de suivi réussie.');
-      } catch (error: any) {
-        console.error('[GEMINI_QUOTA_ERROR] Échec du flux de suivi :', error);
-        if (error?.status === 429 || error?.message?.includes('429')) {
-           yield { type: 'error', data: "\n\n(L'analyse a été interrompue car l'assistant est très sollicité, mais les profils trouvés sont affichés ci-dessus)." };
-           return;
-        }
-        throw error;
-      }
+  } catch (error: any) {
+    console.error('[GEMINI_QUOTA_ERROR] Échec :', error);
+    if (error?.status === 429 || error?.message?.includes('429')) {
+      yield { type: 'error', data: "\n\nNotre assistant IA est actuellement très sollicité. Veuillez réessayer." };
     } else {
-      // If there's an unknown function call, just break to avoid infinite loop
-      console.warn(`[GEMINI] Unknown function call: ${functionCallFound.name}`);
-      break;
+      throw error;
     }
   }
 }

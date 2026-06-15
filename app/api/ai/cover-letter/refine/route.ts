@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
-import { GoogleGenerativeAI } from '@google/generative-ai'; 
+import { generateText } from 'ai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 
 export async function POST(req: Request) {
   try {
@@ -55,12 +56,12 @@ export async function POST(req: Request) {
     }
 
     const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.lite });
+    const google = createGoogleGenerativeAI({ apiKey });
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const refinedText = response.text().trim();
+    const { text: refinedText } = await generateText({
+      model: google(APP_CONFIG.ai.models.lite),
+      prompt: prompt,
+    });
 
     return NextResponse.json({ result: refinedText });
 

@@ -128,7 +128,7 @@ export const APP_CONFIG = {
       lite: 'gemini-3.1-flash-lite',
 
       /** Modèle pour la traduction et les tâches complexes */
-      pro: 'gemini-3.1-pro',
+      pro: 'gemini-3.1-pro-preview',
 
       /** Modèle pour l'audio en live */
       audioLive: 'models/gemini-3.1-flash-live-preview',
