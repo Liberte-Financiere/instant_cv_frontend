@@ -1,13 +1,25 @@
-[2026-06-15] — Tweak: Masquage de l'ID technique dans les réponses de l'IA
+[2026-06-15] — Feat: AI Monitoring Dashboard & Asynchronous Logging
 
 What changed:
-- Ajout d'une règle stricte dans le System Prompt de `lib/talent-assistant.ts` interdisant à l'IA d'afficher l'ID technique de la base de données (ex: `cmqbd...`) dans ses réponses.
+- Ajout du modèle `AILog` dans `schema.prisma` avec `status`, `promptTokens`, `completionTokens`, `latencyMs`.
+- Création d'un utilitaire centralisé "fire-and-forget" dans `lib/ai/logger.ts` encapsulé avec un try/catch silencieux.
+- Implémentation du logging IA dans le Chatbot (`talent-assistant.ts`), le système d'Embeddings (`embeddings.ts`) et l'Analyse de CV (`api/ai/analyze/route.ts`).
+- Création de la page Administrateur `app/dashboard/hq-ops/ai-logs/page.tsx` avec les KPIs (Requêtes, Taux d'Erreur, Latence, Top Modèle).
+- Création de l'API sécurisée `/api/admin/ai-logs/route.ts` vérifiant le rôle `ADMIN`.
 
 Why:
-- L'outil de recherche de la base de données renvoie l'ID à l'IA pour qu'elle puisse différencier les profils, mais l'IA croyait bien faire en l'affichant au recruteur. Cela polluait la lecture.
+- Suivi rigoureux des intégrations IA (Gemini) en amont d'une montée en charge.
+- Identification rapide des potentielles boucles infinies ou des quotas épuisés (429) grâce au taux d'erreur 24h et à la latence moyenne.
+- Intégration totale des amendements demandés par le Tech Lead : sécurité, absence de crash en cas d'erreur de DB, et rétention d'historique optimisée.
 
 Files affected:
+- prisma/schema.prisma
+- lib/ai/logger.ts
 - lib/talent-assistant.ts
+- lib/ai/embeddings.ts
+- app/api/ai/analyze/route.ts
+- app/dashboard/hq-ops/ai-logs/page.tsx
+- app/api/admin/ai-logs/route.ts
 
 Breaking changes:
 - None.

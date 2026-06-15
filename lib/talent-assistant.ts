@@ -21,6 +21,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { APP_CONFIG } from '@/lib/config';
+import { logAIUsage } from '@/lib/ai/logger';
 
 // -- Constants ----------------------------------------------------------------
 
@@ -404,11 +405,23 @@ export async function* chatWithAssistant(
       let currentToolProviderOptions: any = undefined;
       let currentToolSummary = '';
 
+      const startTime = performance.now();
       const result = streamText({
         model: google(APP_CONFIG.ai.models.fast),
         system: systemInstruction,
         messages: currentMessages,
         temperature: 0.7,
+        onFinish: ({ usage, finishReason }) => {
+          logAIUsage({
+            type: 'chat',
+            model: APP_CONFIG.ai.models.fast,
+            status: 'success',
+            promptTokens: usage.promptTokens,
+            completionTokens: usage.completionTokens,
+            latencyMs: performance.now() - startTime,
+            userId: recruiterContext.userId
+          });
+        },
         tools: {
           search_candidates: {
             description: 'Recherche des candidats dans la base de profils Jobsira selon des criteres structures.',
@@ -468,8 +481,28 @@ export async function* chatWithAssistant(
           }
         } else if (part.type === 'error') {
           console.error('[GEMINI] Stream error part:', part.error);
+          
+          logAIUsage({
+            type: 'chat',
+            model: APP_CONFIG.ai.models.fast,
+            status: 'error',
+            errorMessage: part.error?.toString(),
+            latencyMs: performance.now() - startTime,
+            userId: recruiterContext.userId
+          });
+          
           yield { type: 'error', data: "Erreur inattendue de l'IA." };
           return;
+        } else if (part.type === 'finish') {
+          logAIUsage({
+            type: 'chat',
+            model: APP_CONFIG.ai.models.fast,
+            status: 'success',
+            promptTokens: part.usage?.promptTokens || 0,
+            completionTokens: part.usage?.completionTokens || 0,
+            latencyMs: performance.now() - startTime,
+            userId: recruiterContext.userId
+          });
         }
       }
 
@@ -511,6 +544,15 @@ export async function* chatWithAssistant(
     }
   } catch (error: any) {
     console.error('[GEMINI_QUOTA_ERROR] Échec :', error);
+    
+    logAIUsage({
+      type: 'chat',
+      model: APP_CONFIG.ai.models.fast,
+      status: 'error',
+      errorMessage: error?.message || 'Erreur inconnue',
+      userId: recruiterContext.userId
+    });
+
     if (error?.status === 429 || error?.message?.includes('429')) {
       yield { type: 'error', data: "\n\nNotre assistant IA est actuellement très sollicité. Veuillez réessayer." };
     } else {
