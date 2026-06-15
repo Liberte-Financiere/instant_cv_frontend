@@ -1,16 +1,15 @@
-[2026-06-15] — Fix: Comportement et boucle infinie du Chatbot
+[2026-06-15] — Fix: Réduction de la tolérance vectorielle (Faux positifs)
 
 What changed:
-- Mise à jour du System Prompt de `talent-assistant.ts`.
-- Forçage de la justification textuelle : si le Chatbot trouve un candidat via l'outil, il DOIT en parler dans son texte avant de poser une question de clarification.
-- Prévention de la boucle infinie : interdiction au modèle de relancer la recherche en boucle s'il ne trouve aucun candidat (cas du "soudeur").
+- Réduction du seuil de la distance Cosine (`distance < 0.55` devient `distance < 0.40`) dans `app/api/recruiter/search/route.ts` et `lib/talent-assistant.ts`.
 
 Why:
-- L'IA affichait la carte du candidat sur le côté, mais l'ignorait dans son texte car le prompt lui disait de "poser des questions si la requête est vague".
-- Quand l'IA ne trouvait personne, le Vercel AI SDK (Gemini) essayait frénétiquement d'autres mots-clés en boucle, ce qui faisait planter/ralentir le serveur (30+ secondes).
+- Le seuil de 0.55 était trop permissif. La base de données renvoyait un "Développeur Fullstack" même pour la requête "soudeur métallurgique" (car la distance sémantique mathématique évaluée par Gemini était de 0.48, ce qui passait sous le radar de 0.55).
+- Avec un seuil de 0.40, la recherche sémantique devient beaucoup plus stricte et rejette les profils n'ayant aucun lien métier réel.
 
 Files affected:
-- lib/talent-assistant.ts — Modification des instructions (System Prompt).
+- app/api/recruiter/search/route.ts
+- lib/talent-assistant.ts
 
 Breaking changes:
 - None.

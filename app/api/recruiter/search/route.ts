@@ -115,7 +115,7 @@ export async function GET(req: Request) {
           `SELECT "id", ("embedding" <=> '${vectorString}'::vector) as distance FROM "CandidateProfile" WHERE "isActive" = true ORDER BY distance ASC LIMIT 100`
         );
         
-        closestIds = results.filter(r => r.distance < 0.55).map(r => r.id);
+        closestIds = results.filter(r => r.distance < 0.40).map(r => r.id);
       } catch (err) {
         console.error("[HYBRID_SEARCH] Erreur lors de la génération du vecteur pour la recherche :", err);
       }
