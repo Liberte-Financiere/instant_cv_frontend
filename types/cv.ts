@@ -143,6 +143,7 @@ export interface CV {
   // Analytics & Sharing
   views: number;
   isPublic: boolean;
+  isSearchable: boolean;
   publicLink?: string;
 }
 

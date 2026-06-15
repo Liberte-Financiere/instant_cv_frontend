@@ -200,6 +200,28 @@ export async function syncCandidateProfile(cvId: string) {
     update: profileData,
   });
 
+  // --- Génération de l'Embedding (Intelligence Artificielle) ---
+  // On génère le vecteur uniquement après avoir sauvegardé le profil
+  try {
+    const experienceText = (cvContent.experiences || []).map((exp: any) => 
+      `${exp.title || 'Poste'} chez ${exp.company || 'Entreprise'}`
+    ).join(', ');
+
+    // Construction de la chaîne optimisée (sans bruit)
+    const optimizedText = `Titre: ${profileData.title}. Résumé: ${profileData.summary || ''}. Secteur: ${profileData.sector || ''}. Compétences: ${skills.join(', ')}. Expériences: ${experienceText}.`;
+
+    const { generateEmbedding } = await import('@/lib/ai/embeddings');
+    const vector = await generateEmbedding(optimizedText);
+    
+    // Mise à jour de la colonne magique avec une requête SQL brute (Prisma nécessite ça pour les Vecteurs)
+    const vectorString = `[${vector.join(',')}]`;
+    await prisma.$executeRaw`UPDATE "CandidateProfile" SET "embedding" = ${vectorString}::vector WHERE "cvId" = ${cvId}`;
+    
+    console.log(`[VECTEUR] ✅ Profil Recruteur mis à jour et vectorisé pour le CV ${cvId} !`);
+  } catch (error) {
+    console.error(`[VECTEUR] ❌ Erreur silencieuse lors de la vectorisation du CV ${cvId}:`, error);
+  }
+
   return profile;
 }
 

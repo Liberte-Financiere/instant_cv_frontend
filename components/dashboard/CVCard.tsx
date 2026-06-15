@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Edit, Trash2, Download, Clock, Eye, Loader2 } from 'lucide-react';
+import { Edit, Trash2, Download, Clock, Eye, Loader2, Briefcase } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -20,6 +20,7 @@ interface CVCardProps {
 
 export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardProps) {
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Calculate relative time or format date
   const formatDate = (date: Date) => {
@@ -35,6 +36,40 @@ export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardPr
       day: 'numeric',
       month: 'short',
     })}`;
+  };
+
+  const handleSyncRecruiter = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (isSyncing) return;
+
+    if (!cv.isPublic) {
+      toast.error('Le CV doit être "Public" (pastille verte) pour être partagé aux recruteurs.');
+      return;
+    }
+
+    setIsSyncing(true);
+    const toastId = toast.loading('Synchronisation IA avec le portail recruteur...');
+
+    try {
+      const res = await fetch(`/api/cv/${cv.id}/searchable`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isSearchable: true }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Erreur lors de la synchronisation');
+      }
+
+      toast.success('Profil mis à jour et optimisé pour les recruteurs !', { id: toastId });
+    } catch (error: any) {
+      console.error('Sync failed:', error);
+      toast.error(error.message || 'Erreur lors de la synchronisation.', { id: toastId });
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   const handleDownloadPDF = async (e: React.MouseEvent) => {
@@ -103,6 +138,7 @@ export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardPr
                title={`Mon CV ${APP_CONFIG.name}`}
                text={`Découvrez mon CV "${cv.title}" créé avec ${APP_CONFIG.name}`}
              />
+
            <button
               onClick={handleDownloadPDF}
               disabled={isDownloading}
@@ -159,18 +195,32 @@ export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardPr
       </div>
 
       {/* Card Footer */}
-      <div className="p-5 flex items-center justify-between bg-white relative z-10 border-t border-slate-100">
-        <div>
-           <h3 className="font-bold text-slate-900 text-base mb-1 truncate max-w-[160px]" title={cv.title}>
-             {cv.title}
-           </h3>
-           <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-             <span>{formatDate(cv.updatedAt)}</span>
-           </div>
+      <div className="p-4 flex flex-col gap-3 bg-white relative z-10 border-t border-slate-100">
+        <div className="flex items-center justify-between">
+          <div>
+             <h3 className="font-bold text-slate-900 text-base mb-0.5 truncate max-w-[200px]" title={cv.title}>
+               {cv.title}
+             </h3>
+             <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+               <span>{formatDate(cv.updatedAt)}</span>
+             </div>
+          </div>
         </div>
 
-        {/* Circular Progress */}
-
+        {/* Action Permanente */}
+        <button
+           onClick={handleSyncRecruiter}
+           disabled={isSyncing}
+           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-800 rounded-xl text-sm font-semibold transition-all disabled:opacity-50"
+           title="Mettre à jour les données IA pour les recruteurs"
+        >
+           {isSyncing ? (
+             <Loader2 className="w-4 h-4 animate-spin" />
+           ) : (
+             <Briefcase className="w-4 h-4" />
+           )}
+           <span>{isSyncing ? 'Synchronisation...' : 'Synchroniser (Recruteurs)'}</span>
+        </button>
       </div>
     </motion.div>
   );
