@@ -285,19 +285,43 @@ async function searchCandidatesInternal(
   }
 
   if (params.query) {
+    let closestIds: string[] = [];
+    try {
+      const { generateEmbedding } = await import('@/lib/ai/embeddings');
+      const vector = await generateEmbedding(params.query);
+      const vectorString = `[${vector.join(',')}]`;
+
+      // Récupérer les profils sémantiquement proches
+      const results = await prisma.$queryRawUnsafe<Array<{id: string, distance: number}>>(
+        `SELECT "id", ("embedding" <=> '${vectorString}'::vector) as distance FROM "CandidateProfile" WHERE "isActive" = true ORDER BY distance ASC LIMIT 50`
+      );
+      
+      closestIds = results.filter(r => r.distance < 0.55).map(r => r.id);
+    } catch (err) {
+      console.error("[HYBRID_SEARCH_BOT] Erreur lors de la génération du vecteur :", err);
+    }
+
     const ftsQuery = params.query.trim().split(/\s+/).filter(Boolean).join(' | ');
+    const orConditions: any[] = [];
+
     if (ftsQuery) {
-      where.OR = [
-        { title: { search: ftsQuery } },
-        { sector: { search: ftsQuery } },
-        { anonymousName: { search: ftsQuery } },
-        {
-          anonymousData: {
-            path: ['projects'],
-            string_contains: params.query,
-          },
+      orConditions.push({ title: { search: ftsQuery } });
+      orConditions.push({ sector: { search: ftsQuery } });
+      orConditions.push({ anonymousName: { search: ftsQuery } });
+      orConditions.push({
+        anonymousData: {
+          path: ['projects'],
+          string_contains: params.query,
         },
-      ];
+      });
+    }
+
+    if (closestIds.length > 0) {
+      orConditions.push({ id: { in: closestIds } });
+    }
+
+    if (orConditions.length > 0) {
+      where.OR = orConditions;
     }
   }
 
