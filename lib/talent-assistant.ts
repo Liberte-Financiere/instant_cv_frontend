@@ -297,7 +297,7 @@ async function searchCandidatesInternal(
         `SELECT "id", ("embedding" <=> '${vectorString}'::vector) as distance FROM "CandidateProfile" WHERE "isActive" = true ORDER BY distance ASC LIMIT 50`
       );
       
-      closestIds = results.filter(r => r.distance < 0.55).map(r => r.id);
+      closestIds = results.filter(r => r.distance < 0.40).map(r => r.id);
     } catch (err) {
       console.error("[HYBRID_SEARCH_BOT] Erreur lors de la génération du vecteur :", err);
     }
