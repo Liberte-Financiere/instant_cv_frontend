@@ -1,14 +1,14 @@
-[2026-06-15] — Fix: Retour texte garanti si boucle de recherche
+[2026-06-15] — Tweak: Ajustement de la tolérance vectorielle à 0.45
 
 What changed:
-- Modification du message de retour de l'outil `search_candidates` quand il y a 0 résultat. L'outil hurle littéralement "STOP_SEARCH" à Gemini pour le forcer à s'arrêter et à répondre.
-- Ajout d'une sécurité de dernier recours : si le moteur atteint la limite des itérations (3 tentatives) sans jamais parler à l'utilisateur, on force l'envoi d'un message d'excuse au lieu de couper la connexion silencieusement.
+- Ajustement du seuil de la distance Cosine (`distance < 0.40` devient `distance < 0.45`) dans `app/api/recruiter/search/route.ts` et `lib/talent-assistant.ts`.
 
 Why:
-- Le Chatbot ne répondait pas ("pas de réponse") après avoir cherché 3 fois sans succès car la boucle Vercel AI SDK s'arrêtait d'elle-même sans rien émettre (yield) vers le frontend.
-- Cela garantit que le recruteur aura TOUJOURS une réponse textuelle lisible à l'écran, quoi que fasse l'IA en arrière-plan.
+- Le seuil de 0.40 s'est avéré trop punitif pour les recherches conceptuelles avancées (ex: "Tech Lead").
+- Le seuil de 0.45 laisse passer les recherches conceptuelles pertinentes, tout en continuant de bloquer les aberrations (ex: "Database Administrator" ou "Soudeur").
 
 Files affected:
+- app/api/recruiter/search/route.ts
 - lib/talent-assistant.ts
 
 Breaking changes:
