@@ -32,7 +32,9 @@ jobs:
 
       - name: Create backup directory
         run: |
-          BACKUP_DIR="backups/$(date +%Y-%m-%d)"
+          DATE_STR=$(date +%Y-%m-%d)
+          BACKUP_DIR="backups/$DATE_STR"
+          echo "DATE_STR=$DATE_STR" >> $GITHUB_ENV
           echo "BACKUP_DIR=$BACKUP_DIR" >> $GITHUB_ENV
           mkdir -p "$BACKUP_DIR"
 
@@ -71,7 +73,7 @@ jobs:
       - name: Sauvegarde dans GitHub Actions (Artifact)
         uses: actions/upload-artifact@v4
         with:
-          name: database-backup-${{ env.BACKUP_DIR }}
+          name: database-backup-${{ env.DATE_STR }}
           path: ${{ env.BACKUP_DIR }}.tar.gz
           retention-days: 30
 

@@ -1,19 +1,28 @@
-2026-06-15 — fix(talent-assistant): résolution AI_InvalidPromptError sur l'historique ToolCalling
+[2026-06-15] — Finalisation Recherche Vectorielle & UX Portail Recruteur
 
 What changed:
-- Ajout de la propriété `output` (au format `{ type: 'text', value: ... }`) dans l'objet `tool-result` injecté dans l'historique de l'assistant (`lib/talent-assistant.ts`).
-- Conservation de la propriété TypeScript native `result` pour la rétrocompatibilité avec les types `CoreMessage` exposés par l'AI SDK.
+- Intégration de pgvector via Prisma sur la table CandidateProfile.
+- Création de l'utilitaire d'embedding avec Gemini.
+- Modification de la route de recherche pour activer le filtrage hybride (SQL + Vecteur).
+- Refonte UX de la carte CV (CVCard) et de la vue liste (dashboard/list) : ajout d'un statut "Portail Recruteur" explicite avec bouton de synchronisation et info-bulle explicative.
+- Fix: Correction du nommage des artifacts dans le workflow GitHub Actions (db-backup.yml) pour retirer les caractères invalides (slash).
 
 Why:
-- Le Vercel AI SDK 6.0+ possède un schéma de validation interne plus strict lors de l'appel à `streamText()`. 
-- Bien que le type `CoreToolMessage` attende `result`, le validateur d'exécution Zod sous-jacent convertit silencieusement le modèle en `ModelMessage` qui exige la présence obligatoire d'un objet `output`.
-- L'absence d'`output` déclenchait l'erreur "Invalid input: expected object, received undefined" au moment de renvoyer l'historique d'outil dans la boucle.
+- Permettre la recherche sémantique intelligente pour les recruteurs.
+- Rendre l'interface candidat beaucoup plus claire concernant la visibilité de leur profil aux yeux des recruteurs et le fonctionnement de l'IA.
+- Sécuriser les sauvegardes automatisées de base de données.
 
 Files affected:
-- lib/talent-assistant.ts — Modification de l'injection du `tool-result`.
+- prisma/schema.prisma — Configuration vectorielle.
+- lib/ai/embeddings.ts — Logique d'appel API Gemini.
+- lib/candidate-profile.ts — Auto-vectorisation lors de la mise en ligne.
+- app/api/recruiter/search/route.ts — Algorithme de recherche hybride.
+- components/dashboard/CVCard.tsx — Nouveau bouton permanent de synchronisation.
+- app/dashboard/list/page.tsx — Refonte de l'UI avec toggle switches, colonne recruteur et info-bulle.
+- .github/workflows/db-backup.yml — Fix artifact path.
 
 Breaking changes:
 - None.
 
 Notes for review:
-- Ce workaround garantit que le message passe à 100% le validateur strict interne de Vercel AI SDK, tout en restant un objet TypeScript valide vis-à-vis des interfaces `ai` publiques.
+- Les anciens profils nécessitent une re-sauvegarde pour avoir leur vecteur généré.
