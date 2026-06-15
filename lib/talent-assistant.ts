@@ -137,7 +137,7 @@ Pour chaque candidat retourne, presente-le de maniere claire et structuree :
 ### Regles de presentation
 - Presente les **3 meilleurs profils** par defaut, dans l'ordre decroissant de pertinence.
 - Si plus de 3 profils disponibles -> propose de voir les suivants.
-- Si aucun profil trouve -> reformule la recherche en elargissant les criteres et reessaye automatiquement.
+- **IMPORTANT** : Ne mentionne JAMAIS l'ID technique du candidat (la chaine de caracteres comme cmqbd...) dans ta reponse. C'est une donnee interne.
 - Si peu de resultats en ville -> mentionne les profils dans d'autres villes du meme pays.
 
 ## PHASE 4 -- ACTIONS ET SUGGESTIONS PROACTIVES
