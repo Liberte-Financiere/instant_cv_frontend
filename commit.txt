@@ -1,28 +1,19 @@
-[2026-06-15] — Finalisation Recherche Vectorielle & UX Portail Recruteur
+[2026-06-15] — Amélioration UX: Détail de la Quality Gate
 
 What changed:
-- Intégration de pgvector via Prisma sur la table CandidateProfile.
-- Création de l'utilitaire d'embedding avec Gemini.
-- Modification de la route de recherche pour activer le filtrage hybride (SQL + Vecteur).
-- Refonte UX de la carte CV (CVCard) et de la vue liste (dashboard/list) : ajout d'un statut "Portail Recruteur" explicite avec bouton de synchronisation et info-bulle explicative.
-- Fix: Correction du nommage des artifacts dans le workflow GitHub Actions (db-backup.yml) pour retirer les caractères invalides (slash).
+- Ajout de l'affichage détaillé des raisons de refus (qualityReport) lors de la synchronisation d'un CV vers le portail recruteur.
+- L'utilisateur voit maintenant exactement quels critères manquent (ex: "Score de complétude insuffisant", "Manque de compétences") via une infobulle (toast) détaillée.
 
 Why:
-- Permettre la recherche sémantique intelligente pour les recruteurs.
-- Rendre l'interface candidat beaucoup plus claire concernant la visibilité de leur profil aux yeux des recruteurs et le fonctionnement de l'IA.
-- Sécuriser les sauvegardes automatisées de base de données.
+- L'erreur générique "Votre CV ne remplit pas les critères minimum" n'était pas assez explicite.
+- Cela permet d'éduquer l'utilisateur sur les attentes qualitatives du Talent Pool et d'encourager à mieux remplir le CV.
 
 Files affected:
-- prisma/schema.prisma — Configuration vectorielle.
-- lib/ai/embeddings.ts — Logique d'appel API Gemini.
-- lib/candidate-profile.ts — Auto-vectorisation lors de la mise en ligne.
-- app/api/recruiter/search/route.ts — Algorithme de recherche hybride.
-- components/dashboard/CVCard.tsx — Nouveau bouton permanent de synchronisation.
-- app/dashboard/list/page.tsx — Refonte de l'UI avec toggle switches, colonne recruteur et info-bulle.
-- .github/workflows/db-backup.yml — Fix artifact path.
+- app/dashboard/list/page.tsx — Affichage des raisons (description) dans le toast d'erreur.
+- components/dashboard/CVCard.tsx — Affichage des raisons (description) dans le toast d'erreur.
 
 Breaking changes:
 - None.
 
 Notes for review:
-- Les anciens profils nécessitent une re-sauvegarde pour avoir leur vecteur généré.
+- None.

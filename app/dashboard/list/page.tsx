@@ -97,7 +97,13 @@ export default function CVListPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erreur lors de la synchronisation');
+      if (!res.ok) {
+        if (data.qualityReport?.reasons?.length > 0) {
+          toast.error("Critères non remplis", { id: toastId, description: data.qualityReport.reasons.join(' • ') });
+          return;
+        }
+        throw new Error(data.error || 'Erreur lors de la synchronisation');
+      }
 
       toast.success('Profil mis à jour et optimisé pour les recruteurs !', { id: toastId });
       
