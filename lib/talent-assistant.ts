@@ -432,7 +432,7 @@ export async function* chatWithAssistant(
               }
 
               const resultSummary = candidates.length === 0
-                ? 'Aucun profil trouvé avec ces critères.'
+                ? 'STOP_SEARCH: Aucun profil trouvé avec ces critères. Ne relance PAS l\'outil search_candidates. Informe directement l\'utilisateur que la recherche n\'a rien donné.'
                 : `${total} profils trouvés pour cette requête. Voici les résultats :\n\n` +
                   candidates.map((c, i) =>
                     `Profil #${i + 1} (ID: ${c.id}):\n` +
@@ -502,6 +502,11 @@ export async function* chatWithAssistant(
       } else {
         // No tool called, generation is complete
         break;
+      }
+      
+      // If we hit max iterations and still just called a tool, we need to output something
+      if (iteration >= MAX_ITERATIONS) {
+        yield { type: 'text', data: "Je suis désolé, je n'ai pas pu trouver de profil correspondant après plusieurs tentatives. Essayez de simplifier votre recherche." };
       }
     }
   } catch (error: any) {
