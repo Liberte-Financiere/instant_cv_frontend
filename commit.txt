@@ -1,19 +1,16 @@
-[2026-06-15] — Amélioration UX: Détail de la Quality Gate
+[2026-06-15] — Intégration de la Recherche Vectorielle au Chatbot Recruteur
 
 What changed:
-- Ajout de l'affichage détaillé des raisons de refus (qualityReport) lors de la synchronisation d'un CV vers le portail recruteur.
-- L'utilisateur voit maintenant exactement quels critères manquent (ex: "Score de complétude insuffisant", "Manque de compétences") via une infobulle (toast) détaillée.
+- Modification de la fonction `searchCandidatesInternal` dans `lib/talent-assistant.ts`.
+- Le chatbot utilise désormais Gemini pour générer un vecteur sémantique à partir de la requête naturelle du recruteur.
+- Ajout d'une recherche hybride (SQL FTS + pgvector Cosine Distance) au sein de la boucle conversationnelle de l'Agent.
 
 Why:
-- L'erreur générique "Votre CV ne remplit pas les critères minimum" n'était pas assez explicite.
-- Cela permet d'éduquer l'utilisateur sur les attentes qualitatives du Talent Pool et d'encourager à mieux remplir le CV.
+- Le Chatbot (Talent Assistant) n'utilisait que la recherche classique par mots-clés exacts, ce qui limitait sa capacité à trouver des profils pertinents si les termes exacts n'étaient pas présents.
+- Cela unifie l'expérience de recherche sur toute la plateforme (Recherche directe API et Recherche conversationnelle).
 
 Files affected:
-- app/dashboard/list/page.tsx — Affichage des raisons (description) dans le toast d'erreur.
-- components/dashboard/CVCard.tsx — Affichage des raisons (description) dans le toast d'erreur.
+- lib/talent-assistant.ts — Remplacement de la recherche stricte par une recherche hybride vectorielle.
 
 Breaking changes:
-- None.
-
-Notes for review:
 - None.
