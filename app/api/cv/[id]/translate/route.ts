@@ -5,17 +5,7 @@ import { checkAndConsumeCredits } from '@/lib/credits';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { APP_CONFIG } from '@/lib/config';
 
-// Initialize Gemini API
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-// Force using standard text/JSON model
-const model = genAI.getGenerativeModel({ 
-  model: APP_CONFIG.ai.models.pro, 
-  generationConfig: { 
-    responseMimeType: "application/json",
-    maxOutputTokens: 8192, 
-    temperature: 0.1 // Low temperature to prevent hallucinations
-  }
-});
+// Instanciation déplacée dans POST
 
 export async function POST(
   req: Request,
@@ -78,6 +68,17 @@ Contenu original à traduire :
 ${JSON.stringify(cvContentToTranslate, null, 2)}`;
 
     console.log(`[TRANSLATE] Target Language: ${targetLanguage}, Original Length: ${JSON.stringify(cvContentToTranslate).length} characters`);
+
+    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ 
+      model: APP_CONFIG.ai.models.pro, 
+      generationConfig: { 
+        responseMimeType: "application/json",
+        maxOutputTokens: 8192, 
+        temperature: 0.1
+      }
+    });
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

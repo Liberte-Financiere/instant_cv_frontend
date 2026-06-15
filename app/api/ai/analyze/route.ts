@@ -2,13 +2,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
 import { APP_CONFIG } from '@/lib/config';
 
-// Initialize Gemini API
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ 
-  model: APP_CONFIG.ai.models.fast,
-  generationConfig: { responseMimeType: "application/json" }
-});
-
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
@@ -130,6 +123,13 @@ export async function POST(req: Request) {
       ${extractedText.slice(0, 40000)} 
       """
     `;
+
+    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ 
+      model: APP_CONFIG.ai.models.fast,
+      generationConfig: { responseMimeType: "application/json" }
+    });
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

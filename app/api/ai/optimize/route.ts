@@ -4,9 +4,7 @@ import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
 
-// Initialize Gemini API
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.lite });
+// Instanciation déplacée dans le handler pour éviter les problèmes de variables d'environnement
 
 export async function POST(req: Request) {
   try {
@@ -62,6 +60,20 @@ export async function POST(req: Request) {
       default:
         return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
     }
+
+    // INITIALISATION DANS LE POST avec le NOUVEAU nom de variable
+    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const maskedKey = apiKey ? `${apiKey.substring(0, 4)}...${apiKey.substring(apiKey.length - 4)}` : 'MISSING';
+    
+    console.log('\n--- DEBUG GEMINI ---');
+    console.log('Model string used:', APP_CONFIG.ai.models.lite);
+    console.log('API Key loaded:', maskedKey);
+    console.log('API Key length:', apiKey.length);
+    console.log('--------------------\n');
+
+    // INITIALISATION ICI pour garantir que process.env.GOOGLE_API_KEY est bien chargé par Next.js
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.lite });
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

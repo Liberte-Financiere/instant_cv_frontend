@@ -1,13 +1,29 @@
-fix(templates): sécurisation du rendu PDF et refonte de l'affichage des compétences
+2026-06-15 — fix(ai): resolution globale des erreurs 401 via ré-architecture de l'instanciation Gemini
 
-Templates & UI :
-- Remplacement des barres de progression horizontales (skills) par des textes descriptifs clairs (ex: "Expert", "Avancé") pour un rendu plus premium.
-- Ajout de la classe whitespace-nowrap pour éviter les sauts de ligne inesthétiques sur les niveaux de compétences (ex: Intermé-diaire).
-- Sécurisation du rendu PDF : remplacement des conteneurs Flex/Grid par des structures <table> dans les templates pour empêcher la pagination anarchique par Chromium.
-- Ajout généralisé de la classe break-inside-avoid sur les blocs d'expérience et d'éducation pour empêcher la coupe des paragraphes au milieu des pages.
-- Remplacement des blocs de texte simple par dangerouslySetInnerHTML dans les descriptions d'expériences (via CVExperience.tsx et templates custom) pour supporter le texte riche (gras, puces).
+What changed:
+- Remplacement du nom de la variable d'environnement 'GOOGLE_API_KEY' par 'MY_GEMINI_KEY' dans les appels API.
+- Déplacement systématique de l'instanciation de 'new GoogleGenerativeAI(...)' de la racine des fichiers vers l'intérieur des fonctions de requêtes (POST, getModel, chatWithAssistant).
+- Application de ces modifications à l'intégralité des modules d'Intelligence Artificielle du projet.
 
-CI/CD & DevOps :
-- GitHub Actions (build-deploy) : Intégration du cache Next.js (.next/cache) pour accélérer drastiquement les builds.
-- GitHub Actions (build-deploy) : Ajout d'étapes strictes pour le Linter (ESLint) et les Tests (Vitest) avant la génération de l'artefact.
-- GitHub Actions (db-backup) : Ajout de l'upload de la base de données en tant qu'Artifact GitHub téléchargeable et d'un résumé de tâche (Step Summary) pour une meilleure observabilité.
+Why:
+- Next.js priorisait une ancienne variable d'environnement stockée au niveau du système (la fameuse clé se terminant par 'TVRA') au lieu de lire le fichier '.env'. 
+- De plus, l'instanciation de 'genAI' à la racine des fichiers causait des problèmes de chargement prématuré (avant que les variables d'environnement Next.js soient pleinement injectées).
+- Changer de nom (MY_GEMINI_KEY) permet de contourner le cache "fantôme", et la création dans le corps de la requête garantit que la variable correcte est lue en temps réel.
+
+Files affected:
+- .env / .env.local — Changement du nom de la clé en MY_GEMINI_KEY.
+- app/api/ai/analyze/route.ts — Scoping de genAI dans le POST.
+- app/api/ai/match/route.ts — Scoping de genAI dans le POST.
+- app/api/ai/optimize/route.ts — Scoping de genAI dans le POST.
+- app/api/ai/cover-letter/generate/route.ts — Scoping de genAI dans le POST.
+- app/api/ai/cover-letter/refine/route.ts — Scoping de genAI dans le POST.
+- app/api/cv/[id]/translate/route.ts — Scoping de genAI dans le POST.
+- lib/interview.ts — Scoping de genAI dans la fonction getModel.
+- lib/talent-assistant.ts — Scoping de genAI dans la fonction chatWithAssistant.
+- lib/interview-audio.ts — Mise à jour de la clé pour les WebSockets.
+
+Breaking changes:
+- None. L'API locale fonctionnera de nouveau correctement pour l'utilisateur.
+
+Notes for review:
+- Le système utilise désormais 'MY_GEMINI_KEY'. En production (Vercel/Cloud), assurez-vous d'ajouter 'MY_GEMINI_KEY' avec la vraie clé.
