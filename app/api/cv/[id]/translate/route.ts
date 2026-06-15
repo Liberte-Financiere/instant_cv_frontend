@@ -70,7 +70,7 @@ ${JSON.stringify(cvContentToTranslate, null, 2)}`;
 
     console.log(`[TRANSLATE] Target Language: ${targetLanguage}, Original Length: ${JSON.stringify(cvContentToTranslate).length} characters`);
 
-    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const apiKey = process.env.MY_GEMINI_KEY || '';
     const google = createGoogleGenerativeAI({ apiKey });
 
     const { text: generatedText } = await generateText({

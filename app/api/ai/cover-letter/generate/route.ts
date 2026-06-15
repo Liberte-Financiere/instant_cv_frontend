@@ -54,7 +54,7 @@ export async function POST(req: Request) {
 
     const startTime = Date.now();
 
-    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const apiKey = process.env.MY_GEMINI_KEY || '';
     const google = createGoogleGenerativeAI({ apiKey });
 
     const clSchema = z.object({
