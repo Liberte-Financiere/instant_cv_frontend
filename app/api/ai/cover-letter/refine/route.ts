@@ -3,7 +3,7 @@ import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
 import { generateText } from 'ai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createGroq } from '@ai-sdk/groq';
 
 export async function POST(req: Request) {
   try {
@@ -34,6 +34,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
     }
 
+    if (!process.env.GROQ_API_KEY) {
+      return NextResponse.json({ error: 'API Key missing' }, { status: 500 });
+    }
+
     let prompt = '';
 
     switch (action) {
@@ -55,11 +59,10 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
 
-    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
-    const google = createGoogleGenerativeAI({ apiKey });
+    const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
 
     const { text: refinedText } = await generateText({
-      model: google(APP_CONFIG.ai.models.lite),
+      model: groq(APP_CONFIG.ai.models.groqReformulation),
       prompt: prompt,
     });
 
