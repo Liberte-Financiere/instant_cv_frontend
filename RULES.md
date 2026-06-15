@@ -81,3 +81,21 @@ const data = useStore(s => s.data);
 ---
 
 **Dernière mise à jour :** 22 Février 2026
+
+## 7. 🤖 Intégrations IA (Vercel AI SDK)
+
+* **Tool Calling avec Historique** : Lors de l'injection manuelle de l'historique des appels d'outils (`ToolCallPart` et `ToolResultPart`) pour la boucle `streamText` du SDK Vercel AI (v6.x), il y a un décalage entre le typage TypeScript `CoreToolMessage` et la validation d'exécution Zod sous-jacente (`ModelMessage`).
+  * **Edge case** : TypeScript exige la propriété `result`, mais l'exécution Zod plante avec l'erreur `AI_InvalidPromptError` (expected object, received undefined) s'il n'y a pas d'objet `output`.
+  * **Pattern confirmé** : Toujours injecter **les deux propriétés simultanément** pour satisfaire TypeScript ET le Runtime :
+    ```typescript
+    {
+      type: 'tool-result',
+      toolCallId: id,
+      toolName: name,
+      result: stringResult,
+      output: { type: 'text', value: stringResult }
+    }
+    ```
+
+## Changelog
+- [2026-06-15] — Ajout de la règle de double-typage (result/output) pour les tool-results manuels du Vercel AI SDK — Pour contourner le validateur d'exécution (Zod) exigeant la structure `ModelMessage` même si l'interface publique TypeScript expose `CoreToolMessage`.

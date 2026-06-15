@@ -1,29 +1,19 @@
-2026-06-15 — fix(ai): resolution globale des erreurs 401 via ré-architecture de l'instanciation Gemini
+2026-06-15 — fix(talent-assistant): résolution AI_InvalidPromptError sur l'historique ToolCalling
 
 What changed:
-- Remplacement du nom de la variable d'environnement 'GOOGLE_API_KEY' par 'MY_GEMINI_KEY' dans les appels API.
-- Déplacement systématique de l'instanciation de 'new GoogleGenerativeAI(...)' de la racine des fichiers vers l'intérieur des fonctions de requêtes (POST, getModel, chatWithAssistant).
-- Application de ces modifications à l'intégralité des modules d'Intelligence Artificielle du projet.
+- Ajout de la propriété `output` (au format `{ type: 'text', value: ... }`) dans l'objet `tool-result` injecté dans l'historique de l'assistant (`lib/talent-assistant.ts`).
+- Conservation de la propriété TypeScript native `result` pour la rétrocompatibilité avec les types `CoreMessage` exposés par l'AI SDK.
 
 Why:
-- Next.js priorisait une ancienne variable d'environnement stockée au niveau du système (la fameuse clé se terminant par 'TVRA') au lieu de lire le fichier '.env'. 
-- De plus, l'instanciation de 'genAI' à la racine des fichiers causait des problèmes de chargement prématuré (avant que les variables d'environnement Next.js soient pleinement injectées).
-- Changer de nom (MY_GEMINI_KEY) permet de contourner le cache "fantôme", et la création dans le corps de la requête garantit que la variable correcte est lue en temps réel.
+- Le Vercel AI SDK 6.0+ possède un schéma de validation interne plus strict lors de l'appel à `streamText()`. 
+- Bien que le type `CoreToolMessage` attende `result`, le validateur d'exécution Zod sous-jacent convertit silencieusement le modèle en `ModelMessage` qui exige la présence obligatoire d'un objet `output`.
+- L'absence d'`output` déclenchait l'erreur "Invalid input: expected object, received undefined" au moment de renvoyer l'historique d'outil dans la boucle.
 
 Files affected:
-- .env / .env.local — Changement du nom de la clé en MY_GEMINI_KEY.
-- app/api/ai/analyze/route.ts — Scoping de genAI dans le POST.
-- app/api/ai/match/route.ts — Scoping de genAI dans le POST.
-- app/api/ai/optimize/route.ts — Scoping de genAI dans le POST.
-- app/api/ai/cover-letter/generate/route.ts — Scoping de genAI dans le POST.
-- app/api/ai/cover-letter/refine/route.ts — Scoping de genAI dans le POST.
-- app/api/cv/[id]/translate/route.ts — Scoping de genAI dans le POST.
-- lib/interview.ts — Scoping de genAI dans la fonction getModel.
-- lib/talent-assistant.ts — Scoping de genAI dans la fonction chatWithAssistant.
-- lib/interview-audio.ts — Mise à jour de la clé pour les WebSockets.
+- lib/talent-assistant.ts — Modification de l'injection du `tool-result`.
 
 Breaking changes:
-- None. L'API locale fonctionnera de nouveau correctement pour l'utilisateur.
+- None.
 
 Notes for review:
-- Le système utilise désormais 'MY_GEMINI_KEY'. En production (Vercel/Cloud), assurez-vous d'ajouter 'MY_GEMINI_KEY' avec la vraie clé.
+- Ce workaround garantit que le message passe à 100% le validateur strict interne de Vercel AI SDK, tout en restant un objet TypeScript valide vis-à-vis des interfaces `ai` publiques.
