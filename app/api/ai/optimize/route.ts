@@ -1,12 +1,11 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { generateText } from 'ai';
+import { createGroq } from '@ai-sdk/groq';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
 
-// Initialize Gemini API
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.lite });
+// Instanciation déplacée dans le handler pour éviter les problèmes de variables d'environnement
 
 export async function POST(req: Request) {
   try {
@@ -40,7 +39,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
     }
 
-    if (!process.env.GOOGLE_API_KEY) {
+    if (!process.env.GROQ_API_KEY) {
       return NextResponse.json({ error: 'API Key missing' }, { status: 500 });
     }
 
@@ -63,9 +62,12 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
     }
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const generatedText = response.text().trim();
+    const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
+
+    const { text: generatedText } = await generateText({
+      model: groq(APP_CONFIG.ai.models.groqReformulation),
+      prompt: prompt,
+    });
 
     // Cleanup: Remove quotes and leading bullet points/asterisks
     const cleanText = generatedText

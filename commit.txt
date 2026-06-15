@@ -1,13 +1,19 @@
-fix(templates): sécurisation du rendu PDF et refonte de l'affichage des compétences
+2026-06-15 — fix(talent-assistant): résolution AI_InvalidPromptError sur l'historique ToolCalling
 
-Templates & UI :
-- Remplacement des barres de progression horizontales (skills) par des textes descriptifs clairs (ex: "Expert", "Avancé") pour un rendu plus premium.
-- Ajout de la classe whitespace-nowrap pour éviter les sauts de ligne inesthétiques sur les niveaux de compétences (ex: Intermé-diaire).
-- Sécurisation du rendu PDF : remplacement des conteneurs Flex/Grid par des structures <table> dans les templates pour empêcher la pagination anarchique par Chromium.
-- Ajout généralisé de la classe break-inside-avoid sur les blocs d'expérience et d'éducation pour empêcher la coupe des paragraphes au milieu des pages.
-- Remplacement des blocs de texte simple par dangerouslySetInnerHTML dans les descriptions d'expériences (via CVExperience.tsx et templates custom) pour supporter le texte riche (gras, puces).
+What changed:
+- Ajout de la propriété `output` (au format `{ type: 'text', value: ... }`) dans l'objet `tool-result` injecté dans l'historique de l'assistant (`lib/talent-assistant.ts`).
+- Conservation de la propriété TypeScript native `result` pour la rétrocompatibilité avec les types `CoreMessage` exposés par l'AI SDK.
 
-CI/CD & DevOps :
-- GitHub Actions (build-deploy) : Intégration du cache Next.js (.next/cache) pour accélérer drastiquement les builds.
-- GitHub Actions (build-deploy) : Ajout d'étapes strictes pour le Linter (ESLint) et les Tests (Vitest) avant la génération de l'artefact.
-- GitHub Actions (db-backup) : Ajout de l'upload de la base de données en tant qu'Artifact GitHub téléchargeable et d'un résumé de tâche (Step Summary) pour une meilleure observabilité.
+Why:
+- Le Vercel AI SDK 6.0+ possède un schéma de validation interne plus strict lors de l'appel à `streamText()`. 
+- Bien que le type `CoreToolMessage` attende `result`, le validateur d'exécution Zod sous-jacent convertit silencieusement le modèle en `ModelMessage` qui exige la présence obligatoire d'un objet `output`.
+- L'absence d'`output` déclenchait l'erreur "Invalid input: expected object, received undefined" au moment de renvoyer l'historique d'outil dans la boucle.
+
+Files affected:
+- lib/talent-assistant.ts — Modification de l'injection du `tool-result`.
+
+Breaking changes:
+- None.
+
+Notes for review:
+- Ce workaround garantit que le message passe à 100% le validateur strict interne de Vercel AI SDK, tout en restant un objet TypeScript valide vis-à-vis des interfaces `ai` publiques.

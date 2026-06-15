@@ -2,20 +2,11 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { checkAndConsumeCredits } from '@/lib/credits';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { generateText } from 'ai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { APP_CONFIG } from '@/lib/config';
 
-// Initialize Gemini API
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-// Force using standard text/JSON model
-const model = genAI.getGenerativeModel({ 
-  model: APP_CONFIG.ai.models.pro, 
-  generationConfig: { 
-    responseMimeType: "application/json",
-    maxOutputTokens: 8192, 
-    temperature: 0.1 // Low temperature to prevent hallucinations
-  }
-});
+// Instanciation déplacée dans POST
 
 export async function POST(
   req: Request,
@@ -79,9 +70,14 @@ ${JSON.stringify(cvContentToTranslate, null, 2)}`;
 
     console.log(`[TRANSLATE] Target Language: ${targetLanguage}, Original Length: ${JSON.stringify(cvContentToTranslate).length} characters`);
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const generatedText = response.text().trim();
+    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const google = createGoogleGenerativeAI({ apiKey });
+
+    const { text: generatedText } = await generateText({
+      model: google(APP_CONFIG.ai.models.pro),
+      prompt: prompt,
+      temperature: 0.1,
+    });
     
     console.log(`[TRANSLATE] Generation Complete. Output Length: ${generatedText.length} characters`);
     console.log(`[TRANSLATE] Raw Output Preview:`, generatedText.substring(0, 150) + '...', '...[END]...', generatedText.substring(generatedText.length - 150));

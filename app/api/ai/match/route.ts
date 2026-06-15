@@ -1,14 +1,10 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { generateObject } from 'ai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { z } from 'zod';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ 
-  model: APP_CONFIG.ai.models.fast,
-  generationConfig: { responseMimeType: "application/json" }
-});
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -112,38 +108,35 @@ export async function POST(req: Request) {
       6. RECOMMANDATIONS : Conseils concrets pour maximiser les chances.
 
       SCHÉMA JSON DE SORTIE :
-      {
-        "compatibilityScore": number,
-        "summary": string,
-        "matchedSkills": string[],
-        "missingSkills": string[],
-        "reformulations": [
-          {
-            "section": "experiences" | "education" | "skills" | "projects" | "certifications" | "personalInfo",
-            "index": number,
-            "field": string,
-            "original": string,
-            "suggested": string,
-            "reason": string
-          }
-        ],
-        "highlights": string[]
-      }
+      (Suit strictement le schéma fourni)
     `;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const jsonString = response.text();
+    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const google = createGoogleGenerativeAI({ apiKey });
 
-    const cleanJson = jsonString.replace(/```json/g, '').replace(/```/g, '').trim();
+    const matchSchema = z.object({
+      compatibilityScore: z.number(),
+      summary: z.string(),
+      matchedSkills: z.array(z.string()),
+      missingSkills: z.array(z.string()),
+      reformulations: z.array(z.object({
+        section: z.enum(["experiences", "education", "skills", "projects", "certifications", "personalInfo"]),
+        index: z.number(),
+        field: z.string(),
+        original: z.string(),
+        suggested: z.string(),
+        reason: z.string()
+      })),
+      highlights: z.array(z.string())
+    });
 
-    try {
-      const parsedData = JSON.parse(cleanJson);
-      return NextResponse.json(parsedData);
-    } catch {
-      console.error('[AI_MATCH] JSON Parse Error. Raw:', cleanJson.slice(0, 200));
-      return NextResponse.json({ error: 'L\'IA a retourné un format invalide.' }, { status: 500 });
-    }
+    const { object } = await generateObject({
+      model: google(APP_CONFIG.ai.models.fast),
+      schema: matchSchema,
+      prompt: prompt,
+    });
+
+    return NextResponse.json(object);
 
   } catch (error: any) {
     console.error('[AI_MATCH] Error:', error);
