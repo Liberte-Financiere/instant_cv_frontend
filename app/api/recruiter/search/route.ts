@@ -98,22 +98,49 @@ export async function GET(req: Request) {
       }
     }
 
-    // Free text search (title, sector, projects)
+    // Free text search (title, sector, projects) + Vector Semantic Search
     const query = searchParams.get('q');
     if (query) {
       const ftsQuery = query.trim().split(/\s+/).filter(Boolean).join(' | ');
+      
+      // 1. Semantic Search (Vecteurs)
+      let closestIds: string[] = [];
+      try {
+        const { generateEmbedding } = await import('@/lib/ai/embeddings');
+        const vector = await generateEmbedding(query);
+        const vectorString = `[${vector.join(',')}]`;
+
+        // Récupérer les 100 profils les plus sémantiquement proches (distance cosine < 0.55)
+        const results = await prisma.$queryRawUnsafe<Array<{id: string, distance: number}>>(
+          `SELECT "id", ("embedding" <=> '${vectorString}'::vector) as distance FROM "CandidateProfile" WHERE "isActive" = true ORDER BY distance ASC LIMIT 100`
+        );
+        
+        closestIds = results.filter(r => r.distance < 0.55).map(r => r.id);
+      } catch (err) {
+        console.error("[HYBRID_SEARCH] Erreur lors de la génération du vecteur pour la recherche :", err);
+      }
+
+      // 2. Hybrid combinaison (Full Text Search classique OU Sémantique)
+      const orConditions: any[] = [];
+      
       if (ftsQuery) {
-        where.OR = [
-          { title: { search: ftsQuery } },
-          { sector: { search: ftsQuery } },
-          { anonymousName: { search: ftsQuery } },
-          {
-            anonymousData: {
-              path: ['projects'],
-              string_contains: query,
-            },
+        orConditions.push({ title: { search: ftsQuery } });
+        orConditions.push({ sector: { search: ftsQuery } });
+        orConditions.push({ anonymousName: { search: ftsQuery } });
+        orConditions.push({
+          anonymousData: {
+            path: ['projects'],
+            string_contains: query,
           },
-        ];
+        });
+      }
+      
+      if (closestIds.length > 0) {
+        orConditions.push({ id: { in: closestIds } });
+      }
+
+      if (orConditions.length > 0) {
+        where.OR = orConditions;
       }
     }
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { CV } from '@/types/cv';
 import { useCVStore } from '@/store/useCVStore';
 import { formatDate } from '@/lib/utils';
-import { Edit, Eye, Trash2, Search, FileText, ArrowRight, Loader2, Share2, MoreVertical, CheckCircle } from 'lucide-react';
+import { Edit, Eye, Trash2, Search, FileText, ArrowRight, Loader2, Share2, MoreVertical, CheckCircle, Briefcase, Info } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -15,6 +15,7 @@ export default function CVListPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [syncingIds, setSyncingIds] = useState<Record<string, boolean>>({});
   const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
@@ -79,6 +80,37 @@ export default function CVListPage() {
     }
   };
 
+  const handleSyncRecruiter = async (cv: CV) => {
+    if (!cv.isPublic) {
+      toast.error('Le CV doit être "Public" (pastille verte) pour être partagé aux recruteurs.');
+      return;
+    }
+
+    setSyncingIds(prev => ({ ...prev, [cv.id]: true }));
+    const toastId = toast.loading('Synchronisation IA avec le portail recruteur...');
+
+    try {
+      const res = await fetch(`/api/cv/${cv.id}/searchable`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isSearchable: true }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur lors de la synchronisation');
+
+      toast.success('Profil mis à jour et optimisé pour les recruteurs !', { id: toastId });
+      
+      // Rafraîchir les données pour afficher le nouveau statut "isSearchable"
+      useCVStore.getState().fetchUserCVs();
+    } catch (error: any) {
+      console.error('Sync failed:', error);
+      toast.error(error.message || 'Erreur lors de la synchronisation.', { id: toastId });
+    } finally {
+      setSyncingIds(prev => ({ ...prev, [cv.id]: false }));
+    }
+  };
+
   const filteredCVs = cvList
     .filter(cv => cv.title.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()); // Plus récent d'abord
@@ -98,7 +130,7 @@ export default function CVListPage() {
             Mes CVs
           </h1>
           <p className="text-slate-500 text-sm mt-1 hidden md:block">
-            Gérez vos CVs efficacement avec cette vue optimisée.
+            Gérez vos CVs et décidez lesquels sont visibles par les recruteurs.
           </p>
         </div>
 
@@ -152,21 +184,58 @@ export default function CVListPage() {
                       Modifié le {new Date(cv.updatedAt).toLocaleDateString()}
                     </p>
                   </div>
-                  <button 
-                    onClick={() => handleToggleVisibility(cv.id, cv.isPublic)}
-                    className={`ml-2 px-3 py-1 rounded-full text-xs font-medium flex-shrink-0 transition-all hover:scale-105 active:scale-95 ${
-                    cv.isPublic 
-                      ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}>
-                    {cv.isPublic ? 'Public' : 'Privé'}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs font-semibold ${cv.isPublic ? 'text-green-700' : 'text-slate-500'}`}>
+                      {cv.isPublic ? 'Public' : 'Privé'}
+                    </span>
+                    <button
+                      role="switch"
+                      aria-checked={cv.isPublic}
+                      onClick={() => handleToggleVisibility(cv.id, cv.isPublic)}
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 ${
+                        cv.isPublic ? 'bg-green-500' : 'bg-slate-300'
+                      }`}
+                    >
+                      <span className="sr-only">Toggle visibilité</span>
+                      <span
+                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          cv.isPublic ? 'translate-x-2' : '-translate-x-2'
+                        }`}
+                      />
+                    </button>
+                  </div>
                 </div>
                 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-3 mb-1">
                   <div className="flex items-center gap-1 text-xs text-slate-500">
                     <Eye className="w-3.5 h-3.5" />
                     {cv.views} vues
+                  </div>
+                  <div className="flex items-center gap-2">
+                     <div className="flex items-center gap-1 group relative">
+                       <span className="text-xs text-slate-500">Portail Recruteur:</span>
+                       <Info className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48 p-2 bg-slate-800 text-white text-[11px] leading-tight rounded shadow-xl z-50 text-center">
+                         Permet aux recruteurs de trouver votre profil de façon anonyme.
+                       </div>
+                     </div>
+                     <button 
+                       onClick={() => handleSyncRecruiter(cv)}
+                       disabled={syncingIds[cv.id]}
+                       className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all border ${
+                       cv.isSearchable 
+                         ? 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-indigo-200' 
+                         : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200'
+                     }`}>
+                       {syncingIds[cv.id] ? <Loader2 className="w-3 h-3 animate-spin" /> : <Briefcase className="w-3 h-3" />}
+                       {cv.isSearchable ? 'Mettre à jour' : 'Activer'}
+                     </button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between border-t border-slate-100 pt-2 mt-2">
+                  <div className="flex items-center gap-1 text-xs text-slate-500">
+                     Actions:
                   </div>
                   
                   <div className="flex items-center gap-1">
@@ -196,14 +265,23 @@ export default function CVListPage() {
           </div>
 
           {/* Desktop: Table Layout */}
-          <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-sm">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50/50 border-b border-slate-100 text-xs uppercase text-slate-500 font-semibold tracking-wider">
+                <tr className="bg-slate-50/50 border-b border-slate-100 text-xs uppercase text-slate-500 font-semibold tracking-wider [&>th:first-child]:rounded-tl-2xl [&>th:last-child]:rounded-tr-2xl">
                   <th className="px-6 py-4">Titre du CV</th>
                   <th className="px-6 py-4">Dernière modif.</th>
                   <th className="px-6 py-4">Vues</th>
                   <th className="px-6 py-4">Statut</th>
+                  <th className="px-6 py-4 text-center">
+                    <div className="flex items-center justify-center gap-1.5 group relative">
+                      Portail Recruteur
+                      <Info className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block w-56 p-2 bg-slate-800 text-white text-[11px] leading-tight rounded shadow-xl z-[100] font-normal normal-case text-center">
+                        Permet aux recruteurs de trouver votre profil de façon anonyme.
+                      </div>
+                    </div>
+                  </th>
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -231,14 +309,38 @@ export default function CVListPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
+                       <div className="flex items-center gap-2">
+                         <button
+                           role="switch"
+                           aria-checked={cv.isPublic}
+                           onClick={() => handleToggleVisibility(cv.id, cv.isPublic)}
+                           className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 ${
+                             cv.isPublic ? 'bg-green-500' : 'bg-slate-300'
+                           }`}
+                         >
+                           <span className="sr-only">Toggle visibilité</span>
+                           <span
+                             className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                               cv.isPublic ? 'translate-x-2' : '-translate-x-2'
+                             }`}
+                           />
+                         </button>
+                         <span className={`text-xs font-semibold ${cv.isPublic ? 'text-green-700' : 'text-slate-500'}`}>
+                           {cv.isPublic ? 'Public' : 'Privé'}
+                         </span>
+                       </div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
                        <button 
-                         onClick={() => handleToggleVisibility(cv.id, cv.isPublic)}
-                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-all hover:scale-105 active:scale-95 ${
-                         cv.isPublic 
-                           ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                         onClick={() => handleSyncRecruiter(cv)}
+                         disabled={syncingIds[cv.id]}
+                         className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 w-28 rounded-lg text-xs font-semibold transition-all border ${
+                         cv.isSearchable 
+                           ? 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-indigo-200' 
+                           : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200 shadow-sm'
                        }`}>
-                         {cv.isPublic ? 'Public' : 'Privé'}
+                         {syncingIds[cv.id] ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Briefcase className="w-3.5 h-3.5" />}
+                         {cv.isSearchable ? 'Mettre à jour' : 'Activer'}
                        </button>
                     </td>
                     <td className="px-6 py-4 text-right">
