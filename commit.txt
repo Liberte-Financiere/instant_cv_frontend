@@ -1,16 +1,16 @@
-[2026-06-15] — Intégration de la Recherche Vectorielle au Chatbot Recruteur
+[2026-06-15] — Fix: Comportement et boucle infinie du Chatbot
 
 What changed:
-- Modification de la fonction `searchCandidatesInternal` dans `lib/talent-assistant.ts`.
-- Le chatbot utilise désormais Gemini pour générer un vecteur sémantique à partir de la requête naturelle du recruteur.
-- Ajout d'une recherche hybride (SQL FTS + pgvector Cosine Distance) au sein de la boucle conversationnelle de l'Agent.
+- Mise à jour du System Prompt de `talent-assistant.ts`.
+- Forçage de la justification textuelle : si le Chatbot trouve un candidat via l'outil, il DOIT en parler dans son texte avant de poser une question de clarification.
+- Prévention de la boucle infinie : interdiction au modèle de relancer la recherche en boucle s'il ne trouve aucun candidat (cas du "soudeur").
 
 Why:
-- Le Chatbot (Talent Assistant) n'utilisait que la recherche classique par mots-clés exacts, ce qui limitait sa capacité à trouver des profils pertinents si les termes exacts n'étaient pas présents.
-- Cela unifie l'expérience de recherche sur toute la plateforme (Recherche directe API et Recherche conversationnelle).
+- L'IA affichait la carte du candidat sur le côté, mais l'ignorait dans son texte car le prompt lui disait de "poser des questions si la requête est vague".
+- Quand l'IA ne trouvait personne, le Vercel AI SDK (Gemini) essayait frénétiquement d'autres mots-clés en boucle, ce qui faisait planter/ralentir le serveur (30+ secondes).
 
 Files affected:
-- lib/talent-assistant.ts — Remplacement de la recherche stricte par une recherche hybride vectorielle.
+- lib/talent-assistant.ts — Modification des instructions (System Prompt).
 
 Breaking changes:
 - None.
