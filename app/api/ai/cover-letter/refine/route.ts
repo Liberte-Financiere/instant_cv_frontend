@@ -2,10 +2,8 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
-import { GoogleGenerativeAI } from '@google/generative-ai'; // Added this import as it's used later
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.lite });
+import { generateText } from 'ai';
+import { createGroq } from '@ai-sdk/groq';
 
 export async function POST(req: Request) {
   try {
@@ -36,6 +34,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
     }
 
+    if (!process.env.GROQ_API_KEY) {
+      return NextResponse.json({ error: 'API Key missing' }, { status: 500 });
+    }
+
     let prompt = '';
 
     switch (action) {
@@ -57,9 +59,12 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const refinedText = response.text().trim();
+    const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
+
+    const { text: refinedText } = await generateText({
+      model: groq(APP_CONFIG.ai.models.groqReformulation),
+      prompt: prompt,
+    });
 
     return NextResponse.json({ result: refinedText });
 

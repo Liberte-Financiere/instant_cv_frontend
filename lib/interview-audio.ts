@@ -42,8 +42,8 @@ export function createGeminiLiveConnection(
   onError: (err: any) => void,
   voiceName?: string
 ) {
-  const apiKey = process.env.GOOGLE_API_KEY;
-  if (!apiKey) throw new Error('GOOGLE_API_KEY is missing');
+  const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY;
+  if (!apiKey) throw new Error('MY_GEMINI_KEY is missing');
 
   // Live API requires v1beta and the correct model string prefix
   const host = 'generativelanguage.googleapis.com';

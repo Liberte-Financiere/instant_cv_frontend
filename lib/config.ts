@@ -123,9 +123,12 @@ export const APP_CONFIG = {
   ai: {
     models: {
       /** Modèle rapide et intelligent pour les tâches générales (Analyse, Match) */
-      fast: 'gemini-3-flash-preview',
+      fast: 'gemini-3.5-flash',
       /** Modèle très léger et rapide pour les petites tâches (Correction, Génération de petites listes) */
-      lite: 'gemini-3.1-flash-lite-preview',
+      lite: 'gemini-3.1-flash-lite',
+
+      /** Modèle Groq (très rapide) dédié à la reformulation et correction de texte en Français */
+      groqReformulation: 'llama-3.3-70b-versatile',
 
       /** Modèle pour la traduction et les tâches complexes */
       pro: 'gemini-3.1-pro-preview',

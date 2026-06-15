@@ -2,10 +2,9 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
-import { GoogleGenerativeAI } from '@google/generative-ai'; // Assuming this import is needed for GoogleGenerativeAI
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.fast });
+import { generateObject } from 'ai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { z } from 'zod'; 
 
 export async function POST(req: Request) {
   try {
@@ -55,38 +54,23 @@ export async function POST(req: Request) {
 
     const startTime = Date.now();
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    
+    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const google = createGoogleGenerativeAI({ apiKey });
 
-    
-    // Robust JSON extraction
-    // 1. Remove markdown code blocks
-    let cleanText = text.replace(/```json/g, '').replace(/```/g, '');
-    
-    // 2. Find the first '{' and last '}' to handle any preamble text
-    const firstOpen = cleanText.indexOf('{');
-    const lastClose = cleanText.lastIndexOf('}');
-    
-    if (firstOpen !== -1 && lastClose !== -1) {
-      cleanText = cleanText.substring(firstOpen, lastClose + 1);
-    } else {
-      console.error('[AI_GEN] No JSON object found in response:', text);
-      throw new Error("Invalid AI response format (No JSON found)");
-    }
+    const clSchema = z.object({
+      subject: z.string(),
+      salutation: z.string(),
+      body: z.string(),
+      closing: z.string()
+    });
 
-    let letterData;
-    try {
-      letterData = JSON.parse(cleanText);
-    } catch (e) {
-      console.error('[AI_GEN] JSON Parse Error:', e);
-      console.error('[AI_GEN] Raw Text was:', text);
-      console.error('[AI_GEN] Cleaned Text was:', cleanText);
-      throw new Error("Failed to parse AI response JSON");
-    }
+    const { object } = await generateObject({
+      model: google(APP_CONFIG.ai.models.fast),
+      schema: clSchema,
+      prompt: prompt,
+    });
 
-    return NextResponse.json(letterData);
+    return NextResponse.json(object);
 
   } catch (error: any) {
     console.error('AI Generation Detailed Error:', error);

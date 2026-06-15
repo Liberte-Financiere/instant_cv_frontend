@@ -81,3 +81,46 @@ const data = useStore(s => s.data);
 ---
 
 **Dernière mise à jour :** 22 Février 2026
+
+## 7. 🤖 Intégrations IA (Vercel AI SDK)
+
+* **Architecture des Modèles** :
+  * Ne plus utiliser `GoogleGenerativeAI` directement via `@google/generative-ai` pour éviter la complexité de formatage.
+  * Toujours utiliser le Vercel AI SDK (`@ai-sdk/google`, `@ai-sdk/openai`) pour une approche agnostique.
+  * **Scoping d'Instance** : L'initialisation du modèle (ex: `google('gemini-1.5-flash')`) doit toujours se faire **à l'intérieur de la fonction de la route** (ex: dans `POST()` ou `chatWithAssistant()`), et jamais à la racine du fichier. Cela empêche les bugs liés au chargement asynchrone des variables d'environnement (`MY_GEMINI_KEY`) dans Next.js.
+
+* **Typages des Générations** :
+  * **Texte Brut** : Utiliser `generateText` ou `streamText`.
+  * **Structure JSON** : Toujours utiliser `generateObject` avec un schéma **Zod** fort pour forcer la sortie (ex: optimisation de CV, création de lettre de motivation). Ne jamais parser de JSON manuellement depuis du texte généré.
+
+* **Tool Calling avec Historique (streamText)** : 
+  * Lors de l'injection manuelle de l'historique des appels d'outils (`ToolCallPart` et `ToolResultPart`) pour la boucle `streamText`, il y a un décalage entre le typage TypeScript `CoreToolMessage` et la validation d'exécution Zod sous-jacente du Vercel AI SDK (v6.x).
+  * **Pattern Confirmé** : Toujours injecter **les deux propriétés simultanément** pour satisfaire TypeScript (qui veut `result` / `args`) ET le Runtime Zod (qui exige `output` / `input` du schéma `ModelMessage`) :
+    ```typescript
+    // Pour un appel d'outil (Assistant)
+    {
+      role: 'assistant',
+      content: [{
+        type: 'tool-call',
+        toolCallId: id,
+        toolName: name,
+        args: toolArgs, // Pour TypeScript (CoreMessage)
+        input: toolArgs // Pour Zod Validator (ModelMessage)
+      }]
+    }
+
+    // Pour un retour d'outil (Tool)
+    {
+      role: 'tool',
+      content: [{
+        type: 'tool-result',
+        toolCallId: id,
+        toolName: name,
+        result: stringResult, // Pour TypeScript
+        output: { type: 'text', value: stringResult } // Pour Zod Validator
+      }]
+    }
+    ```
+
+## Changelog
+- [2026-06-15] — Consolidation des règles d'Architecture IA (Instance scoping, generateObject + Zod, et double-typage pour le Tool Calling manuellement réinjecté).

@@ -1,13 +1,8 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { generateObject } from 'ai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { z } from 'zod';
 import { NextResponse } from 'next/server';
 import { APP_CONFIG } from '@/lib/config';
-
-// Initialize Gemini API
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ 
-  model: APP_CONFIG.ai.models.fast,
-  generationConfig: { responseMimeType: "application/json" }
-});
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -131,20 +126,61 @@ export async function POST(req: Request) {
       """
     `;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const jsonString = response.text();
+    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const google = createGoogleGenerativeAI({ apiKey });
 
-    // Sanitize JSON string (remove markdown code blocks if present)
-    const cleanJson = jsonString.replace(/```json/g, '').replace(/```/g, '').trim();
-    
-    try {
-        const parsedData = JSON.parse(cleanJson);
-        return NextResponse.json(parsedData);
-    } catch (parseError) {
-        console.error('[API] JSON Parse Error. Raw string:', cleanJson);
-        return NextResponse.json({ error: 'AI returned invalid format', details: cleanJson.slice(0, 100) }, { status: 500 });
-    }
+    const sectionSchema = z.object({
+      score: z.number(),
+      strengths: z.array(z.string()),
+      improvements: z.array(z.string()),
+      recommendations: z.array(z.string())
+    });
+
+    const analyzeSchema = z.object({
+      analysis: z.object({
+        globalScore: z.number(),
+        globalReview: z.string(),
+        detectedKeywords: z.array(z.string()),
+        recommendedPositions: z.array(z.object({
+          title: z.string(),
+          match: z.number(),
+          reason: z.string()
+        })),
+        sections: z.object({
+          structure: sectionSchema,
+          experience: sectionSchema,
+          education: sectionSchema,
+          skills: sectionSchema
+        })
+      }),
+      cvData: z.object({
+        personalInfo: z.object({
+          firstName: z.string(), lastName: z.string(), email: z.string(), phone: z.string(), address: z.string(), title: z.string(), summary: z.string()
+        }),
+        experiences: z.array(z.object({
+          company: z.string(), position: z.string(), startDate: z.string(), endDate: z.string(), current: z.boolean(), description: z.string()
+        })),
+        education: z.array(z.object({
+          institution: z.string(), degree: z.string(), field: z.string(), startDate: z.string(), endDate: z.string()
+        })),
+        skills: z.array(z.object({ name: z.string(), level: z.number() })),
+        languages: z.array(z.object({ name: z.string(), level: z.string() })),
+        hobbies: z.array(z.object({ name: z.string() })),
+        certifications: z.array(z.object({ name: z.string(), organization: z.string(), date: z.string() })),
+        projects: z.array(z.object({ name: z.string(), description: z.string() })),
+        references: z.array(z.object({ name: z.string(), company: z.string(), contact: z.string() })),
+        qualities: z.array(z.object({ name: z.string() })),
+        socialLinks: z.array(z.object({ platform: z.string(), url: z.string() }))
+      })
+    });
+
+    const { object } = await generateObject({
+      model: google(APP_CONFIG.ai.models.fast),
+      schema: analyzeSchema,
+      prompt: prompt,
+    });
+
+    return NextResponse.json(object);
 
   } catch (error: any) {
     console.error('[API] Global Catch Error:', error);
