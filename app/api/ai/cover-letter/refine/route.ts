@@ -2,10 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
-import { GoogleGenerativeAI } from '@google/generative-ai'; // Added this import as it's used later
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.lite });
+import { GoogleGenerativeAI } from '@google/generative-ai'; 
 
 export async function POST(req: Request) {
   try {
@@ -56,6 +53,10 @@ export async function POST(req: Request) {
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
+
+    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.lite });
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

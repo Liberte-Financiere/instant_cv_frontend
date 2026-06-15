@@ -27,7 +27,7 @@ import {
 import { prisma } from '@/lib/prisma';
 import { APP_CONFIG } from '@/lib/config';
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+// Global genAI removed
 
 // -- Constants ----------------------------------------------------------------
 
@@ -435,6 +435,8 @@ export async function* chatWithAssistant(
 ): AsyncGenerator<StreamEvent> {
   console.log('[GEMINI] Démarrage de chatWithAssistant. Initialisation du modèle...');
   const systemInstruction = buildSystemPrompt(recruiterContext);
+  const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+  const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({
     model: APP_CONFIG.ai.models.fast,
     systemInstruction,

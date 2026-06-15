@@ -2,10 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
-import { GoogleGenerativeAI } from '@google/generative-ai'; // Assuming this import is needed for GoogleGenerativeAI
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.fast });
+import { GoogleGenerativeAI } from '@google/generative-ai'; 
 
 export async function POST(req: Request) {
   try {
@@ -54,6 +51,10 @@ export async function POST(req: Request) {
     `;
 
     const startTime = Date.now();
+
+    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: APP_CONFIG.ai.models.fast });
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

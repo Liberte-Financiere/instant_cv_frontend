@@ -4,12 +4,6 @@ import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ 
-  model: APP_CONFIG.ai.models.fast,
-  generationConfig: { responseMimeType: "application/json" }
-});
-
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
@@ -130,6 +124,13 @@ export async function POST(req: Request) {
         "highlights": string[]
       }
     `;
+
+    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ 
+      model: APP_CONFIG.ai.models.fast,
+      generationConfig: { responseMimeType: "application/json" }
+    });
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

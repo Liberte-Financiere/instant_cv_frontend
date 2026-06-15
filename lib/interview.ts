@@ -3,8 +3,6 @@ import { APP_CONFIG } from '@/lib/config';
 
 const MAX_QUESTIONS = APP_CONFIG.ai.interview.maxQuestions;
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-
 const FIRST_QUESTION_SCHEMA: Schema = {
   type: SchemaType.OBJECT,
   properties: {
@@ -44,6 +42,9 @@ function getModel(schemaType: 'first' | 'response' | 'summary', systemInstructio
     response: RESPONSE_SCHEMA,
     summary: SUMMARY_SCHEMA
   };
+
+  const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+  const genAI = new GoogleGenerativeAI(apiKey);
 
   return genAI.getGenerativeModel({
     model: APP_CONFIG.ai.models.fast,
