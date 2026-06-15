@@ -31,7 +31,8 @@ export async function POST(req: Request) {
     const baseUrl = `${protocol}://${host}`;
     
     // Construct the target URL. Add headless=true to skip window.print()
-    const headlessToken = process.env.GOOGLE_API_KEY?.slice(0, 10) || 'fallbackToken';
+    const headlessToken = process.env.MY_GEMINI_KEY?.slice(0, 10) || 'fallbackToken';
+    console.log('[PDF Gen] Calling headless browser...');
     const targetUrl = `${baseUrl}/${pagePath}/${id}?print=true&headless=true&token=${headlessToken}`;
 
     // Define real Google Chrome paths based on the OS for both dev and prod

@@ -10,6 +10,15 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useCoverLetterStore } from '@/store/useCoverLetterStore';
 import { useCVStore } from '@/store/useCVStore';
+import { experimental_useObject as useObject } from '@ai-sdk/react';
+import { z } from 'zod';
+
+const clSchema = z.object({
+  subject: z.string(),
+  salutation: z.string(),
+  body: z.string(),
+  closing: z.string()
+});
 
 export default function CoverLettersPage() {
   const { clList, fetchUserCLs, createNewCL, updateContent, deleteCL } = useCoverLetterStore();
@@ -60,6 +69,49 @@ export default function CoverLettersPage() {
   const [jobSourceType, setJobSourceType] = useState<'text' | 'upload'>('text');
   const [jobDesc, setJobDesc] = useState('');
   const [isParsingJob, setIsParsingJob] = useState(false);
+
+  // AI Stream Object Hook
+  const { submit, isLoading: isStreaming, object, error: streamError } = useObject({
+    api: '/api/ai/cover-letter/generate',
+    schema: clSchema,
+    onFinish: async ({ object, error }) => {
+      if (error) {
+         setAiStep('details');
+         return; // Handled in onError usually
+      }
+      
+      const currentDetails = useCoverLetterStore.getState().currentCL?.content.details || {};
+      
+      updateContent({
+        details: {
+            ...currentDetails,
+            subject: object?.subject || '',
+            salutation: object?.salutation || '',
+            body: object?.body || '',
+            closing: object?.closing || '',
+            date: new Date().toLocaleDateString('fr-FR'),
+            location: city, // Use user city
+        }
+      });
+
+      // Force Save
+      await useCoverLetterStore.getState().saveCurrentCL();
+
+      toast.success('Lettre générée avec succès !');
+      // Redirect to editor
+      const currentCLId = useCoverLetterStore.getState().currentCL?.id;
+      if (currentCLId) router.push(`/cover-letter/editor/${currentCLId}`);
+    },
+    onError: (error: any) => {
+      console.error(error);
+      const message = error.message?.includes('429') 
+        ? "L'IA est très sollicitée. Veuillez réessayer dans quelques instants."
+        : "Une erreur est survenue lors de la génération. Veuillez réessayer.";
+      
+      toast.error(message, { duration: 5000 });
+      setAiStep('details');
+    }
+  });
 
   // Handlers
   const openUnifiedModal = () => {
@@ -158,70 +210,12 @@ export default function CoverLettersPage() {
     // 1. Create empty CL locally & on server
     const id = createNewCL(newLetterTitle, 'ai');
 
-    try {
-      // 2. Call AI Generation
-      const res = await fetch('/api/ai/cover-letter/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          cvData: cvData, 
-          cvText: uploadedCvText, 
-          jobDescription: jobDesc 
-        }),
-      });
-
-      if (!res.ok) {
-        if (res.status === 403) {
-            const { useCreditStore } = await import('@/store/useCreditStore');
-            useCreditStore.getState().setOutOfCreditsModalOpen(true);
-            setAiStep('details');
-            return;
-        }
-        if (res.status === 503) {
-          throw new Error('Le service IA est momentanément surchargé. Veuillez réessayer dans une minute.');
-        }
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.details || errorData.error || 'Erreur lors de la génération');
-      }
-
-      const data = await res.json();
-
-      // 3. Update Content in Store
-      // createNewCL sets 'currentCL' to the new one.
-      // updateContent updates 'currentCL'.
-      
-      const currentDetails = useCoverLetterStore.getState().currentCL?.content.details || {};
-      
-      updateContent({
-        details: {
-            ...currentDetails,
-            subject: data.subject,
-            salutation: data.salutation,
-            body: data.body,
-            closing: data.closing,
-            date: new Date().toLocaleDateString('fr-FR'),
-            location: city, // Use user city
-        }
-      });
-
-      // 4. Force Save
-      await useCoverLetterStore.getState().saveCurrentCL();
-
-      toast.success('Lettre générée avec succès !');
-      // Redirect to editor
-      router.push(`/cover-letter/editor/${id}`);
-
-    } catch (error: any) {
-      console.error(error);
-      // Show user friendly message
-      const message = error.message.includes('503') || error.message.includes('surchargé')
-        ? "L'IA est très sollicitée. Veuillez réessayer dans quelques instants."
-        : "Une erreur est survenue lors de la génération. Veuillez réessayer.";
-      
-      toast.error(message, { duration: 5000 });
-      setAiStep('details');
-      // Ideally we might delete the CL if it failed, but let's keep it safe.
-    }
+    // 2. Trigger Streaming API via useObject submit
+    submit({ 
+        cvData: cvData, 
+        cvText: uploadedCvText, 
+        jobDescription: jobDesc 
+    });
   };
 
   const filteredCLs = clList.filter(cl => 
@@ -485,14 +479,37 @@ export default function CoverLettersPage() {
 
              <div className="p-6 md:p-8 max-h-[85vh] overflow-y-auto">
                {aiStep === 'generating' ? (
-                 <div className="flex flex-col items-center justify-center py-12 space-y-6 text-center">
-                    <div className="relative">
-                       <div className="w-20 h-20 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600" />
-                       <Wand2 className="w-8 h-8 text-blue-600 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                 <div className="flex flex-col py-6 px-2 space-y-6">
+                    <div className="flex items-center gap-4 mb-4 border-b border-slate-100 pb-4">
+                       <div className="w-10 h-10 border-2 border-blue-100 rounded-full animate-spin border-t-blue-600 flex items-center justify-center relative">
+                         <Wand2 className="w-4 h-4 text-blue-600 absolute" />
+                       </div>
+                       <div>
+                         <h3 className="text-lg font-bold text-slate-900">L'IA rédige votre lettre...</h3>
+                         <p className="text-sm text-slate-500">Génération en temps réel</p>
+                       </div>
                     </div>
-                    <div>
-                       <h3 className="text-xl font-bold text-slate-900 mb-2">L&apos;IA rédige votre lettre...</h3>
-                       <p className="text-slate-500 max-w-md">Analyse du CV et de l&apos;offre en cours. Cela prend quelques secondes.</p>
+                    
+                    {/* Live Preview Container */}
+                    <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 min-h-[300px] max-h-[500px] overflow-y-auto text-sm text-slate-700 font-medium font-serif leading-relaxed relative">
+                       {/* Subject */}
+                       {object?.subject && <p className="font-bold mb-6 text-slate-900">Objet : {object.subject}</p>}
+                       
+                       {/* Salutation */}
+                       {object?.salutation && <p className="mb-4">{object.salutation}</p>}
+                       
+                       {/* Body */}
+                       {object?.body && <p className="mb-6 whitespace-pre-wrap">{object.body}</p>}
+                       
+                       {/* Closing */}
+                       {object?.closing && <p>{object.closing}</p>}
+                       
+                       {!object?.subject && !object?.body && (
+                         <div className="flex flex-col items-center justify-center h-64 text-slate-400 gap-4">
+                           <Loader2 className="w-6 h-6 animate-spin text-blue-400" /> 
+                           <span className="animate-pulse">Analyse du profil et de l'offre...</span>
+                         </div>
+                       )}
                     </div>
                  </div>
                ) : (

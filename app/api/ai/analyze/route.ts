@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
     }
 
-    if (!process.env.GOOGLE_API_KEY) {
+    if (!process.env.MY_GEMINI_KEY && !process.env.GOOGLE_API_KEY) {
       return NextResponse.json({ error: 'API Key missing' }, { status: 500 });
     }
 
