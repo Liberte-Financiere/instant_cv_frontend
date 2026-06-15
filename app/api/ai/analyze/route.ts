@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
     }
 
-    if (!process.env.MY_GEMINI_KEY && !process.env.GOOGLE_API_KEY) {
+    if (!process.env.MY_GEMINI_KEY) {
       return NextResponse.json({ error: 'API Key missing' }, { status: 500 });
     }
 
@@ -126,7 +126,7 @@ export async function POST(req: Request) {
       """
     `;
 
-    const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
+    const apiKey = process.env.MY_GEMINI_KEY || '';
     const google = createGoogleGenerativeAI({ apiKey });
 
     const sectionSchema = z.object({
