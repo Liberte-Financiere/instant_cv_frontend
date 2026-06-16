@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { POST } from '../../app/api/ai/match/route';
-import { auth } from '../../auth';
+import { POST } from '@/app/api/ai/match/route';
+import { auth } from '@/auth';
 import { generateObject } from 'ai';
 
-vi.mock('../../auth', () => ({
+vi.mock('@/auth', () => ({
   auth: vi.fn(),
 }));
 
@@ -12,7 +12,7 @@ vi.mock('ai', () => ({
 }));
 
 // Mock credits check
-vi.mock('../../lib/credits', () => ({
+vi.mock('@/lib/credits', () => ({
   checkAndConsumeCredits: vi.fn().mockResolvedValue(true),
 }));
 

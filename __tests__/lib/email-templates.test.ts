@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getHtmlForTemplate, generateAnnouncementEmail, generatePromoEmail, generateMinimalEmail } from '../lib/email-templates';
+import { getHtmlForTemplate, generateAnnouncementEmail, generatePromoEmail, generateMinimalEmail } from '@/lib/email-templates';
 
 describe('Email Templates Generator', () => {
   const mockProps = {
