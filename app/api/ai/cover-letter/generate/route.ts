@@ -5,10 +5,12 @@ import { APP_CONFIG } from '@/lib/config';
 import { streamObject } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { z } from 'zod'; 
+import { logAIUsage } from '@/lib/ai/logger';
 
 export async function POST(req: Request) {
+  let session: any;
   try {
-    const session = await auth();
+    session = await auth();
     if (!session?.user?.id) return new NextResponse("Unauthorized", { status: 401 });
 
 
@@ -64,16 +66,36 @@ export async function POST(req: Request) {
       closing: z.string()
     });
 
+    const startTimeMs = performance.now();
     const result = await streamObject({
       model: google(APP_CONFIG.ai.models.fast),
       schema: clSchema,
       prompt: prompt,
+      onFinish: ({ usage }) => {
+        logAIUsage({
+          type: 'cover-letter',
+          model: APP_CONFIG.ai.models.fast,
+          status: 'success',
+          promptTokens: (usage as any)?.promptTokens || (usage as any)?.inputTokens || 0,
+          completionTokens: (usage as any)?.completionTokens || (usage as any)?.outputTokens || 0,
+          latencyMs: performance.now() - startTimeMs,
+          userId: session?.user?.id
+        });
+      }
     });
 
     return result.toTextStreamResponse();
 
   } catch (error: any) {
     console.error('AI Generation Detailed Error:', error);
+
+    logAIUsage({
+      type: 'cover-letter',
+      model: APP_CONFIG.ai.models.fast,
+      status: 'error',
+      errorMessage: error?.message || 'Erreur inconnue',
+      userId: session?.user?.id
+    });
     
     if (error.status === 429 || error.message?.includes('429') || error.message?.includes('usage limit')) {
         return NextResponse.json({ error: 'Quota API dépassé (429). Réessayez plus tard.' }, { status: 429 });

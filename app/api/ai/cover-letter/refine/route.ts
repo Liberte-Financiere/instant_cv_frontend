@@ -4,10 +4,12 @@ import { auth } from '@/auth';
 import { APP_CONFIG } from '@/lib/config';
 import { generateText } from 'ai';
 import { createGroq } from '@ai-sdk/groq';
+import { logAIUsage } from '@/lib/ai/logger';
 
 export async function POST(req: Request) {
+  let session: any;
   try {
-    const session = await auth();
+    session = await auth();
     if (!session?.user?.id) return new NextResponse("Unauthorized", { status: 401 });
 
 
@@ -61,15 +63,35 @@ export async function POST(req: Request) {
 
     const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
 
-    const { text: refinedText } = await generateText({
+    const startTime = performance.now();
+    const { text: refinedText, usage } = await generateText({
       model: groq(APP_CONFIG.ai.models.groqReformulation),
       prompt: prompt,
+    });
+
+    logAIUsage({
+      type: 'cover-letter',
+      model: APP_CONFIG.ai.models.groqReformulation,
+      status: 'success',
+      promptTokens: (usage as any)?.promptTokens || (usage as any)?.inputTokens || 0,
+      completionTokens: (usage as any)?.completionTokens || (usage as any)?.outputTokens || 0,
+      latencyMs: performance.now() - startTime,
+      userId: session.user.id
     });
 
     return NextResponse.json({ result: refinedText });
 
   } catch (error: any) {
     console.error('AI Refine Error:', error);
+
+    logAIUsage({
+      type: 'cover-letter',
+      model: APP_CONFIG.ai.models.groqReformulation,
+      status: 'error',
+      errorMessage: error?.message || 'Erreur inconnue',
+      userId: session?.user?.id
+    });
+
     return NextResponse.json({ error: error.message || 'Erreur lors du traitement IA.' }, { status: 500 });
   }
 }

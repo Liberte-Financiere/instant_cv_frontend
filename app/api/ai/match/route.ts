@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
+import { logAIUsage } from '@/lib/ai/logger';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -22,8 +23,9 @@ async function extractTextFromFile(file: File): Promise<string> {
 }
 
 export async function POST(req: Request) {
+  let session: any;
   try {
-    const session = await auth();
+    session = await auth();
     if (!session?.user?.id) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
 
@@ -130,16 +132,35 @@ export async function POST(req: Request) {
       highlights: z.array(z.string())
     });
 
-    const { object } = await generateObject({
+    const startTime = performance.now();
+    const { object, usage } = await generateObject({
       model: google(APP_CONFIG.ai.models.fast),
       schema: matchSchema,
       prompt: prompt,
+    });
+
+    logAIUsage({
+      type: 'match',
+      model: APP_CONFIG.ai.models.fast,
+      status: 'success',
+      promptTokens: (usage as any)?.promptTokens || (usage as any)?.inputTokens || 0,
+      completionTokens: (usage as any)?.completionTokens || (usage as any)?.outputTokens || 0,
+      latencyMs: performance.now() - startTime,
+      userId: session.user.id
     });
 
     return NextResponse.json(object);
 
   } catch (error: any) {
     console.error('[AI_MATCH] Error:', error);
+
+    logAIUsage({
+      type: 'match',
+      model: APP_CONFIG.ai.models.fast,
+      status: 'error',
+      errorMessage: error?.message || 'Erreur inconnue',
+      userId: session?.user?.id
+    });
 
     if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
       return NextResponse.json({ error: 'Quota IA dépassé. Réessayez dans une minute.' }, { status: 429 });

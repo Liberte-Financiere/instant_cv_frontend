@@ -95,6 +95,7 @@ export const MOCK_ETUDIANT: CV = {
   sectionOrder: DEFAULT_SECTION_ORDER,
   views: 0,
   isPublic: false,
+  isSearchable: false,
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -207,6 +208,7 @@ export const MOCK_PROFESSIONNEL: CV = {
   sectionOrder: DEFAULT_SECTION_ORDER,
   views: 0,
   isPublic: false,
+  isSearchable: false,
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -315,6 +317,7 @@ export const MOCK_RECONVERSION: CV = {
   sectionOrder: DEFAULT_SECTION_ORDER,
   views: 0,
   isPublic: false,
+  isSearchable: false,
   createdAt: new Date(),
   updatedAt: new Date(),
 };

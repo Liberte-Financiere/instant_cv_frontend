@@ -102,7 +102,7 @@ export default function AILogsDashboard() {
           value={stats ? `${stats.errorRate24h.toFixed(1)}%` : "..."} 
           icon={<AlertTriangle className={stats?.errorRate24h && stats.errorRate24h > 5 ? "text-red-500" : "text-amber-500"} />} 
           trend={stats?.errorRate24h === 0 ? "Système stable" : "À surveiller"}
-          isAlert={stats?.errorRate24h && stats.errorRate24h > 5}
+          isAlert={stats ? stats.errorRate24h > 5 : false}
         />
         <KpiCard 
           title="Latence Moyenne" 
@@ -149,9 +149,16 @@ export default function AILogsDashboard() {
                         <CheckCircle2 className="w-3.5 h-3.5" /> Succès
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1.5 text-red-700 bg-red-50 px-2.5 py-1 rounded-full w-fit text-xs font-medium" title={log.errorMessage || "Erreur"}>
-                        <XCircle className="w-3.5 h-3.5" /> Erreur
-                      </span>
+                      <div className="flex flex-col gap-1">
+                        <span className="flex items-center gap-1.5 text-red-700 bg-red-50 px-2.5 py-1 rounded-full w-fit text-xs font-medium">
+                          <XCircle className="w-3.5 h-3.5" /> Erreur
+                        </span>
+                        {log.errorMessage && (
+                          <span className="text-[10px] text-red-500 max-w-[150px] truncate" title={log.errorMessage}>
+                            {log.errorMessage.length > 50 ? log.errorMessage.substring(0, 50) + '...' : log.errorMessage}
+                          </span>
+                        )}
+                      </div>
                     )}
                   </td>
                   <td className="px-6 py-4 text-gray-600 whitespace-nowrap">
