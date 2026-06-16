@@ -4,6 +4,7 @@ import { Sidebar } from '@/components/dashboard/Sidebar';
 import { HqSidebar } from '@/components/dashboard/HqSidebar';
 import { MobileHeader } from '@/components/dashboard/MobileHeader';
 import { OutOfCreditsModal } from '@/components/shared/OutOfCreditsModal';
+import { MarketingOptInModal } from '@/components/shared/MarketingOptInModal';
 import { usePathname } from 'next/navigation';
 
 export default function DashboardLayout({
@@ -49,6 +50,7 @@ export default function DashboardLayout({
       
       {/* Global Modals */}
       <OutOfCreditsModal />
+      <MarketingOptInModal />
     </div>
   );
 }
