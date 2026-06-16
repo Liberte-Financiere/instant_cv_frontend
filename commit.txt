@@ -1,28 +1,25 @@
-[2026-06-15] — Finalisation Recherche Vectorielle & UX Portail Recruteur
+[2026-06-15] — Feat: AI Monitoring Dashboard & Asynchronous Logging
 
 What changed:
-- Intégration de pgvector via Prisma sur la table CandidateProfile.
-- Création de l'utilitaire d'embedding avec Gemini.
-- Modification de la route de recherche pour activer le filtrage hybride (SQL + Vecteur).
-- Refonte UX de la carte CV (CVCard) et de la vue liste (dashboard/list) : ajout d'un statut "Portail Recruteur" explicite avec bouton de synchronisation et info-bulle explicative.
-- Fix: Correction du nommage des artifacts dans le workflow GitHub Actions (db-backup.yml) pour retirer les caractères invalides (slash).
+- Ajout du modèle `AILog` dans `schema.prisma` avec `status`, `promptTokens`, `completionTokens`, `latencyMs`.
+- Création d'un utilitaire centralisé "fire-and-forget" dans `lib/ai/logger.ts` encapsulé avec un try/catch silencieux.
+- Implémentation du logging IA dans le Chatbot (`talent-assistant.ts`), le système d'Embeddings (`embeddings.ts`) et l'Analyse de CV (`api/ai/analyze/route.ts`).
+- Création de la page Administrateur `app/dashboard/hq-ops/ai-logs/page.tsx` avec les KPIs (Requêtes, Taux d'Erreur, Latence, Top Modèle).
+- Création de l'API sécurisée `/api/admin/ai-logs/route.ts` vérifiant le rôle `ADMIN`.
 
 Why:
-- Permettre la recherche sémantique intelligente pour les recruteurs.
-- Rendre l'interface candidat beaucoup plus claire concernant la visibilité de leur profil aux yeux des recruteurs et le fonctionnement de l'IA.
-- Sécuriser les sauvegardes automatisées de base de données.
+- Suivi rigoureux des intégrations IA (Gemini) en amont d'une montée en charge.
+- Identification rapide des potentielles boucles infinies ou des quotas épuisés (429) grâce au taux d'erreur 24h et à la latence moyenne.
+- Intégration totale des amendements demandés par le Tech Lead : sécurité, absence de crash en cas d'erreur de DB, et rétention d'historique optimisée.
 
 Files affected:
-- prisma/schema.prisma — Configuration vectorielle.
-- lib/ai/embeddings.ts — Logique d'appel API Gemini.
-- lib/candidate-profile.ts — Auto-vectorisation lors de la mise en ligne.
-- app/api/recruiter/search/route.ts — Algorithme de recherche hybride.
-- components/dashboard/CVCard.tsx — Nouveau bouton permanent de synchronisation.
-- app/dashboard/list/page.tsx — Refonte de l'UI avec toggle switches, colonne recruteur et info-bulle.
-- .github/workflows/db-backup.yml — Fix artifact path.
+- prisma/schema.prisma
+- lib/ai/logger.ts
+- lib/talent-assistant.ts
+- lib/ai/embeddings.ts
+- app/api/ai/analyze/route.ts
+- app/dashboard/hq-ops/ai-logs/page.tsx
+- app/api/admin/ai-logs/route.ts
 
 Breaking changes:
 - None.
-
-Notes for review:
-- Les anciens profils nécessitent une re-sauvegarde pour avoir leur vecteur généré.

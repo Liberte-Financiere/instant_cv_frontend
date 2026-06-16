@@ -388,6 +388,7 @@ export const ModelName = {
   Session: 'Session',
   VerificationToken: 'VerificationToken',
   AnalysisHistory: 'AnalysisHistory',
+  AILog: 'AILog',
   User: 'User',
   PlatformFeedback: 'PlatformFeedback',
   PaymentTransaction: 'PaymentTransaction',
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign"
+    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "aILog" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -712,6 +713,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AnalysisHistoryCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AnalysisHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    AILog: {
+      payload: Prisma.$AILogPayload<ExtArgs>
+      fields: Prisma.AILogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AILogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AILogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload>
+        }
+        findFirst: {
+          args: Prisma.AILogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AILogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload>
+        }
+        findMany: {
+          args: Prisma.AILogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload>[]
+        }
+        create: {
+          args: Prisma.AILogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload>
+        }
+        createMany: {
+          args: Prisma.AILogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AILogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload>[]
+        }
+        delete: {
+          args: Prisma.AILogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload>
+        }
+        update: {
+          args: Prisma.AILogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload>
+        }
+        deleteMany: {
+          args: Prisma.AILogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AILogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AILogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload>[]
+        }
+        upsert: {
+          args: Prisma.AILogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AILogPayload>
+        }
+        aggregate: {
+          args: Prisma.AILogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAILog>
+        }
+        groupBy: {
+          args: Prisma.AILogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AILogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AILogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AILogCountAggregateOutputType> | number
         }
       }
     }
@@ -1693,6 +1768,23 @@ export const AnalysisHistoryScalarFieldEnum = {
 export type AnalysisHistoryScalarFieldEnum = (typeof AnalysisHistoryScalarFieldEnum)[keyof typeof AnalysisHistoryScalarFieldEnum]
 
 
+export const AILogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  model: 'model',
+  status: 'status',
+  promptTokens: 'promptTokens',
+  completionTokens: 'completionTokens',
+  totalTokens: 'totalTokens',
+  latencyMs: 'latencyMs',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type AILogScalarFieldEnum = (typeof AILogScalarFieldEnum)[keyof typeof AILogScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1985,6 +2077,18 @@ export const AnalysisHistoryOrderByRelevanceFieldEnum = {
 } as const
 
 export type AnalysisHistoryOrderByRelevanceFieldEnum = (typeof AnalysisHistoryOrderByRelevanceFieldEnum)[keyof typeof AnalysisHistoryOrderByRelevanceFieldEnum]
+
+
+export const AILogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  model: 'model',
+  status: 'status',
+  errorMessage: 'errorMessage'
+} as const
+
+export type AILogOrderByRelevanceFieldEnum = (typeof AILogOrderByRelevanceFieldEnum)[keyof typeof AILogOrderByRelevanceFieldEnum]
 
 
 export const UserOrderByRelevanceFieldEnum = {
@@ -2345,6 +2449,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   verificationToken?: Prisma.VerificationTokenOmit
   analysisHistory?: Prisma.AnalysisHistoryOmit
+  aILog?: Prisma.AILogOmit
   user?: Prisma.UserOmit
   platformFeedback?: Prisma.PlatformFeedbackOmit
   paymentTransaction?: Prisma.PaymentTransactionOmit

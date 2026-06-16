@@ -55,6 +55,7 @@ export const ModelName = {
   Session: 'Session',
   VerificationToken: 'VerificationToken',
   AnalysisHistory: 'AnalysisHistory',
+  AILog: 'AILog',
   User: 'User',
   PlatformFeedback: 'PlatformFeedback',
   PaymentTransaction: 'PaymentTransaction',
@@ -134,6 +135,23 @@ export const AnalysisHistoryScalarFieldEnum = {
 } as const
 
 export type AnalysisHistoryScalarFieldEnum = (typeof AnalysisHistoryScalarFieldEnum)[keyof typeof AnalysisHistoryScalarFieldEnum]
+
+
+export const AILogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  model: 'model',
+  status: 'status',
+  promptTokens: 'promptTokens',
+  completionTokens: 'completionTokens',
+  totalTokens: 'totalTokens',
+  latencyMs: 'latencyMs',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type AILogScalarFieldEnum = (typeof AILogScalarFieldEnum)[keyof typeof AILogScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -428,6 +446,18 @@ export const AnalysisHistoryOrderByRelevanceFieldEnum = {
 } as const
 
 export type AnalysisHistoryOrderByRelevanceFieldEnum = (typeof AnalysisHistoryOrderByRelevanceFieldEnum)[keyof typeof AnalysisHistoryOrderByRelevanceFieldEnum]
+
+
+export const AILogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  model: 'model',
+  status: 'status',
+  errorMessage: 'errorMessage'
+} as const
+
+export type AILogOrderByRelevanceFieldEnum = (typeof AILogOrderByRelevanceFieldEnum)[keyof typeof AILogOrderByRelevanceFieldEnum]
 
 
 export const UserOrderByRelevanceFieldEnum = {

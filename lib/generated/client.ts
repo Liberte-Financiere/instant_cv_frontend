@@ -62,6 +62,11 @@ export type VerificationToken = Prisma.VerificationTokenModel
  */
 export type AnalysisHistory = Prisma.AnalysisHistoryModel
 /**
+ * Model AILog
+ * 
+ */
+export type AILog = Prisma.AILogModel
+/**
  * Model User
  * 
  */
