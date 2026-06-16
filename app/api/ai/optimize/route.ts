@@ -2,14 +2,15 @@ import { generateText } from 'ai';
 import { createGroq } from '@ai-sdk/groq';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-
 import { APP_CONFIG } from '@/lib/config';
+import { logAIUsage } from '@/lib/ai/logger';
 
-// Instanciation déplacée dans le handler pour éviter les problèmes de variables d'environnement
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
+  let session: any;
   try {
-    const session = await auth();
+    session = await auth();
     if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
 
@@ -64,9 +65,20 @@ export async function POST(req: Request) {
 
     const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
 
-    const { text: generatedText } = await generateText({
+    const startTime = performance.now();
+    const { text: generatedText, usage } = await generateText({
       model: groq(APP_CONFIG.ai.models.groqReformulation),
       prompt: prompt,
+    });
+
+    logAIUsage({
+      type: 'optimize',
+      model: APP_CONFIG.ai.models.groqReformulation,
+      status: 'success',
+      promptTokens: (usage as any)?.promptTokens || (usage as any)?.inputTokens || 0,
+      completionTokens: (usage as any)?.completionTokens || (usage as any)?.outputTokens || 0,
+      latencyMs: performance.now() - startTime,
+      userId: session.user.id
     });
 
     // Cleanup: Remove quotes and leading bullet points/asterisks
@@ -78,6 +90,14 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error('AI Error Details:', error);
+
+    logAIUsage({
+      type: 'optimize',
+      model: APP_CONFIG.ai.models.groqReformulation,
+      status: 'error',
+      errorMessage: error?.message || 'Erreur inconnue',
+      userId: session?.user?.id
+    });
     
     let userMessage = 'Une erreur est survenue lors de la génération.';
     const errorMessage = error.toString().toLowerCase();

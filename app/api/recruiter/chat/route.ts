@@ -120,6 +120,7 @@ export async function POST(req: Request) {
       recruiterCredits: user.recruiterCredits,
       freeUnlocksRemaining: Math.max(0, FREE_UNLOCK_LIMIT - user.freeUnlocksUsed),
       unlockedProfileIds: unlockedProfiles.map((u) => u.candidateProfileId),
+      userId: session.user.id,
     };
 
     console.log(`[CHAT_API] Initialisation du flux SSE pour le UserID : ${session.user.id}`);
