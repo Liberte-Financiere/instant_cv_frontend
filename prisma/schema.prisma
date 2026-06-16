@@ -59,6 +59,27 @@ model AnalysisHistory {
   @@index([userId])
 }
 
+model AILog {
+  id               String   @id @default(cuid())
+  userId           String?  
+  user             User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  type             String   // ex: 'chat', 'search', 'embedding', 'analysis', 'cover-letter'
+  model            String   // ex: 'gemini-3.5-flash', 'gemini-embedding-001'
+  status           String   @default("success") // "success" | "error" | "timeout"
+  promptTokens     Int      @default(0)
+  completionTokens Int      @default(0)
+  totalTokens      Int      @default(0)
+  latencyMs        Int      @default(0)
+  errorMessage     String?  @db.Text
+  createdAt        DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([model])
+  @@index([status])
+  @@index([createdAt])
+}
+
 enum Role {
   USER
   ADMIN
@@ -106,6 +127,7 @@ model User {
   interviewSessions   InterviewSession[]
   candidateProfiles   CandidateProfile[]
   profileUnlocks      ProfileUnlock[]
+  aiLogs              AILog[]
 }
 
 model PlatformFeedback {

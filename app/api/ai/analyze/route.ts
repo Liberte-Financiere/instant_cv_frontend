@@ -3,6 +3,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { z } from 'zod';
 import { NextResponse } from 'next/server';
 import { APP_CONFIG } from '@/lib/config';
+import { logAIUsage } from '@/lib/ai/logger';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -174,10 +175,21 @@ export async function POST(req: Request) {
       })
     });
 
-    const { object } = await generateObject({
+    const startTime = performance.now();
+    const { object, usage } = await generateObject({
       model: google(APP_CONFIG.ai.models.fast),
       schema: analyzeSchema,
       prompt: prompt,
+    });
+
+    logAIUsage({
+      type: 'analysis',
+      model: APP_CONFIG.ai.models.fast,
+      status: 'success',
+      promptTokens: usage?.promptTokens || 0,
+      completionTokens: usage?.completionTokens || 0,
+      latencyMs: performance.now() - startTime,
+      userId: session.user.id
     });
 
     return NextResponse.json(object);
@@ -185,6 +197,14 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error('[API] Global Catch Error:', error);
     
+    logAIUsage({
+      type: 'analysis',
+      model: APP_CONFIG.ai.models.fast,
+      status: 'error',
+      errorMessage: error?.message || 'Erreur inconnue',
+      userId: session?.user?.id
+    });
+
     if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
         return NextResponse.json({ 
             error: 'Le quota de l\'IA est dépassé. Veuillez réessayer dans une minute.', 

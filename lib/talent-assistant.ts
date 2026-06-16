@@ -21,6 +21,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { APP_CONFIG } from '@/lib/config';
+import { logAIUsage } from '@/lib/ai/logger';
 
 // -- Constants ----------------------------------------------------------------
 
@@ -111,8 +112,9 @@ Quand un recruteur decrit son besoin, tu dois extraire :
 - Type de contrat souhaite
 
 ### Regle de clarification
-- Si le besoin est **suffisamment clair** (poste + localisation identifies) -> lance la recherche directement.
-- Si le besoin est **trop vague** -> pose au maximum **2 questions ciblees** avant de lancer la recherche.
+- **Dès que tu as des résultats de recherche**, tu DOIS impérativement les présenter et les justifier en premier.
+- Seulement **à la fin de ton message**, tu peux poser une question de clarification (ex: localisation manquante) pour affiner la prochaine recherche.
+- **IMPORTANT** : Si la recherche ne retourne aucun profil ("Aucun profil trouvé"), **ne refais pas de recherche en boucle**. Informe simplement l'utilisateur qu'il n'y a pas de résultat et demande-lui d'élargir ses critères.
 
 ## PHASE 2 -- RECHERCHE
 
@@ -136,7 +138,7 @@ Pour chaque candidat retourne, presente-le de maniere claire et structuree :
 ### Regles de presentation
 - Presente les **3 meilleurs profils** par defaut, dans l'ordre decroissant de pertinence.
 - Si plus de 3 profils disponibles -> propose de voir les suivants.
-- Si aucun profil trouve -> reformule la recherche en elargissant les criteres et reessaye automatiquement.
+- **IMPORTANT** : Ne mentionne JAMAIS l'ID technique du candidat (la chaine de caracteres comme cmqbd...) dans ta reponse. C'est une donnee interne.
 - Si peu de resultats en ville -> mentionne les profils dans d'autres villes du meme pays.
 
 ## PHASE 4 -- ACTIONS ET SUGGESTIONS PROACTIVES
@@ -285,19 +287,43 @@ async function searchCandidatesInternal(
   }
 
   if (params.query) {
+    let closestIds: string[] = [];
+    try {
+      const { generateEmbedding } = await import('@/lib/ai/embeddings');
+      const vector = await generateEmbedding(params.query);
+      const vectorString = `[${vector.join(',')}]`;
+
+      // Récupérer les profils sémantiquement proches
+      const results = await prisma.$queryRawUnsafe<Array<{id: string, distance: number}>>(
+        `SELECT "id", ("embedding" <=> '${vectorString}'::vector) as distance FROM "CandidateProfile" WHERE "isActive" = true ORDER BY distance ASC LIMIT 50`
+      );
+      
+      closestIds = results.filter(r => r.distance < 0.45).map(r => r.id);
+    } catch (err) {
+      console.error("[HYBRID_SEARCH_BOT] Erreur lors de la génération du vecteur :", err);
+    }
+
     const ftsQuery = params.query.trim().split(/\s+/).filter(Boolean).join(' | ');
+    const orConditions: any[] = [];
+
     if (ftsQuery) {
-      where.OR = [
-        { title: { search: ftsQuery } },
-        { sector: { search: ftsQuery } },
-        { anonymousName: { search: ftsQuery } },
-        {
-          anonymousData: {
-            path: ['projects'],
-            string_contains: params.query,
-          },
+      orConditions.push({ title: { search: ftsQuery } });
+      orConditions.push({ sector: { search: ftsQuery } });
+      orConditions.push({ anonymousName: { search: ftsQuery } });
+      orConditions.push({
+        anonymousData: {
+          path: ['projects'],
+          string_contains: params.query,
         },
-      ];
+      });
+    }
+
+    if (closestIds.length > 0) {
+      orConditions.push({ id: { in: closestIds } });
+    }
+
+    if (orConditions.length > 0) {
+      where.OR = orConditions;
     }
   }
 
@@ -379,11 +405,23 @@ export async function* chatWithAssistant(
       let currentToolProviderOptions: any = undefined;
       let currentToolSummary = '';
 
+      const startTime = performance.now();
       const result = streamText({
         model: google(APP_CONFIG.ai.models.fast),
         system: systemInstruction,
         messages: currentMessages,
         temperature: 0.7,
+        onFinish: ({ usage, finishReason }) => {
+          logAIUsage({
+            type: 'chat',
+            model: APP_CONFIG.ai.models.fast,
+            status: 'success',
+            promptTokens: usage.promptTokens,
+            completionTokens: usage.completionTokens,
+            latencyMs: performance.now() - startTime,
+            userId: recruiterContext.userId
+          });
+        },
         tools: {
           search_candidates: {
             description: 'Recherche des candidats dans la base de profils Jobsira selon des criteres structures.',
@@ -407,7 +445,7 @@ export async function* chatWithAssistant(
               }
 
               const resultSummary = candidates.length === 0
-                ? 'Aucun profil trouvé avec ces critères.'
+                ? 'STOP_SEARCH: Aucun profil trouvé avec ces critères. Ne relance PAS l\'outil search_candidates. Informe directement l\'utilisateur que la recherche n\'a rien donné.'
                 : `${total} profils trouvés pour cette requête. Voici les résultats :\n\n` +
                   candidates.map((c, i) =>
                     `Profil #${i + 1} (ID: ${c.id}):\n` +
@@ -443,8 +481,28 @@ export async function* chatWithAssistant(
           }
         } else if (part.type === 'error') {
           console.error('[GEMINI] Stream error part:', part.error);
+          
+          logAIUsage({
+            type: 'chat',
+            model: APP_CONFIG.ai.models.fast,
+            status: 'error',
+            errorMessage: part.error?.toString(),
+            latencyMs: performance.now() - startTime,
+            userId: recruiterContext.userId
+          });
+          
           yield { type: 'error', data: "Erreur inattendue de l'IA." };
           return;
+        } else if (part.type === 'finish') {
+          logAIUsage({
+            type: 'chat',
+            model: APP_CONFIG.ai.models.fast,
+            status: 'success',
+            promptTokens: part.usage?.promptTokens || 0,
+            completionTokens: part.usage?.completionTokens || 0,
+            latencyMs: performance.now() - startTime,
+            userId: recruiterContext.userId
+          });
         }
       }
 
@@ -478,9 +536,23 @@ export async function* chatWithAssistant(
         // No tool called, generation is complete
         break;
       }
+      
+      // If we hit max iterations and still just called a tool, we need to output something
+      if (iteration >= MAX_ITERATIONS) {
+        yield { type: 'text', data: "Je suis désolé, je n'ai pas pu trouver de profil correspondant après plusieurs tentatives. Essayez de simplifier votre recherche." };
+      }
     }
   } catch (error: any) {
     console.error('[GEMINI_QUOTA_ERROR] Échec :', error);
+    
+    logAIUsage({
+      type: 'chat',
+      model: APP_CONFIG.ai.models.fast,
+      status: 'error',
+      errorMessage: error?.message || 'Erreur inconnue',
+      userId: recruiterContext.userId
+    });
+
     if (error?.status === 429 || error?.message?.includes('429')) {
       yield { type: 'error', data: "\n\nNotre assistant IA est actuellement très sollicité. Veuillez réessayer." };
     } else {

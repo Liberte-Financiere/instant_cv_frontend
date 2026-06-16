@@ -60,6 +60,10 @@ export function CVCard({ cv, onDelete, onToggleVisibility, score = 0 }: CVCardPr
 
       const data = await res.json();
       if (!res.ok) {
+        if (data.qualityReport?.reasons?.length > 0) {
+          toast.error("Critères non remplis", { id: toastId, description: data.qualityReport.reasons.join(' • ') });
+          return;
+        }
         throw new Error(data.error || 'Erreur lors de la synchronisation');
       }
 
