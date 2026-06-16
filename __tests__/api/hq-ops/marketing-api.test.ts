@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { GET as getStats } from '../app/api/hq-ops/marketing/stats/route';
-import { POST as sendMarketing, GET as getCount } from '../app/api/hq-ops/marketing/send/route';
-import { prisma } from '../lib/prisma';
-import { auth } from '../auth';
+import { GET as getStats } from '@/app/api/hq-ops/marketing/stats/route';
+import { POST as sendMarketing, GET as getCount } from '@/app/api/hq-ops/marketing/send/route';
+import { prisma } from '@/lib/prisma';
+import { auth } from '@/auth';
 
 // --- MOCKS ---
-vi.mock('../lib/prisma', () => ({
+vi.mock('@/lib/prisma', () => ({
   prisma: {
     marketingCampaign: {
       create: vi.fn(),
@@ -17,7 +17,7 @@ vi.mock('../lib/prisma', () => ({
   }
 }));
 
-vi.mock('../auth', () => ({
+vi.mock('@/auth', () => ({
   auth: vi.fn()
 }));
 

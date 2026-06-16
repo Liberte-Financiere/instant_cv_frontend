@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { logAIUsage } from '../../lib/ai/logger';
-import { prisma } from '../../lib/prisma';
+import { logAIUsage } from '@/lib/ai/logger';
+import { prisma } from '@/lib/prisma';
 
 // Mock du client Prisma
-vi.mock('../../lib/prisma', () => ({
+vi.mock('@/lib/prisma', () => ({
   prisma: {
     aILog: {
       create: vi.fn(),

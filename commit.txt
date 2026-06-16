@@ -1,42 +1,28 @@
-2026-06-16 — Integrate OpenRouter for CV Analysis & Job Matching
+2026-06-16 — Optimisation base de données VPS & Réorganisation des tests
 
 What changed:
-- Installed `@openrouter/ai-sdk-provider` package for native Vercel AI SDK compatibility.
-- Appended `OPENROUTER_API_KEY` to `.env` file template.
-- Added `openrouter: { fast: 'google/gemini-2.5-flash', pro: 'google/gemini-2.5-pro' }` to `APP_CONFIG.ai.models` in `lib/config.ts`.
-- Refactored `app/api/ai/analyze/route.ts` and `app/api/ai/match/route.ts` to use the `createOpenRouter` provider instead of `createGoogleGenerativeAI`.
-- Added runtime validation checks for `OPENROUTER_API_KEY` in the modified API routes (returns 500 cleanly if missing).
-- Fixed a TS error in `__tests__/ai/match-route.test.ts` where `null` was not an expected return type of the mocked `auth` function.
-- Mocked `OPENROUTER_API_KEY` in test suites to prevent test failures.
+- Configuré le pool de connexion Prisma (pg.Pool) avec max: 20 et timeouts.
+- Ajouté les index manquants (acceptsMarketing, referredById) dans le modèle User.
+- Restreint les requêtes lourdes (transactions admin) avec take: 100 pour prévenir les crashs OOM.
+- Implémenté un cache en mémoire (Map) pour les KPI du Dashboard Admin (AI Logs).
+- Réorganisé le dossier `__tests__` en sous-dossiers (api, lib, utils, integration, models) pour un code plus propre.
 
 Why:
-- To allow the system to route specific heavy endpoints (CV Analysis and Job Matching) through OpenRouter for centralized management and billing, without disrupting existing Groq models or Gemini Live Audio Websocket features.
+- Protéger la base de données Supabase des "Connection Exhaustion".
+- Adapter le setup Prisma aux environnements VPS persistants (PM2).
+- Prévenir les "Full Table Scans" sur les requêtes fréquentes.
+- Clarifier l'architecture des tests qui devenait brouillonne.
 
 Files affected:
-- package.json — Added @openrouter/ai-sdk-provider
-- lib/config.ts — Added OpenRouter models config
-- app/api/ai/analyze/route.ts — Switched provider to OpenRouter
-- app/api/ai/match/route.ts — Switched provider to OpenRouter
-- __tests__/ai/match-route.test.ts — Fixed test typings and added OpenRouter key to test env
-- .env — Added OPENROUTER_API_KEY
+- lib/prisma.ts — Ajout configuration Pool
+- prisma/schema.prisma — Ajout des index sur User
+- app/api/hq-ops/transactions/route.ts — Ajout de la pagination (take: 100)
+- app/api/admin/ai-logs/route.ts — Mise en place du cache
+- __tests__/* — Déplacement des fichiers et remplacement des imports relatifs par les alias '@/...'
 
 Breaking changes:
-- None. (Phase 1 does not implement fallback. The endpoints will explicitly fail with a 500 error if `OPENROUTER_API_KEY` is not present at runtime).
+- None
 
 Notes for review:
-- Tested with `tsc --noEmit` and tests pass without typing errors.
-
-2026-06-16 — Upgrade OpenRouter Models
-What changed:
-- Upgraded the `fast` OpenRouter model to `google/gemini-3.5-flash` in `lib/config.ts`.
-- Upgraded the `pro` OpenRouter model to `google/gemini-3.1-pro-preview` in `lib/config.ts`.
-
-2026-06-16 — Migrate Talent Assistant Generation to OpenRouter
-What changed:
-- Configured a dedicated `assistant: 'google/gemini-2.5-flash'` OpenRouter model in `APP_CONFIG`.
-- Refactored `lib/talent-assistant.ts` to use `createOpenRouter` for the `generateText` / `streamText` function.
-- Updated AI Usage logging (`logAIUsage`) for the Talent Assistant to record the `openrouter.assistant` model.
-- Kept the native Google API explicitly only for the `generateEmbedding` function inside the Talent Assistant.
-
-Why:
-- To consolidate text generation billing for the Talent Assistant under OpenRouter while explicitly enforcing the 2.5-flash model, separating it from the core backend logic.
+- Le schéma Prisma a été synchronisé en base avec `npx prisma db push` avec succès sans perte de données.
+- Test de charge : Les requêtes admin répondront désormais instantanément grâce au cache en RAM.

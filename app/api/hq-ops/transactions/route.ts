@@ -12,6 +12,7 @@ export async function GET() {
 
     // 1. Récupérer les vrais paiements (Mobile Money via LigdiCash)
     const realPayments = await prisma.paymentTransaction.findMany({
+      take: 100,
       orderBy: { createdAt: 'desc' },
       include: {
         user: {
@@ -22,6 +23,7 @@ export async function GET() {
 
     // 2. Récupérer les rechargements manuels (Cadeaux/Admin)
     const manualRecharges = await prisma.creditTransaction.findMany({
+      take: 100,
       where: {
         description: { startsWith: 'Recharge Manuelle' }
       },
