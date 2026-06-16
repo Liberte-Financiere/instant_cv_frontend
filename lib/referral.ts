@@ -15,8 +15,8 @@ export function generateReferralCode(): string {
 
 // Reward constants
 export const REFERRAL_REWARDS = {
-  CREDITS_PER_REFERRAL: 30, // The referrer gets 30 credits
-  CREDITS_FOR_NEW_USER: 15, // The new user gets 15 bonus credits
+  CREDITS_PER_REFERRAL: 10, // The referrer gets 10 credits
+  CREDITS_FOR_NEW_USER: 5, // The new user gets 5 bonus credits
 } as const;
 
 // Calculate total credits earned based on referral count

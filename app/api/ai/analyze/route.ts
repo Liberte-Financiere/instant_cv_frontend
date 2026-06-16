@@ -1,5 +1,5 @@
 import { generateObject } from 'ai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { z } from 'zod';
 import { NextResponse } from 'next/server';
 import { APP_CONFIG } from '@/lib/config';
@@ -127,8 +127,11 @@ export async function POST(req: Request) {
       """
     `;
 
-    const apiKey = process.env.MY_GEMINI_KEY || '';
-    const google = createGoogleGenerativeAI({ apiKey });
+    const apiKey = process.env.OPENROUTER_API_KEY || '';
+    if (!apiKey) {
+      return NextResponse.json({ error: "Configuration IA manquante (OpenRouter)" }, { status: 500 });
+    }
+    const openrouter = createOpenRouter({ apiKey });
 
     const sectionSchema = z.object({
       score: z.number(),
@@ -177,7 +180,7 @@ export async function POST(req: Request) {
 
     const startTime = performance.now();
     const { object, usage } = await generateObject({
-      model: google(APP_CONFIG.ai.models.fast),
+      model: openrouter(APP_CONFIG.ai.models.openrouter.fast),
       schema: analyzeSchema,
       prompt: prompt,
     });

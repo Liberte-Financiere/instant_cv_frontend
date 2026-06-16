@@ -1,30 +1,42 @@
-2026-06-16 — Fix AI Logging TypeScript Errors & Token Metric Property Names
+2026-06-16 — Integrate OpenRouter for CV Analysis & Job Matching
 
 What changed:
-- Updated Vercel AI SDK token property references to use `inputTokens` and `outputTokens` instead of `promptTokens` and `completionTokens` to match the latest SDK updates.
-- Scoped `session` correctly in the `catch` blocks by declaring `let session: any;` above the `try` block in all AI feature endpoints (`match`, `translate`, `optimize`, `cover-letter/generate`, `cover-letter/refine`).
-- Added `isSearchable: false` to all dummy and mock CV profiles (`lib/mock-cv.ts`, `lib/mock-cv-profiles.ts`, `TemplateDummyData.ts`, and initial state in `useCVStore.ts`) to align with the updated `CV` schema.
-- Added `userId` to `RecruiterContext` in `lib/talent-assistant.ts` and passed the session user ID from the `app/api/recruiter/chat/route.ts` caller.
-- Cleaned up duplicated `auth` imports.
+- Installed `@openrouter/ai-sdk-provider` package for native Vercel AI SDK compatibility.
+- Appended `OPENROUTER_API_KEY` to `.env` file template.
+- Added `openrouter: { fast: 'google/gemini-2.5-flash', pro: 'google/gemini-2.5-pro' }` to `APP_CONFIG.ai.models` in `lib/config.ts`.
+- Refactored `app/api/ai/analyze/route.ts` and `app/api/ai/match/route.ts` to use the `createOpenRouter` provider instead of `createGoogleGenerativeAI`.
+- Added runtime validation checks for `OPENROUTER_API_KEY` in the modified API routes (returns 500 cleanly if missing).
+- Fixed a TS error in `__tests__/ai/match-route.test.ts` where `null` was not an expected return type of the mocked `auth` function.
+- Mocked `OPENROUTER_API_KEY` in test suites to prevent test failures.
 
 Why:
-- The implementation of the AI Logging infrastructure caused several TypeScript errors during `tsc --noEmit`, mainly due to the Vercel AI SDK updating the `LanguageModelUsage` property names, and the updated Prisma models imposing new typing requirements that were not reflected in the existing mock objects.
+- To allow the system to route specific heavy endpoints (CV Analysis and Job Matching) through OpenRouter for centralized management and billing, without disrupting existing Groq models or Gemini Live Audio Websocket features.
 
 Files affected:
-- app/api/ai/analyze/route.ts — Fixed SDK usage token types.
-- app/api/ai/cover-letter/generate/route.ts — Fixed SDK token types, session block scoping, duplicate auth import.
-- app/api/ai/cover-letter/refine/route.ts — Fixed SDK token types, session block scoping, duplicate auth import.
-- app/api/ai/match/route.ts — Fixed SDK token types, session block scoping.
-- app/api/ai/optimize/route.ts — Fixed SDK token types, session block scoping.
-- app/api/cv/[id]/translate/route.ts — Fixed SDK token types, session block scoping.
-- app/dashboard/hq-ops/ai-logs/page.tsx — Fixed boolean expression coercion in KPI alert card.
-- lib/talent-assistant.ts — Updated `RecruiterContext` to require `userId`, fixed SDK usage tokens in streaming events.
-- app/api/recruiter/chat/route.ts — Passed `session.user.id` to `recruiterContext`.
-- lib/mock-cv.ts, lib/mock-cv-profiles.ts, components/dashboard/TemplateDummyData.ts, store/useCVStore.ts — Added missing `isSearchable: false` fields to mock CV datasets.
+- package.json — Added @openrouter/ai-sdk-provider
+- lib/config.ts — Added OpenRouter models config
+- app/api/ai/analyze/route.ts — Switched provider to OpenRouter
+- app/api/ai/match/route.ts — Switched provider to OpenRouter
+- __tests__/ai/match-route.test.ts — Fixed test typings and added OpenRouter key to test env
+- .env — Added OPENROUTER_API_KEY
 
 Breaking changes:
-- None
+- None. (Phase 1 does not implement fallback. The endpoints will explicitly fail with a 500 error if `OPENROUTER_API_KEY` is not present at runtime).
 
 Notes for review:
-- The `tsc --noEmit` command now passes without errors (Exit code: 0).
-- The changes strictly fix compilation errors without changing the runtime logic of the application.
+- Tested with `tsc --noEmit` and tests pass without typing errors.
+
+2026-06-16 — Upgrade OpenRouter Models
+What changed:
+- Upgraded the `fast` OpenRouter model to `google/gemini-3.5-flash` in `lib/config.ts`.
+- Upgraded the `pro` OpenRouter model to `google/gemini-3.1-pro-preview` in `lib/config.ts`.
+
+2026-06-16 — Migrate Talent Assistant Generation to OpenRouter
+What changed:
+- Configured a dedicated `assistant: 'google/gemini-2.5-flash'` OpenRouter model in `APP_CONFIG`.
+- Refactored `lib/talent-assistant.ts` to use `createOpenRouter` for the `generateText` / `streamText` function.
+- Updated AI Usage logging (`logAIUsage`) for the Talent Assistant to record the `openrouter.assistant` model.
+- Kept the native Google API explicitly only for the `generateEmbedding` function inside the Talent Assistant.
+
+Why:
+- To consolidate text generation billing for the Talent Assistant under OpenRouter while explicitly enforcing the 2.5-flash model, separating it from the core backend logic.
