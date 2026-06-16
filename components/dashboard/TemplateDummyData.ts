@@ -5,6 +5,7 @@ export const DUMMY_CV: CV = {
   title: 'Preview',
   templateId: 'modern',
   isPublic: false,
+  isSearchable: false,
   views: 0,
   createdAt: new Date(),
   updatedAt: new Date(),

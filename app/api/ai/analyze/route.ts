@@ -186,8 +186,8 @@ export async function POST(req: Request) {
       type: 'analysis',
       model: APP_CONFIG.ai.models.fast,
       status: 'success',
-      promptTokens: usage?.promptTokens || 0,
-      completionTokens: usage?.completionTokens || 0,
+      promptTokens: (usage as any)?.promptTokens || (usage as any)?.inputTokens || 0,
+      completionTokens: (usage as any)?.completionTokens || (usage as any)?.outputTokens || 0,
       latencyMs: performance.now() - startTime,
       userId: session.user.id
     });
