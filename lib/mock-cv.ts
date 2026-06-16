@@ -4,6 +4,7 @@ export const MOCK_PREVIEW_CV: CV = {
   id: "preview",
   title: "Aperçu",
   templateId: "modern",
+  isSearchable: false,
   personalInfo: {
     firstName: "John",
     lastName: "Doe",

@@ -5,6 +5,7 @@ import { checkAndConsumeCredits } from '@/lib/credits';
 import { generateText } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { APP_CONFIG } from '@/lib/config';
+import { logAIUsage } from '@/lib/ai/logger';
 
 // Instanciation déplacée dans POST
 
@@ -12,8 +13,9 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  let session: any;
   try {
-    const session = await auth();
+    session = await auth();
     if (!session?.user?.id) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -73,10 +75,21 @@ ${JSON.stringify(cvContentToTranslate, null, 2)}`;
     const apiKey = process.env.MY_GEMINI_KEY || '';
     const google = createGoogleGenerativeAI({ apiKey });
 
-    const { text: generatedText } = await generateText({
+    const startTime = performance.now();
+    const { text: generatedText, usage } = await generateText({
       model: google(APP_CONFIG.ai.models.pro),
       prompt: prompt,
       temperature: 0.1,
+    });
+    
+    logAIUsage({
+      type: 'translation',
+      model: APP_CONFIG.ai.models.pro,
+      status: 'success',
+      promptTokens: (usage as any)?.promptTokens || (usage as any)?.inputTokens || 0,
+      completionTokens: (usage as any)?.completionTokens || (usage as any)?.outputTokens || 0,
+      latencyMs: performance.now() - startTime,
+      userId: session.user.id
     });
     
     console.log(`[TRANSLATE] Generation Complete. Output Length: ${generatedText.length} characters`);
@@ -131,7 +144,15 @@ ${JSON.stringify(cvContentToTranslate, null, 2)}`;
     return NextResponse.json({ success: true, newCvId: newCV.id });
 
   } catch (error: any) {
-    console.error('[CV_TRANSLATE_POST]', error);
+    console.error('[TRANSLATE] Error during translation:', error);
+
+    logAIUsage({
+      type: 'translation',
+      model: APP_CONFIG.ai.models.pro,
+      status: 'error',
+      errorMessage: error?.message || 'Erreur inconnue',
+      userId: session?.user?.id
+    });
     
     // Clean, readable error for the user
     let userMessage = 'Une erreur est survenue lors de la traduction de votre CV.';

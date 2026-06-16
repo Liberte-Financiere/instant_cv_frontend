@@ -76,6 +76,7 @@ interface RecruiterContext {
   recruiterCredits: number;
   freeUnlocksRemaining: number;
   unlockedProfileIds: string[];
+  userId?: string;
 }
 
 // -- System Prompt ------------------------------------------------------------
@@ -416,8 +417,8 @@ export async function* chatWithAssistant(
             type: 'chat',
             model: APP_CONFIG.ai.models.fast,
             status: 'success',
-            promptTokens: usage.promptTokens,
-            completionTokens: usage.completionTokens,
+            promptTokens: (usage as any).promptTokens || (usage as any).inputTokens || 0,
+            completionTokens: (usage as any).completionTokens || (usage as any).outputTokens || 0,
             latencyMs: performance.now() - startTime,
             userId: recruiterContext.userId
           });
@@ -498,8 +499,8 @@ export async function* chatWithAssistant(
             type: 'chat',
             model: APP_CONFIG.ai.models.fast,
             status: 'success',
-            promptTokens: part.usage?.promptTokens || 0,
-            completionTokens: part.usage?.completionTokens || 0,
+            promptTokens: (part as any).usage?.promptTokens || (part as any).totalUsage?.inputTokens || 0,
+            completionTokens: (part as any).usage?.completionTokens || (part as any).totalUsage?.outputTokens || 0,
             latencyMs: performance.now() - startTime,
             userId: recruiterContext.userId
           });
