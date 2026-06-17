@@ -18,6 +18,7 @@
 
 import { streamText, tool } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { APP_CONFIG } from '@/lib/config';
@@ -387,7 +388,13 @@ export async function* chatWithAssistant(
   console.log('[GEMINI] Démarrage de chatWithAssistant via Vercel AI SDK.');
   const systemInstruction = buildSystemPrompt(recruiterContext);
   const apiKey = process.env.MY_GEMINI_KEY || process.env.GOOGLE_API_KEY || '';
-  const google = createGoogleGenerativeAI({ apiKey });
+  // On garde createGoogleGenerativeAI car il est possible qu'on en ait besoin plus tard ou pour d'autres appels,
+  // mais la fonction principale utilisera openrouter
+  
+  if (!process.env.OPENROUTER_API_KEY) {
+    throw new Error('Configuration IA manquante (OpenRouter) pour le Talent Assistant.');
+  }
+  const openrouter = createOpenRouter({ apiKey: process.env.OPENROUTER_API_KEY });
 
   const formattedHistory = truncateHistory(history);
   let currentMessages: any[] = [...formattedHistory, { role: 'user', content: message }];
@@ -408,14 +415,14 @@ export async function* chatWithAssistant(
 
       const startTime = performance.now();
       const result = streamText({
-        model: google(APP_CONFIG.ai.models.fast),
+        model: openrouter(APP_CONFIG.ai.models.openrouter.assistant),
         system: systemInstruction,
         messages: currentMessages,
         temperature: 0.7,
         onFinish: ({ usage, finishReason }) => {
           logAIUsage({
             type: 'chat',
-            model: APP_CONFIG.ai.models.fast,
+            model: APP_CONFIG.ai.models.openrouter.assistant,
             status: 'success',
             promptTokens: (usage as any).promptTokens || (usage as any).inputTokens || 0,
             completionTokens: (usage as any).completionTokens || (usage as any).outputTokens || 0,
@@ -485,7 +492,7 @@ export async function* chatWithAssistant(
           
           logAIUsage({
             type: 'chat',
-            model: APP_CONFIG.ai.models.fast,
+            model: APP_CONFIG.ai.models.openrouter.assistant,
             status: 'error',
             errorMessage: part.error?.toString(),
             latencyMs: performance.now() - startTime,
@@ -497,7 +504,7 @@ export async function* chatWithAssistant(
         } else if (part.type === 'finish') {
           logAIUsage({
             type: 'chat',
-            model: APP_CONFIG.ai.models.fast,
+            model: APP_CONFIG.ai.models.openrouter.assistant,
             status: 'success',
             promptTokens: (part as any).usage?.promptTokens || (part as any).totalUsage?.inputTokens || 0,
             completionTokens: (part as any).usage?.completionTokens || (part as any).totalUsage?.outputTokens || 0,
@@ -548,7 +555,7 @@ export async function* chatWithAssistant(
     
     logAIUsage({
       type: 'chat',
-      model: APP_CONFIG.ai.models.fast,
+      model: APP_CONFIG.ai.models.openrouter.assistant,
       status: 'error',
       errorMessage: error?.message || 'Erreur inconnue',
       userId: recruiterContext.userId

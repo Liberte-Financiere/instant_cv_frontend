@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { APP_CONFIG } from '../lib/config';
+import { APP_CONFIG } from '@/lib/config';
 
 // ---------------------------------------------------------
 // 1. EXTRACTION DE LA LOGIQUE POUR LES TESTS UNITAIRES

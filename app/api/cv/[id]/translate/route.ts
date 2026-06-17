@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { checkAndConsumeCredits } from '@/lib/credits';
 import { generateText } from 'ai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { APP_CONFIG } from '@/lib/config';
 import { logAIUsage } from '@/lib/ai/logger';
 
@@ -72,19 +72,21 @@ ${JSON.stringify(cvContentToTranslate, null, 2)}`;
 
     console.log(`[TRANSLATE] Target Language: ${targetLanguage}, Original Length: ${JSON.stringify(cvContentToTranslate).length} characters`);
 
-    const apiKey = process.env.MY_GEMINI_KEY || '';
-    const google = createGoogleGenerativeAI({ apiKey });
+    if (!process.env.OPENROUTER_API_KEY) {
+      return NextResponse.json({ error: 'Configuration IA manquante (OpenRouter)' }, { status: 500 });
+    }
+    const openrouter = createOpenRouter({ apiKey: process.env.OPENROUTER_API_KEY });
 
     const startTime = performance.now();
     const { text: generatedText, usage } = await generateText({
-      model: google(APP_CONFIG.ai.models.pro),
+      model: openrouter(APP_CONFIG.ai.models.openrouter.fast),
       prompt: prompt,
       temperature: 0.1,
     });
     
     logAIUsage({
       type: 'translation',
-      model: APP_CONFIG.ai.models.pro,
+      model: APP_CONFIG.ai.models.openrouter.fast,
       status: 'success',
       promptTokens: (usage as any)?.promptTokens || (usage as any)?.inputTokens || 0,
       completionTokens: (usage as any)?.completionTokens || (usage as any)?.outputTokens || 0,
@@ -148,7 +150,7 @@ ${JSON.stringify(cvContentToTranslate, null, 2)}`;
 
     logAIUsage({
       type: 'translation',
-      model: APP_CONFIG.ai.models.pro,
+      model: APP_CONFIG.ai.models.openrouter.fast,
       status: 'error',
       errorMessage: error?.message || 'Erreur inconnue',
       userId: session?.user?.id

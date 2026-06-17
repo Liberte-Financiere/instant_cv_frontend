@@ -35,11 +35,11 @@ export const APP_CONFIG = {
   // ─── Credits & Pricing ────────────────────────────
   credits: {
     /** Credits gifted to new users on signup */
-    signupBonus: 20,
+    signupBonus: 15,
     /** Credits gifted to the referrer when a referral signs up */
     referralReward: 10,
     /** Credits gifted to the referred user */
-    referralBonus: 10,
+    referralBonus: 5,
   },
 
   pricing: {
@@ -135,6 +135,13 @@ export const APP_CONFIG = {
 
       /** Modèle pour l'audio en live */
       audioLive: 'models/gemini-3.1-flash-live-preview',
+      
+      /** Modèles via OpenRouter */
+      openrouter: {
+        fast: 'google/gemini-3.5-flash',
+        pro: 'google/gemini-3.1-pro-preview',
+        assistant: 'google/gemini-2.5-flash',
+      }
     },
     interview: {
       maxQuestions: 6,

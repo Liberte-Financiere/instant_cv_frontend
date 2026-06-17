@@ -12,7 +12,8 @@
 - **Analyse de CV** — Import PDF et diagnostic IA (forces, faiblesses, suggestions)
 - **Matching CV / Offre** — Comparaison de votre profil avec une offre d'emploi
 - **Correction & Traduction** — Optimisation automatique FR/EN
-- *Propulsé par Google Gemini 2.5*
+- **Talent Assistant** — Un agent IA pour sourcer des profils
+- *Propulsé par OpenRouter (Google Gemini 2.5 & 3.5 Flash)*
 
 ### 🎨 Éditeur de CV
 - **23+ Templates Professionnels** — Moderne, Classique, Créatif, Tech, ATS, Minimaliste, et bien plus
@@ -34,15 +35,21 @@
 - **Smart Pagination** — Gestion intelligente des sauts de page
 
 ### 💎 Système de Crédits
-- **25 crédits gratuits** à l'inscription
+- **15 crédits gratuits** à l'inscription (Freemium)
+- **Coûts réduits** : Matching (2 cr.), Création (2 cr.), Traduction (5 cr.)
 - **Packs payants** — Standard (35 cr.), Premium (80 cr.), Pro (250 cr.)
 - **Paiement via WhatsApp** — Wave, Orange Money, etc.
 - **Crédits sans expiration** — Valables à vie
 
 ### 🎁 Programme de Parrainage
 - **Code unique** par utilisateur
-- **Bonus crédits** pour le parrain et le filleul
+- **Bonus de crédits** : 10 crédits pour le parrain, 5 pour le filleul
 - **Partage facile** via lien ou copie
+
+### 🏢 Portail B2B / Recruteurs
+- **Base de candidats anonymisée** — Recherche de talents via IA
+- **Système de déblocage** — Dévoiler les coordonnées (Email, Tel) via crédits
+- **Talent Assistant** — IA conversationnelle pour requêter la base de données
 
 ### 📱 Progressive Web App (PWA)
 - **Installable** sur mobile et desktop
@@ -57,14 +64,15 @@
 |-----------|-------------|
 | **Framework** | [Next.js 16](https://nextjs.org/) (App Router, Turbopack) |
 | **Langage** | TypeScript (strict mode) |
-| **Base de données** | PostgreSQL + [Prisma ORM](https://www.prisma.io/) |
+| **Base de données** | PostgreSQL + [Prisma ORM](https://www.prisma.io/) (Optimisé VPS) |
 | **Auth** | [NextAuth.js v5](https://authjs.dev/) (Google Sign-In) |
 | **Styling** | [Tailwind CSS v4](https://tailwindcss.com/) |
 | **Animations** | [Framer Motion](https://www.framer.com/motion/) |
 | **State** | [Zustand](https://zustand-demo.pmnd.rs/) (persist IndexedDB) |
-| **IA** | Google Gemini 2.5 Flash |
+| **IA API** | [OpenRouter](https://openrouter.ai/) (Gemini 3.5 Flash) |
 | **Monitoring** | [Sentry](https://sentry.io/) |
 | **Storage** | [Cloudinary](https://cloudinary.com/) (photos profil) |
+| **Tests** | Vitest (API, Lib, Models, Utils) |
 | **Export** | docx, file-saver, html2canvas |
 
 ### Structure du projet
@@ -126,7 +134,7 @@ DATABASE_URL=postgresql://...
 AUTH_SECRET=...
 AUTH_GOOGLE_ID=...
 AUTH_GOOGLE_SECRET=...
-GOOGLE_API_KEY=...
+OPENROUTER_API_KEY=...
 CLOUDINARY_CLOUD_NAME=...
 CLOUDINARY_API_KEY=...
 CLOUDINARY_API_SECRET=...
@@ -168,13 +176,14 @@ WHERE "email" IN ('m9bikienga@gmail.com', 'optijob18@gmail.com');
 
 ## 📖 Utilisation
 
-1. **S'inscrire** — Connexion via Google (25 crédits offerts)
+1. **S'inscrire** — Connexion via Google (15 crédits offerts)
 2. **Créer un CV** — Choisir un template parmi 23+ modèles
 3. **Rédiger** — Remplir les sections avec l'aide de l'IA
 4. **Personnaliser** — Couleurs, photo, ordre des sections
 5. **Exporter** — PDF ou Word
 6. **Lettre de motivation** — Générer une lettre adaptée à chaque offre
 7. **Partager** — Lien public vers votre CV
+8. **Recruter** — Accéder au portail B2B pour trouver des talents
 
 ---
 
