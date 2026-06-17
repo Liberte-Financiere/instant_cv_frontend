@@ -1,28 +1,22 @@
-2026-06-16 — Optimisation base de données VPS & Réorganisation des tests
+[2026-06-16] — Création du Hub Boîte à Outils B2C (UI/UX)
 
 What changed:
-- Configuré le pool de connexion Prisma (pg.Pool) avec max: 20 et timeouts.
-- Ajouté les index manquants (acceptsMarketing, referredById) dans le modèle User.
-- Restreint les requêtes lourdes (transactions admin) avec take: 100 pour prévenir les crashs OOM.
-- Implémenté un cache en mémoire (Map) pour les KPI du Dashboard Admin (AI Logs).
-- Réorganisé le dossier `__tests__` en sous-dossiers (api, lib, utils, integration, models) pour un code plus propre.
+- Création de la page `/dashboard/tools` avec une grille de 6 cartes "Coming Soon" animées via Framer Motion.
+- Ajout du lien "Boîte à outils" dans la barre de navigation latérale (Sidebar) avec l'icône Wand2.
+- Masquage conditionnel du lien "Boîte à outils" pour les utilisateurs avec le rôle RECRUITER.
 
 Why:
-- Protéger la base de données Supabase des "Connection Exhaustion".
-- Adapter le setup Prisma aux environnements VPS persistants (PM2).
-- Prévenir les "Full Table Scans" sur les requêtes fréquentes.
-- Clarifier l'architecture des tests qui devenait brouillonne.
+- Créer une anticipation forte chez les candidats en leur montrant une roadmap de fonctionnalités IA riches.
+- Développer la valeur perçue de JobSira en tant que "Super App" pour la carrière.
+- Cloisonner les espaces pour ne pas polluer l'interface des recruteurs B2B avec des outils B2C.
 
 Files affected:
-- lib/prisma.ts — Ajout configuration Pool
-- prisma/schema.prisma — Ajout des index sur User
-- app/api/hq-ops/transactions/route.ts — Ajout de la pagination (take: 100)
-- app/api/admin/ai-logs/route.ts — Mise en place du cache
-- __tests__/* — Déplacement des fichiers et remplacement des imports relatifs par les alias '@/...'
+- components/dashboard/Sidebar.tsx — Ajout du lien Wand2 et condition role !== 'RECRUITER'
+- app/dashboard/tools/page.tsx — Création de l'interface riche avec les 6 outils (LinkedIn, Photo Pro, Portfolio, Relance, Salaire, Bilan)
 
 Breaking changes:
 - None
 
 Notes for review:
-- Le schéma Prisma a été synchronisé en base avec `npx prisma db push` avec succès sans perte de données.
-- Test de charge : Les requêtes admin répondront désormais instantanément grâce au cache en RAM.
+- Design aligné avec la charte graphique dark mode et optimisé mobile. 
+- Les boutons sont désactivés ("En développement") et afficheront le bon texte le jour où la fonctionnalité sera active.
