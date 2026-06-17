@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap, Building2 } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap, Building2, Wand2 } from 'lucide-react';
 import { cn, clearAllLocalData } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
@@ -24,6 +24,7 @@ const navigation = [
 ];
 
 const aiNavigation = [
+  { name: 'Boîte à outils', href: '/dashboard/tools', icon: Wand2, b2cOnly: true },
   { name: 'Analyser mon CV', href: '/dashboard/ai/analyze', icon: Brain },
   { name: 'Matcher une offre', href: '/dashboard/ai/match', icon: Target },
   { name: "Simulateur d'entretien", href: '/dashboard/ai/interview', icon: Mic },
@@ -114,9 +115,10 @@ export function Sidebar() {
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Outils IA</span>
           </div>
           <nav className="space-y-1">
-            {aiNavigation.map((item) => (
-              <NavLink key={item.name} item={item} />
-            ))}
+            {aiNavigation.map((item) => {
+              if (item.b2cOnly && session?.user?.role === 'RECRUITER') return null;
+              return <NavLink key={item.name} item={item} />;
+            })}
           </nav>
         </div> 
 
