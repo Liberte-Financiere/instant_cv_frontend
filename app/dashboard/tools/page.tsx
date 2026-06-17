@@ -86,8 +86,8 @@ export default function ToolsPage() {
             <Sparkles className="w-6 h-6 text-blue-400" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">Boîte à Outils IA</h1>
-            <p className="text-slate-400 mt-1">Super-pouvoirs exclusifs pour accélérer votre carrière.</p>
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Boîte à Outils IA</h1>
+            <p className="text-slate-500 mt-1">Super-pouvoirs exclusifs pour accélérer votre carrière.</p>
           </div>
         </div>
       </div>
@@ -103,7 +103,7 @@ export default function ToolsPage() {
           <motion.div
             key={tool.id}
             variants={itemVariants}
-            className="group relative bg-slate-800/40 border border-slate-700 hover:border-slate-600 rounded-2xl p-6 transition-all duration-300 overflow-hidden"
+            className="group relative bg-white border border-slate-200 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-200/50 rounded-2xl p-6 transition-all duration-300 overflow-hidden"
           >
             {/* Background Gradient Hover */}
             <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500 bg-gradient-to-br from-transparent to-${tool.color.split('-')[1]}-500`} />
@@ -114,7 +114,7 @@ export default function ToolsPage() {
               </div>
               
               {tool.status === 'coming_soon' && (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700 shadow-sm">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200 shadow-sm">
                   <Lock className="w-3 h-3" />
                   Bientôt
                 </span>
@@ -122,10 +122,10 @@ export default function ToolsPage() {
             </div>
 
             <div className="relative z-10">
-              <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
+              <h3 className="text-lg font-semibold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
                 {tool.title}
               </h3>
-              <p className="text-slate-400 text-sm leading-relaxed mb-6">
+              <p className="text-slate-600 text-sm leading-relaxed mb-6">
                 {tool.description}
               </p>
             </div>
@@ -133,7 +133,7 @@ export default function ToolsPage() {
             <div className="mt-auto relative z-10">
               <button 
                 disabled={tool.status === 'coming_soon'}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-800 text-slate-300 text-sm font-medium transition-all group-hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed border border-slate-700"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-50 text-slate-500 text-sm font-medium transition-all group-hover:bg-slate-100 disabled:opacity-70 disabled:cursor-not-allowed border border-slate-200"
               >
                 {tool.status === 'coming_soon' ? 'En développement' : 'Découvrir'}
                 <ArrowRight className="w-4 h-4" />
