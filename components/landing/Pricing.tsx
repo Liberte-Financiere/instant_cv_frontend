@@ -12,7 +12,7 @@ const creditActions = [
   { icon: FileText, label: 'Lettre de motivation', cost: '2 cr.', color: 'text-violet-500' },
   { icon: PenLine, label: 'Amélioration IA', cost: '1 cr.', color: 'text-emerald-500' },
   { icon: Zap, label: 'Correction / Reformulation', cost: '0.5 cr.', color: 'text-amber-500' },
-  { icon: Languages, label: 'Traduction de CV', cost: '10 cr.', color: 'text-cyan-500' },
+  { icon: Languages, label: 'Traduction de CV', cost: '5 cr.', color: 'text-cyan-500' },
   { icon: MessageSquare, label: 'Entretien écrit', cost: '5 cr.', color: 'text-rose-500' },
   { icon: Mic, label: 'Entretien vocal', cost: '1 cr./min', color: 'text-orange-500' },
 ];
