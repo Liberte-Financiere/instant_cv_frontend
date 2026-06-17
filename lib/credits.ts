@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 
 export const CREDIT_COSTS = {
-  CREATE_CV: 3,
+  CREATE_CV: 2,
   CREATE_LETTER: 1,
   AI_ANALYZE: 2,
   AI_MATCH: 2,
@@ -12,7 +12,7 @@ export const CREDIT_COSTS = {
   AI_CONTINUE: 0.5,
   AI_CORRECT: 0.5,
 
-  AI_CV_TRANSLATE: 10,
+  AI_CV_TRANSLATE: 5,
 
   AI_INTERVIEW: 5,               // 5 credits for Text Mode (flat rate)
   AI_INTERVIEW_AUDIO_MINUTE: 1,  // 1 credit per minute for Audio Mode (dynamic rate)

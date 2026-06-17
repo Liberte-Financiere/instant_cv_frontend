@@ -3,7 +3,7 @@ import { auth } from '@/auth';
 
 import { APP_CONFIG } from '@/lib/config';
 import { streamObject } from 'ai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { z } from 'zod'; 
 import { logAIUsage } from '@/lib/ai/logger';
 
@@ -56,8 +56,10 @@ export async function POST(req: Request) {
 
     const startTime = Date.now();
 
-    const apiKey = process.env.MY_GEMINI_KEY || '';
-    const google = createGoogleGenerativeAI({ apiKey });
+    if (!process.env.OPENROUTER_API_KEY) {
+      return NextResponse.json({ error: 'Configuration IA manquante (OpenRouter)' }, { status: 500 });
+    }
+    const openrouter = createOpenRouter({ apiKey: process.env.OPENROUTER_API_KEY });
 
     const clSchema = z.object({
       subject: z.string(),
@@ -68,13 +70,13 @@ export async function POST(req: Request) {
 
     const startTimeMs = performance.now();
     const result = await streamObject({
-      model: google(APP_CONFIG.ai.models.fast),
+      model: openrouter(APP_CONFIG.ai.models.openrouter.assistant),
       schema: clSchema,
       prompt: prompt,
       onFinish: ({ usage }) => {
         logAIUsage({
           type: 'cover-letter',
-          model: APP_CONFIG.ai.models.fast,
+          model: APP_CONFIG.ai.models.openrouter.assistant,
           status: 'success',
           promptTokens: (usage as any)?.promptTokens || (usage as any)?.inputTokens || 0,
           completionTokens: (usage as any)?.completionTokens || (usage as any)?.outputTokens || 0,
@@ -91,7 +93,7 @@ export async function POST(req: Request) {
 
     logAIUsage({
       type: 'cover-letter',
-      model: APP_CONFIG.ai.models.fast,
+      model: APP_CONFIG.ai.models.openrouter.assistant,
       status: 'error',
       errorMessage: error?.message || 'Erreur inconnue',
       userId: session?.user?.id

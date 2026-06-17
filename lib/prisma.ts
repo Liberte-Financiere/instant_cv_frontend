@@ -9,9 +9,13 @@ const prismaClientSingleton = () => {
     throw new Error("La variable d'environnement DATABASE_URL est manquante.");
   }
 
-  // 1. On crée un pool de connexion Node-Postgres natif
-  const pool = new Pool({ connectionString });
-  
+  // 1. On crée un pool de connexion Node-Postgres natif adapté pour un VPS persistant
+  const pool = new Pool({ 
+    connectionString,
+    max: 20,                    // Partagé entre toutes les requêtes du process
+    idleTimeoutMillis: 30000,   // Ferme les connexions inactives après 30s
+    connectionTimeoutMillis: 10000, // Timeout de connexion après 10s
+  });
   // 2. On crée l'adaptateur requis par Prisma 7
   const adapter = new PrismaPg(pool);
 
