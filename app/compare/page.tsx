@@ -22,8 +22,8 @@ export default function CompareHubPage() {
       <div className="absolute top-[20%] right-[-10%] w-[45%] h-[45%] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
 
       <div className="relative max-w-5xl mx-auto">
-        <Link href="/help" className="inline-flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors mb-8">
-          <ArrowLeft className="w-4 h-4" /> Retour au centre d'aide
+        <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors mb-8">
+          <ArrowLeft className="w-4 h-4" /> Retour à l'accueil
         </Link>
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
