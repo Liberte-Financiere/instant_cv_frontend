@@ -29,12 +29,11 @@ export default function TermsPage() {
         </h1>
 
         <p className="text-slate-500 mb-8">
-          Dernière mise à jour : Février 2026
+          Dernière mise à jour : {new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
         </p>
 
         <div className="prose prose-slate prose-lg max-w-none">
           
-          {/* Section 1 */}
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">
               1. Acceptation des Conditions
@@ -45,7 +44,6 @@ export default function TermsPage() {
             </p>
           </section>
 
-          {/* Section 2 */}
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">
               2. Description du Service
@@ -57,61 +55,53 @@ export default function TermsPage() {
               <li>Créer et personnaliser des CV professionnels</li>
               <li>Générer des lettres de motivation</li>
               <li>Analyser et optimiser vos documents avec l&apos;intelligence artificielle</li>
-              <li>Importer des données depuis LinkedIn</li>
-              <li>Exporter vos documents en PDF</li>
+              <li>Permettre la mise en relation avec des recruteurs (Espace Recruteur)</li>
             </ul>
           </section>
 
-          {/* Section 3 */}
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              3. Inscription et Compte
+              3. Paiements et Crédits
             </h2>
             <p className="text-slate-600 leading-relaxed">
-              Pour utiliser certaines fonctionnalités, vous devez créer un compte. Vous êtes responsable de 
-              maintenir la confidentialité de vos identifiants et de toutes les activités effectuées sous votre compte.
+              Certaines fonctionnalités avancées (génération IA, déblocage de profils par les recruteurs) nécessitent des crédits. 
+              Les achats de crédits sont traités via nos prestataires de paiement sécurisés (ex: LigdiCash). 
+              Une fois achetés, les crédits ne sont ni remboursables, ni transférables, sauf en cas de défaillance technique avérée de notre plateforme.
             </p>
           </section>
 
-          {/* Section 4 */}
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              4. Propriété Intellectuelle
+              4. Utilisation de l&apos;Intelligence Artificielle
             </h2>
             <p className="text-slate-600 leading-relaxed">
-              Vous conservez tous les droits sur le contenu que vous créez sur {APP_CONFIG.name}. Cependant, vous nous 
-              accordez une licence limitée pour stocker et afficher ce contenu dans le cadre de la fourniture du service.
+              Les fonctionnalités d&apos;assistance IA utilisent des modèles tiers (LLMs). Bien que nous mettions tout en œuvre pour 
+              garantir des résultats pertinents, le contenu généré par l&apos;IA est fourni à titre indicatif. L&apos;utilisateur final 
+              est seul responsable de la vérification, de l&apos;édition et de l&apos;utilisation du contenu (lettres de motivation, résumé de CV) produit.
             </p>
           </section>
 
-          {/* Section 5 */}
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              5. Protection des Données
+              5. Espace Recruteur et Anonymat
             </h2>
             <p className="text-slate-600 leading-relaxed">
-              Nous nous engageons à protéger vos données personnelles conformément au RGPD. 
+              En tant que candidat, si vous choisissez de rendre votre CV "Public" et "Recherchable", votre profil sera 
+              indexé dans notre base de données recruteur. <strong>Votre identité (nom, contact) restera strictement anonyme</strong> 
+              lors des recherches. Elle ne sera dévoilée qu&apos;à un recruteur validé ayant dépensé des crédits pour débloquer votre profil complet.
+            </p>
+          </section>
+
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">
+              6. Protection des Données
+            </h2>
+            <p className="text-slate-600 leading-relaxed">
+              Nous nous engageons à protéger vos données personnelles. 
               Pour plus d&apos;informations, consultez notre <Link href="/privacy" className="text-blue-600 hover:underline">Politique de Confidentialité</Link>.
             </p>
           </section>
 
-          {/* Section 6 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              6. Utilisation Acceptable
-            </h2>
-            <p className="text-slate-600 leading-relaxed mb-4">
-              Vous vous engagez à ne pas utiliser le service pour :
-            </p>
-            <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
-              <li>Créer du contenu illégal, offensant ou frauduleux</li>
-              <li>Usurper l&apos;identité d&apos;une autre personne</li>
-              <li>Tenter de compromettre la sécurité du service</li>
-              <li>Utiliser des systèmes automatisés sans autorisation</li>
-            </ul>
-          </section>
-
-          {/* Section 7 */}
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">
               7. Limitation de Responsabilité
@@ -122,22 +112,9 @@ export default function TermsPage() {
             </p>
           </section>
 
-          {/* Section 8 */}
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              8. Modifications des Conditions
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications 
-              prendront effet dès leur publication sur cette page. Votre utilisation continue du service 
-              après modification constitue votre acceptation des nouvelles conditions.
-            </p>
-          </section>
-
-          {/* Section 9 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              9. Contact
+              8. Contact
             </h2>
             <p className="text-slate-600 leading-relaxed">
               Pour toute question concernant ces conditions, contactez-nous à : 
@@ -163,7 +140,7 @@ export default function TermsPage() {
       {/* Footer */}
       <footer className="bg-slate-50 border-t border-slate-200 py-8 mt-12">
         <div className="max-w-4xl mx-auto px-4 text-center text-slate-500 text-sm">
-          © 2026 {APP_CONFIG.name}. Tous droits réservés.
+          © {new Date().getFullYear()} {APP_CONFIG.name}. Tous droits réservés.
         </div>
       </footer>
     </div>
