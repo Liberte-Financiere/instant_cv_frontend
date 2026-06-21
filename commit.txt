@@ -1,22 +1,41 @@
-[2026-06-16] — Création du Hub Boîte à Outils B2C (UI/UX)
+
+
+[2026-06-21] — Feature: Finalize Photo Pro IA Integration with OpenRouter
 
 What changed:
-- Création de la page `/dashboard/tools` avec une grille de 6 cartes "Coming Soon" animées via Framer Motion.
-- Ajout du lien "Boîte à outils" dans la barre de navigation latérale (Sidebar) avec l'icône Wand2.
-- Masquage conditionnel du lien "Boîte à outils" pour les utilisateurs avec le rôle RECRUITER.
+- Integrated `google/gemini-3.1-flash-image` via OpenRouter for the Photo Pro IA feature.
+- Updated the backend to download the source image from Cloudinary and pass it as a Base64 string directly in the OpenRouter payload, avoiding external URL access issues.
+- Added the required `modalities: ["image", "text"]` parameter to the OpenRouter payload to properly trigger the Gemini image generation pipeline.
+- Built a robust response parser to extract the generated Base64 image from the new `message.images` array format returned by OpenRouter for multimodal models.
+- Ensured transaction safety: 50 credits are deducted ONLY upon successful extraction of the generated image URL.
 
 Why:
-- Créer une anticipation forte chez les candidats en leur montrant une roadmap de fonctionnalités IA riches.
-- Développer la valeur perçue de JobSira en tant que "Super App" pour la carrière.
-- Cloisonner les espaces pour ne pas polluer l'interface des recruteurs B2B avec des outils B2C.
+- Resolves the "Empty Response" errors by correctly instructing OpenRouter to generate images rather than defaulting to text.
+- Using Base64 payload instead of Cloudinary URLs ensures that the upstream AI model never fails due to network or CORS restrictions when attempting to access the source selfie.
 
 Files affected:
-- components/dashboard/Sidebar.tsx — Ajout du lien Wand2 et condition role !== 'RECRUITER'
-- app/dashboard/tools/page.tsx — Création de l'interface riche avec les 6 outils (LinkedIn, Photo Pro, Portfolio, Relance, Salaire, Bilan)
+- app/api/ai/photo/route.ts — Completed the production-ready AI image generation logic.
+
+---
+
+[2026-06-21] — Bugfix: Refund credits on AI CV translation failure
+
+What changed:
+- Added a `refundCredits` function in `lib/credits.ts` that adds credits back to the user account with a `REFUND` transaction type.
+- Updated `app/api/cv/[id]/translate/route.ts` to track if credits were consumed before the external API call.
+- Integrated `refundCredits` in the error catch block of the translation route. If the AI model fails, times out, or returns invalid JSON, the consumed credits are now fully refunded to the user.
+- Updated error messages to explicitly tell the user that their credits were refunded.
+
+Why:
+- Previously, if the AI translation failed (e.g. invalid JSON parsing or model timeout), the user permanently lost 5 credits.
+- This ensures fair billing and prevents user frustration.
+
+Files affected:
+- lib/credits.ts — Added REFUND transaction type and `refundCredits` utility.
+- app/api/cv/[id]/translate/route.ts — Added credit refund logic inside the error handler.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Design aligné avec la charte graphique dark mode et optimisé mobile. 
-- Les boutons sont désactivés ("En développement") et afficheront le bon texte le jour où la fonctionnalité sera active.
+- Refunds are tracked in the database under `creditTransaction` with the `REFUND` type, so they are auditable on the admin dashboard.

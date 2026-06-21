@@ -93,7 +93,7 @@ model User {
   emailVerified DateTime?
   image         String?
   role          Role      @default(USER)
-  credits       Float     @default(20) // Utilisation de Float pour supporter les retraits de 0.5
+  credits       Float     @default(15) // Utilisation de Float pour supporter les retraits de 0.5
   acceptsMarketing Boolean @default(false) // Opt-in pour les newsletters et alertes
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
