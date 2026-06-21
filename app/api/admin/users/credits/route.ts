@@ -17,27 +17,9 @@ export async function GET(req: Request) {
     const search = searchParams.get('search') || '';
 
     // Fetch users
-    const users = await prisma.user.findMany({
-      where: search ? {
-        OR: [
-          { name: { contains: search, mode: 'insensitive' } },
-          { email: { contains: search, mode: 'insensitive' } }
-        ]
-      } : undefined,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        credits: true,
-        // Using string keys logic instead of directly asking 'createdAt' if it causes TS bugs on  local build
-      },
-      take: 50 // Limit to 50 for performance
-    });
-
-    // Add a basic formatting for the date since select does not return native date on this schema apparently
     const usersList = await prisma.user.findMany({
         where: search ? { OR: [ { name: { contains: search, mode: 'insensitive' } }, { email: { contains: search, mode: 'insensitive' } } ] } : undefined,
-        orderBy: { id: 'desc' },
+        orderBy: { createdAt: 'desc' },
         take: 50
     })
     
@@ -47,7 +29,9 @@ export async function GET(req: Request) {
         name: u.name,
         email: u.email,
         credits: u.credits,
-        createdAt: (u as any).createdAt || new Date().toISOString()
+        role: u.role,
+        isBanned: u.isBanned,
+        createdAt: u.createdAt || new Date().toISOString()
     }));
 
     return NextResponse.json({ users: formattedUsers });

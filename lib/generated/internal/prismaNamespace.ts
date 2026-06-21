@@ -1793,6 +1793,7 @@ export const UserScalarFieldEnum = {
   image: 'image',
   role: 'role',
   credits: 'credits',
+  isBanned: 'isBanned',
   acceptsMarketing: 'acceptsMarketing',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

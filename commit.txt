@@ -1,41 +1,21 @@
-
-
-[2026-06-21] — Feature: Finalize Photo Pro IA Integration with OpenRouter
+[2026-06-21] — CRM & HQ Ops KPIs (V2)
 
 What changed:
-- Integrated `google/gemini-3.1-flash-image` via OpenRouter for the Photo Pro IA feature.
-- Updated the backend to download the source image from Cloudinary and pass it as a Base64 string directly in the OpenRouter payload, avoiding external URL access issues.
-- Added the required `modalities: ["image", "text"]` parameter to the OpenRouter payload to properly trigger the Gemini image generation pipeline.
-- Built a robust response parser to extract the generated Base64 image from the new `message.images` array format returned by OpenRouter for multimodal models.
-- Ensured transaction safety: 50 credits are deducted ONLY upon successful extraction of the generated image URL.
+- Added `isBanned` boolean to the `User` Prisma model.
+- Upgraded the `/dashboard/hq-ops/page.tsx` index to a Server Component to display real-time global KPIs (Total Users, Daily Signups, Credits Consumed, Credits Distributed).
+- Transformed the `/dashboard/hq-ops/credits` page into a fully-fledged CRM that now displays user roles, active/banned status, and allows admins to ban/unban users directly from the UI.
+- Created `/api/admin/users/ban` route to handle status toggle securely.
 
 Why:
-- Resolves the "Empty Response" errors by correctly instructing OpenRouter to generate images rather than defaulting to text.
-- Using Base64 payload instead of Cloudinary URLs ensures that the upstream AI model never fails due to network or CORS restrictions when attempting to access the source selfie.
+- To give the admin a high-level overview of the platform's health (KPIs).
+- To provide a quick action to stop fraudulent or abusive accounts from consuming API resources (Ban mechanism) without creating a redundant "Users" page.
 
 Files affected:
-- app/api/ai/photo/route.ts — Completed the production-ready AI image generation logic.
-
----
-
-[2026-06-21] — Bugfix: Refund credits on AI CV translation failure
-
-What changed:
-- Added a `refundCredits` function in `lib/credits.ts` that adds credits back to the user account with a `REFUND` transaction type.
-- Updated `app/api/cv/[id]/translate/route.ts` to track if credits were consumed before the external API call.
-- Integrated `refundCredits` in the error catch block of the translation route. If the AI model fails, times out, or returns invalid JSON, the consumed credits are now fully refunded to the user.
-- Updated error messages to explicitly tell the user that their credits were refunded.
-
-Why:
-- Previously, if the AI translation failed (e.g. invalid JSON parsing or model timeout), the user permanently lost 5 credits.
-- This ensures fair billing and prevents user frustration.
-
-Files affected:
-- lib/credits.ts — Added REFUND transaction type and `refundCredits` utility.
-- app/api/cv/[id]/translate/route.ts — Added credit refund logic inside the error handler.
-
-Breaking changes:
-- None
+- prisma/schema.prisma — Added isBanned field.
+- app/dashboard/hq-ops/page.tsx — Refactored to Server Component, added KPI section.
+- app/dashboard/hq-ops/credits/page.tsx — Added Role, Status columns and Ban toggle.
+- app/api/admin/users/credits/route.ts — Returned isBanned and role fields.
+- app/api/admin/users/ban/route.ts — Created new route for banning.
 
 Notes for review:
-- Refunds are tracked in the database under `creditTransaction` with the `REFUND` type, so they are auditable on the admin dashboard.
+- Users are banned at the API boundary/SignIn boundary, not actively booted from Edge Middleware, because checking the DB on every single Edge request via JWTs would cause massive latency.
