@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useState, useRef } from 'react';
-import { Camera, X, Upload } from 'lucide-react';
+import { Camera, X, Upload, Loader2 } from 'lucide-react';
+import { CropModal } from '@/components/editor/CropModal';
 
 interface PhotoUploadProps {
   currentUrl?: string;
@@ -12,9 +13,10 @@ export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUpload
   const [preview, setPreview] = useState<string | null>(currentUrl || null);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (file: File | null) => {
+  const handleFileChange = (file: File | null) => {
     if (!file) return;
     
     // Check file type
@@ -29,10 +31,21 @@ export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUpload
       return;
     }
 
+    // Pass image to cropper instead of uploading directly
+    const imageUrl = URL.createObjectURL(file);
+    setImageToCrop(imageUrl);
+    
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleCropComplete = async (croppedFile: File) => {
+    setImageToCrop(null);
     try {
       setIsUploading(true);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', croppedFile);
 
       const res = await fetch('/api/upload', {
         method: 'POST',
@@ -132,6 +145,15 @@ export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUpload
       <p className="text-xs text-slate-400 text-center">
         JPG, PNG • Max 5MB
       </p>
+
+      {/* Rendu conditionnel du Modal de Rognage */}
+      {imageToCrop && (
+        <CropModal
+          imageSrc={imageToCrop}
+          onCropComplete={handleCropComplete}
+          onClose={() => setImageToCrop(null)}
+        />
+      )}
     </div>
   );
 }

@@ -1,21 +1,21 @@
-[2026-06-21] — CRM & HQ Ops KPIs (V2)
+[2026-06-21] — Implémentation Rognage Photo CV
 
 What changed:
-- Added `isBanned` boolean to the `User` Prisma model.
-- Upgraded the `/dashboard/hq-ops/page.tsx` index to a Server Component to display real-time global KPIs (Total Users, Daily Signups, Credits Consumed, Credits Distributed).
-- Transformed the `/dashboard/hq-ops/credits` page into a fully-fledged CRM that now displays user roles, active/banned status, and allows admins to ban/unban users directly from the UI.
-- Created `/api/admin/users/ban` route to handle status toggle securely.
+- Installed `react-easy-crop` dependency.
+- Created `lib/cropImage.ts` utility to extract cropped images natively via HTML5 Canvas.
+- Created `components/editor/CropModal.tsx` for a touch-friendly cropping interface with zoom.
+- Refactored `components/editor/PhotoUpload.tsx` to intercept the file selection, display the `CropModal`, and upload the final cropped File.
 
 Why:
-- To give the admin a high-level overview of the platform's health (KPIs).
-- To provide a quick action to stop fraudulent or abusive accounts from consuming API resources (Ban mechanism) without creating a redundant "Users" page.
+- Users frequently uploaded rectangular or non-centered photos that looked bad on the final CV.
+- Extracting the crop on the client side (Canvas) avoids expensive image processing on the Next.js server and saves Cloudinary storage by enforcing a max 400x400px resolution.
 
 Files affected:
-- prisma/schema.prisma — Added isBanned field.
-- app/dashboard/hq-ops/page.tsx — Refactored to Server Component, added KPI section.
-- app/dashboard/hq-ops/credits/page.tsx — Added Role, Status columns and Ban toggle.
-- app/api/admin/users/credits/route.ts — Returned isBanned and role fields.
-- app/api/admin/users/ban/route.ts — Created new route for banning.
+- package.json — Added react-easy-crop.
+- lib/cropImage.ts — New canvas utility.
+- components/editor/CropModal.tsx — New UI modal.
+- components/editor/PhotoUpload.tsx — Integrated the modal into the upload flow.
 
 Notes for review:
-- Users are banned at the API boundary/SignIn boundary, not actively booted from Edge Middleware, because checking the DB on every single Edge request via JWTs would cause massive latency.
+- The `cropShape="round"` property is used in the modal to guide the user visually, ensuring the face fits the CV's circular avatar design.
+- The output resolution is currently capped at 400x400px in the canvas logic to optimize uploads.
