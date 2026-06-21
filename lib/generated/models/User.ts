@@ -48,6 +48,7 @@ export type UserMinAggregateOutputType = {
   image: string | null
   role: $Enums.Role | null
   credits: number | null
+  isBanned: boolean | null
   acceptsMarketing: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -71,6 +72,7 @@ export type UserMaxAggregateOutputType = {
   image: string | null
   role: $Enums.Role | null
   credits: number | null
+  isBanned: boolean | null
   acceptsMarketing: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -94,6 +96,7 @@ export type UserCountAggregateOutputType = {
   image: number
   role: number
   credits: number
+  isBanned: number
   acceptsMarketing: number
   createdAt: number
   updatedAt: number
@@ -133,6 +136,7 @@ export type UserMinAggregateInputType = {
   image?: true
   role?: true
   credits?: true
+  isBanned?: true
   acceptsMarketing?: true
   createdAt?: true
   updatedAt?: true
@@ -156,6 +160,7 @@ export type UserMaxAggregateInputType = {
   image?: true
   role?: true
   credits?: true
+  isBanned?: true
   acceptsMarketing?: true
   createdAt?: true
   updatedAt?: true
@@ -179,6 +184,7 @@ export type UserCountAggregateInputType = {
   image?: true
   role?: true
   credits?: true
+  isBanned?: true
   acceptsMarketing?: true
   createdAt?: true
   updatedAt?: true
@@ -289,6 +295,7 @@ export type UserGroupByOutputType = {
   image: string | null
   role: $Enums.Role
   credits: number
+  isBanned: boolean
   acceptsMarketing: boolean
   createdAt: Date
   updatedAt: Date
@@ -335,6 +342,7 @@ export type UserWhereInput = {
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   credits?: Prisma.FloatFilter<"User"> | number
+  isBanned?: Prisma.BoolFilter<"User"> | boolean
   acceptsMarketing?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -372,6 +380,7 @@ export type UserOrderByWithRelationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
   acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -414,6 +423,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   credits?: Prisma.FloatFilter<"User"> | number
+  isBanned?: Prisma.BoolFilter<"User"> | boolean
   acceptsMarketing?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -450,6 +460,7 @@ export type UserOrderByWithAggregationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
   acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -481,6 +492,7 @@ export type UserScalarWhereWithAggregatesInput = {
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   credits?: Prisma.FloatWithAggregatesFilter<"User"> | number
+  isBanned?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   acceptsMarketing?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -504,6 +516,7 @@ export type UserCreateInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -540,6 +553,7 @@ export type UserUncheckedCreateInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -576,6 +590,7 @@ export type UserUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -612,6 +627,7 @@ export type UserUncheckedUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -648,6 +664,7 @@ export type UserCreateManyInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -671,6 +688,7 @@ export type UserUpdateManyMutationInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -693,6 +711,7 @@ export type UserUncheckedUpdateManyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -742,6 +761,7 @@ export type UserCountOrderByAggregateInput = {
   image?: Prisma.SortOrder
   role?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
   acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -772,6 +792,7 @@ export type UserMaxOrderByAggregateInput = {
   image?: Prisma.SortOrder
   role?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
   acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -795,6 +816,7 @@ export type UserMinOrderByAggregateInput = {
   image?: Prisma.SortOrder
   role?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
   acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -1067,6 +1089,7 @@ export type UserCreateWithoutAccountsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1102,6 +1125,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1153,6 +1177,7 @@ export type UserUpdateWithoutAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1188,6 +1213,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1223,6 +1249,7 @@ export type UserCreateWithoutSessionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1258,6 +1285,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1309,6 +1337,7 @@ export type UserUpdateWithoutSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1344,6 +1373,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1379,6 +1409,7 @@ export type UserCreateWithoutAnalysesInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1414,6 +1445,7 @@ export type UserUncheckedCreateWithoutAnalysesInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1465,6 +1497,7 @@ export type UserUpdateWithoutAnalysesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1500,6 +1533,7 @@ export type UserUncheckedUpdateWithoutAnalysesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1535,6 +1569,7 @@ export type UserCreateWithoutAiLogsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1570,6 +1605,7 @@ export type UserUncheckedCreateWithoutAiLogsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1621,6 +1657,7 @@ export type UserUpdateWithoutAiLogsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1656,6 +1693,7 @@ export type UserUncheckedUpdateWithoutAiLogsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1691,6 +1729,7 @@ export type UserCreateWithoutReferredUsersInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1726,6 +1765,7 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1766,6 +1806,7 @@ export type UserCreateWithoutReferredByInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1801,6 +1842,7 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1857,6 +1899,7 @@ export type UserUpdateWithoutReferredUsersInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1892,6 +1935,7 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1946,6 +1990,7 @@ export type UserScalarWhereInput = {
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   credits?: Prisma.FloatFilter<"User"> | number
+  isBanned?: Prisma.BoolFilter<"User"> | boolean
   acceptsMarketing?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -1969,6 +2014,7 @@ export type UserCreateWithoutFeedbacksInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2004,6 +2050,7 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2055,6 +2102,7 @@ export type UserUpdateWithoutFeedbacksInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2090,6 +2138,7 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2125,6 +2174,7 @@ export type UserCreateWithoutPaymentTransactionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2160,6 +2210,7 @@ export type UserUncheckedCreateWithoutPaymentTransactionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2211,6 +2262,7 @@ export type UserUpdateWithoutPaymentTransactionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2246,6 +2298,7 @@ export type UserUncheckedUpdateWithoutPaymentTransactionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2281,6 +2334,7 @@ export type UserCreateWithoutCvsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2316,6 +2370,7 @@ export type UserUncheckedCreateWithoutCvsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2367,6 +2422,7 @@ export type UserUpdateWithoutCvsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2402,6 +2458,7 @@ export type UserUncheckedUpdateWithoutCvsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2437,6 +2494,7 @@ export type UserCreateWithoutCoverLettersInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2472,6 +2530,7 @@ export type UserUncheckedCreateWithoutCoverLettersInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2523,6 +2582,7 @@ export type UserUpdateWithoutCoverLettersInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2558,6 +2618,7 @@ export type UserUncheckedUpdateWithoutCoverLettersInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2593,6 +2654,7 @@ export type UserCreateWithoutCreditTransactionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2628,6 +2690,7 @@ export type UserUncheckedCreateWithoutCreditTransactionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2679,6 +2742,7 @@ export type UserUpdateWithoutCreditTransactionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2714,6 +2778,7 @@ export type UserUncheckedUpdateWithoutCreditTransactionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2749,6 +2814,7 @@ export type UserCreateWithoutInterviewSessionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2784,6 +2850,7 @@ export type UserUncheckedCreateWithoutInterviewSessionsInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2835,6 +2902,7 @@ export type UserUpdateWithoutInterviewSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2870,6 +2938,7 @@ export type UserUncheckedUpdateWithoutInterviewSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2905,6 +2974,7 @@ export type UserCreateWithoutCandidateProfilesInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2940,6 +3010,7 @@ export type UserUncheckedCreateWithoutCandidateProfilesInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2991,6 +3062,7 @@ export type UserUpdateWithoutCandidateProfilesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3026,6 +3098,7 @@ export type UserUncheckedUpdateWithoutCandidateProfilesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3061,6 +3134,7 @@ export type UserCreateWithoutProfileUnlocksInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3096,6 +3170,7 @@ export type UserUncheckedCreateWithoutProfileUnlocksInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3147,6 +3222,7 @@ export type UserUpdateWithoutProfileUnlocksInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3182,6 +3258,7 @@ export type UserUncheckedUpdateWithoutProfileUnlocksInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3217,6 +3294,7 @@ export type UserCreateManyReferredByInput = {
   image?: string | null
   role?: $Enums.Role
   credits?: number
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3239,6 +3317,7 @@ export type UserUpdateWithoutReferredByInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3274,6 +3353,7 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3309,6 +3389,7 @@ export type UserUncheckedUpdateManyWithoutReferredByInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3470,6 +3551,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   image?: boolean
   role?: boolean
   credits?: boolean
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -3508,6 +3590,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   role?: boolean
   credits?: boolean
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -3532,6 +3615,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   role?: boolean
   credits?: boolean
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -3556,6 +3640,7 @@ export type UserSelectScalar = {
   image?: boolean
   role?: boolean
   credits?: boolean
+  isBanned?: boolean
   acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -3571,7 +3656,7 @@ export type UserSelectScalar = {
   freeUnlocksUsed?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "credits" | "acceptsMarketing" | "createdAt" | "updatedAt" | "phone" | "jobTitle" | "sector" | "referralCode" | "referredById" | "referralCount" | "premiumUntil" | "companyName" | "recruiterCredits" | "freeUnlocksUsed", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "credits" | "isBanned" | "acceptsMarketing" | "createdAt" | "updatedAt" | "phone" | "jobTitle" | "sector" | "referralCode" | "referredById" | "referralCount" | "premiumUntil" | "companyName" | "recruiterCredits" | "freeUnlocksUsed", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   referredBy?: boolean | Prisma.User$referredByArgs<ExtArgs>
   referredUsers?: boolean | Prisma.User$referredUsersArgs<ExtArgs>
@@ -3622,6 +3707,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     image: string | null
     role: $Enums.Role
     credits: number
+    isBanned: boolean
     acceptsMarketing: boolean
     createdAt: Date
     updatedAt: Date
@@ -4079,6 +4165,7 @@ export interface UserFieldRefs {
   readonly image: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly credits: Prisma.FieldRef<"User", 'Float'>
+  readonly isBanned: Prisma.FieldRef<"User", 'Boolean'>
   readonly acceptsMarketing: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>

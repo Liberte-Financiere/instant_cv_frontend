@@ -9,6 +9,8 @@ interface User {
   name: string | null;
   email: string;
   credits: number;
+  role: string;
+  isBanned: boolean;
   createdAt: string;
 }
 
@@ -21,6 +23,7 @@ export default function AdminCreditPanel() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [amountToAdd, setAmountToAdd] = useState(35);
   const [isAdding, setIsAdding] = useState(false);
+  const [isBanning, setIsBanning] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUsers();
@@ -70,6 +73,29 @@ export default function AdminCreditPanel() {
     }
   };
 
+  const handleToggleBan = async (userId: string, currentStatus: boolean) => {
+    setIsBanning(userId);
+    try {
+      const res = await fetch('/api/admin/users/ban', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          targetUserId: userId,
+          isBanned: !currentStatus
+        }),
+      });
+
+      if (!res.ok) throw new Error('Erreur API');
+      
+      toast.success(!currentStatus ? 'Utilisateur banni.' : 'Utilisateur réactivé.');
+      fetchUsers();
+    } catch (error) {
+      toast.error('Échec de la modification du statut.');
+    } finally {
+      setIsBanning(null);
+    }
+  };
+
   return (
     <div className="p-4 lg:p-8 max-w-7xl mx-auto space-y-6">
       <div className="flex items-center gap-3 pb-4 border-b border-slate-200">
@@ -77,8 +103,8 @@ export default function AdminCreditPanel() {
           <ShieldAlert className="w-6 h-6 text-red-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Panel Administrateur - Crédits</h1>
-          <p className="text-slate-500 text-sm">Gestion manuelle des rechargements clients (WhatsApp)</p>
+          <h1 className="text-2xl font-bold text-slate-900">CRM Utilisateurs & Crédits</h1>
+          <p className="text-slate-500 text-sm">Gestion des comptes, des rôles et rechargements manuels</p>
         </div>
       </div>
 
@@ -102,7 +128,9 @@ export default function AdminCreditPanel() {
                  <tr>
                     <th className="p-4 rounded-tl-xl font-medium">Utilisateur</th>
                     <th className="p-4 font-medium">Email</th>
-                    <th className="p-4 font-medium">Solde de Crédits</th>
+                    <th className="p-4 font-medium">Rôle</th>
+                    <th className="p-4 font-medium">Statut</th>
+                    <th className="p-4 font-medium">Crédits</th>
                     <th className="p-4 font-medium">Inscription</th>
                     <th className="p-4 rounded-tr-xl font-medium text-right">Action</th>
                  </tr>
@@ -111,12 +139,30 @@ export default function AdminCreditPanel() {
                  {isLoading ? (
                     <tr><td colSpan={5} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-400" /></td></tr>
                  ) : users.length === 0 ? (
-                    <tr><td colSpan={5} className="p-8 text-center text-slate-500">Aucun utilisateur trouvé.</td></tr>
+                    <tr><td colSpan={7} className="p-8 text-center text-slate-500">Aucun utilisateur trouvé.</td></tr>
                  ) : (
                     users.map((user) => (
                       <tr key={user.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
-                        <td className="p-4 font-medium text-slate-900">{user.name || '---'}</td>
+                        <td className="p-4 font-medium text-slate-900">
+                           {user.name || '---'}
+                        </td>
                         <td className="p-4">{user.email}</td>
+                        <td className="p-4">
+                          <span className={`px-2 py-1 text-xs font-semibold rounded-md ${
+                            user.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' :
+                            user.role === 'RECRUITER' ? 'bg-blue-100 text-blue-700' :
+                            'bg-slate-100 text-slate-700'
+                          }`}>
+                            {user.role}
+                          </span>
+                        </td>
+                        <td className="p-4">
+                          <span className={`px-2 py-1 text-xs font-semibold rounded-md ${
+                            user.isBanned ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                          }`}>
+                            {user.isBanned ? 'Banni' : 'Actif'}
+                          </span>
+                        </td>
                         <td className="p-4">
                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 font-bold border border-blue-100">
                              <Sparkles className="w-3.5 h-3.5" />
@@ -125,12 +171,23 @@ export default function AdminCreditPanel() {
                         </td>
                         <td className="p-4 text-xs text-slate-400">{new Date(user.createdAt).toLocaleDateString()}</td>
                         <td className="p-4 text-right">
-                           <button 
-                             onClick={() => setSelectedUser(user)}
-                             className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition-colors text-xs font-semibold"
-                           >
-                             <PlusCircle className="w-4 h-4" /> Relancer
-                           </button>
+                           <div className="flex items-center justify-end gap-2">
+                             <button 
+                               onClick={() => handleToggleBan(user.id, user.isBanned)}
+                               disabled={isBanning === user.id}
+                               className={`px-3 py-1.5 rounded-lg transition-colors text-xs font-semibold disabled:opacity-50 ${
+                                 user.isBanned ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'
+                               }`}
+                             >
+                               {isBanning === user.id ? '...' : user.isBanned ? 'Débannir' : 'Bannir'}
+                             </button>
+                             <button 
+                               onClick={() => setSelectedUser(user)}
+                               className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition-colors text-xs font-semibold"
+                             >
+                               <PlusCircle className="w-4 h-4" /> Relancer
+                             </button>
+                           </div>
                         </td>
                       </tr>
                     ))
