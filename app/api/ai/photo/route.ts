@@ -160,7 +160,7 @@ export async function POST(req: Request) {
             userId,
             amount: -COST,
             type: 'USAGE',
-            description: 'Génération Photo Pro IA (Nano Banana)'
+            description: 'Génération Photo Pro IA'
           }
         });
         
@@ -190,7 +190,7 @@ export async function POST(req: Request) {
         }
       });
       return NextResponse.json(
-        { error: `Le service de génération d'image a échoué: ${apiErrorMsg}` },
+        { error: `Le service IA est temporairement indisponible. Veuillez réessayer.` },
         { status: 503 }
       );
     }

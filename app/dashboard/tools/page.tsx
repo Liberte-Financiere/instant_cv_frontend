@@ -6,15 +6,6 @@ import Link from 'next/link';
 
 const tools = [
   {
-    id: 'linkedin',
-    title: 'Optimiseur LinkedIn',
-    description: 'Générez un résumé percutant et des accroches optimisées pour l\'algorithme LinkedIn à partir de votre CV.',
-    icon: Linkedin,
-    color: 'text-[#0A66C2]',
-    bgColor: 'bg-[#0A66C2]/10',
-    status: 'coming_soon',
-  },
-  {
     id: 'photo',
     title: 'Photo Pro IA',
     description: 'Uploadez un simple selfie de vous, notre IA le transforme en véritable photo de profil studio professionnelle.',
@@ -22,42 +13,6 @@ const tools = [
     color: 'text-purple-500',
     bgColor: 'bg-purple-500/10',
     status: 'active',
-  },
-  {
-    id: 'portfolio',
-    title: 'Générateur de Portfolio',
-    description: 'Transformez votre CV instantanément en un site web personnel élégant. Hébergement inclus en un clic.',
-    icon: Globe,
-    color: 'text-emerald-500',
-    bgColor: 'bg-emerald-500/10',
-    status: 'coming_soon',
-  },
-  {
-    id: 'email',
-    title: 'Email de Relance',
-    description: 'Créez l\'e-mail parfait pour relancer un recruteur après un entretien sans paraître insistant.',
-    icon: Mail,
-    color: 'text-amber-500',
-    bgColor: 'bg-amber-500/10',
-    status: 'coming_soon',
-  },
-  {
-    id: 'salary',
-    title: 'Simulateur de Salaire',
-    description: 'Découvrez votre valeur sur le marché et entraînez-vous à négocier votre salaire avec notre agent IA.',
-    icon: Coins,
-    color: 'text-rose-500',
-    bgColor: 'bg-rose-500/10',
-    status: 'coming_soon',
-  },
-  {
-    id: 'assessment',
-    title: 'Bilan de Compétences',
-    description: 'L\'IA analyse votre parcours et vous suggère les métiers et formations les plus pertinents pour votre évolution.',
-    icon: ClipboardList,
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
-    status: 'coming_soon',
   }
 ];
 
