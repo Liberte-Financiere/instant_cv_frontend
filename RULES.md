@@ -120,7 +120,11 @@ const data = useStore(s => s.data);
         output: { type: 'text', value: stringResult } // Pour Zod Validator
       }]
     }
-    ```
+## 8. 🎨 Manipulation d'Images & Canvas
+
+* **Transparence et Export** : Le format `image/jpeg` sur un Canvas HTML5 **ne supporte pas la transparence**. Si vous recadrez ou manipulez une image avec un fond transparent (ex: logo, détourage IA) et l'exportez via `canvas.toBlob(..., 'image/jpeg')`, les pixels transparents deviendront **noir opaque**.
+* **Solution** : Toujours exporter en `image/png` ou `image/webp` lorsqu'une image peut contenir un canal Alpha (transparence).
 
 ## Changelog
 - [2026-06-15] — Consolidation des règles d'Architecture IA (Instance scoping, generateObject + Zod, et double-typage pour le Tool Calling manuellement réinjecté).
+- [2026-06-21] — Ajout de la règle sur la gestion de la transparence avec HTML5 Canvas et les formats d'export (JPEG vs PNG).

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useState, useRef } from 'react';
-import { Camera, X, Upload, Loader2 } from 'lucide-react';
+import { Camera, X, Upload, Loader2, Edit2 } from 'lucide-react';
 import { CropModal } from '@/components/editor/CropModal';
 
 interface PhotoUploadProps {
@@ -14,6 +14,7 @@ export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUpload
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+  const [fileToCrop, setFileToCrop] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (file: File | null) => {
@@ -34,14 +35,38 @@ export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUpload
     // Pass image to cropper instead of uploading directly
     const imageUrl = URL.createObjectURL(file);
     setImageToCrop(imageUrl);
+    setFileToCrop(file);
     
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
+  const handleEditExisting = async () => {
+    if (!preview) return;
+    try {
+      setIsUploading(true);
+      // We use our local proxy to bypass CORS issues from Cloudinary or external hosts
+      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(preview)}`;
+      const res = await fetch(proxyUrl);
+      if (!res.ok) throw new Error('Network response was not ok');
+      const blob = await res.blob();
+      const file = new File([blob], 'photo.jpg', { type: blob.type });
+      
+      const imageUrl = URL.createObjectURL(file);
+      setImageToCrop(imageUrl);
+      setFileToCrop(file);
+    } catch (error) {
+      console.error(error);
+      alert("Impossible de charger l'image pour l'édition.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleCropComplete = async (croppedFile: File) => {
     setImageToCrop(null);
+    setFileToCrop(null);
     try {
       setIsUploading(true);
       const formData = new FormData();
@@ -100,23 +125,34 @@ export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUpload
       />
 
       {preview ? (
-        <div className="relative group">
+        <div className="relative group cursor-pointer" onClick={handleEditExisting}>
           <Image
             src={preview}
             alt="Photo de profil"
             width={112}
             height={112}
-            className="w-28 h-28 rounded-full object-cover border-4 border-slate-100 shadow-lg"
+            className="w-28 h-28 rounded-full object-cover border-4 border-slate-100 shadow-lg group-hover:opacity-75 transition-opacity"
           />
+          {/* Icône d'édition centrale au survol */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            {isUploading ? (
+              <Loader2 className="w-6 h-6 text-slate-700 animate-spin" />
+            ) : (
+              <Edit2 className="w-8 h-8 text-white drop-shadow-md" />
+            )}
+          </div>
+          
           <button
-            onClick={handleRemove}
+            type="button"
+            onClick={(e) => { e.stopPropagation(); handleRemove(); }}
             className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-red-600"
             title="Supprimer la photo"
           >
             <X className="w-4 h-4" />
           </button>
           <button
-            onClick={() => fileInputRef.current?.click()}
+            type="button"
+            onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
             className="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors"
             title="Changer la photo"
           >
@@ -147,11 +183,15 @@ export function PhotoUpload({ currentUrl, onPhotoChange, onRemove }: PhotoUpload
       </p>
 
       {/* Rendu conditionnel du Modal de Rognage */}
-      {imageToCrop && (
+      {imageToCrop && fileToCrop && (
         <CropModal
           imageSrc={imageToCrop}
+          imageFile={fileToCrop}
           onCropComplete={handleCropComplete}
-          onClose={() => setImageToCrop(null)}
+          onClose={() => {
+            setImageToCrop(null);
+            setFileToCrop(null);
+          }}
         />
       )}
     </div>
