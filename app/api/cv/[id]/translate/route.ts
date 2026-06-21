@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
-import { checkAndConsumeCredits } from '@/lib/credits';
+import { checkAndConsumeCredits, refundCredits } from '@/lib/credits';
 import { generateText } from 'ai';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { APP_CONFIG } from '@/lib/config';
@@ -37,9 +37,11 @@ export async function POST(
       return NextResponse.json({ error: "CV introuvable ou vous n'avez pas les droits." }, { status: 404 });
     }
 
+    let creditsConsumed = false;
     // 2. Consume Credits
     try {
       await checkAndConsumeCredits(session.user.id, 'AI_CV_TRANSLATE', `Traduction du CV en ${targetLanguage.toUpperCase()}`);
+      creditsConsumed = true;
     } catch (e: any) {
       return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
     }
@@ -160,10 +162,20 @@ ${JSON.stringify(cvContentToTranslate, null, 2)}`;
     let userMessage = 'Une erreur est survenue lors de la traduction de votre CV.';
     const errorMessage = error.toString().toLowerCase();
 
+    if (creditsConsumed && session?.user?.id) {
+      try {
+        await refundCredits(session.user.id, 'AI_CV_TRANSLATE', 'Remboursement suite à un échec de la traduction IA');
+      } catch (refundErr) {
+        console.error('[TRANSLATE] Échec du remboursement des crédits:', refundErr);
+      }
+    }
+
     if (errorMessage.includes('503') || errorMessage.includes('overloaded')) {
-      userMessage = "L'IA est très sollicitée. Réessayez dans quelques secondes !";
+      userMessage = "L'IA est très sollicitée. Réessayez dans quelques secondes ! Vos crédits ont été remboursés.";
     } else if (errorMessage.includes('json') || errorMessage.includes('parse')) {
-      userMessage = "L'IA a généré une traduction avec un format invalide. Veuillez réessayer.";
+      userMessage = "L'IA a généré une traduction avec un format invalide. Veuillez réessayer. Vos crédits ont été remboursés.";
+    } else {
+      userMessage = "Une erreur est survenue lors de la traduction de votre CV. Vos crédits ont été remboursés.";
     }
 
     return NextResponse.json({ error: userMessage, details: errorMessage }, { status: 500 });

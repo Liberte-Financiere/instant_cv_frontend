@@ -21,7 +21,7 @@ const tools = [
     icon: Camera,
     color: 'text-purple-500',
     bgColor: 'bg-purple-500/10',
-    status: 'coming_soon',
+    status: 'active',
   },
   {
     id: 'portfolio',
@@ -131,13 +131,23 @@ export default function ToolsPage() {
             </div>
 
             <div className="mt-auto relative z-10">
-              <button 
-                disabled={tool.status === 'coming_soon'}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-50 text-slate-500 text-sm font-medium transition-all group-hover:bg-slate-100 disabled:opacity-70 disabled:cursor-not-allowed border border-slate-200"
-              >
-                {tool.status === 'coming_soon' ? 'En développement' : 'Découvrir'}
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              {tool.status === 'coming_soon' ? (
+                <button 
+                  disabled
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-50 text-slate-500 text-sm font-medium transition-all border border-slate-200 opacity-70 cursor-not-allowed"
+                >
+                  En développement
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              ) : (
+                <Link 
+                  href={`/dashboard/tools/${tool.id}`}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-50 text-slate-500 text-sm font-medium transition-all group-hover:bg-slate-100 group-hover:text-slate-800 border border-slate-200"
+                >
+                  Découvrir
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              )}
             </div>
           </motion.div>
         ))}

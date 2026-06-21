@@ -77,4 +77,6 @@ export function checkRateLimit(key: string, options: RateLimitOptions): RateLimi
 export const RATE_LIMITS = {
   /** File upload: 15 requests per minute */
   UPLOAD: { limit: 15, windowMs: 60_000 },
+  /** AI features: 5 requests per minute */
+  AI_ANALYSIS: { limit: 5, windowMs: 60_000 },
 } as const;

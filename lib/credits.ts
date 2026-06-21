@@ -97,7 +97,7 @@ export async function checkAndConsumeCredits(
 export async function addCredits(
   userId: string,
   amount: number,
-  type: 'PURCHASE' | 'BONUS_REFERRAL' | 'SIGNUP' | 'ADMIN_GIFT',
+  type: 'PURCHASE' | 'BONUS_REFERRAL' | 'SIGNUP' | 'ADMIN_GIFT' | 'REFUND',
   description: string
 ): Promise<{ success: boolean; newBalance: number }> {
   return await prisma.$transaction(async (tx) => {
@@ -133,4 +133,16 @@ export async function getUserCredits(userId: string): Promise<number> {
     select: { credits: true },
   });
   return user?.credits || 0;
+}
+
+/**
+ * Refunds credits to a user account if an action failed.
+ */
+export async function refundCredits(
+  userId: string,
+  actionType: ActionType,
+  description: string = "Remboursement suite à un échec technique"
+): Promise<{ success: boolean; newBalance: number }> {
+  const cost = CREDIT_COSTS[actionType];
+  return await addCredits(userId, cost, 'REFUND', description);
 }
