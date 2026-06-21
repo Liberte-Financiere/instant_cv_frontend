@@ -1,21 +1,31 @@
-[2026-06-21] — Implémentation Rognage Photo CV
+[2026-06-21] — Implémentation du détourage IA (Background Removal)
 
 What changed:
-- Installed `react-easy-crop` dependency.
-- Created `lib/cropImage.ts` utility to extract cropped images natively via HTML5 Canvas.
-- Created `components/editor/CropModal.tsx` for a touch-friendly cropping interface with zoom.
-- Refactored `components/editor/PhotoUpload.tsx` to intercept the file selection, display the `CropModal`, and upload the final cropped File.
+- Création d'un microservice Python (FastAPI + rembg) tournant sur le port 3001 en local.
+- Ajout d'une route proxy `/api/proxy-image` pour gérer le CORS des images hébergées (Cloudinary, etc.).
+- Ajout de la route API sécurisée `/api/ai/remove-bg` avec facturation d'un (1) crédit par utilisation.
+- Modification du composant `CropModal.tsx` pour inclure le bouton "Magique" de détourage.
+- Ajustement de la résolution d'export Canvas à 800x800 px au format PNG (pour supporter la transparence et la netteté HD).
+- Ajustement de `deviceScaleFactor: 2` dans Puppeteer pour garantir des PDF "Retina/HD".
 
 Why:
-- Users frequently uploaded rectangular or non-centered photos that looked bad on the final CV.
-- Extracting the crop on the client side (Canvas) avoids expensive image processing on the Next.js server and saves Cloudinary storage by enforcing a max 400x400px resolution.
+- Permettre aux utilisateurs d'avoir une photo de CV professionnelle instantanément sans quitter l'application.
+- Le format PNG + Haute Résolution + Puppeteer 2x assurent un export PDF final ultra-net et sans fond noir de compression JPEG.
+- Le microservice Python isolé évite de saturer le serveur Next.js avec le calcul lourd des tenseurs U2Net.
 
 Files affected:
-- package.json — Added react-easy-crop.
-- lib/cropImage.ts — New canvas utility.
-- components/editor/CropModal.tsx — New UI modal.
-- components/editor/PhotoUpload.tsx — Integrated the modal into the upload flow.
+- microservices/bg_removal/main.py — Microservice FastAPI pour le détourage.
+- ecosystem.config.js — Ajout du service Python dans la gestion PM2.
+- app/api/ai/remove-bg/route.ts — Proxy, vérification de sécurité (taille, SSRF), gestion des crédits.
+- app/api/proxy-image/route.ts — Contournement des CORS pour l'édition de photos existantes.
+- components/editor/CropModal.tsx — UI/UX du bouton "Enlever l'arrière plan (1 crédit)".
+- lib/cropImage.ts — Modification de l'export en PNG 800x800px.
+- app/api/pdf/generate/route.ts — Ajout de `deviceScaleFactor: 2` pour des PDF HD.
+- RULES.md — Documentation de l'edge case Canvas JPEG vs PNG.
+
+Breaking changes:
+- None
 
 Notes for review:
-- The `cropShape="round"` property is used in the modal to guide the user visually, ensuring the face fits the CV's circular avatar design.
-- The output resolution is currently capped at 400x400px in the canvas logic to optimize uploads.
+- Le microservice Python tourne sur localhost:3001. En production, s'assurer que PM2 le lance bien avec l'environnement virtuel.
+- L'appel initial de l'IA (si le serveur a redémarré) met un timeout à 120s pour télécharger le modèle U2Net (~170 Mo).

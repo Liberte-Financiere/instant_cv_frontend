@@ -20,8 +20,8 @@ export default async function getCroppedImg(
     return null
   }
 
-  // Force output to 400x400px to optimize storage and loading times
-  const targetDimension = 400;
+  // Force output to 800x800px to ensure high quality on Retina displays and in PDF generation
+  const targetDimension = 800;
 
   canvas.width = targetDimension;
   canvas.height = targetDimension;
@@ -48,7 +48,7 @@ export default async function getCroppedImg(
         resolve(null)
         return
       }
-      resolve(new File([blob], 'cropped.jpg', { type: 'image/jpeg', lastModified: Date.now() }))
-    }, 'image/jpeg', 0.9)
+      resolve(new File([blob], 'cropped.png', { type: 'image/png', lastModified: Date.now() }))
+    }, 'image/png')
   })
 }

@@ -58,7 +58,7 @@ export async function POST(req: Request) {
         '--no-zygote',
         '--disable-gpu'
       ],
-      defaultViewport: { width: 1920, height: 1080 },
+      defaultViewport: { width: 1920, height: 1080, deviceScaleFactor: 2 },
     });
 
     console.log(`[PDF] 🤖 Navigateur Chrome réel (${chromeExecutablePath}) lancé avec succès. J'ouvre un nouvel onglet...`);
