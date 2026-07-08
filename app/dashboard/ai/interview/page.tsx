@@ -107,7 +107,7 @@ export default function InterviewSetupPage() {
        setCvSourceMode('select');
        toast.success("PDF importé avec succès pour l'entretien !");
     } catch (error) {
-       toast.error("Impossible de lire le contenu du PDF.");
+       toast.error("Désolé, la structure de ce PDF est illisible ou verrouillée. Veuillez essayer avec un autre fichier ou ré-exporter votre CV depuis un outil officiel.");
        setUploadedFile(null);
     } finally {
        setIsUploading(false);

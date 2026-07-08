@@ -14,6 +14,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   let session: any;
+  let creditsConsumed = false;
   try {
     session = await auth();
     if (!session?.user?.id) {
@@ -37,7 +38,6 @@ export async function POST(
       return NextResponse.json({ error: "CV introuvable ou vous n'avez pas les droits." }, { status: 404 });
     }
 
-    let creditsConsumed = false;
     // 2. Consume Credits
     try {
       await checkAndConsumeCredits(session.user.id, 'AI_CV_TRANSLATE', `Traduction du CV en ${targetLanguage.toUpperCase()}`);

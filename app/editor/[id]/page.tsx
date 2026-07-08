@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Download, Save, Eye, LayoutTemplate } from 'lucide-react';
 import Link from 'next/link';
@@ -17,6 +18,7 @@ import { LanguageSelector } from '@/components/editor/LanguageSelector';
 import { MobilePreviewModal } from '@/components/editor/MobilePreviewModal';
 import { DebugFillButton } from '@/components/editor/DebugFillButton';
 import { EDITOR_STEPS } from '@/types/cv';
+import { trackTelemetry } from '@/lib/telemetry';
 
 export default function EditorPage() {
   const params = useParams();
@@ -28,9 +30,42 @@ export default function EditorPage() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState('');
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const [showNudge, setShowNudge] = useState(false);
   
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedRef = useRef<string>('');
+
+  const { data: session, status } = useSession();
+  const userId = status === 'authenticated' ? session?.user?.id : (status === 'loading' ? null : 'anonymous');
+
+  // Sync tempTitle when CV loads
+  useEffect(() => {
+    if (currentCV?.title) {
+      setTempTitle(currentCV.title);
+    }
+  }, [currentCV?.title]);
+
+  // Manage onboarding nudge for template selector
+  useEffect(() => {
+    if (userId === null) return; // Wait for session to load
+    const key = `template-nudge-count-${userId}`;
+    const storedCount = localStorage.getItem(key);
+    const count = storedCount ? parseInt(storedCount, 10) : 0;
+    
+    if (count < 3) {
+      setShowNudge(true);
+      localStorage.setItem(key, String(count + 1));
+      trackTelemetry('template_nudge_impression', { count: count + 1, userId });
+    }
+  }, [userId]);
+
+  const handleNudgeDismiss = () => {
+    if (userId === null) return;
+    const key = `template-nudge-count-${userId}`;
+    localStorage.setItem(key, '3');
+    setShowNudge(false);
+    trackTelemetry('template_nudge_dismissed', { userId });
+  };
 
   const id = params.id as string;
 
@@ -173,7 +208,7 @@ export default function EditorPage() {
           </Link>
           <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
           <div className="min-w-0 flex flex-col justify-center">
-            {isEditingTitle ? (
+            <div className="relative flex items-center group max-w-[120px] xs:max-w-[160px] sm:max-w-[250px] -ml-2">
               <input
                 ref={titleInputRef}
                 type="text"
@@ -182,35 +217,24 @@ export default function EditorPage() {
                 onBlur={() => {
                   if (tempTitle.trim() && tempTitle.trim() !== currentCV.title) {
                     useCVStore.getState().updateCVTitle(tempTitle.trim());
+                    trackTelemetry('cv_renamed', { cvId: currentCV.id, newTitle: tempTitle.trim() });
                   }
-                  setIsEditingTitle(false);
                 }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    if (tempTitle.trim() && tempTitle.trim() !== currentCV.title) {
-                      useCVStore.getState().updateCVTitle(tempTitle.trim());
-                    }
-                    setIsEditingTitle(false);
+                    titleInputRef.current?.blur();
                   } else if (e.key === 'Escape') {
-                    setIsEditingTitle(false);
+                    setTempTitle(currentCV.title);
+                    titleInputRef.current?.blur();
                   }
                 }}
-                className="font-bold text-slate-900 text-sm sm:text-base bg-white border border-indigo-400 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-indigo-500/50 w-full max-w-[200px]"
+                className="font-bold text-slate-900 text-sm sm:text-base bg-transparent hover:bg-slate-100 focus:bg-white border border-transparent hover:border-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded px-2 py-1 outline-none transition-all w-full pr-8 cursor-pointer focus:cursor-text truncate"
+                title="Cliquez pour renommer le CV"
               />
-            ) : (
-              <h1 
-                onClick={() => {
-                  setTempTitle(currentCV.title);
-                  setIsEditingTitle(true);
-                  setTimeout(() => titleInputRef.current?.focus(), 0);
-                }}
-                className="font-bold text-slate-900 text-sm sm:text-base truncate max-w-[80px] xs:max-w-[120px] sm:max-w-xs cursor-pointer hover:bg-slate-100 px-2 py-0.5 rounded -ml-2 transition-colors inline-flex items-center gap-2 group"
-                title="Renommer le CV"
-              >
-                <span>{currentCV.title}</span>
-                <span className="opacity-0 group-hover:opacity-100 text-slate-400 text-xs transition-opacity">✏️</span>
-              </h1>
-            )}
+              <span className="absolute right-2 text-slate-400 text-xs pointer-events-none opacity-40 group-hover:opacity-100 transition-opacity">
+                ✏️
+              </span>
+            </div>
             <div className="flex items-center gap-1.5 text-xs text-slate-500">
                {saveStatus === 'saving' ? (
                  <>
@@ -245,12 +269,23 @@ export default function EditorPage() {
 
            <div className="h-6 w-px bg-slate-200 mx-1 lg:hidden" />
 
-           <DebugFillButton />
-           <TranslateCVButton />
-           <LanguageSelector />
-           <TemplateSelector />
+           {/* Design & Structure */}
+           <TemplateSelector showNudge={showNudge} onNudgeDismiss={handleNudgeDismiss} />
            <ColorPicker />
            <SectionOrderEditor />
+
+           {/* Separator */}
+           <div className="hidden xs:block h-6 w-px bg-slate-200 mx-1 sm:mx-2" />
+
+           {/* Content & Language */}
+           <TranslateCVButton />
+           <LanguageSelector />
+
+           {/* Separator */}
+           <div className="hidden xs:block h-6 w-px bg-slate-200 mx-1 sm:mx-2" />
+
+           {/* Debug Helpers */}
+           <DebugFillButton />
            
            <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
 

@@ -85,15 +85,16 @@ const data = useStore(s => s.data);
 ## 7. 🤖 Intégrations IA (Vercel AI SDK)
 
 * **Architecture des Modèles** :
+
   * Ne plus utiliser `GoogleGenerativeAI` directement via `@google/generative-ai` pour éviter la complexité de formatage.
   * Toujours utiliser le Vercel AI SDK (`@ai-sdk/google`, `@ai-sdk/openai`) pour une approche agnostique.
   * **Scoping d'Instance** : L'initialisation du modèle (ex: `google('gemini-1.5-flash')`) doit toujours se faire **à l'intérieur de la fonction de la route** (ex: dans `POST()` ou `chatWithAssistant()`), et jamais à la racine du fichier. Cela empêche les bugs liés au chargement asynchrone des variables d'environnement (`MY_GEMINI_KEY`) dans Next.js.
-
 * **Typages des Générations** :
+
   * **Texte Brut** : Utiliser `generateText` ou `streamText`.
   * **Structure JSON** : Toujours utiliser `generateObject` avec un schéma **Zod** fort pour forcer la sortie (ex: optimisation de CV, création de lettre de motivation). Ne jamais parser de JSON manuellement depuis du texte généré.
+* **Tool Calling avec Historique (streamText)** :
 
-* **Tool Calling avec Historique (streamText)** : 
   * Lors de l'injection manuelle de l'historique des appels d'outils (`ToolCallPart` et `ToolResultPart`) pour la boucle `streamText`, il y a un décalage entre le typage TypeScript `CoreToolMessage` et la validation d'exécution Zod sous-jacente du Vercel AI SDK (v6.x).
   * **Pattern Confirmé** : Toujours injecter **les deux propriétés simultanément** pour satisfaire TypeScript (qui veut `result` / `args`) ET le Runtime Zod (qui exige `output` / `input` du schéma `ModelMessage`) :
     ```typescript
@@ -120,11 +121,13 @@ const data = useStore(s => s.data);
         output: { type: 'text', value: stringResult } // Pour Zod Validator
       }]
     }
+    ```
+
 ## 8. 🎨 Manipulation d'Images & Canvas
 
 * **Transparence et Export** : Le format `image/jpeg` sur un Canvas HTML5 **ne supporte pas la transparence**. Si vous recadrez ou manipulez une image avec un fond transparent (ex: logo, détourage IA) et l'exportez via `canvas.toBlob(..., 'image/jpeg')`, les pixels transparents deviendront **noir opaque**.
 * **Solution** : Toujours exporter en `image/png` ou `image/webp` lorsqu'une image peut contenir un canal Alpha (transparence).
+* [ ] Changelog
 
-## Changelog
 - [2026-06-15] — Consolidation des règles d'Architecture IA (Instance scoping, generateObject + Zod, et double-typage pour le Tool Calling manuellement réinjecté).
 - [2026-06-21] — Ajout de la règle sur la gestion de la transparence avec HTML5 Canvas et les formats d'export (JPEG vs PNG).

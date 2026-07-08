@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Sparkles, Linkedin, Camera, Globe, Mail, Coins, ClipboardList, ArrowRight, Lock } from 'lucide-react';
+import { Sparkles, Linkedin, Camera, Globe, Mail, Coins, ClipboardList, ArrowRight, Lock, Image as ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 
 const tools = [
@@ -13,6 +13,33 @@ const tools = [
     color: 'text-purple-500',
     bgColor: 'bg-purple-500/10',
     status: 'active',
+  },
+  {
+    id: 'portfolio',
+    title: 'Générateur de Portfolio',
+    description: 'Transformez votre CV en un mini-site web portfolio ultra design, optimisé pour convertir les recruteurs.',
+    icon: Globe,
+    color: 'text-emerald-500',
+    bgColor: 'bg-emerald-500/10',
+    status: 'coming_soon',
+  },
+  {
+    id: 'remove-bg',
+    title: 'Détourage Magique',
+    description: 'Supprimez l\'arrière-plan de n\'importe quelle photo instantanément grâce à notre IA de vision.',
+    icon: ImageIcon,
+    color: 'text-pink-500',
+    bgColor: 'bg-pink-500/10',
+    status: 'coming_soon',
+  },
+  {
+    id: 'bilan',
+    title: 'Bilan de Compétences IA',
+    description: 'Analysez votre parcours pour identifier vos forces, découvrir les métiers adaptés et obtenir des recommandations de formations ou certificats à suivre.',
+    icon: ClipboardList,
+    color: 'text-amber-500',
+    bgColor: 'bg-amber-500/10',
+    status: 'coming_soon',
   }
 ];
 

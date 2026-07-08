@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 import { prisma } from '@/lib/prisma';
+import { CREDIT_COSTS } from '@/lib/credits';
 
-const REMBG_COST = 1;
+const REMBG_COST = CREDIT_COSTS.AI_REMOVE_BG;
 
 export async function POST(req: Request) {
   try {

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from 'sonner';
 import { Providers } from '@/components/Providers';
 import { ServiceWorkerRegister } from '@/components/ServiceWorkerRegister';
+import { ActivityTracker } from '@/components/ActivityTracker';
 import { APP_CONFIG } from '@/lib/config';
 
 
@@ -85,6 +86,7 @@ export default function RootLayout({
           <main id="main-content">
             {children}
           </main>
+          <ActivityTracker />
         </Providers>
         <script
           type="application/ld+json"

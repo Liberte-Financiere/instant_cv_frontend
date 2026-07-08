@@ -1,14 +1,23 @@
 'use client';
 
+import { useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
 import { Input } from '@/components/ui/Input';
 import { Trash2, Plus } from 'lucide-react';
 
 export function HobbiesForm() {
   const { currentCV, updateSettings, addHobby, removeHobby } = useCVStore();
+  const [newHobby, setNewHobby] = useState('');
 
   if (!currentCV) return null;
   const hobbies = currentCV.hobbies || [];
+
+  const handleAdd = () => {
+    if (newHobby.trim()) {
+      addHobby({ name: newHobby.trim() });
+      setNewHobby('');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -34,10 +43,16 @@ export function HobbiesForm() {
         </div>
       ))}
       <div className="flex items-center gap-2 w-full max-w-xs mt-2">
-        <Input placeholder="Ex: Lecture, Football, Voyage..." className="h-10 text-sm" onKeyDown={(e) => { if (e.key === 'Enter') { const target = e.target as HTMLInputElement; if (target.value.trim()) { addHobby({ name: target.value.trim() }); target.value = ''; } } }} />
-        <button className="p-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600"><Plus className="w-5 h-5" /></button>
+        <Input 
+          placeholder="Ex: Lecture, Football, Voyage..." 
+          className="h-10 text-sm" 
+          value={newHobby}
+          onChange={(e) => setNewHobby(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAdd(); } }} 
+        />
+        <button onClick={handleAdd} type="button" className="p-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600"><Plus className="w-5 h-5" /></button>
       </div>
-      <p className="w-full text-xs text-slate-400 mt-1">Appuyez sur Entrée pour ajouter</p>
+      <p className="w-full text-xs text-slate-400 mt-1">Appuyez sur Entrée ou sur le bouton pour ajouter</p>
       </div>
     </div>
   );
