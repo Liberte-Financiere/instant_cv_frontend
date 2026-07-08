@@ -24,7 +24,7 @@ interface CVFooterProps {
 export function CVFooter({ footer, variant, lang = 'fr', accentColor }: CVFooterProps) {
   const styles = variantStyles[variant];
   
-  if (!footer.showFooter || (!footer.madeAt && !footer.madeDate)) return null;
+  if (!footer.showFooter || (!footer.madeAt && !footer.madeDate && !footer.signatureUrl)) return null;
 
   const locale = LOCALE_MAP[lang] || 'fr-FR';
   const t = FOOTER_TEMPLATES[lang] || FOOTER_TEMPLATES['fr'];

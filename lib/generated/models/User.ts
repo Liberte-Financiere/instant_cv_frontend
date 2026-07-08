@@ -52,6 +52,8 @@ export type UserMinAggregateOutputType = {
   acceptsMarketing: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  lastLogin: Date | null
+  lastActivity: Date | null
   phone: string | null
   jobTitle: string | null
   sector: string | null
@@ -76,6 +78,8 @@ export type UserMaxAggregateOutputType = {
   acceptsMarketing: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  lastLogin: Date | null
+  lastActivity: Date | null
   phone: string | null
   jobTitle: string | null
   sector: string | null
@@ -100,6 +104,8 @@ export type UserCountAggregateOutputType = {
   acceptsMarketing: number
   createdAt: number
   updatedAt: number
+  lastLogin: number
+  lastActivity: number
   phone: number
   jobTitle: number
   sector: number
@@ -140,6 +146,8 @@ export type UserMinAggregateInputType = {
   acceptsMarketing?: true
   createdAt?: true
   updatedAt?: true
+  lastLogin?: true
+  lastActivity?: true
   phone?: true
   jobTitle?: true
   sector?: true
@@ -164,6 +172,8 @@ export type UserMaxAggregateInputType = {
   acceptsMarketing?: true
   createdAt?: true
   updatedAt?: true
+  lastLogin?: true
+  lastActivity?: true
   phone?: true
   jobTitle?: true
   sector?: true
@@ -188,6 +198,8 @@ export type UserCountAggregateInputType = {
   acceptsMarketing?: true
   createdAt?: true
   updatedAt?: true
+  lastLogin?: true
+  lastActivity?: true
   phone?: true
   jobTitle?: true
   sector?: true
@@ -299,6 +311,8 @@ export type UserGroupByOutputType = {
   acceptsMarketing: boolean
   createdAt: Date
   updatedAt: Date
+  lastLogin: Date | null
+  lastActivity: Date | null
   phone: string | null
   jobTitle: string | null
   sector: string | null
@@ -346,6 +360,8 @@ export type UserWhereInput = {
   acceptsMarketing?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  lastLogin?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  lastActivity?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   jobTitle?: Prisma.StringNullableFilter<"User"> | string | null
   sector?: Prisma.StringNullableFilter<"User"> | string | null
@@ -384,6 +400,8 @@ export type UserOrderByWithRelationInput = {
   acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastLogin?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastActivity?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   jobTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   sector?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -427,6 +445,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   acceptsMarketing?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  lastLogin?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  lastActivity?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   jobTitle?: Prisma.StringNullableFilter<"User"> | string | null
   sector?: Prisma.StringNullableFilter<"User"> | string | null
@@ -464,6 +484,8 @@ export type UserOrderByWithAggregationInput = {
   acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastLogin?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastActivity?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   jobTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   sector?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -496,6 +518,8 @@ export type UserScalarWhereWithAggregatesInput = {
   acceptsMarketing?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  lastLogin?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  lastActivity?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   jobTitle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   sector?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -520,6 +544,8 @@ export type UserCreateInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -557,6 +583,8 @@ export type UserUncheckedCreateInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -594,6 +622,8 @@ export type UserUpdateInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -631,6 +661,8 @@ export type UserUncheckedUpdateInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -668,6 +700,8 @@ export type UserCreateManyInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -692,6 +726,8 @@ export type UserUpdateManyMutationInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -715,6 +751,8 @@ export type UserUncheckedUpdateManyInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -765,6 +803,8 @@ export type UserCountOrderByAggregateInput = {
   acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastLogin?: Prisma.SortOrder
+  lastActivity?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   jobTitle?: Prisma.SortOrder
   sector?: Prisma.SortOrder
@@ -796,6 +836,8 @@ export type UserMaxOrderByAggregateInput = {
   acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastLogin?: Prisma.SortOrder
+  lastActivity?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   jobTitle?: Prisma.SortOrder
   sector?: Prisma.SortOrder
@@ -820,6 +862,8 @@ export type UserMinOrderByAggregateInput = {
   acceptsMarketing?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastLogin?: Prisma.SortOrder
+  lastActivity?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   jobTitle?: Prisma.SortOrder
   sector?: Prisma.SortOrder
@@ -1093,6 +1137,8 @@ export type UserCreateWithoutAccountsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1129,6 +1175,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1181,6 +1229,8 @@ export type UserUpdateWithoutAccountsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1217,6 +1267,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1253,6 +1305,8 @@ export type UserCreateWithoutSessionsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1289,6 +1343,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1341,6 +1397,8 @@ export type UserUpdateWithoutSessionsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1377,6 +1435,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1413,6 +1473,8 @@ export type UserCreateWithoutAnalysesInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1449,6 +1511,8 @@ export type UserUncheckedCreateWithoutAnalysesInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1501,6 +1565,8 @@ export type UserUpdateWithoutAnalysesInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1537,6 +1603,8 @@ export type UserUncheckedUpdateWithoutAnalysesInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1573,6 +1641,8 @@ export type UserCreateWithoutAiLogsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1609,6 +1679,8 @@ export type UserUncheckedCreateWithoutAiLogsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1661,6 +1733,8 @@ export type UserUpdateWithoutAiLogsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1697,6 +1771,8 @@ export type UserUncheckedUpdateWithoutAiLogsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1733,6 +1809,8 @@ export type UserCreateWithoutReferredUsersInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1769,6 +1847,8 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1810,6 +1890,8 @@ export type UserCreateWithoutReferredByInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1846,6 +1928,8 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -1903,6 +1987,8 @@ export type UserUpdateWithoutReferredUsersInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1939,6 +2025,8 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1994,6 +2082,8 @@ export type UserScalarWhereInput = {
   acceptsMarketing?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  lastLogin?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  lastActivity?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   jobTitle?: Prisma.StringNullableFilter<"User"> | string | null
   sector?: Prisma.StringNullableFilter<"User"> | string | null
@@ -2018,6 +2108,8 @@ export type UserCreateWithoutFeedbacksInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2054,6 +2146,8 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2106,6 +2200,8 @@ export type UserUpdateWithoutFeedbacksInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2142,6 +2238,8 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2178,6 +2276,8 @@ export type UserCreateWithoutPaymentTransactionsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2214,6 +2314,8 @@ export type UserUncheckedCreateWithoutPaymentTransactionsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2266,6 +2368,8 @@ export type UserUpdateWithoutPaymentTransactionsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2302,6 +2406,8 @@ export type UserUncheckedUpdateWithoutPaymentTransactionsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2338,6 +2444,8 @@ export type UserCreateWithoutCvsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2374,6 +2482,8 @@ export type UserUncheckedCreateWithoutCvsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2426,6 +2536,8 @@ export type UserUpdateWithoutCvsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2462,6 +2574,8 @@ export type UserUncheckedUpdateWithoutCvsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2498,6 +2612,8 @@ export type UserCreateWithoutCoverLettersInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2534,6 +2650,8 @@ export type UserUncheckedCreateWithoutCoverLettersInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2586,6 +2704,8 @@ export type UserUpdateWithoutCoverLettersInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2622,6 +2742,8 @@ export type UserUncheckedUpdateWithoutCoverLettersInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2658,6 +2780,8 @@ export type UserCreateWithoutCreditTransactionsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2694,6 +2818,8 @@ export type UserUncheckedCreateWithoutCreditTransactionsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2746,6 +2872,8 @@ export type UserUpdateWithoutCreditTransactionsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2782,6 +2910,8 @@ export type UserUncheckedUpdateWithoutCreditTransactionsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2818,6 +2948,8 @@ export type UserCreateWithoutInterviewSessionsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2854,6 +2986,8 @@ export type UserUncheckedCreateWithoutInterviewSessionsInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -2906,6 +3040,8 @@ export type UserUpdateWithoutInterviewSessionsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2942,6 +3078,8 @@ export type UserUncheckedUpdateWithoutInterviewSessionsInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2978,6 +3116,8 @@ export type UserCreateWithoutCandidateProfilesInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -3014,6 +3154,8 @@ export type UserUncheckedCreateWithoutCandidateProfilesInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -3066,6 +3208,8 @@ export type UserUpdateWithoutCandidateProfilesInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3102,6 +3246,8 @@ export type UserUncheckedUpdateWithoutCandidateProfilesInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3138,6 +3284,8 @@ export type UserCreateWithoutProfileUnlocksInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -3174,6 +3322,8 @@ export type UserUncheckedCreateWithoutProfileUnlocksInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -3226,6 +3376,8 @@ export type UserUpdateWithoutProfileUnlocksInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3262,6 +3414,8 @@ export type UserUncheckedUpdateWithoutProfileUnlocksInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3298,6 +3452,8 @@ export type UserCreateManyReferredByInput = {
   acceptsMarketing?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
   phone?: string | null
   jobTitle?: string | null
   sector?: string | null
@@ -3321,6 +3477,8 @@ export type UserUpdateWithoutReferredByInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3357,6 +3515,8 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3393,6 +3553,8 @@ export type UserUncheckedUpdateManyWithoutReferredByInput = {
   acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3555,6 +3717,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lastLogin?: boolean
+  lastActivity?: boolean
   phone?: boolean
   jobTitle?: boolean
   sector?: boolean
@@ -3594,6 +3758,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lastLogin?: boolean
+  lastActivity?: boolean
   phone?: boolean
   jobTitle?: boolean
   sector?: boolean
@@ -3619,6 +3785,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lastLogin?: boolean
+  lastActivity?: boolean
   phone?: boolean
   jobTitle?: boolean
   sector?: boolean
@@ -3644,6 +3812,8 @@ export type UserSelectScalar = {
   acceptsMarketing?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lastLogin?: boolean
+  lastActivity?: boolean
   phone?: boolean
   jobTitle?: boolean
   sector?: boolean
@@ -3656,7 +3826,7 @@ export type UserSelectScalar = {
   freeUnlocksUsed?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "credits" | "isBanned" | "acceptsMarketing" | "createdAt" | "updatedAt" | "phone" | "jobTitle" | "sector" | "referralCode" | "referredById" | "referralCount" | "premiumUntil" | "companyName" | "recruiterCredits" | "freeUnlocksUsed", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "credits" | "isBanned" | "acceptsMarketing" | "createdAt" | "updatedAt" | "lastLogin" | "lastActivity" | "phone" | "jobTitle" | "sector" | "referralCode" | "referredById" | "referralCount" | "premiumUntil" | "companyName" | "recruiterCredits" | "freeUnlocksUsed", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   referredBy?: boolean | Prisma.User$referredByArgs<ExtArgs>
   referredUsers?: boolean | Prisma.User$referredUsersArgs<ExtArgs>
@@ -3711,6 +3881,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     acceptsMarketing: boolean
     createdAt: Date
     updatedAt: Date
+    lastLogin: Date | null
+    lastActivity: Date | null
     phone: string | null
     jobTitle: string | null
     sector: string | null
@@ -4169,6 +4341,8 @@ export interface UserFieldRefs {
   readonly acceptsMarketing: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly lastLogin: Prisma.FieldRef<"User", 'DateTime'>
+  readonly lastActivity: Prisma.FieldRef<"User", 'DateTime'>
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly jobTitle: Prisma.FieldRef<"User", 'String'>
   readonly sector: Prisma.FieldRef<"User", 'String'>

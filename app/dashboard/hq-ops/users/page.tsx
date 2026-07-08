@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { ShieldAlert, Search, PlusCircle, CheckCircle2, History, Loader2, Sparkles, Ghost } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
+import { clearAllLocalData } from '@/lib/utils';
 
 interface User {
   id: string;
@@ -13,9 +14,11 @@ interface User {
   role: string;
   isBanned: boolean;
   createdAt: string;
+  lastLogin: string | null;
+  lastActivity: string | null;
 }
 
-export default function AdminCreditPanel() {
+export default function SupportPanel() {
   const { data: session, update } = useSession();
   const [users, setUsers] = useState<User[]>([]);
   const [search, setSearch] = useState('');
@@ -25,10 +28,8 @@ export default function AdminCreditPanel() {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Modal state
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [amountToAdd, setAmountToAdd] = useState(35);
-  const [isAdding, setIsAdding] = useState(false);
+  const [isBanning, setIsBanning] = useState<string | null>(null);
+  const [isImpersonating, setIsImpersonating] = useState<string | null>(null);
 
   useEffect(() => {
     setPage(1); // Reset page to 1 when filters change
@@ -60,37 +61,51 @@ export default function AdminCreditPanel() {
     }
   };
 
-  const handleAddCredit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedUser || amountToAdd <= 0) return;
 
-    setIsAdding(true);
+
+  const handleToggleBan = async (userId: string, currentStatus: boolean) => {
+    setIsBanning(userId);
     try {
-      const res = await fetch('/api/admin/users/credits', {
+      const res = await fetch('/api/admin/users/ban', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          targetUserId: selectedUser.id,
-          amount: amountToAdd,
-          type: 'PURCHASE', // considered as purchase
-          description: `Recharge Manuelle WhatsApp (${amountToAdd} cr.)`
+          targetUserId: userId,
+          isBanned: !currentStatus
         }),
       });
 
-      if (!res.ok) throw new Error('Erreur');
+      if (!res.ok) throw new Error('Erreur API');
       
-      const result = await res.json();
-      toast.success(`Succès : ${amountToAdd} crédits ajoutés à ${selectedUser.name || selectedUser.email}`);
-      setSelectedUser(null);
-      fetchUsers(); // Refresh list
+      toast.success(!currentStatus ? 'Utilisateur banni.' : 'Utilisateur réactivé.');
+      fetchUsers();
     } catch (error) {
-      toast.error('Échec de la recharge de crédit.');
+      toast.error('Échec de la modification du statut.');
     } finally {
-      setIsAdding(false);
+      setIsBanning(null);
     }
   };
 
-
+  const handleImpersonate = async (userId: string) => {
+    setIsImpersonating(userId);
+    try {
+      const res = await fetch('/api/admin/impersonate', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ targetUserId: userId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur API');
+      
+      await clearAllLocalData(); // Clear local CVs before impersonating
+      await update({ impersonationToken: data.token });
+      window.location.href = '/dashboard';
+    } catch(e: any) {
+      toast.error(e.message || "Impossible d'impersoner cet utilisateur.");
+    } finally {
+      setIsImpersonating(null);
+    }
+  };
 
   return (
     <div className="p-4 lg:p-8 max-w-7xl mx-auto space-y-6">
@@ -99,8 +114,8 @@ export default function AdminCreditPanel() {
           <ShieldAlert className="w-6 h-6 text-red-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Gestion des Crédits</h1>
-          <p className="text-slate-500 text-sm">Consulter et recharger manuellement les crédits utilisateurs</p>
+          <h1 className="text-2xl font-bold text-slate-900">Support Utilisateurs</h1>
+          <p className="text-slate-500 text-sm">Assistance, modération et connexion impersonnée</p>
         </div>
       </div>
 
@@ -153,14 +168,15 @@ export default function AdminCreditPanel() {
                     <th className="p-4 font-medium">Statut</th>
                     <th className="p-4 font-medium">Crédits</th>
                     <th className="p-4 font-medium">Inscription</th>
+                    <th className="p-4 font-medium">Dernière Activité</th>
                     <th className="p-4 rounded-tr-xl font-medium text-right">Action</th>
                  </tr>
               </thead>
               <tbody>
                  {isLoading ? (
-                    <tr><td colSpan={5} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-400" /></td></tr>
+                    <tr><td colSpan={8} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-400" /></td></tr>
                  ) : users.length === 0 ? (
-                    <tr><td colSpan={7} className="p-8 text-center text-slate-500">Aucun utilisateur trouvé.</td></tr>
+                    <tr><td colSpan={8} className="p-8 text-center text-slate-500">Aucun utilisateur trouvé.</td></tr>
                  ) : (
                     users.map((user) => (
                       <tr key={user.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
@@ -191,13 +207,31 @@ export default function AdminCreditPanel() {
                            </span>
                         </td>
                         <td className="p-4 text-xs text-slate-400">{new Date(user.createdAt).toLocaleDateString()}</td>
+                        <td className="p-4 text-xs text-slate-500">
+                           {(user.lastActivity || user.lastLogin) ? new Date((user.lastActivity || user.lastLogin) as string).toLocaleString('fr-FR', { 
+                             day: '2-digit', month: '2-digit', year: 'numeric', 
+                             hour: '2-digit', minute: '2-digit' 
+                           }) : 'Jamais'}
+                        </td>
                         <td className="p-4 text-right">
                            <div className="flex items-center justify-end gap-2">
                              <button 
-                               onClick={() => setSelectedUser(user)}
-                               className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition-colors text-xs font-semibold"
+                               onClick={() => handleToggleBan(user.id, user.isBanned)}
+                               disabled={isBanning === user.id}
+                               className={`px-3 py-1.5 rounded-lg transition-colors text-xs font-semibold disabled:opacity-50 ${
+                                 user.isBanned ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'
+                               }`}
                              >
-                               <PlusCircle className="w-4 h-4" /> Relancer
+                               {isBanning === user.id ? '...' : user.isBanned ? 'Débannir' : 'Bannir'}
+                             </button>
+                             <button
+                               onClick={() => handleImpersonate(user.id)}
+                               disabled={isImpersonating === user.id || user.role === 'ADMIN'}
+                               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-colors text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                               title="Se connecter en tant que cet utilisateur"
+                             >
+                               {isImpersonating === user.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Ghost className="w-4 h-4" />}
+                               Login As
                              </button>
                            </div>
                         </td>
@@ -231,58 +265,6 @@ export default function AdminCreditPanel() {
            </div>
          )}
       </div>
-
-      {/* Manual Recharge Modal */}
-      {selectedUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl relative">
-              <h3 className="text-xl font-bold text-slate-900 mb-1">Recharger un compte</h3>
-              <p className="text-sm text-slate-500 mb-6">Ajouter des crédits manuellement pour <strong className="text-slate-900">{selectedUser.email}</strong></p>
-              
-              <form onSubmit={handleAddCredit} className="space-y-4">
-                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Montant de Crédits</label>
-                    <div className="grid grid-cols-4 gap-2 mb-4">
-                       {[35, 80, 250, 500].map(amount => (
-                         <button
-                           key={amount}
-                           type="button"
-                           onClick={() => setAmountToAdd(amount)}
-                           className={`py-2 px-1 text-center font-medium border rounded-lg text-sm transition-colors ${
-                              amountToAdd === amount ? 'bg-red-50 border-red-200 text-red-700' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                           }`}
-                         >+{amount}</button>
-                       ))}
-                    </div>
-                    
-                    <input 
-                      type="number"
-                      value={amountToAdd}
-                      onChange={(e) => setAmountToAdd(parseInt(e.target.value) || 0)}
-                      className="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                      min={1}
-                    />
-                 </div>
-                 
-                 <div className="flex gap-3 pt-2">
-                    <button 
-                      type="button" 
-                      onClick={() => setSelectedUser(null)}
-                      className="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-colors"
-                    >Annuler</button>
-                    <button 
-                      type="submit" 
-                      disabled={isAdding}
-                      className="flex-1 flex justify-center items-center py-3 px-4 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold rounded-xl shadow-lg transition-colors gap-2"
-                    >
-                      {isAdding ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
-                      Valider (+{amountToAdd})
-                    </button>
-                 </div>
-              </form>
-           </div>
-        </div>
-      )}
     </div>
   );
 }

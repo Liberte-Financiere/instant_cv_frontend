@@ -18,7 +18,7 @@ export default function PhotoProToolPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { credits, fetchCredits } = useCreditStore();
-  const cost = 50; // Coût en crédits pour une génération
+  const cost = 20; // Coût en crédits pour une génération (doit correspondre à CREDIT_COSTS.AI_PHOTO)
 
   useEffect(() => {
     fetchCredits();

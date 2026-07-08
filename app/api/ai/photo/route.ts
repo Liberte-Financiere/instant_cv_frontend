@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
+import { CREDIT_COSTS } from '@/lib/credits';
 
-const COST = 50;
+const COST = CREDIT_COSTS.AI_PHOTO;
 
 export async function POST(req: Request) {
   try {

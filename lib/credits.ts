@@ -16,6 +16,9 @@ export const CREDIT_COSTS = {
 
   AI_INTERVIEW: 5,               // 5 credits for Text Mode (flat rate)
   AI_INTERVIEW_AUDIO_MINUTE: 1,  // 1 credit per minute for Audio Mode (dynamic rate)
+  
+  AI_PHOTO: 20,                  // 20 credits for Photo Studio Generation
+  AI_REMOVE_BG: 1,               // 1 credit for Background Removal
 };
 
 export type ActionType = keyof typeof CREDIT_COSTS;

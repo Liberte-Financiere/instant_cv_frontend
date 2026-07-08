@@ -3,8 +3,6 @@ import { TemplateId } from '@/types/cv';
 import { DUMMY_CV } from './TemplateDummyData';
 import { CVThumbnail } from './CVThumbnail';
 
-import { LazyMount } from '@/components/ui/LazyMount';
-
 interface TemplatePreviewProps {
   templateId: TemplateId;
   color?: string;
@@ -23,10 +21,8 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ templateId }) 
            We use a slightly larger scale here (0.16) for the selector cards.
            We absolutely position it to match the previous layout.
        */}
-       <div className="absolute top-0 left-0 w-full h-full flex justify-center">
-            <LazyMount className="w-full h-full flex justify-center items-center">
-                <CVThumbnail cv={previewCV} scale={0.16} />
-            </LazyMount>
+       <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+            <CVThumbnail cv={previewCV} scale={0.16} />
        </div>
     </div>
   );

@@ -98,6 +98,8 @@ model User {
   acceptsMarketing Boolean @default(false) // Opt-in pour les newsletters et alertes
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  lastLogin     DateTime? // Date de la dernière vraie authentification (login)
+  lastActivity  DateTime? // Date du dernier ping d'activité applicative
 
   // Professional Infos
   phone    String?
@@ -132,6 +134,8 @@ model User {
 
   @@index([acceptsMarketing])
   @@index([referredById])
+  @@index([lastLogin])
+  @@index([lastActivity])
 }
 
 model PlatformFeedback {
@@ -334,4 +338,17 @@ model MarketingCampaign {
   
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  sessionId String?
+  adminId   String
+  targetId  String
+  action    String
+  ipAddress String?
+  createdAt DateTime @default(now())
+  
+  @@index([adminId])
+  @@index([sessionId])
 }

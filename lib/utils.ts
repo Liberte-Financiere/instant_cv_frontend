@@ -19,7 +19,8 @@ export function formatDate(date: string | Date, lang: string = 'fr'): string {
   const locale = LOCALE_MAP[lang] || 'fr-FR';
   return d.toLocaleDateString(locale, { 
     year: 'numeric', 
-    month: 'long' 
+    month: 'long',
+    day: 'numeric'
   });
 }
 

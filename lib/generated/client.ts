@@ -126,3 +126,8 @@ export type ProfileUnlock = Prisma.ProfileUnlockModel
  * 
  */
 export type MarketingCampaign = Prisma.MarketingCampaignModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel

@@ -67,7 +67,8 @@ export const ModelName = {
   InterviewMessage: 'InterviewMessage',
   CandidateProfile: 'CandidateProfile',
   ProfileUnlock: 'ProfileUnlock',
-  MarketingCampaign: 'MarketingCampaign'
+  MarketingCampaign: 'MarketingCampaign',
+  AuditLog: 'AuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -166,6 +167,8 @@ export const UserScalarFieldEnum = {
   acceptsMarketing: 'acceptsMarketing',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  lastLogin: 'lastLogin',
+  lastActivity: 'lastActivity',
   phone: 'phone',
   jobTitle: 'jobTitle',
   sector: 'sector',
@@ -355,6 +358,19 @@ export const MarketingCampaignScalarFieldEnum = {
 } as const
 
 export type MarketingCampaignScalarFieldEnum = (typeof MarketingCampaignScalarFieldEnum)[keyof typeof MarketingCampaignScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  adminId: 'adminId',
+  targetId: 'targetId',
+  action: 'action',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -607,4 +623,16 @@ export const MarketingCampaignOrderByRelevanceFieldEnum = {
 } as const
 
 export type MarketingCampaignOrderByRelevanceFieldEnum = (typeof MarketingCampaignOrderByRelevanceFieldEnum)[keyof typeof MarketingCampaignOrderByRelevanceFieldEnum]
+
+
+export const AuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  adminId: 'adminId',
+  targetId: 'targetId',
+  action: 'action',
+  ipAddress: 'ipAddress'
+} as const
+
+export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
 

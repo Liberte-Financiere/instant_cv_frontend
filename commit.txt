@@ -1,31 +1,24 @@
-[2026-06-21] — Implémentation du détourage IA (Background Removal)
+2026-07-08 — Feature: Admin Last Login & Activity Tracking
 
 What changed:
-- Création d'un microservice Python (FastAPI + rembg) tournant sur le port 3001 en local.
-- Ajout d'une route proxy `/api/proxy-image` pour gérer le CORS des images hébergées (Cloudinary, etc.).
-- Ajout de la route API sécurisée `/api/ai/remove-bg` avec facturation d'un (1) crédit par utilisation.
-- Modification du composant `CropModal.tsx` pour inclure le bouton "Magique" de détourage.
-- Ajustement de la résolution d'export Canvas à 800x800 px au format PNG (pour supporter la transparence et la netteté HD).
-- Ajustement de `deviceScaleFactor: 2` dans Puppeteer pour garantir des PDF "Retina/HD".
+- Ajout du champ `lastActivity DateTime?` au modèle Prisma `User`, en complément du `lastLogin` récemment ajouté, avec création d'index pour les deux champs pour optimiser les futurs tris administratifs.
+- Création du composant client asynchrone `ActivityTracker.tsx` (injecté dans `layout.tsx`) qui ping le backend une fois par jour.
+- Création de la route `/api/user/ping` avec mécanisme de throttling serveur (vérifie que la dernière activité remonte à plus de 24h avant d'écrire en BDD).
+- Mise à jour du dashboard HQ-Ops et de l'API admin pour remonter la "Dernière Activité", utilisant `lastActivity` en priorité ou `lastLogin` en fallback.
 
 Why:
-- Permettre aux utilisateurs d'avoir une photo de CV professionnelle instantanément sans quitter l'application.
-- Le format PNG + Haute Résolution + Puppeteer 2x assurent un export PDF final ultra-net et sans fond noir de compression JPEG.
-- Le microservice Python isolé évite de saturer le serveur Next.js avec le calcul lourd des tenseurs U2Net.
+- Le champ `lastLogin` (mis à jour uniquement au moment de l'authentification explicite) était insuffisant pour mesurer l'activité réelle, un utilisateur pouvant utiliser la plateforme tous les jours en ayant une session active vieille de plusieurs semaines. Ce système hybride permet de conserver l'audit strict des authentifications (`lastLogin`) tout en offrant un monitoring quotidien précis de l'utilisation (`lastActivity`) sans polluer la base de données.
 
 Files affected:
-- microservices/bg_removal/main.py — Microservice FastAPI pour le détourage.
-- ecosystem.config.js — Ajout du service Python dans la gestion PM2.
-- app/api/ai/remove-bg/route.ts — Proxy, vérification de sécurité (taille, SSRF), gestion des crédits.
-- app/api/proxy-image/route.ts — Contournement des CORS pour l'édition de photos existantes.
-- components/editor/CropModal.tsx — UI/UX du bouton "Enlever l'arrière plan (1 crédit)".
-- lib/cropImage.ts — Modification de l'export en PNG 800x800px.
-- app/api/pdf/generate/route.ts — Ajout de `deviceScaleFactor: 2` pour des PDF HD.
-- RULES.md — Documentation de l'edge case Canvas JPEG vs PNG.
+- prisma/schema.prisma — Déclaration de `lastActivity` et des index.
+- components/ActivityTracker.tsx — Logique de ping asynchrone avec protection par localStorage.
+- app/layout.tsx — Injection du composant global.
+- app/api/user/ping/route.ts — Traitement du ping et throttling serveur.
+- app/api/admin/users/credits/route.ts — Sérialisation de la nouvelle donnée.
+- app/dashboard/hq-ops/users/page.tsx — Mise à jour de la colonne et affichage sécurisé.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Le microservice Python tourne sur localhost:3001. En production, s'assurer que PM2 le lance bien avec l'environnement virtuel.
-- L'appel initial de l'IA (si le serveur a redémarré) met un timeout à 120s pour télécharger le modèle U2Net (~170 Mo).
+- Prisma Pushed avec succès, build TS au vert. Pas de bloqueurs de performance à prévoir grâce aux limites 24h client+serveur.

@@ -21,6 +21,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
 
+  // Security: Block payments if the admin is impersonating a user
+  if (session.user.impersonatedBy) {
+    return NextResponse.json(
+      { error: 'Paiements bloqués en mode impersonation.' },
+      { status: 403 }
+    );
+  }
+
   // Rate limit: 5 validation attempts per minute
   const rateCheck = checkRateLimit(`${session.user.id}:payment-validate`, { limit: 5, windowMs: 60_000 });
   if (!rateCheck.allowed) {

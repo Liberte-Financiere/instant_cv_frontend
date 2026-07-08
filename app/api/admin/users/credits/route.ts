@@ -15,13 +15,42 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const search = searchParams.get('search') || '';
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('limit') || '50', 10);
+    const roleFilter = searchParams.get('role') || 'ALL';
+    const bannedFilter = searchParams.get('banned') || 'ALL';
+    
+    const skip = (page - 1) * limit;
 
-    // Fetch users
-    const usersList = await prisma.user.findMany({
-        where: search ? { OR: [ { name: { contains: search, mode: 'insensitive' } }, { email: { contains: search, mode: 'insensitive' } } ] } : undefined,
-        orderBy: { createdAt: 'desc' },
-        take: 50
-    })
+    const where: any = {};
+    
+    if (search) {
+      where.OR = [ 
+        { name: { contains: search, mode: 'insensitive' } }, 
+        { email: { contains: search, mode: 'insensitive' } } 
+      ];
+    }
+    
+    if (roleFilter !== 'ALL') {
+      where.role = roleFilter;
+    }
+    
+    if (bannedFilter === 'BANNED') {
+      where.isBanned = true;
+    } else if (bannedFilter === 'ACTIVE') {
+      where.isBanned = false;
+    }
+
+    // Fetch users and total count in parallel
+    const [usersList, totalCount] = await Promise.all([
+      prisma.user.findMany({
+          where,
+          orderBy: { createdAt: 'desc' },
+          take: limit,
+          skip
+      }),
+      prisma.user.count({ where })
+    ]);
     
     // We fetch the full objects then map them securely
     const formattedUsers = usersList.map(u => ({
@@ -31,10 +60,20 @@ export async function GET(req: Request) {
         credits: u.credits,
         role: u.role,
         isBanned: u.isBanned,
-        createdAt: u.createdAt || new Date().toISOString()
+        createdAt: u.createdAt || new Date().toISOString(),
+        lastLogin: u.lastLogin ? u.lastLogin.toISOString() : null,
+        lastActivity: u.lastActivity ? u.lastActivity.toISOString() : null
     }));
 
-    return NextResponse.json({ users: formattedUsers });
+    return NextResponse.json({ 
+      users: formattedUsers,
+      pagination: {
+        total: totalCount,
+        page,
+        limit,
+        totalPages: Math.ceil(totalCount / limit)
+      }
+    });
   } catch (error) {
     console.error('[ADMIN_USERS_GET]', error);
     return new NextResponse("Internal Error", { status: 500 });

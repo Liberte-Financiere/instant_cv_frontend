@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { APP_CONFIG } from '@/lib/config';
 
 const adminNavigation = [
+  { name: 'Support Utilisateurs', href: '/dashboard/hq-ops/users', icon: User },
   { name: 'Monitoring IA', href: '/dashboard/hq-ops/ai-logs', icon: Server },
   { name: 'Gestion des Crédits', href: '/dashboard/hq-ops/credits', icon: Zap },
   { name: 'Transactions & Paiements', href: '/dashboard/hq-ops/transactions', icon: Receipt },

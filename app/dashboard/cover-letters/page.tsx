@@ -184,7 +184,7 @@ export default function CoverLettersPage() {
       }
     } catch (error: any) {
       console.error(error);
-      toast.error(`Erreur: ${error.message}`);
+      toast.error("Désolé, la structure de ce PDF est illisible ou verrouillée. Veuillez essayer avec un autre fichier ou ré-exporter votre CV depuis un outil officiel.");
     } finally {
       setParsing(false);
     }
