@@ -93,7 +93,7 @@ export function TimelinePro({ cv }: TemplateProps) {
               {education.map((edu) => (
                 <div key={edu.id} className="relative break-inside-avoid">
                   <div className="absolute -left-6 top-1 w-3.5 h-3.5 rounded-full border-2 bg-white" style={{ borderColor: accent }} />
-                  <p className="text-xs font-semibold" style={{ color: accent }}>{edu.startDate} — {edu.endDate}</p>
+                  <p className="text-xs font-semibold" style={{ color: accent }}>{edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' — ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</p>
                   <p className="font-bold text-sm">{edu.degree}</p>
                   <p className="text-xs text-slate-500">{edu.institution} {edu.field && `— ${edu.field}`}</p>
                 </div>

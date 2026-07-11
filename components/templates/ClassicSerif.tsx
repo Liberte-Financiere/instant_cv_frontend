@@ -85,7 +85,7 @@ export function ClassicSerif({ cv }: TemplateProps) {
                     <p className="font-bold">{edu.degree}</p>
                     <p className="text-xs italic text-slate-500">{edu.institution} {edu.field && `— ${edu.field}`}</p>
                   </div>
-                  <span className="text-xs italic text-slate-500 shrink-0">{edu.startDate} — {edu.endDate}</span>
+                  <span className="text-xs italic text-slate-500 shrink-0">{edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' — ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</span>
                 </div>
               ))}
             </div>

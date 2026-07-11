@@ -1,24 +1,32 @@
-2026-07-08 — Feature: Admin Last Login & Activity Tracking
+[2026-07-11] — Amélioration UX dates & ajout option "Formation en cours"
 
 What changed:
-- Ajout du champ `lastActivity DateTime?` au modèle Prisma `User`, en complément du `lastLogin` récemment ajouté, avec création d'index pour les deux champs pour optimiser les futurs tris administratifs.
-- Création du composant client asynchrone `ActivityTracker.tsx` (injecté dans `layout.tsx`) qui ping le backend une fois par jour.
-- Création de la route `/api/user/ping` avec mécanisme de throttling serveur (vérifie que la dernière activité remonte à plus de 24h avant d'écrire en BDD).
-- Mise à jour du dashboard HQ-Ops et de l'API admin pour remonter la "Dernière Activité", utilisant `lastActivity` en priorité ou `lastLogin` en fallback.
+- Transformation des champs "Date de début" et "Date de fin" de l'Éducation et l'Expérience en champs de texte libre (plus de `type="date"` restrictif).
+- Ajout de placeholders pertinents pour guider l'utilisateur ("Ex: Sept 2020", "Ex: 2018").
+- Refonte de la logique d'affichage des dates dans tous les templates pour masquer le tiret ("-") si une seule date est renseignée (ex: "2018" au lieu de "2018 - Présent").
+- Ajout d'une case à cocher "Formation en cours" pour le modèle Éducation.
+- Mise à jour du schéma Zod `educationSchema` et du type TypeScript `Education` pour inclure le champ booléen `current`.
+- Mise à jour de la fonction `sanitizeCVData` pour persister ce nouveau champ.
+- Mise à jour des 15 templates de CV pour afficher intelligemment le label "Présent" si la case est cochée.
+- CORRECTION BUGS DATES: La fonction `formatDate` a été corrigée pour ne plus forcer l'ajout d'un jour (ex: le 1er du mois) si l'utilisateur saisit uniquement une année ("2024" => "2024", pas "1 janvier 2024") ou du texte libre ("Sept 2024").
 
 Why:
-- Le champ `lastLogin` (mis à jour uniquement au moment de l'authentification explicite) était insuffisant pour mesurer l'activité réelle, un utilisateur pouvant utiliser la plateforme tous les jours en ayant une session active vieille de plusieurs semaines. Ce système hybride permet de conserver l'audit strict des authentifications (`lastLogin`) tout en offrant un monitoring quotidien précis de l'utilisation (`lastActivity`) sans polluer la base de données.
+- Amélioration majeure de l'UX : les utilisateurs détestent chercher un jour exact pour un diplôme passé il y a 5 ans. Seul le mois/l'année (ou juste l'année) compte sur un CV.
+- Résolution d'un bug visuel : un diplôme avec une seule année (ex: Baccalauréat) affichait "2018 - Présent" ce qui était illogique.
+- Demande explicite d'ajouter l'option "En cours" (identique à l'expérience professionnelle) pour uniformiser l'outil d'édition.
+- Corriger le comportement par défaut de `new Date()` en JavaScript qui polluait l'affichage avec des jours arbitraires (le 1er du mois) pour les saisies partielles.
 
 Files affected:
-- prisma/schema.prisma — Déclaration de `lastActivity` et des index.
-- components/ActivityTracker.tsx — Logique de ping asynchrone avec protection par localStorage.
-- app/layout.tsx — Injection du composant global.
-- app/api/user/ping/route.ts — Traitement du ping et throttling serveur.
-- app/api/admin/users/credits/route.ts — Sérialisation de la nouvelle donnée.
-- app/dashboard/hq-ops/users/page.tsx — Mise à jour de la colonne et affichage sécurisé.
+- components/editor/forms/EducationForm.tsx — Passage en input texte, ajout case à cocher, correctif de typage.
+- components/editor/forms/ExperienceForm.tsx — Passage en input texte, ajout placeholders.
+- types/cv.ts — Ajout de `current?: boolean` à `Education`.
+- lib/schemas.ts — Ajout de `current: z.boolean().optional()` à `educationSchema`.
+- lib/utils.ts — Prise en compte de `edu.current` dans `sanitizeCVData` et refonte complète de la fonction `formatDate` (regex défensif).
+- components/cv-sections/CVEducation.tsx — Mise à jour de la logique d'affichage.
+- components/templates/*.tsx (15 fichiers) — Refonte Regex de l'affichage des dates d'éducation pour gérer `edu.current` et masquer les tirets orphelins.
 
 Breaking changes:
-- None
+- None. La base de données Postgres stocke le CV en JSONB. L'ajout d'une nouvelle clé `current` dans l'objet Education ne brise pas les anciens CV. Les anciens CV auront simplement `current: false` (ou undefined) lors du parsing.
 
 Notes for review:
-- Prisma Pushed avec succès, build TS au vert. Pas de bloqueurs de performance à prévoir grâce aux limites 24h client+serveur.
+- Les remplacements dans les 15 templates ont été scriptés par regex puis validés manuellement. La compilation TypeScript (tsc) est passée sans erreur sur ces fichiers. L'affichage des dates "orphelines" a été vérifié.

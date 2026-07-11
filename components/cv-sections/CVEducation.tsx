@@ -33,9 +33,11 @@ export function CVEducation({ education, variant, title = 'Éducation', accentCo
               <h3 className={`font-bold text-base ${variant === 'tech' ? 'text-white' : 'text-slate-800'}`}>
                 {edu.degree}{edu.field && ` — ${edu.field}`}
               </h3>
-              {(edu.startDate || edu.endDate) && (
+              {(edu.startDate || edu.endDate || edu.current) && (
                 <span className={`text-sm font-medium tabular-nums shrink-0 ${variant === 'tech' ? 'text-gray-500' : 'text-slate-500'}`}>
-                  {edu.startDate && formatDate(edu.startDate, lang)} - {edu.endDate ? formatDate(edu.endDate, lang) : getPresentLabel(lang)}
+                  {edu.startDate && formatDate(edu.startDate, lang)}
+                  {edu.startDate && (edu.endDate || edu.current) && ' - '}
+                  {edu.current ? getPresentLabel(lang) : (edu.endDate && formatDate(edu.endDate, lang))}
                 </span>
               )}
             </div>

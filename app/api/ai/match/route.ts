@@ -38,10 +38,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: e.message || 'Crédits insuffisants' }, { status: 403 });
     }
 
-    if (!process.env.MY_GEMINI_KEY) {
-      return NextResponse.json({ error: 'Clé API manquante' }, { status: 500 });
-    }
-
     const contentType = req.headers.get('content-type') || '';
     let cvContent = '';
     let jobContent = '';
@@ -107,7 +103,7 @@ export async function POST(req: Request) {
       3. COMPÉTENCES MATCHÉES : Liste des compétences du CV qui correspondent à l'offre.
       4. COMPÉTENCES MANQUANTES : Compétences demandées dans l'offre mais absentes du CV.
       5. REFORMULATIONS : Pour chaque élément du CV qui pourrait être mieux formulé pour cette offre, propose une reformulation. Indique la section (experiences, education, skills, projects, certifications, personalInfo), l'index dans le tableau (commence à 0), le champ précis (description, position, summary, name, technologies, etc.), le texte original complet (exactement comme dans le CV), la suggestion d'amélioration, et la raison. Ne modifie pas la structure du JSON, uniquement le contenu textuel des valeurs.
-      6. RECOMMANDATIONS : Conseils concrets pour maximiser les chances.
+      6. HIGHLIGHTS (Recommandations) : Conseils concrets pour maximiser les chances, à mapper strictement sur le champ "highlights".
 
       SCHÉMA JSON DE SORTIE :
       (Suit strictement le schéma fourni)

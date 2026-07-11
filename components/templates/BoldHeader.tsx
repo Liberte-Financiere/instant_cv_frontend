@@ -88,7 +88,7 @@ export function BoldHeader({ cv }: TemplateProps) {
                 <div key={edu.id} className="w-1/2 pr-2 break-inside-avoid">
                   <p className="font-bold text-sm">{edu.degree}</p>
                   <p className="text-xs text-slate-500">{edu.institution}</p>
-                  <p className="text-xs" style={{ color: accent }}>{edu.startDate} — {edu.endDate}</p>
+                  <p className="text-xs" style={{ color: accent }}>{edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' — ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</p>
                 </div>
               ))}
             </div>

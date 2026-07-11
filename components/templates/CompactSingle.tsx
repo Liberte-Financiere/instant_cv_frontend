@@ -68,7 +68,7 @@ export function CompactSingle({ cv }: TemplateProps) {
               {education.map((edu) => (
                 <div key={edu.id} className="text-xs">
                   <p className="font-semibold">{edu.degree}</p>
-                  <p className="text-[10px] text-slate-500">{edu.institution} • {edu.startDate}–{edu.endDate}</p>
+                  <p className="text-[10px] text-slate-500">{edu.institution} • {edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' – ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</p>
                 </div>
               ))}
             </div>

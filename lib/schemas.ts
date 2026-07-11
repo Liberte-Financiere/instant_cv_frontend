@@ -28,6 +28,7 @@ export const educationSchema = z.object({
   field: z.string().optional(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
+  current: z.boolean().optional(),
 });
 
 export const skillSchema = z.object({
