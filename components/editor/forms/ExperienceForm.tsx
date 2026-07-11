@@ -58,17 +58,17 @@ export function ExperienceForm() {
               <div className="grid grid-cols-2 gap-2">
                 <Input 
                   label="Début" 
-                  type="date" 
                   value={exp.startDate} 
                   onChange={(e) => handleUpdate(exp.id, 'startDate', e.target.value)} 
+                  placeholder="Ex: Sept 2020"
                 />
                 <div className="relative">
                   <Input 
                     label="Fin" 
-                    type="date" 
                     value={exp.endDate} 
                     onChange={(e) => handleUpdate(exp.id, 'endDate', e.target.value)} 
                     disabled={exp.current} 
+                    placeholder="Ex: 2023"
                   />
                 </div>
               </div>

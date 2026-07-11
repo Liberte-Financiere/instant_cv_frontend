@@ -73,7 +73,7 @@ export function TwoTone({ cv }: TemplateProps) {
                 {education.map((edu) => (
                   <div key={edu.id}>
                     <p className="font-bold text-xs">{edu.degree}</p>
-                    <p className="text-[11px] text-slate-500">{edu.institution} • {edu.startDate}–{edu.endDate}</p>
+                    <p className="text-[11px] text-slate-500">{edu.institution} • {edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' – ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</p>
                   </div>
                 ))}
               </div>

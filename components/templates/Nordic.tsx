@@ -74,7 +74,7 @@ export function Nordic({ cv }: TemplateProps) {
             <div className="space-y-3">
               {education.map((edu) => (
                 <div key={edu.id} className="grid grid-cols-[100px_1fr] gap-4">
-                  <span className="text-xs text-slate-400">{edu.startDate}–{edu.endDate}</span>
+                  <span className="text-xs text-slate-400">{edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' – ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</span>
                   <div>
                     <p className="font-semibold text-slate-800">{edu.degree}</p>
                     <p className="text-xs text-slate-500">{edu.institution} {edu.field && `— ${edu.field}`}</p>

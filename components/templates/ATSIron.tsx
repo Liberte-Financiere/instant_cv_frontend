@@ -84,7 +84,7 @@ export function ATSIron({ cv }: TemplateProps) {
                     <span className="block italic">{edu.degree}{edu.field && `, ${edu.field}`}</span>
                  </div>
                  <div className="text-right">
-                    <span className="block">{edu.startDate} – {edu.endDate}</span>
+                    <span className="block">{edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' – ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</span>
                  </div>
               </div>
             ))}

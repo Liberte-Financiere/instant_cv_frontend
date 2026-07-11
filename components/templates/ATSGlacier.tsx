@@ -111,7 +111,7 @@ export function ATSGlacier({ cv }: TemplateProps) {
                  <div className="flex justify-between items-baseline mb-1">
                     <h3 className="font-bold text-base text-slate-800">{edu.institution}</h3>
                     <span className="text-sm text-slate-500 tabular-nums">
-                        {edu.startDate} — {edu.endDate}
+                        {edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' — ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}
                     </span>
                  </div>
                  <p className="text-slate-600">

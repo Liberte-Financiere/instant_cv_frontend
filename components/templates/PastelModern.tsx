@@ -89,7 +89,7 @@ export function PastelModern({ cv }: TemplateProps) {
                 <div key={edu.id} className="p-3 rounded-lg" style={{ backgroundColor: pastelBg }}>
                   <p className="font-bold text-sm">{edu.degree}</p>
                   <p className="text-xs text-slate-500">{edu.institution}</p>
-                  <p className="text-xs mt-1" style={{ color: accent }}>{edu.startDate} — {edu.endDate}</p>
+                  <p className="text-xs mt-1" style={{ color: accent }}>{edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' — ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</p>
                 </div>
               ))}
             </div>

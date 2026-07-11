@@ -133,7 +133,7 @@ export function Infographic({ cv }: TemplateProps) {
                 {education.map((edu) => (
                   <div key={edu.id} className="break-inside-avoid">
                     <p className="font-bold text-sm">{edu.degree}</p>
-                    <p className="text-xs text-slate-500">{edu.institution} • {edu.startDate}–{edu.endDate}</p>
+                    <p className="text-xs text-slate-500">{edu.institution} • {edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' – ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</p>
                   </div>
                 ))}
               </div>

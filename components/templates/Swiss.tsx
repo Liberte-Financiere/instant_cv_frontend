@@ -83,7 +83,7 @@ export function Swiss({ cv }: TemplateProps) {
                         <p className="font-bold text-sm">{edu.degree}</p>
                         <p className="text-xs text-slate-500">{edu.institution} {edu.field && `— ${edu.field}`}</p>
                       </div>
-                      <span className="text-xs text-slate-400 shrink-0">{edu.startDate} — {edu.endDate}</span>
+                      <span className="text-xs text-slate-400 shrink-0">{edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' — ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</span>
                     </div>
                   ))}
                 </div>

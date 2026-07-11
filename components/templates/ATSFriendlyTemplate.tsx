@@ -100,7 +100,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
                 <div className="flex justify-between items-baseline">
                   <strong>{edu.degree}{edu.field && ` - ${edu.field}`}</strong>
                   <span className="text-sm">
-                    {edu.startDate && `${edu.startDate}`}{edu.endDate && ` - ${edu.endDate}`}
+                    {edu.startDate && `${edu.startDate}`}{(edu.endDate || edu.current) && ` - ${edu.current ? getPresentLabel(lang) : edu.endDate}`}
                   </span>
                 </div>
                 <p className="italic">{edu.institution}</p>

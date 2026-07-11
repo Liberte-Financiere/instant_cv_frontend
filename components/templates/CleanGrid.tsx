@@ -100,7 +100,7 @@ export function CleanGrid({ cv }: TemplateProps) {
           <div className="grid grid-cols-2 gap-x-6 gap-y-3">
             {education.map((edu) => (
               <div key={edu.id}>
-                <p className="text-xs font-semibold" style={{ color: accentColor }}>{edu.startDate} — {edu.endDate}</p>
+                <p className="text-xs font-semibold" style={{ color: accentColor }}>{edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' — ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</p>
                 <p className="font-bold text-sm text-slate-900">{edu.degree}</p>
                 <p className="text-xs text-slate-500">{edu.institution}</p>
                 {edu.field && <p className="text-xs text-slate-400">{edu.field}</p>}

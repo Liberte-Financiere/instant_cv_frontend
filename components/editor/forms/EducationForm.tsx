@@ -12,7 +12,7 @@ export function EducationForm() {
     addEducation({ institution: '', degree: '', field: '', startDate: '', endDate: '' });
   }, [addEducation]);
 
-  const handleUpdate = useCallback((id: string, field: string, value: string) => {
+  const handleUpdate = useCallback((id: string, field: string, value: string | boolean) => {
     updateEducation(id, { [field]: value });
   }, [updateEducation]);
 
@@ -46,8 +46,20 @@ export function EducationForm() {
             <div className="col-span-full"><Input label="École / Université" value={edu.institution} onChange={(e) => handleUpdate(edu.id, 'institution', e.target.value)} placeholder="Ex: HEC Paris" /></div>
             <Input label="Diplôme" value={edu.degree} onChange={(e) => handleUpdate(edu.id, 'degree', e.target.value)} placeholder="Ex: Master 2" />
             <Input label="Domaine d'études" value={edu.field} onChange={(e) => handleUpdate(edu.id, 'field', e.target.value)} placeholder="Ex: Marketing Digital" />
-            <Input label="Date de début" type="date" value={edu.startDate} onChange={(e) => handleUpdate(edu.id, 'startDate', e.target.value)} />
-            <Input label="Date de fin" type="date" value={edu.endDate} onChange={(e) => handleUpdate(edu.id, 'endDate', e.target.value)} />
+            <div className="grid grid-cols-2 gap-2">
+              <Input label="Date de début" value={edu.startDate} onChange={(e) => handleUpdate(edu.id, 'startDate', e.target.value)} placeholder="Ex: 2018" />
+              <div className="relative">
+                <Input label="Date de fin" value={edu.endDate} onChange={(e) => handleUpdate(edu.id, 'endDate', e.target.value)} placeholder="Ex: 2021" disabled={edu.current} />
+              </div>
+            </div>
+            <div className="col-span-full flex items-center gap-2 -mt-2">
+              <input type="checkbox" id={`current-edu-${edu.id}`} checked={edu.current || false} onChange={(e) => {
+                    const isCurrent = e.target.checked;
+                    handleUpdate(edu.id, 'current', isCurrent);
+                    if (isCurrent) handleUpdate(edu.id, 'endDate', '');
+                  }} className="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+              <label htmlFor={`current-edu-${edu.id}`} className="text-xs text-slate-500 cursor-pointer select-none">Formation en cours</label>
+            </div>
           </div>
         </div>
       ))}

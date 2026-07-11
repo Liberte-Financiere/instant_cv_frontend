@@ -14,13 +14,31 @@ const LOCALE_MAP: Record<string, string> = {
 
 export function formatDate(date: string | Date, lang: string = 'fr'): string {
   if (!date) return '';
+  
+  if (typeof date === 'string') {
+    const trimmed = date.trim();
+    // Si c'est juste une année (ex: "2024") ou si ça contient des lettres (ex: "Sept 2024"), on ne formate pas
+    if (/^\d{4}$/.test(trimmed) || /[a-zA-Z]/.test(trimmed)) {
+      return trimmed;
+    }
+    // On ne formate que si c'est un format standard YYYY-MM-DD ou YYYY-MM
+    if (!/^\d{4}-\d{2}(-\d{2})?$/.test(trimmed) && !/^\d{4}\/\d{2}(\/\d{2})?$/.test(trimmed)) {
+      return trimmed;
+    }
+  }
+
   const d = new Date(date);
   if (isNaN(d.getTime())) return String(date);
+  
   const locale = LOCALE_MAP[lang] || 'fr-FR';
+  
+  // Si on a un format YYYY-MM (sans jour), on n'affiche pas le jour
+  const isMonthOnly = typeof date === 'string' && /^\d{4}-\d{2}$/.test(date.trim());
+  
   return d.toLocaleDateString(locale, { 
     year: 'numeric', 
     month: 'long',
-    day: 'numeric'
+    ...(isMonthOnly ? {} : { day: 'numeric' })
   });
 }
 
@@ -170,6 +188,7 @@ export function sanitizeCVData(data: any): any {
     field: edu.field || '',
     startDate: edu.startDate || '',
     endDate: edu.endDate || '',
+    current: !!edu.current,
   }));
 
   // 4. Compétences (validation du niveau de 1 à 5)
