@@ -131,3 +131,4 @@ const data = useStore(s => s.data);
 
 - [2026-06-15] — Consolidation des règles d'Architecture IA (Instance scoping, generateObject + Zod, et double-typage pour le Tool Calling manuellement réinjecté).
 - [2026-06-21] — Ajout de la règle sur la gestion de la transparence avec HTML5 Canvas et les formats d'export (JPEG vs PNG).
+- [2026-07-11] — Gestion des dates partielles JS (`new Date()`). Toujours ajouter un regex pour intercepter les années seules (`^\d{4}$`) ou le texte libre avant de passer la chaîne à `new Date()`, sinon JS ajoute un jour ou un mois factice (ex: "2024" => "1 janvier 2024").
