@@ -55,7 +55,7 @@ Créez un fichier `ecosystem.config.js` à la racine de votre projet (si vous n'
 cd /chemin/vers/votre/projet/microservices/bg_removal
 
 # Démarrer FastAPI avec uvicorn via PM2 en utilisant le binaire Python du venv
-pm2 start ./venv/bin/uvicorn --name "jobsira-python-bg" --interpreter ./venv/bin/python -- main:app --host 0.0.0.0 --port 3001
+pm2 start ./venv/bin/uvicorn --name "jobsira-python-bg" --interpreter ./venv/bin/python -- main:app --host 127.0.0.1 --port 3001
 ```
 
 Sauvegardez l'état de PM2 pour qu'il redémarre au reboot du serveur :
@@ -100,7 +100,7 @@ Puis lancez le conteneur sur le serveur :
 ```bash
 cd microservices/bg_removal
 docker build -t jobsira-python-bg .
-docker run -d -p 3001:3001 --name bg-remover --restart always jobsira-python-bg
+docker run -d -p 127.0.0.1:3001:3001 --name bg-remover --restart always jobsira-python-bg
 ```
 
 ---
