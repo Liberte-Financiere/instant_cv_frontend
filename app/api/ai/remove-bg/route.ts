@@ -54,7 +54,8 @@ export async function POST(req: Request) {
     const pythonFormData = new FormData();
     pythonFormData.append('file', file);
 
-    const pythonRes = await fetch('http://127.0.0.1:3001/remove-bg', {
+    const pythonBaseUrl = process.env.PYTHON_MICROSERVICE_URL || 'http://127.0.0.1:3001';
+    const pythonRes = await fetch(`${pythonBaseUrl}/remove-bg`, {
       method: 'POST',
       body: pythonFormData,
       // Timeout generous for first call (model download ~170MB), subsequent calls take 2-3s

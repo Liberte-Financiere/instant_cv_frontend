@@ -1,16 +1,17 @@
-[2026-07-11] — Suppression des puces (dots) pour le niveau des langues
+[2026-07-11] — Fix: Utilisation de la variable d'environnement pour l'URL du microservice Python
 
 What changed:
-- Retrait de la visualisation par "points" (dots) pour le niveau des langues dans le composant `CVLanguages.tsx`.
+- Remplacement de l'URL hardcodée (`http://127.0.0.1:3001/remove-bg`) par l'utilisation de `process.env.PYTHON_MICROSERVICE_URL` avec fallback sur `http://127.0.0.1:3001`.
 
 Why:
-- Demande explicite de l'utilisateur pour épurer le modèle. L'affichage des points (`● ● ◯ ◯`) était visuellement encombrant et n'apportait pas de valeur ajoutée majeure par rapport au texte ("Intermédiaire", "Natif"). Le rendu est désormais plus minimaliste et professionnel.
+- C'est une mauvaise pratique d'avoir des URLs en dur dans le code.
+- Cela garantit que la configuration expliquée dans le README (où l'utilisateur définit `PYTHON_MICROSERVICE_URL=...` dans le fichier `.env`) sera bien respectée en production.
 
 Files affected:
-- components/cv-sections/CVLanguages.tsx — Suppression du bloc de rendu des `<div className="w-2 h-2 rounded-full">`.
+- app/api/ai/remove-bg/route.ts — Modification de l'appel `fetch` pour utiliser `process.env.PYTHON_MICROSERVICE_URL`.
 
 Breaking changes:
 - None.
 
 Notes for review:
-- Testé visuellement, le composant n'affiche plus que le nom de la langue et le niveau textuel, alignés horizontalement de façon propre.
+- Le fallback sur `http://127.0.0.1:3001` assure que ça fonctionne out-of-the-box en développement si la variable n'est pas encore définie dans `.env`.
