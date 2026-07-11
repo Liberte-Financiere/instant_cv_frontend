@@ -38,19 +38,6 @@ export function CVLanguages({ languages, variant, title = 'Langues', accentColor
               <span className={`text-xs font-medium ${variant === 'tech' ? 'text-gray-500' : 'text-slate-400'}`}>
                 {lang.level}
               </span>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className={`w-2 h-2 rounded-full ${
-                      i <= levelBars[lang.level]
-                        ? styles.accentBg
-                        : variant === 'tech' ? 'bg-gray-700' : 'bg-slate-200'
-                    }`}
-                    style={i <= levelBars[lang.level] ? { backgroundColor: accentColor || undefined } : undefined}
-                  />
-                ))}
-              </div>
             </div>
           </div>
         ))}
