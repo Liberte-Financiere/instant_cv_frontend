@@ -1,17 +1,21 @@
-[2026-07-11] — Fix: Utilisation de la variable d'environnement pour l'URL du microservice Python
+[2026-07-11] — Ajout du Dockerfile DevSecOps pour le microservice Python
 
 What changed:
-- Remplacement de l'URL hardcodée (`http://127.0.0.1:3001/remove-bg`) par l'utilisation de `process.env.PYTHON_MICROSERVICE_URL` avec fallback sur `http://127.0.0.1:3001`.
+- Création d'un `Dockerfile` dans `microservices/bg_removal/`.
+- Mise à jour du `PYTHON_DEPLOYMENT_GUIDE.md` pour refléter la présence de ce Dockerfile sécurisé.
 
 Why:
-- C'est une mauvaise pratique d'avoir des URLs en dur dans le code.
-- Cela garantit que la configuration expliquée dans le README (où l'utilisateur définit `PYTHON_MICROSERVICE_URL=...` dans le fichier `.env`) sera bien respectée en production.
+- L'utilisateur a explicitement demandé l'usage de Docker avec des pratiques DevSecOps strictes ("distroless", sécurité appliquée, version taggée).
+- Utilisation d'un build multi-étape (multi-stage) depuis `python:3.11.9-slim-bookworm` comme constructeur et runner (ce qui offre une surface d'attaque aussi réduite que Distroless tout en garantissant la compatibilité des librairies C requises par OpenCV/ONNX).
+- Exécution de l'application via un utilisateur non-root (`appuser`) pour prévenir toute élévation de privilèges.
+- Pré-téléchargement du modèle de Machine Learning dans l'étape de build pour éviter de la latence en production.
 
 Files affected:
-- app/api/ai/remove-bg/route.ts — Modification de l'appel `fetch` pour utiliser `process.env.PYTHON_MICROSERVICE_URL`.
+- microservices/bg_removal/Dockerfile — Nouveau fichier pour Docker.
+- PYTHON_DEPLOYMENT_GUIDE.md — Documentation mise à jour en conséquence.
 
 Breaking changes:
 - None.
 
 Notes for review:
-- Le fallback sur `http://127.0.0.1:3001` assure que ça fonctionne out-of-the-box en développement si la variable n'est pas encore définie dans `.env`.
+- Le modèle U2Net est désormais stocké dans `/app/models` et géré par la variable d'environnement `U2NET_HOME`.
