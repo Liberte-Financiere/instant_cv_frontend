@@ -70,33 +70,13 @@ pm2 startup
 
 Docker est idéal pour les applications IA en Python car il isole parfaitement les dépendances complexes (comme OnnxRuntime).
 
-Créez un fichier `Dockerfile` dans le dossier `microservices/bg_removal` :
+Le projet contient déjà un `Dockerfile` ultra-sécurisé dans `microservices/bg_removal/Dockerfile`. Ce Dockerfile utilise les meilleures pratiques DevSecOps :
+- **Multi-stage build** : L'image finale ne contient ni outils de compilation (`pip`, `wget`), ni code source inutile, réduisant drastiquement le poids et la surface d'attaque.
+- **Image de base slim et versionnée** : Utilise `python:3.11.9-slim-bookworm` (tag précis et minimaliste, plus sûr que `python:latest`).
+- **Utilisateur Non-Root** : L'application tourne avec l'utilisateur restreint `appuser` (pas de droits sudo/root), ce qui empêche une compromission totale en cas de faille applicative.
+- **Modèle IA mis en cache** : Le modèle `u2net.onnx` est téléchargé pendant le build et copié dans l'image, garantissant que le conteneur démarre instantanément sans dépendre d'Internet en production.
 
-```dockerfile
-# microservices/bg_removal/Dockerfile
-FROM python:3.11-slim
-
-# Dépendances système pour OpenCV / rembg
-RUN apt-get update && apt-get install -y libgl1 libglib2.0-0 wget && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-
-# Copie des fichiers
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Pré-téléchargement du modèle IA (évite le délai au 1er lancement)
-RUN mkdir -p /root/.u2net && \
-    wget -O /root/.u2net/u2net.onnx https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx
-
-COPY main.py .
-
-EXPOSE 3001
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3001"]
-```
-
-Puis lancez le conteneur sur le serveur :
+Pour lancer le conteneur sur votre serveur :
 ```bash
 cd microservices/bg_removal
 docker build -t jobsira-python-bg .
