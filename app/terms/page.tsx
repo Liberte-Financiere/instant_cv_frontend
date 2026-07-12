@@ -9,28 +9,24 @@ export const metadata: Metadata = {
 };
 
 const SECTIONS = [
-  { id: 'acceptation', title: '1. Acceptation des Conditions', icon: CheckCircle2, color: 'text-blue-500 bg-blue-50 border-blue-100' },
-  { id: 'description', title: '2. Description du Service', icon: Globe, color: 'text-indigo-500 bg-indigo-50 border-indigo-100' },
-  { id: 'credits-paiements', title: '3. Crédits et Paiements', icon: CreditCard, color: 'text-cyan-500 bg-cyan-50 border-cyan-100' },
-  { id: 'contenu-ia', title: '4. Contenu Généré par l\'IA', icon: Sparkles, color: 'text-violet-500 bg-violet-50 border-violet-100' },
-  { id: 'propriete', title: '5. Propriété Intellectuelle', icon: FileText, color: 'text-purple-500 bg-purple-50 border-purple-100' },
-  { id: 'confidentialite', title: '6. Confidentialité', icon: Lock, color: 'text-emerald-500 bg-emerald-50 border-emerald-100' },
-  { id: 'utilisation', title: '7. Utilisation Acceptable', icon: AlertTriangle, color: 'text-amber-500 bg-amber-50 border-amber-100' },
-  { id: 'limitation', title: '8. Responsabilité', icon: ShieldAlert, color: 'text-red-500 bg-red-50 border-red-100' },
-  { id: 'contact', title: '9. Contact', icon: Mail, color: 'text-rose-500 bg-rose-50 border-rose-100' },
+  { id: 'acceptation', title: '1. Acceptation des Conditions', icon: CheckCircle2, colorClass: 'text-primary bg-primary/5 border-primary/10' },
+  { id: 'description', title: '2. Description du Service', icon: Globe, colorClass: 'text-indigo-600 bg-indigo-50 border-indigo-100' },
+  { id: 'credits-paiements', title: '3. Crédits et Paiements', icon: CreditCard, colorClass: 'text-cyan-600 bg-cyan-50 border-cyan-100' },
+  { id: 'contenu-ia', title: '4. Contenu Généré par l\'IA', icon: Sparkles, colorClass: 'text-violet-600 bg-violet-50 border-violet-100' },
+  { id: 'propriete', title: '5. Propriété Intellectuelle', icon: FileText, colorClass: 'text-purple-600 bg-purple-50 border-purple-100' },
+  { id: 'confidentialite', title: '6. Confidentialité', icon: Lock, colorClass: 'text-emerald-600 bg-emerald-50 border-emerald-100' },
+  { id: 'utilisation', title: '7. Utilisation Acceptable', icon: AlertTriangle, colorClass: 'text-amber-600 bg-amber-50 border-amber-100' },
+  { id: 'limitation', title: '8. Responsabilité', icon: ShieldAlert, colorClass: 'text-red-600 bg-red-50 border-red-100' },
+  { id: 'contact', title: '9. Contact', icon: Mail, colorClass: 'text-rose-600 bg-rose-50 border-rose-100' },
 ];
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-slate-50/30 text-slate-900 font-sans selection:bg-primary/20 relative overflow-hidden">
-      {/* Background glow effects */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-400/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-purple-400/5 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-primary/20">
       {/* Header Minimalist */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold tracking-tight text-primary">
             {APP_CONFIG.name}
           </Link>
           <Link href="/privacy" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
@@ -39,14 +35,14 @@ export default function TermsPage() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-16 md:py-24 relative">
+      <main className="max-w-6xl mx-auto px-6 py-16 md:py-24">
         {/* Hero */}
         <div className="max-w-3xl mb-16 md:mb-24">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-xs font-semibold text-blue-600 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10 text-xs font-semibold text-primary mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             Règles & Conditions
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-slate-955">
             Conditions d&apos;Utilisation
           </h1>
           <p className="text-lg md:text-xl text-slate-500">
@@ -68,7 +64,7 @@ export default function TermsPage() {
                       href={`#${section.id}`} 
                       className="group flex items-center gap-3 text-sm text-slate-500 hover:text-slate-900 transition-all py-1"
                     >
-                      <span className={`p-1 rounded-md border transition-colors ${section.color.split(' ').slice(1).join(' ')} group-hover:bg-opacity-80`}>
+                      <span className={`p-1.5 rounded-lg border transition-colors ${section.colorClass}`}>
                         <Icon className="w-3.5 h-3.5" />
                       </span>
                       <span>{section.title}</span>
@@ -84,25 +80,25 @@ export default function TermsPage() {
             
             <section id="acceptation" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-blue-50 border-blue-100 text-blue-500">
+                <span className="p-2 rounded-xl border bg-primary/5 border-primary/10 text-primary">
                   <CheckCircle2 className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">1. Acceptation des Conditions</h2>
+                <h2 className="!my-0 text-slate-955">1. Acceptation des Conditions</h2>
               </div>
               <p>
                 En accédant et en utilisant {APP_CONFIG.name}, vous acceptez d&apos;être lié par ces Conditions Générales d&apos;Utilisation (CGU) et nos Conditions Générales de Vente (CGV). 
-                Si vous n&apos;accepttez pas ces termes, nous vous invitons à cesser toute utilisation de nos services.
+                Si vous n&apos;acceptez pas ces termes, nous vous invitons à cesser toute utilisation de nos services.
               </p>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="description" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-indigo-50 border-indigo-100 text-indigo-500">
+                <span className="p-2 rounded-xl border bg-indigo-50 border-indigo-100 text-indigo-600">
                   <Globe className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">2. Description du Service et Accès</h2>
+                <h2 className="!my-0 text-slate-955">2. Description du Service et Accès</h2>
               </div>
               <p>
                 {APP_CONFIG.name} est une plateforme de nouvelle génération en mode SaaS (Software as a Service), optimisée par l&apos;Intelligence Artificielle. Notre technologie permet de :
@@ -118,14 +114,14 @@ export default function TermsPage() {
               </p>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="credits-paiements" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-cyan-50 border-cyan-100 text-cyan-500">
+                <span className="p-2 rounded-xl border bg-cyan-50 border-cyan-100 text-cyan-600">
                   <CreditCard className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">3. Système de Crédits et Paiements</h2>
+                <h2 className="!my-0 text-slate-955">3. Système de Crédits et Paiements</h2>
               </div>
               <h4 className="text-slate-800 font-semibold mt-6 mb-2">Modèle Économique</h4>
               <p>
@@ -137,14 +133,14 @@ export default function TermsPage() {
               </p>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="contenu-ia" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-violet-50 border-violet-100 text-violet-500">
+                <span className="p-2 rounded-xl border bg-violet-50 border-violet-100 text-violet-600">
                   <Sparkles className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">4. Contenu Généré par l&apos;Intelligence Artificielle</h2>
+                <h2 className="!my-0 text-slate-955">4. Contenu Généré par l&apos;Intelligence Artificielle</h2>
               </div>
               <p>
                 L&apos;innovation comporte des spécificités. Nos outils emploient des modèles de traitement du langage naturel (LLM) avancés :
@@ -156,14 +152,14 @@ export default function TermsPage() {
               </ul>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="propriete" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-purple-50 border-purple-100 text-purple-500">
+                <span className="p-2 rounded-xl border bg-purple-50 border-purple-100 text-purple-600">
                   <FileText className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">5. Propriété Intellectuelle</h2>
+                <h2 className="!my-0 text-slate-955">5. Propriété Intellectuelle</h2>
               </div>
               <p>
                 Le code, le design, l&apos;interface utilisateur et les algorithmes internes de {APP_CONFIG.name} demeurent notre propriété exclusive. 
@@ -171,28 +167,28 @@ export default function TermsPage() {
               </p>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="confidentialite" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-emerald-50 border-emerald-100 text-emerald-500">
+                <span className="p-2 rounded-xl border bg-emerald-50 border-emerald-100 text-emerald-600">
                   <Lock className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">6. Protection des Données</h2>
+                <h2 className="!my-0 text-slate-955">6. Protection des Données</h2>
               </div>
               <p>
                 La sécurité de vos parcours professionnels est primordiale. Nous traitons vos données personnelles dans le plus strict respect de la confidentialité. Pour comprendre en détail nos mécanismes d&apos;anonymisation vis-à-vis des IA tierces, nous vous invitons à lire notre <Link href="/privacy">Politique de Confidentialité</Link>.
               </p>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="utilisation" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-amber-50 border-amber-100 text-amber-500">
+                <span className="p-2 rounded-xl border bg-amber-50 border-amber-100 text-amber-600">
                   <AlertTriangle className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">7. Utilisation Acceptable</h2>
+                <h2 className="!my-0 text-slate-955">7. Utilisation Acceptable</h2>
               </div>
               <p>
                 La plateforme est destinée à un usage professionnel légitime. Il est formellement interdit de :
@@ -204,28 +200,28 @@ export default function TermsPage() {
               </ul>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="limitation" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-red-50 border-red-100 text-red-500">
+                <span className="p-2 rounded-xl border bg-red-50 border-red-100 text-red-600">
                   <ShieldAlert className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">8. Limitation de Responsabilité</h2>
+                <h2 className="!my-0 text-slate-955">8. Limitation de Responsabilité</h2>
               </div>
               <p>
                 {APP_CONFIG.name} est fourni en mode &quot;best effort&quot;. Nous déclinons toute responsabilité pour d&apos;éventuelles interruptions de service, pertes de données ou latences, souvent liées aux fournisseurs technologiques sous-jacents. La plateforme ne garantit pas l&apos;obtention d&apos;un emploi.
               </p>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="contact" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-rose-50 border-rose-100 text-rose-500">
+                <span className="p-2 rounded-xl border bg-rose-50 border-rose-100 text-rose-600">
                   <Mail className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">9. Contact et Droit Applicable</h2>
+                <h2 className="!my-0 text-slate-955">9. Contact et Droit Applicable</h2>
               </div>
               <p>
                 Les présentes conditions sont régies par la juridiction du siège social de JobSira. Pour tout litige ou réclamation, le dialogue prévaut.
@@ -239,7 +235,7 @@ export default function TermsPage() {
         </div>
       </main>
 
-      <footer className="border-t border-slate-200/60 bg-white py-12 mt-24">
+      <footer className="border-t border-slate-100 bg-white py-12 mt-24">
         <div className="max-w-6xl mx-auto px-6 text-slate-400 text-sm flex flex-col md:flex-row justify-between items-center gap-4">
           <p>© {new Date().getFullYear()} {APP_CONFIG.name}. Tous droits réservés.</p>
           <div className="flex gap-6">
