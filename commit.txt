@@ -1,18 +1,11 @@
-[2026-07-12] — Ajout du template Premium Événement (style Dreamforce/Anima)
+[2026-07-12] — Fix de l'état bloquant "Envoi..." après envoi réussi de la campagne
 
 What changed:
-- Création d'un nouveau modèle d'e-mail appelé "Premium Événement" (id: "dreamforce") inspiré par Dreamforce, Anima et Empower.
-- Mise en page à deux colonnes (Texte + Graphique de tableau de bord pure HTML/CSS).
-- Liste à puces avec des glyphes "✦" de couleur bleue.
-- Section de cartes empilées (style Anima) pour présenter des fonctionnalités phares avec illustrations minimalistes en HTML/CSS brut.
-- Ajout du modèle dans la bibliothèque de templates et le formulaire de campagne.
-- Mise à jour et validation des tests Vitest (11 tests au vert).
+- Ajout d'un bloc `finally` dans la fonction `executeSend` de la page marketing pour remettre `loading` à `false` après l'envoi de la campagne (que ce soit un succès ou une erreur).
+- Ajout d'un affichage de l'erreur via un message `toast.error` en cas d'échec de la requête.
 
 Why:
-- Demande de l'utilisateur de s'inspirer des exemples fournis (Dreamforce, Anima, Empower) tout en conservant la charte graphique de Jobsira.
+- Le bouton de soumission de campagne restait grisé et bloqué sur "Envoi..." après un envoi réussi car le changement d'état `setLoading(false)` n'était pas exécuté dans le bloc `try` de succès.
 
 Files affected:
-- lib/email-templates.ts — Implémentation du template "dreamforce"
-- app/dashboard/hq-ops/marketing/page.tsx — Intégration dans le sélecteur de templates
-- app/dashboard/hq-ops/marketing/templates/page.tsx — Ajout de la carte de présentation et configuration de l'aperçu
-- __tests__/lib/email-templates.test.ts — Tests associés
+- app/dashboard/hq-ops/marketing/page.tsx — Ajout du bloc `finally { setLoading(false); }` dans la méthode `executeSend`.
