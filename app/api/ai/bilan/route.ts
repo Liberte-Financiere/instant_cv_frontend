@@ -89,7 +89,7 @@ async function callLLM(apiKey: string, model: string, cvContent: string) {
         { role: 'user', content: buildUserMessage(cvContent) },
       ],
       temperature: 0.3,
-      max_tokens: 4096,
+      max_tokens: 5000,
       response_format: { type: 'json_object' },
     }),
   });
