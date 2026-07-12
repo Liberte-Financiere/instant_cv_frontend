@@ -96,7 +96,7 @@ export function ReferralSection() {
             <Gift className="w-4 h-4 text-blue-600" />
             <h3 className="text-sm font-semibold text-slate-800">Parrainage (Gagnez des Crédits)</h3>
             <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-medium">
-              +30 Cr. / Filleul
+              +10 Cr. / Filleul
             </span>
           </div>
           
@@ -137,7 +137,7 @@ export function ReferralSection() {
           <div className="text-center">
              <div className="flex items-center justify-center gap-1 text-amber-500">
                <Sparkles className="w-4 h-4" />
-               <span className="text-lg font-bold">{data.referralCount * 30}</span>
+               <span className="text-lg font-bold">{data.referralCount * 10}</span>
              </div>
              <p className="text-xs text-slate-500">Crédits générés</p>
           </div>
