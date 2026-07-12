@@ -1,26 +1,30 @@
-2026-07-12 — Pricing À La Carte and IA Suffix Cleanups
+[2026-07-12] — Refonte Tarification, CGU/Confidentialité et Outils de Carrière (Bilan, Détourage)
 
 What changed:
-- Removed superflous 'IA' suffixes from Bilan de Compétences page title and credit costs comments.
-- Cleaned up 'IA' occurrences in AIToolbox component titles, badges, and marketing descriptions.
-- Added Bilan de Compétences (2 cr.), Photo Pro (20 cr.), and Détourage Magique (1 cr.) to the landing page credit cost grid in Pricing.tsx.
-- Reduced dimensions, margins, and padding in the action pricing grid to display all 11 items compactly (6 columns on desktop, 3-4 on tablet/mobile).
-- Added an interactive À la Carte (pay-as-you-go) credit calculator card on the landing page pricing section with live pricing preview and stepper controls.
+- Retrait définitif du "Pack Pro" (5 000 FCFA / 250 crédits) et harmonisation de la grille de prix à 3 colonnes.
+- Intégration de la tarification à la carte avec calculateur interactif de crédits.
+- Mise à jour du coût de la traduction de CV à 5 crédits.
+- Création et rédaction complète de la page CGU (/terms) avec design premium Stripe-like et sommaire interactif collant.
+- Création et rédaction complète de la page Politique de Confidentialité (/privacy) avec design premium Stripe-like et sommaire interactif collant.
+- Anonymisation des données personnelles (Nom, Prénom, E-mail, Téléphone) vis-à-vis des requêtes transmises aux IA.
+- Nettoyage des suffixes "IA" redondants dans les titres et les libellés (Bilan de Compétences, Photo Pro, Détourage Magique, Boîte à Outils).
+- Stabilisation des couleurs de thème (JobSira bleu solid, pas de dégradés superflus).
 
 Why:
-- To align with user request to remove repetitive 'IA' brand labels.
-- To display the full suite of career tools on the pricing page and let users know they can purchase exactly the number of credits they need without choosing a full package.
+- Répondre aux nouvelles exigences de clarté légale, de tarification simplifiée par crédit et de suppression des labels "IA" répétitifs.
 
 Files affected:
-- frontend/instant_cv/app/dashboard/tools/bilan/page.tsx — Removed 'IA' from main page title.
-- frontend/instant_cv/components/landing/AIToolbox.tsx — Removed 'IA' from AIToolbox headers, badges, and text.
-- frontend/instant_cv/app/api/ai/bilan/route.ts — Removed 'IA' from credit transaction descriptions.
-- frontend/instant_cv/app/api/ai/photo/route.ts — Removed 'IA' from credit transaction descriptions.
-- frontend/instant_cv/lib/credit-costs.ts — Updated comment for Bilan de Compétences credits cost.
-- frontend/instant_cv/components/landing/Pricing.tsx — Added interactive À la Carte calculator card, added new actions to the pricing grid, and optimized the layout to be extremely compact.
+- frontend/instant_cv/app/privacy/page.tsx — Nouvelle page Politique de Confidentialité avec menu collant et style JobSira.
+- frontend/instant_cv/app/terms/page.tsx — Nouvelle page Conditions d'Utilisation avec menu collant et style JobSira.
+- frontend/instant_cv/components/landing/Pricing.tsx — Grille de prix à 3 colonnes, retrait du Pack Pro, et ajout du calculateur interactif.
+- frontend/instant_cv/lib/credit-costs.ts — Mise à jour du tarif de traduction de CV à 5 crédits et nettoyage des commentaires de coûts.
+- frontend/instant_cv/components/landing/AIToolbox.tsx — Retrait des suffixes "IA".
+- frontend/instant_cv/app/dashboard/tools/bilan/page.tsx — Suppression du suffixe "IA" dans le titre principal.
+- frontend/instant_cv/app/api/ai/bilan/route.ts — Suppression du suffixe "IA" dans la description de transaction.
+- frontend/instant_cv/app/api/ai/photo/route.ts — Suppression du suffixe "IA" dans la description de transaction.
 
 Breaking changes:
-- None
+- Le forfait "Pack Pro" n'est plus proposé aux utilisateurs.
 
 Notes for review:
-- Ensure the custom À la Carte stepper increments and decrements by 5 credits correctly on the landing page and matches the dashboard pricing behavior.
+- Vérifier que la grille de tarification et le calculateur à la carte s'affichent correctement sans dégradés et correspondent à la charte graphique bleue de JobSira.
