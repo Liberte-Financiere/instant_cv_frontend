@@ -9,26 +9,22 @@ export const metadata: Metadata = {
 };
 
 const SECTIONS = [
-  { id: 'introduction', title: '1. Introduction', icon: Info, color: 'text-blue-500 bg-blue-50 border-blue-100' },
-  { id: 'donnees-collectees', title: '2. Données collectées', icon: Database, color: 'text-indigo-500 bg-indigo-50 border-indigo-100' },
-  { id: 'ia-anonymisation', title: '3. IA et Anonymisation', icon: Sparkles, color: 'text-cyan-500 bg-cyan-50 border-cyan-100' },
-  { id: 'partage-stockage', title: '4. Partage et Stockage', icon: Share2, color: 'text-violet-500 bg-violet-50 border-violet-100' },
-  { id: 'securite', title: '5. Sécurité', icon: ShieldCheck, color: 'text-emerald-500 bg-emerald-50 border-emerald-100' },
-  { id: 'vos-droits', title: '6. Vos Droits', icon: Fingerprint, color: 'text-amber-500 bg-amber-50 border-amber-100' },
-  { id: 'contact', title: '7. Contact', icon: Mail, color: 'text-rose-500 bg-rose-50 border-rose-100' },
+  { id: 'introduction', title: '1. Introduction', icon: Info, colorClass: 'text-primary bg-primary/5 border-primary/10' },
+  { id: 'donnees-collectees', title: '2. Données collectées', icon: Database, colorClass: 'text-indigo-600 bg-indigo-50 border-indigo-100' },
+  { id: 'ia-anonymisation', title: '3. IA et Anonymisation', icon: Sparkles, colorClass: 'text-cyan-600 bg-cyan-50 border-cyan-100' },
+  { id: 'partage-stockage', title: '4. Partage et Stockage', icon: Share2, colorClass: 'text-violet-600 bg-violet-50 border-violet-100' },
+  { id: 'securite', title: '5. Sécurité', icon: ShieldCheck, colorClass: 'text-emerald-600 bg-emerald-50 border-emerald-100' },
+  { id: 'vos-droits', title: '6. Vos Droits', icon: Fingerprint, colorClass: 'text-amber-600 bg-amber-50 border-amber-100' },
+  { id: 'contact', title: '7. Contact', icon: Mail, colorClass: 'text-rose-600 bg-rose-50 border-rose-100' },
 ];
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-slate-50/30 text-slate-900 font-sans selection:bg-primary/20 relative overflow-hidden">
-      {/* Background glow effects */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-400/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-purple-400/5 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-primary/20">
       {/* Header Minimalist */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold tracking-tight text-primary">
             {APP_CONFIG.name}
           </Link>
           <Link href="/terms" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
@@ -37,14 +33,14 @@ export default function PrivacyPage() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-16 md:py-24 relative">
+      <main className="max-w-6xl mx-auto px-6 py-16 md:py-24">
         {/* Hero */}
         <div className="max-w-3xl mb-16 md:mb-24">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-xs font-semibold text-blue-600 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10 text-xs font-semibold text-primary mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             Confidentialité & Sécurité
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-slate-950">
             Politique de Confidentialité
           </h1>
           <p className="text-lg md:text-xl text-slate-500">
@@ -66,7 +62,7 @@ export default function PrivacyPage() {
                       href={`#${section.id}`} 
                       className="group flex items-center gap-3 text-sm text-slate-500 hover:text-slate-900 transition-all py-1"
                     >
-                      <span className={`p-1 rounded-md border transition-colors ${section.color.split(' ').slice(1).join(' ')} group-hover:bg-opacity-80`}>
+                      <span className={`p-1.5 rounded-lg border transition-colors ${section.colorClass}`}>
                         <Icon className="w-3.5 h-3.5" />
                       </span>
                       <span>{section.title}</span>
@@ -82,24 +78,24 @@ export default function PrivacyPage() {
             
             <section id="introduction" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-blue-50 border-blue-100 text-blue-500">
+                <span className="p-2 rounded-xl border bg-primary/5 border-primary/10 text-primary">
                   <Info className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">1. Introduction</h2>
+                <h2 className="!my-0 text-slate-955">1. Introduction</h2>
               </div>
               <p>
                 Chez {APP_CONFIG.name}, nous construisons l&apos;avenir du recrutement en mettant la confidentialité au centre de notre architecture. Cette politique explique en toute transparence comment nous collectons, utilisons, protégeons et partageons vos informations personnelles lorsque vous utilisez notre plateforme.
               </p>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="donnees-collectees" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-indigo-50 border-indigo-100 text-indigo-500">
+                <span className="p-2 rounded-xl border bg-indigo-50 border-indigo-100 text-indigo-600">
                   <Database className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">2. Données collectées</h2>
+                <h2 className="!my-0 text-slate-955">2. Données collectées</h2>
               </div>
               <p>
                 Afin de vous fournir nos services d&apos;aide à la candidature propulsés par l&apos;Intelligence Artificielle, nous traitons un ensemble précis de données :
@@ -112,14 +108,14 @@ export default function PrivacyPage() {
               </ul>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="ia-anonymisation" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-cyan-50 border-cyan-100 text-cyan-500">
+                <span className="p-2 rounded-xl border bg-cyan-50 border-cyan-100 text-cyan-600">
                   <Sparkles className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">3. IA et Anonymisation</h2>
+                <h2 className="!my-0 text-slate-955">3. IA et Anonymisation</h2>
               </div>
               <p>
                 L&apos;innovation de {APP_CONFIG.name} repose sur l&apos;exploitation de l&apos;IA (LLM). 
@@ -132,14 +128,14 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="partage-stockage" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-violet-50 border-violet-100 text-violet-500">
+                <span className="p-2 rounded-xl border bg-violet-50 border-violet-100 text-violet-600">
                   <Share2 className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">4. Partage et Stockage des Données</h2>
+                <h2 className="!my-0 text-slate-955">4. Partage et Stockage des Données</h2>
               </div>
               <p>
                 <strong>La vente de données ne fait pas partie de notre modèle économique.</strong> Nous ne vendons, ne louons, ni ne commercialisons vos CV.
@@ -154,28 +150,28 @@ export default function PrivacyPage() {
               </ul>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="securite" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-emerald-50 border-emerald-100 text-emerald-500">
+                <span className="p-2 rounded-xl border bg-emerald-50 border-emerald-100 text-emerald-600">
                   <ShieldCheck className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">5. Sécurité</h2>
+                <h2 className="!my-0 text-slate-955">5. Sécurité</h2>
               </div>
               <p>
                 Nous implémentons des standards de sécurité rigoureux pour protéger vos données contre les accès non autorisés, l&apos;altération ou la destruction. Cela inclut le chiffrement des données en transit (TLS/HTTPS), le stockage chiffré au repos, et des contrôles d&apos;accès stricts à nos systèmes.
               </p>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="vos-droits" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-amber-50 border-amber-100 text-amber-500">
+                <span className="p-2 rounded-xl border bg-amber-50 border-amber-100 text-amber-600">
                   <Fingerprint className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">6. Vos Droits</h2>
+                <h2 className="!my-0 text-slate-955">6. Vos Droits</h2>
               </div>
               <p>
                 Vous restez maître de vos données à tout moment. Vous disposez des droits suivants concernant vos informations personnelles :
@@ -187,14 +183,14 @@ export default function PrivacyPage() {
               </ul>
             </section>
 
-            <hr className="my-12 border-slate-200/60" />
+            <hr className="my-12 border-slate-100" />
 
             <section id="contact" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
-                <span className="p-2 rounded-xl border bg-rose-50 border-rose-100 text-rose-500">
+                <span className="p-2 rounded-xl border bg-rose-50 border-rose-100 text-rose-600">
                   <Mail className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0">7. Contact</h2>
+                <h2 className="!my-0 text-slate-955">7. Contact</h2>
               </div>
               <p>
                 La confiance se construit par le dialogue. Pour toute question relative à cette politique de confidentialité ou à vos données personnelles, notre équipe est à votre disposition.
@@ -207,7 +203,7 @@ export default function PrivacyPage() {
         </div>
       </main>
 
-      <footer className="border-t border-slate-200/60 bg-white py-12 mt-24">
+      <footer className="border-t border-slate-100 bg-white py-12 mt-24">
         <div className="max-w-6xl mx-auto px-6 text-slate-400 text-sm flex flex-col md:flex-row justify-between items-center gap-4">
           <p>© {new Date().getFullYear()} {APP_CONFIG.name}. Tous droits réservés.</p>
           <div className="flex gap-6">
