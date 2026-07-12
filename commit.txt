@@ -1,15 +1,18 @@
-[2026-07-12] — Ajustement des couleurs des templates e-mails (Retrait du rouge)
+[2026-07-12] — Ajout du template Premium Événement (style Dreamforce/Anima)
 
 What changed:
-- Suppression définitive de toute couleur rouge (#ef4444, #b91c1c, etc.) dans l'ensemble des templates d'emails.
-- Remplacement par les teintes bleu/indigo de la charte de Jobsira (#2563eb, #1e3a8a, #eff6ff).
-- Ajustement du logo textuel et des cartes de caractéristiques.
+- Création d'un nouveau modèle d'e-mail appelé "Premium Événement" (id: "dreamforce") inspiré par Dreamforce, Anima et Empower.
+- Mise en page à deux colonnes (Texte + Graphique de tableau de bord pure HTML/CSS).
+- Liste à puces avec des glyphes "✦" de couleur bleue.
+- Section de cartes empilées (style Anima) pour présenter des fonctionnalités phares avec illustrations minimalistes en HTML/CSS brut.
+- Ajout du modèle dans la bibliothèque de templates et le formulaire de campagne.
+- Mise à jour et validation des tests Vitest (11 tests au vert).
 
 Why:
-- Demande explicite de l'utilisateur de ne pas utiliser de rouge dans la charte visuelle des e-mails marketing.
+- Demande de l'utilisateur de s'inspirer des exemples fournis (Dreamforce, Anima, Empower) tout en conservant la charte graphique de Jobsira.
 
 Files affected:
-- lib/email-templates.ts — Remplacement des styles rouges par des teintes bleues.
-
-Breaking changes:
-- None
+- lib/email-templates.ts — Implémentation du template "dreamforce"
+- app/dashboard/hq-ops/marketing/page.tsx — Intégration dans le sélecteur de templates
+- app/dashboard/hq-ops/marketing/templates/page.tsx — Ajout de la carte de présentation et configuration de l'aperçu
+- __tests__/lib/email-templates.test.ts — Tests associés

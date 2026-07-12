@@ -332,6 +332,8 @@ export default function MarketingDashboard() {
                         <option value="annonce">Annonce Standard</option>
                         <option value="promo">Alerte Promo</option>
                         <option value="minimal">Défaut Minimaliste</option>
+                        <option value="artlist">Premium Sombre (Style Artlist)</option>
+                        <option value="dreamforce">Premium Événement (Style Dreamforce)</option>
                       </select>
                       <LayoutTemplate className="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>

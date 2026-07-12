@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getHtmlForTemplate, generateAnnouncementEmail, generatePromoEmail, generateMinimalEmail } from '@/lib/email-templates';
+import { getHtmlForTemplate, generateAnnouncementEmail, generatePromoEmail, generateMinimalEmail, generateArtlistEmail, generateDreamforceEmail } from '@/lib/email-templates';
 
 describe('Email Templates Generator', () => {
   const mockProps = {
@@ -44,6 +44,24 @@ describe('Email Templates Generator', () => {
     });
   });
 
+  describe('generateArtlistEmail', () => {
+    it('should generate dark premium HTML inspired by Artlist', () => {
+      const html = generateArtlistEmail(mockProps);
+      expect(html).toContain(mockProps.subject);
+      expect(html).toContain('Nouveauté Live');
+      expect(html).toContain('L\'Innovateur 3.0');
+    });
+  });
+
+  describe('generateDreamforceEmail', () => {
+    it('should generate tech event HTML inspired by Dreamforce', () => {
+      const html = generateDreamforceEmail(mockProps);
+      expect(html).toContain(mockProps.subject);
+      expect(html).toContain('Édition Spéciale');
+      expect(html).toContain('Tout Jobsira. Sans compromis.');
+    });
+  });
+
   describe('getHtmlForTemplate (Switch)', () => {
     it('should return promo template when templateId is "promo"', () => {
       const promoHtml = generatePromoEmail(mockProps);
@@ -55,6 +73,18 @@ describe('Email Templates Generator', () => {
       const minHtml = generateMinimalEmail(mockProps);
       const result = getHtmlForTemplate('minimal', mockProps);
       expect(result).toEqual(minHtml);
+    });
+
+    it('should return artlist template when templateId is "artlist"', () => {
+      const artlistHtml = generateArtlistEmail(mockProps);
+      const result = getHtmlForTemplate('artlist', mockProps);
+      expect(result).toEqual(artlistHtml);
+    });
+
+    it('should return dreamforce template when templateId is "dreamforce"', () => {
+      const dreamHtml = generateDreamforceEmail(mockProps);
+      const result = getHtmlForTemplate('dreamforce', mockProps);
+      expect(result).toEqual(dreamHtml);
     });
 
     it('should return announcement template as default', () => {

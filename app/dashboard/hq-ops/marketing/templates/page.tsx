@@ -169,6 +169,100 @@ export default function MarketingTemplatesPage() {
              </div>
            </div>
 
+           {/* Card 4: Premium Sombre (Artlist style) */}
+           <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col">
+             <div className="h-48 bg-slate-950 relative p-4 flex items-center justify-center overflow-hidden">
+               <div className="absolute top-4 right-4 bg-blue-600 text-white text-xs font-black uppercase tracking-wider px-3 py-1 rounded shadow-sm z-10">
+                 Premium
+               </div>
+               {/* Abstract Premium layout */}
+               <div className="w-3/4 h-3/4 bg-slate-900 shadow-xl rounded-lg overflow-hidden border border-slate-800 flex flex-col relative z-0 group-hover:scale-105 transition-transform duration-500">
+                 <div className="p-3 text-center flex flex-col items-center justify-center h-full">
+                   <div className="w-2/3 h-2 bg-white rounded mb-2"></div>
+                   <div className="flex gap-1 justify-center mb-4">
+                     <div className="w-8 h-2 bg-blue-500 rounded-full"></div>
+                     <div className="w-12 h-2 bg-slate-700 rounded-full"></div>
+                   </div>
+                   {/* Simulated miniature CV preview diagram inside preview card */}
+                   <div className="w-full h-8 bg-slate-950 border border-slate-800 rounded flex overflow-hidden">
+                     <div className="w-1/3 bg-slate-900 border-r border-slate-800 p-1">
+                       <div className="w-2 h-2 bg-blue-500 rounded-full mb-1"></div>
+                       <div className="w-4 h-1 bg-slate-700 rounded"></div>
+                     </div>
+                     <div className="w-2/3 p-1">
+                       <div className="w-6 h-1.5 bg-white rounded mb-1"></div>
+                       <div className="w-10 h-1 bg-slate-800 rounded"></div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div className="p-6 flex flex-col flex-1">
+               <h3 className="text-lg font-black text-slate-900 mb-2">Premium Sombre</h3>
+               <p className="text-sm text-slate-500 mb-6 flex-1">Design moderne inspiré des lancements de produits de pointe (Artlist/Canva). Fond sombre et contrasté valorisant les visuels.</p>
+               
+               <div className="flex items-center justify-end pt-4 border-t border-slate-100">
+                 <div className="flex gap-2 w-full">
+                   <button 
+                     onClick={() => setPreviewTemplate('artlist')}
+                     className="flex-1 py-2 text-sm font-bold text-blue-600 hover:bg-blue-50 rounded-xl transition-colors flex items-center justify-center gap-2"
+                   >
+                     <Eye className="w-4 h-4" /> Aperçu
+                   </button>
+                   <Link href="/dashboard/hq-ops/marketing?template=artlist" className="flex-1 py-2 text-sm font-bold text-slate-700 border border-slate-200 bg-white hover:bg-slate-50 rounded-xl transition-colors shadow-sm flex items-center justify-center text-center">
+                     Utiliser
+                   </Link>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+           {/* Card 5: Premium Événement (Dreamforce style) */}
+           <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col">
+             <div className="h-48 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 relative p-4 flex items-center justify-center overflow-hidden">
+               <div className="absolute top-4 right-4 bg-blue-600 text-white text-xs font-black uppercase tracking-wider px-3 py-1 rounded shadow-sm z-10">
+                 Premium
+               </div>
+               {/* Abstract Dreamforce layout */}
+               <div className="w-3/4 h-3/4 bg-slate-900/80 backdrop-blur-md shadow-xl rounded-lg overflow-hidden border border-blue-900/50 flex flex-col relative z-0 group-hover:scale-105 transition-transform duration-500">
+                 <div className="p-3 flex items-center justify-between h-full">
+                   {/* Left details */}
+                   <div className="w-1/2 flex flex-col justify-center">
+                     <div className="w-12 h-1.5 bg-blue-400 rounded mb-1"></div>
+                     <div className="w-full h-3 bg-white rounded mb-2"></div>
+                     <div className="w-8 h-3.5 bg-blue-600 rounded"></div>
+                   </div>
+                   {/* Right dashboard illustration */}
+                   <div className="w-1/3 h-10 bg-slate-950 border border-blue-500/30 rounded p-1 flex flex-col justify-between">
+                     <div className="flex gap-0.5">
+                       <div className="w-1 h-1 bg-red-500 rounded-full"></div>
+                       <div className="w-1 h-1 bg-yellow-500 rounded-full"></div>
+                     </div>
+                     <div className="w-full h-2 bg-blue-500/20 rounded"></div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div className="p-6 flex flex-col flex-1">
+               <h3 className="text-lg font-black text-slate-900 mb-2">Premium Événement</h3>
+               <p className="text-sm text-slate-500 mb-6 flex-1">Design percutant avec en-tête dégradé (Dreamforce style) et mise en page à deux colonnes pour lancements de fonctionnalités.</p>
+               
+               <div className="flex items-center justify-end pt-4 border-t border-slate-100">
+                 <div className="flex gap-2 w-full">
+                   <button 
+                     onClick={() => setPreviewTemplate('dreamforce')}
+                     className="flex-1 py-2 text-sm font-bold text-blue-600 hover:bg-blue-50 rounded-xl transition-colors flex items-center justify-center gap-2"
+                   >
+                     <Eye className="w-4 h-4" /> Aperçu
+                   </button>
+                   <Link href="/dashboard/hq-ops/marketing?template=dreamforce" className="flex-1 py-2 text-sm font-bold text-slate-700 border border-slate-200 bg-white hover:bg-slate-50 rounded-xl transition-colors shadow-sm flex items-center justify-center text-center">
+                     Utiliser
+                   </Link>
+                 </div>
+               </div>
+             </div>
+           </div>
+
          </div>
       </div>
 
