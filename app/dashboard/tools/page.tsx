@@ -12,16 +12,8 @@ const tools = [
     icon: Camera,
     color: 'text-purple-500',
     bgColor: 'bg-purple-500/10',
+    hoverBg: 'to-purple-500',
     status: 'active',
-  },
-  {
-    id: 'portfolio',
-    title: 'Générateur de Portfolio',
-    description: 'Transformez votre CV en un mini-site web portfolio ultra design, optimisé pour convertir les recruteurs.',
-    icon: Globe,
-    color: 'text-emerald-500',
-    bgColor: 'bg-emerald-500/10',
-    status: 'coming_soon',
   },
   {
     id: 'remove-bg',
@@ -30,6 +22,7 @@ const tools = [
     icon: ImageIcon,
     color: 'text-blue-500',
     bgColor: 'bg-blue-500/10',
+    hoverBg: 'to-blue-500',
     status: 'active',
   },
   {
@@ -39,6 +32,7 @@ const tools = [
     icon: ClipboardList,
     color: 'text-amber-500',
     bgColor: 'bg-amber-500/10',
+    hoverBg: 'to-amber-500',
     status: 'active',
   }
 ];
@@ -87,8 +81,7 @@ export default function ToolsPage() {
             variants={itemVariants}
             className="group relative bg-white border border-slate-200 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-200/50 rounded-2xl p-6 transition-all duration-300 overflow-hidden"
           >
-            {/* Background Gradient Hover */}
-            <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500 bg-gradient-to-br from-transparent to-${tool.color.split('-')[1]}-500`} />
+            <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500 bg-gradient-to-br from-transparent ${tool.hoverBg}`} />
             
             <div className="flex items-start justify-between mb-4 relative z-10">
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${tool.bgColor}`}>
