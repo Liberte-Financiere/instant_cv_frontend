@@ -4,7 +4,7 @@ import { useCVStore, AnalysisHistoryItem } from '@/store/useCVStore';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { FileText, Target, Clock, ArrowRight, Trash2, GraduationCap } from 'lucide-react';
+import { FileText, Target, Clock, ArrowRight, Trash2, ClipboardList } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface HistoryListProps {
@@ -72,11 +72,11 @@ export function HistoryList({ type }: HistoryListProps) {
             <div className="flex items-center gap-4">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                 item.type === 'analysis' ? 'bg-purple-100 text-purple-600' :
-                item.type === 'bilan' ? 'bg-cyan-100 text-cyan-600' :
+                item.type === 'bilan' ? 'bg-amber-100 text-amber-600' :
                 'bg-blue-100 text-blue-600'
               }`}>
                 {item.type === 'analysis' ? <FileText className="w-5 h-5" /> : 
-                 item.type === 'bilan' ? <GraduationCap className="w-5 h-5" /> : 
+                 item.type === 'bilan' ? <ClipboardList className="w-5 h-5" /> : 
                  <Target className="w-5 h-5" />}
               </div>
               <div>
@@ -85,13 +85,17 @@ export function HistoryList({ type }: HistoryListProps) {
                 </p>
                 <div className="flex items-center gap-3 text-xs text-slate-500">
                   <span>{format(new Date(item.date), 'dd MMM yyyy à HH:mm', { locale: fr })}</span>
-                  <span className="w-1 h-1 rounded-full bg-slate-300" />
-                  <span className={`font-semibold ${
-                    item.score >= 80 ? 'text-emerald-600' : 
-                    item.score >= 50 ? 'text-amber-600' : 'text-red-600'
-                  }`}>
-                    Score: {Math.round(item.score)}%
-                  </span>
+                  {item.type !== 'bilan' && (
+                    <>
+                      <span className="w-1 h-1 rounded-full bg-slate-300" />
+                      <span className={`font-semibold ${
+                        item.score >= 80 ? 'text-emerald-600' : 
+                        item.score >= 50 ? 'text-amber-600' : 'text-red-600'
+                      }`}>
+                        Score: {Math.round(item.score)}%
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
