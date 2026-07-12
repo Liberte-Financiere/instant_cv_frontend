@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { POST } from '@/app/api/admin/impersonate/route';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
@@ -41,7 +41,7 @@ describe('POST /api/admin/impersonate', () => {
        (global as any).crypto = {};
     }
     if (!global.crypto.randomUUID) {
-       global.crypto.randomUUID = () => 'mocked-uuid-' + Math.random().toString(36).slice(2);
+       global.crypto.randomUUID = (() => 'mocked-uuid-' + Math.random().toString(36).slice(2)) as any;
     }
     if (!global.TextEncoder) {
        global.TextEncoder = require('util').TextEncoder;

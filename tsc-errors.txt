@@ -1,0 +1,18 @@
+__tests__/api/admin/impersonate-route.test.ts(44,8): error TS2322: Type '() => string' is not assignable to type '{ (): `${string}-${string}-${string}-${string}-${string}`; (): string; }'.
+  Type 'string' is not assignable to type '`${string}-${string}-${string}-${string}-${string}`'.
+__tests__/api/admin/impersonate-route.test.ts(54,3): error TS2304: Cannot find name 'afterEach'.
+auth.config.ts(69,43): error TS2365: Operator '>' cannot be applied to types 'number' and '{}'.
+auth.config.ts(71,44): error TS2339: Property 'sub' does not exist on type '{}'.
+auth.config.ts(72,45): error TS2339: Property 'role' does not exist on type '{}'.
+auth.config.ts(73,46): error TS2339: Property 'email' does not exist on type '{}'.
+auth.config.ts(74,45): error TS2339: Property 'name' does not exist on type '{}'.
+auth.config.ts(75,48): error TS2339: Property 'picture' does not exist on type '{}'.
+auth.config.ts(117,36): error TS18046: 'token.originalUser' is of type 'unknown'.
+auth.config.ts(128,44): error TS2339: Property 'sub' does not exist on type '{}'.
+auth.config.ts(129,45): error TS2339: Property 'role' does not exist on type '{}'.
+auth.config.ts(130,46): error TS2339: Property 'email' does not exist on type '{}'.
+auth.config.ts(131,45): error TS2339: Property 'name' does not exist on type '{}'.
+auth.config.ts(132,48): error TS2339: Property 'picture' does not exist on type '{}'.
+scripts/tests/test-prisma.ts(1,24): error TS2307: Cannot find module './lib/prisma' or its corresponding type declarations.
+scripts/tests/test_timeout.ts(1,24): error TS2307: Cannot find module './lib/prisma' or its corresponding type declarations.
+scripts/tests/test_timeout.ts(2,34): error TS2307: Cannot find module './lib/anonymize' or its corresponding type declarations.
