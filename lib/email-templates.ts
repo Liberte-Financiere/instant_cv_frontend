@@ -5,12 +5,48 @@ type EmailTemplateProps = {
   buttonUrl?: string;
 };
 
+const parseMessageToHtml = (msg: string, isDark: boolean) => {
+  const textColor = isDark ? '#cbd5e1' : '#334155';
+  const lines = msg.split('\n');
+  let html = '';
+  let inList = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line === '') {
+      if (inList) {
+        html += '</ul>';
+        inList = false;
+      }
+      continue;
+    }
+
+    const isBullet = line.startsWith('-') || line.startsWith('*') || line.startsWith('•');
+    if (isBullet) {
+      const content = line.substring(1).trim();
+      if (!inList) {
+        inList = true;
+        html += `<ul style="margin: 0 0 16px 0; padding-left: 20px; list-style-type: disc; color: ${textColor};">`;
+      }
+      html += `<li style="margin: 0 0 8px 0; font-size: 15px; line-height: 1.6; color: ${textColor};">${content}</li>`;
+    } else {
+      if (inList) {
+        html += '</ul>';
+        inList = false;
+      }
+      html += `<p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.6; color: ${textColor};">${line}</p>`;
+    }
+  }
+
+  if (inList) {
+    html += '</ul>';
+  }
+
+  return html;
+};
+
 const formatMessage = (msg: string) => {
-  return msg
-    .split('\n')
-    .filter(p => p.trim() !== '')
-    .map(p => `<p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.6; color: #334155;">${p}</p>`)
-    .join('');
+  return parseMessageToHtml(msg, false);
 };
 
 const BASE_STYLES = `
@@ -268,11 +304,7 @@ export function generateMinimalEmail({ subject, message, buttonText, buttonUrl }
 }
 
 const formatDarkMessage = (msg: string) => {
-  return msg
-    .split('\n')
-    .filter(p => p.trim() !== '')
-    .map(p => `<p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.6; color: #cbd5e1;">${p}</p>`)
-    .join('');
+  return parseMessageToHtml(msg, true);
 };
 
 export function generateArtlistEmail({ subject, message, buttonText, buttonUrl }: EmailTemplateProps) {
