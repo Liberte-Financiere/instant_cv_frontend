@@ -71,6 +71,7 @@ export default function BilanDeCompetencesPage() {
   const loadingMessages = [
     "Lecture et extraction des données du CV...",
     "Analyse approfondie de votre parcours...",
+    "Évaluation de la pertinence de vos compétences...",
     "Identification de vos forces et axes d'amélioration...",
     "Recherche des carrières les plus compatibles...",
     "Sélection des meilleures formations...",
@@ -83,7 +84,7 @@ export default function BilanDeCompetencesPage() {
       setLoadingStep(0);
       interval = setInterval(() => {
         setLoadingStep((prev) => (prev < loadingMessages.length - 1 ? prev + 1 : prev));
-      }, 12000); // Change message every 12s
+      }, 10500); // Change message every 10.5s
     }
     return () => clearInterval(interval);
   }, [isGenerating]);
