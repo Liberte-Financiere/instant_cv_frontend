@@ -36,7 +36,7 @@ export function generateAnnouncementEmail({ subject, message, buttonText, button
                 <!-- HEADER LOGO -->
                 <tr>
                   <td align="center" style="padding: 32px 40px 24px 40px; border-bottom: 1px solid #f1f5f9;">
-                    <span style="font-size: 24px; font-weight: 900; color: #0f172a; letter-spacing: -1px;">JobSira<span style="color: #ef4444;">.</span></span>
+                    <span style="font-size: 24px; font-weight: 900; color: #0f172a; letter-spacing: -1px;">JobSira<span style="color: #2563eb;">.</span></span>
                   </td>
                 </tr>
 
@@ -61,7 +61,7 @@ export function generateAnnouncementEmail({ subject, message, buttonText, button
                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 32px; margin-bottom: 16px;">
                         <tr>
                           <td align="center">
-                            <a href="${buttonUrl}" target="_blank" style="display: inline-block; background-color: #0f172a; color: #ffffff; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-size: 14px; letter-spacing: -0.2px; text-align: center; border: 1px solid #0f172a;">
+                            <a href="${buttonUrl}" target="_blank" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-size: 14px; letter-spacing: -0.2px; text-align: center; border: 1px solid #2563eb;">
                               ${buttonText}
                             </a>
                           </td>
@@ -118,13 +118,13 @@ export function generatePromoEmail({ subject, message, buttonText, buttonUrl }: 
                 <!-- HEADER LOGO -->
                 <tr>
                   <td align="center" style="padding: 24px; background-color: #0f172a;">
-                    <span style="font-size: 20px; font-weight: 900; color: #ffffff; letter-spacing: -1px;">JobSira<span style="color: #ef4444;">.</span></span>
+                    <span style="font-size: 20px; font-weight: 900; color: #ffffff; letter-spacing: -1px;">JobSira<span style="color: #2563eb;">.</span></span>
                   </td>
                 </tr>
 
-                <!-- HERO PROMO (RED/CRIMSON BOLD DESIGN) -->
+                <!-- HERO PROMO (BLUE/INDIGO BOLD DESIGN) -->
                 <tr>
-                  <td align="center" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); padding: 48px 40px; text-align: center;">
+                  <td align="center" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); padding: 48px 40px; text-align: center;">
                     <span style="display: inline-block; background-color: rgba(255, 255, 255, 0.15); color: #ffffff; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 6px 12px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 1px;">
                       Offre Spéciale
                     </span>
@@ -142,11 +142,11 @@ export function generatePromoEmail({ subject, message, buttonText, buttonUrl }: 
                     </div>
 
                     <!-- HIGHLIGHT CARD (Pure HTML/CSS - No Images) -->
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fff5f5; border: 1px solid #fee2e2; border-radius: 12px; margin-top: 32px; overflow: hidden;">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #eff6ff; border: 1px solid #dbeafe; border-radius: 12px; margin-top: 32px; overflow: hidden;">
                       <tr>
                         <td style="padding: 20px;">
-                          <h3 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #991b1b;">Pourquoi en profiter maintenant ?</h3>
-                          <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #7f1d1d; line-height: 1.5;">
+                          <h3 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #1e3a8a;">Pourquoi en profiter maintenant ?</h3>
+                          <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #1e40af; line-height: 1.5;">
                             <li style="margin-bottom: 4px;">Optimisation immédiate de vos CV par l'IA</li>
                             <li style="margin-bottom: 4px;">Modèles de CV premium accrus et validés par les recruteurs</li>
                             <li>Support prioritaire dédié à votre réussite</li>
@@ -160,7 +160,7 @@ export function generatePromoEmail({ subject, message, buttonText, buttonUrl }: 
                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 32px;">
                         <tr>
                           <td align="center">
-                            <a href="${buttonUrl}" target="_blank" style="display: inline-block; background-color: #ef4444; color: #ffffff; font-weight: 800; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-size: 15px; letter-spacing: -0.2px; text-align: center; border: 1px solid #ef4444; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);">
+                            <a href="${buttonUrl}" target="_blank" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-weight: 800; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-size: 15px; letter-spacing: -0.2px; text-align: center; border: 1px solid #2563eb; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);">
                               ${buttonText}
                             </a>
                           </td>
@@ -215,7 +215,7 @@ export function generateMinimalEmail({ subject, message, buttonText, buttonUrl }
                 <!-- SIMPLE TYPOGRAPHIC LOGO -->
                 <tr>
                   <td style="padding-bottom: 24px; border-bottom: 1px solid #e2e8f0;">
-                    <span style="font-size: 18px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">JobSira<span style="color: #ef4444;">.</span></span>
+                    <span style="font-size: 18px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">JobSira<span style="color: #2563eb;">.</span></span>
                   </td>
                 </tr>
 

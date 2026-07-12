@@ -1,21 +1,15 @@
-[2026-07-12] — Refonte des templates d'emails marketing (Canva/Stripo style)
+[2026-07-12] — Ajustement des couleurs des templates e-mails (Retrait du rouge)
 
 What changed:
-- Suppression de toutes les images factices externes d'Unsplash dans les templates e-mails pour éviter les liens brisés.
-- Réécriture des 3 fonctions de génération d'e-mails (Annonce, Promo, Minimal) en HTML/CSS tabulaire robuste et propre.
-- Intégration de la charte de couleurs de Jobsira.
-- Mise à jour des tests unitaires de templates d'e-mails pour refléter les nouveaux designs et structures.
+- Suppression définitive de toute couleur rouge (#ef4444, #b91c1c, etc.) dans l'ensemble des templates d'emails.
+- Remplacement par les teintes bleu/indigo de la charte de Jobsira (#2563eb, #1e3a8a, #eff6ff).
+- Ajustement du logo textuel et des cartes de caractéristiques.
 
 Why:
-- Les images de substitution externes (Unsplash/Spotify) nuisaient au professionnalisme des courriels et pouvaient être bloquées ou considérées comme spam par les clients mails de destination.
-- Améliorer l'esthétique générale pour avoir des designs "Canva/Stripo style" robustes et épurés.
+- Demande explicite de l'utilisateur de ne pas utiliser de rouge dans la charte visuelle des e-mails marketing.
 
 Files affected:
-- lib/email-templates.ts — Réécriture des générateurs d'e-mails HTML/CSS.
-- __tests__/lib/email-templates.test.ts — Ajustement des assertions de test pour correspondre aux nouveaux textes.
+- lib/email-templates.ts — Remplacement des styles rouges par des teintes bleues.
 
 Breaking changes:
 - None
-
-Notes for review:
-- Vérifier la structure visuelle des emails générés dans l'aperçu du dashboard marketing.
