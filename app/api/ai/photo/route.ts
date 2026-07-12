@@ -150,33 +150,29 @@ export async function POST(req: Request) {
 
     // 4. Déduire les crédits et historiser (ou rembourser si échec total)
     if (apiSuccess) {
-      await prisma.$transaction(async (tx) => {
-        await tx.user.update({
-          where: { id: userId },
-          data: { credits: { decrement: COST } }
-        });
-
-        await tx.creditTransaction.create({
-          data: {
-            userId,
-            amount: -COST,
-            type: 'USAGE',
-            description: 'Génération Photo Pro IA'
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          credits: { decrement: COST },
+          creditTransactions: {
+            create: {
+              amount: -COST,
+              type: 'USAGE',
+              description: 'Génération Photo Pro'
+            }
+          },
+          aiLogs: {
+            create: {
+              type: 'photo-generation',
+              model: 'gemini-3.1-flash-image',
+              status: 'success',
+              promptTokens: 0,
+              completionTokens: 0,
+              totalTokens: 0,
+              latencyMs
+            }
           }
-        });
-        
-        await tx.aILog.create({
-          data: {
-            userId,
-            type: 'photo-generation',
-            model: 'gemini-3.1-flash-image',
-            status: 'success',
-            promptTokens: 0,
-            completionTokens: 0,
-            totalTokens: 0,
-            latencyMs
-          }
-        });
+        }
       });
     } else {
       // Échec de l'API : on logge l'erreur mais on ne débite pas l'utilisateur

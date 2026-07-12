@@ -81,7 +81,7 @@ EXPOSE 3001
 
 # Healthcheck natif pour orchestration (Docker Compose / K8s)
 # FastAPI ne gérant pas nativement curl s'il n'est pas installé, on utilise python -c avec urllib
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3001/docs')" || exit 1
 
 # Lancement sécurisé avec 4 workers pour le multi-processing (traitement parallèle des requêtes)

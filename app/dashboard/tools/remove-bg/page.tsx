@@ -2,26 +2,32 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Upload, Loader2, Sparkles, AlertCircle, CheckCircle2, Download, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import { Upload, Loader2, Sparkles, AlertCircle, CheckCircle2, Download, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCreditStore } from '@/store/useCreditStore';
 import { Button } from '@/components/ui/Button';
 
-export default function PhotoProToolPage() {
+export default function RemoveBgToolPage() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [resultImage, setResultImage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { credits, fetchCredits } = useCreditStore();
-  const cost = 20; // Coût en crédits pour une génération (doit correspondre à CREDIT_COSTS.AI_PHOTO)
+  const cost = 1; // Coût en crédits pour le détourage (doit correspondre à CREDIT_COSTS.AI_REMOVE_BG)
 
   useEffect(() => {
     fetchCredits();
+    
+    // Cleanup de l'URL objet pour éviter les fuites mémoire
+    return () => {
+      if (resultImage) {
+        URL.revokeObjectURL(resultImage);
+      }
+    };
   }, [fetchCredits]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +46,11 @@ export default function PhotoProToolPage() {
 
     setFile(selectedFile);
     setError(null);
-    setResultImage(null);
+    
+    if (resultImage) {
+      URL.revokeObjectURL(resultImage);
+      setResultImage(null);
+    }
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -61,7 +71,6 @@ export default function PhotoProToolPage() {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0];
       
-      // Simuler l'événement onchange
       const dataTransfer = new DataTransfer();
       dataTransfer.items.add(droppedFile);
       if (fileInputRef.current) {
@@ -72,11 +81,11 @@ export default function PhotoProToolPage() {
     }
   };
 
-  const generatePhoto = async () => {
+  const generateRemoveBg = async () => {
     if (!file || !preview) return;
 
     if (credits < cost) {
-      setError(`Crédits insuffisants. Il vous faut ${cost} crédits pour utiliser cet outil.`);
+      setError(`Crédits insuffisants. Il vous faut ${cost} crédit pour utiliser cet outil.`);
       return;
     }
 
@@ -84,37 +93,36 @@ export default function PhotoProToolPage() {
     setError(null);
 
     try {
-      // 1. Upload de l'image source sur Cloudinary
-      setIsUploading(true);
       const formData = new FormData();
       formData.append('file', file);
 
-      const uploadRes = await fetch('/api/upload', {
+      // Appel direct à l'API de détourage
+      const aiRes = await fetch('/api/ai/remove-bg', {
         method: 'POST',
         body: formData,
       });
 
-      if (!uploadRes.ok) {
-        throw new Error('Erreur lors de l\'upload de l\'image.');
-      }
-
-      const { url: sourceUrl } = await uploadRes.json();
-      setIsUploading(false);
-
-      // 2. Appel à l'API IA (Mock pour l'instant avec déduction des crédits)
-      const aiRes = await fetch('/api/ai/photo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sourceUrl }),
-      });
-
       if (!aiRes.ok) {
-        const errorData = await aiRes.json();
-        throw new Error(errorData.error || 'Erreur lors de la génération IA.');
+        // Essayer de lire le JSON si présent, sinon texte brut
+        let errorMsg = 'Erreur lors du détourage de l\'image.';
+        try {
+            const errorData = await aiRes.json();
+            errorMsg = errorData.error || errorMsg;
+        } catch(e) {
+            const textData = await aiRes.text();
+            errorMsg = textData || errorMsg;
+        }
+        throw new Error(errorMsg);
       }
 
-      const { resultUrl } = await aiRes.json();
-      setResultImage(resultUrl);
+      // Le serveur renvoie directement le fichier binaire PNG
+      const imageBlob = await aiRes.blob();
+      const objectUrl = URL.createObjectURL(imageBlob);
+      
+      if (resultImage) {
+          URL.revokeObjectURL(resultImage); // Nettoyage de l'ancienne image générée
+      }
+      setResultImage(objectUrl);
       
       // Rafraîchir les crédits
       await fetchCredits();
@@ -123,7 +131,6 @@ export default function PhotoProToolPage() {
       setError(err.message || 'Une erreur inattendue est survenue.');
     } finally {
       setIsGenerating(false);
-      setIsUploading(false);
     }
   };
 
@@ -140,12 +147,12 @@ export default function PhotoProToolPage() {
         </Link>
         
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center">
-            <Camera className="w-7 h-7 text-purple-600" />
+          <div className="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center">
+            <ImageIcon className="w-7 h-7 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Photo Pro</h1>
-            <p className="text-slate-500 mt-1">À partir d'un simple selfie, obtenez un véritable portrait de qualité studio professionnel.</p>
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Détourage Magique</h1>
+            <p className="text-slate-500 mt-1">Supprimez l'arrière-plan de n'importe quelle photo instantanément.</p>
           </div>
         </div>
       </div>
@@ -172,7 +179,7 @@ export default function PhotoProToolPage() {
               onDrop={handleDrop}
               onClick={() => !isGenerating && fileInputRef.current?.click()}
               className={`relative group border-2 border-dashed rounded-2xl transition-all duration-200 
-                ${preview ? 'border-purple-200 bg-purple-50/30' : 'border-slate-300 hover:border-purple-400 bg-slate-50 hover:bg-purple-50/50'}
+                ${preview ? 'border-blue-200 bg-blue-50/30' : 'border-slate-300 hover:border-blue-400 bg-slate-50 hover:bg-blue-50/50'}
                 ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
               `}
             >
@@ -186,8 +193,9 @@ export default function PhotoProToolPage() {
               />
 
               {preview ? (
-                <div className="aspect-square relative rounded-2xl overflow-hidden m-2">
-                  <Image src={preview} alt="Preview" fill className="object-cover" />
+                <div className="aspect-square relative rounded-2xl overflow-hidden m-2 bg-slate-100">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={preview} alt="Preview" className="w-full h-full object-contain" />
                   {!isGenerating && (
                     <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <span className="text-white text-sm font-medium flex items-center gap-2">
@@ -200,7 +208,7 @@ export default function PhotoProToolPage() {
               ) : (
                 <div className="aspect-square flex flex-col items-center justify-center p-8 text-center">
                   <div className="w-16 h-16 bg-white border border-slate-200 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-105 transition-transform">
-                    <Upload className="w-8 h-8 text-slate-400 group-hover:text-purple-500 transition-colors" />
+                    <Upload className="w-8 h-8 text-slate-400 group-hover:text-blue-500 transition-colors" />
                   </div>
                   <h3 className="text-sm font-medium text-slate-900 mb-1">Cliquez ou glissez-déposez</h3>
                   <p className="text-xs text-slate-500">JPG, PNG ou WebP. Max 5 Mo.</p>
@@ -211,32 +219,27 @@ export default function PhotoProToolPage() {
 
           <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium text-slate-700">Coût de la génération</span>
+              <span className="text-sm font-medium text-slate-700">Coût du détourage</span>
               <span className="text-sm font-bold text-slate-900 bg-white px-3 py-1 rounded-lg border border-slate-200 shadow-sm flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                {cost} crédits
+                {cost} crédit
               </span>
             </div>
             
             <Button
-              onClick={generatePhoto}
+              onClick={generateRemoveBg}
               disabled={!file || isGenerating}
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 rounded-xl shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:shadow-none transition-all duration-300"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl shadow-lg shadow-blue-600/20 disabled:opacity-50 disabled:shadow-none transition-all duration-300"
             >
-              {isUploading ? (
+              {isGenerating ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Upload de l'image...
-                </>
-              ) : isGenerating ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Génération Gemini IA...
+                  Détourage en cours...
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-5 h-5 mr-2" />
-                  Générer ma photo pro
+                  <ImageIcon className="w-5 h-5 mr-2" />
+                  Supprimer l'arrière-plan
                 </>
               )}
             </Button>
@@ -246,11 +249,14 @@ export default function PhotoProToolPage() {
         {/* Right Column: Result */}
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col">
           <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            2. Résultat Studio
+            2. Résultat
             {resultImage && <CheckCircle2 className="w-5 h-5 text-emerald-500" />}
           </h2>
 
-          <div className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden flex flex-col items-center justify-center relative min-h-[400px]">
+          <div className="flex-1 bg-[url('/checkered.png')] bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden flex flex-col items-center justify-center relative min-h-[400px]">
+            {/* Si pas d'image de fond checkboard, on ajoute un motif CSS pour bien voir la transparence */}
+            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)', backgroundSize: '20px 20px', backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px' }} />
+            
             <AnimatePresence mode="wait">
               {isGenerating ? (
                 <motion.div 
@@ -258,35 +264,36 @@ export default function PhotoProToolPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 flex flex-col items-center justify-center"
+                  className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-10"
                 >
                   <div className="relative w-24 h-24 mb-6">
                     <div className="absolute inset-0 border-4 border-slate-200 rounded-full"></div>
-                    <div className="absolute inset-0 border-4 border-purple-500 rounded-full border-t-transparent animate-spin"></div>
-                    <Sparkles className="absolute inset-0 m-auto w-8 h-8 text-purple-500 animate-pulse" />
+                    <div className="absolute inset-0 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+                    <Sparkles className="absolute inset-0 m-auto w-8 h-8 text-blue-500 animate-pulse" />
                   </div>
-                  <p className="text-slate-600 font-medium">Traitement Gemini 3 Pro en cours...</p>
-                  <p className="text-slate-400 text-sm mt-2">Détourage et amélioration studio</p>
+                  <p className="text-slate-600 font-medium">Analyse visuelle en cours...</p>
+                  <p className="text-slate-400 text-sm mt-2">Détourage pixel parfait par IA</p>
                 </motion.div>
               ) : resultImage ? (
                 <motion.div 
                   key="result"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="absolute inset-0"
+                  className="absolute inset-0 z-10 flex items-center justify-center p-4"
                 >
-                  <Image src={resultImage} alt="Résultat Pro" fill className="object-cover" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={resultImage} alt="Résultat Détouré" className="max-w-full max-h-full object-contain drop-shadow-2xl" />
                 </motion.div>
               ) : (
                 <motion.div 
                   key="empty"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center p-6"
+                  className="text-center p-6 z-10"
                 >
                   <ImageIcon className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                  <p className="text-slate-500 font-medium">Votre portrait apparaîtra ici</p>
-                  <p className="text-slate-400 text-sm mt-1">L'IA améliorera l'éclairage et l'arrière-plan</p>
+                  <p className="text-slate-500 font-medium">L'image détourée apparaîtra ici</p>
+                  <p className="text-slate-400 text-sm mt-1">Le fond sera rendu 100% transparent</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -300,13 +307,11 @@ export default function PhotoProToolPage() {
             >
               <a 
                 href={resultImage} 
-                download="photo-pro-jobsira.jpg"
-                target="_blank"
-                rel="noreferrer"
+                download="image-detouree.png"
                 className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium transition-colors"
               >
                 <Download className="w-5 h-5" />
-                Télécharger la photo
+                Télécharger (PNG Transparent)
               </a>
             </motion.div>
           )}

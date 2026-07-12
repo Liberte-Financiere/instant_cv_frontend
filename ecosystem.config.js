@@ -8,17 +8,8 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
-        HOSTNAME: '127.0.0.1', // Ensure it binds to all interfaces for Nginx to proxy
+        HOSTNAME: '127.0.0.1', // 
       },
     },
-    {
-      name: 'jobsira-rembg',
-      script: 'venv/bin/python3',
-      args: '-m uvicorn main:app --host 127.0.0.1 --port 3001',
-      cwd: './microservices/bg_removal',
-      env: {
-        // Environment variables for rembg if needed
-      }
-    }
   ],
 };

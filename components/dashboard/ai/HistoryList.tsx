@@ -4,15 +4,16 @@ import { useCVStore, AnalysisHistoryItem } from '@/store/useCVStore';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { FileText, Target, Clock, ArrowRight } from 'lucide-react';
+import { FileText, Target, Clock, ArrowRight, Trash2, GraduationCap } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface HistoryListProps {
-  type?: 'analysis' | 'match';
+  type?: 'analysis' | 'match' | 'bilan';
 }
 
 export function HistoryList({ type }: HistoryListProps) {
   const router = useRouter();
-  const { history, setAnalysisData, setMatchData } = useCVStore();
+  const { history, setAnalysisData, setMatchData, removeFromHistory } = useCVStore();
 
   const filteredHistory = type 
     ? history.filter(item => item.type === type)
@@ -30,10 +31,28 @@ export function HistoryList({ type }: HistoryListProps) {
   const handleItemClick = (item: AnalysisHistoryItem) => {
     if (item.type === 'analysis') {
       setAnalysisData(item.data);
-      router.push('/analysis');
+      router.push('/dashboard/ai/analyze');
     } else if (item.type === 'match') {
       setMatchData(item.data);
-      router.push('/match');
+      router.push('/dashboard/ai/match');
+    } else if (item.type === 'bilan') {
+      useCVStore.getState().setBilanData(item.data);
+      router.push('/dashboard/tools/bilan');
+    }
+  };
+
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    try {
+      const res = await fetch(`/api/ai/history?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error('Erreur de suppression');
+      
+      removeFromHistory(id);
+      toast.success('Historique supprimé');
+    } catch (error) {
+      toast.error('Impossible de supprimer cet élément');
     }
   };
 
@@ -52,9 +71,13 @@ export function HistoryList({ type }: HistoryListProps) {
           >
             <div className="flex items-center gap-4">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                item.type === 'analysis' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'
+                item.type === 'analysis' ? 'bg-purple-100 text-purple-600' :
+                item.type === 'bilan' ? 'bg-cyan-100 text-cyan-600' :
+                'bg-blue-100 text-blue-600'
               }`}>
-                {item.type === 'analysis' ? <FileText className="w-5 h-5" /> : <Target className="w-5 h-5" />}
+                {item.type === 'analysis' ? <FileText className="w-5 h-5" /> : 
+                 item.type === 'bilan' ? <GraduationCap className="w-5 h-5" /> : 
+                 <Target className="w-5 h-5" />}
               </div>
               <div>
                 <p className="font-medium text-slate-800 group-hover:text-blue-600 transition-colors">
@@ -72,7 +95,16 @@ export function HistoryList({ type }: HistoryListProps) {
                 </div>
               </div>
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-blue-500 transition-colors" />
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={(e) => handleDelete(e, item.id)}
+                className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                title="Supprimer"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+              <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-blue-500 transition-colors" />
+            </div>
           </div>
         ))}
       </div>

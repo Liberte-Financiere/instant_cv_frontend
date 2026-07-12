@@ -370,3 +370,17 @@ model BusinessExpense {
   @@index([category])
   @@index([isActive])
 }
+
+// Activity Tracker for HQ Ops
+model CompanyActivity {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  type        String   @default("feature") // feature, bug, meeting, marketing, devops
+  author      String   @default("System")
+  createdAt   DateTime @default(now())
+
+  @@index([type])
+  @@index([createdAt])
+}
+

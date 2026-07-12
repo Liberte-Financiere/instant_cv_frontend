@@ -7,8 +7,8 @@ import Link from 'next/link';
 const tools = [
   {
     id: 'photo',
-    title: 'Photo Pro IA',
-    description: 'Uploadez un simple selfie de vous, notre IA le transforme en véritable photo de profil studio professionnelle.',
+    title: 'Photo Pro',
+    description: 'À partir d\'un simple selfie, obtenez un véritable portrait de qualité studio, idéal pour sublimer votre CV et vos profils professionnels.',
     icon: Camera,
     color: 'text-purple-500',
     bgColor: 'bg-purple-500/10',
@@ -26,20 +26,20 @@ const tools = [
   {
     id: 'remove-bg',
     title: 'Détourage Magique',
-    description: 'Supprimez l\'arrière-plan de n\'importe quelle photo instantanément grâce à notre IA de vision.',
+    description: 'Supprimez l\'arrière-plan de n\'importe quelle photo instantanément grâce à notre technologie de vision avancée.',
     icon: ImageIcon,
-    color: 'text-pink-500',
-    bgColor: 'bg-pink-500/10',
-    status: 'coming_soon',
+    color: 'text-blue-500',
+    bgColor: 'bg-blue-500/10',
+    status: 'active',
   },
   {
     id: 'bilan',
-    title: 'Bilan de Compétences IA',
+    title: 'Bilan de Compétences',
     description: 'Analysez votre parcours pour identifier vos forces, découvrir les métiers adaptés et obtenir des recommandations de formations ou certificats à suivre.',
     icon: ClipboardList,
     color: 'text-amber-500',
     bgColor: 'bg-amber-500/10',
-    status: 'coming_soon',
+    status: 'active',
   }
 ];
 
@@ -68,7 +68,7 @@ export default function ToolsPage() {
             <Sparkles className="w-6 h-6 text-blue-400" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Boîte à Outils IA</h1>
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Boîte à Outils</h1>
             <p className="text-slate-500 mt-1">Super-pouvoirs exclusifs pour accélérer votre carrière.</p>
           </div>
         </div>

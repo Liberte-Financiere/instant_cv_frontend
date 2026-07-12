@@ -1,169 +1,250 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/lib/config';
+import { CheckCircle2, Globe, CreditCard, Sparkles, FileText, Lock, AlertTriangle, ShieldAlert, Mail } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: `Conditions d'Utilisation | ${APP_CONFIG.name}`,
   description: `Conditions générales d'utilisation de la plateforme ${APP_CONFIG.name}`,
 };
 
+const SECTIONS = [
+  { id: 'acceptation', title: '1. Acceptation des Conditions', icon: CheckCircle2, color: 'text-blue-500 bg-blue-50 border-blue-100' },
+  { id: 'description', title: '2. Description du Service', icon: Globe, color: 'text-indigo-500 bg-indigo-50 border-indigo-100' },
+  { id: 'credits-paiements', title: '3. Crédits et Paiements', icon: CreditCard, color: 'text-cyan-500 bg-cyan-50 border-cyan-100' },
+  { id: 'contenu-ia', title: '4. Contenu Généré par l\'IA', icon: Sparkles, color: 'text-violet-500 bg-violet-50 border-violet-100' },
+  { id: 'propriete', title: '5. Propriété Intellectuelle', icon: FileText, color: 'text-purple-500 bg-purple-50 border-purple-100' },
+  { id: 'confidentialite', title: '6. Confidentialité', icon: Lock, color: 'text-emerald-500 bg-emerald-50 border-emerald-100' },
+  { id: 'utilisation', title: '7. Utilisation Acceptable', icon: AlertTriangle, color: 'text-amber-500 bg-amber-50 border-amber-100' },
+  { id: 'limitation', title: '8. Responsabilité', icon: ShieldAlert, color: 'text-red-500 bg-red-50 border-red-100' },
+  { id: 'contact', title: '9. Contact', icon: Mail, color: 'text-rose-500 bg-rose-50 border-rose-100' },
+];
+
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <Link 
-            href="/" 
-            className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-          >
+    <div className="min-h-screen bg-slate-50/30 text-slate-900 font-sans selection:bg-primary/20 relative overflow-hidden">
+      {/* Background glow effects */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-400/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-purple-400/5 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Header Minimalist */}
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
             {APP_CONFIG.name}
+          </Link>
+          <Link href="/privacy" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
+            Politique de Confidentialité
           </Link>
         </div>
       </header>
 
-      {/* Content */}
-      <main className="max-w-4xl mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-slate-900 mb-8">
-          Conditions Générales d&apos;Utilisation
-        </h1>
-
-        <p className="text-slate-500 mb-8">
-          Dernière mise à jour : Février 2026
-        </p>
-
-        <div className="prose prose-slate prose-lg max-w-none">
-          
-          {/* Section 1 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              1. Acceptation des Conditions
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              En accédant et en utilisant {APP_CONFIG.name}, vous acceptez d&apos;être lié par ces conditions d&apos;utilisation. 
-              Si vous n&apos;acceptez pas ces conditions, veuillez ne pas utiliser notre service.
-            </p>
-          </section>
-
-          {/* Section 2 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              2. Description du Service
-            </h2>
-            <p className="text-slate-600 leading-relaxed mb-4">
-              {APP_CONFIG.name} est une plateforme en ligne permettant de :
-            </p>
-            <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
-              <li>Créer et personnaliser des CV professionnels</li>
-              <li>Générer des lettres de motivation</li>
-              <li>Analyser et optimiser vos documents avec l&apos;intelligence artificielle</li>
-              <li>Importer des données depuis LinkedIn</li>
-              <li>Exporter vos documents en PDF</li>
-            </ul>
-          </section>
-
-          {/* Section 3 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              3. Inscription et Compte
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              Pour utiliser certaines fonctionnalités, vous devez créer un compte. Vous êtes responsable de 
-              maintenir la confidentialité de vos identifiants et de toutes les activités effectuées sous votre compte.
-            </p>
-          </section>
-
-          {/* Section 4 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              4. Propriété Intellectuelle
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              Vous conservez tous les droits sur le contenu que vous créez sur {APP_CONFIG.name}. Cependant, vous nous 
-              accordez une licence limitée pour stocker et afficher ce contenu dans le cadre de la fourniture du service.
-            </p>
-          </section>
-
-          {/* Section 5 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              5. Protection des Données
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              Nous nous engageons à protéger vos données personnelles conformément au RGPD. 
-              Pour plus d&apos;informations, consultez notre <Link href="/privacy" className="text-blue-600 hover:underline">Politique de Confidentialité</Link>.
-            </p>
-          </section>
-
-          {/* Section 6 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              6. Utilisation Acceptable
-            </h2>
-            <p className="text-slate-600 leading-relaxed mb-4">
-              Vous vous engagez à ne pas utiliser le service pour :
-            </p>
-            <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
-              <li>Créer du contenu illégal, offensant ou frauduleux</li>
-              <li>Usurper l&apos;identité d&apos;une autre personne</li>
-              <li>Tenter de compromettre la sécurité du service</li>
-              <li>Utiliser des systèmes automatisés sans autorisation</li>
-            </ul>
-          </section>
-
-          {/* Section 7 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              7. Limitation de Responsabilité
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              {APP_CONFIG.name} est fourni &quot;tel quel&quot;. Nous ne garantissons pas que le service sera ininterrompu ou 
-              exempt d&apos;erreurs. Nous ne sommes pas responsables des dommages indirects résultant de l&apos;utilisation du service.
-            </p>
-          </section>
-
-          {/* Section 8 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              8. Modifications des Conditions
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications 
-              prendront effet dès leur publication sur cette page. Votre utilisation continue du service 
-              après modification constitue votre acceptation des nouvelles conditions.
-            </p>
-          </section>
-
-          {/* Section 9 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              9. Contact
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              Pour toute question concernant ces conditions, contactez-nous à : 
-              <a href="mailto:contact@jobsira.com" className="text-blue-600 hover:underline ml-1">
-                contact@jobsira.com
-              </a>
-            </p>
-          </section>
-
+      <main className="max-w-6xl mx-auto px-6 py-16 md:py-24 relative">
+        {/* Hero */}
+        <div className="max-w-3xl mb-16 md:mb-24">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-xs font-semibold text-blue-600 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            Règles & Conditions
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent">
+            Conditions d&apos;Utilisation
+          </h1>
+          <p className="text-lg md:text-xl text-slate-500">
+            Dernière mise à jour : 12 Juillet 2026
+          </p>
         </div>
 
-        {/* Back Link */}
-        <div className="mt-12 pt-8 border-t border-slate-200">
-          <Link 
-            href="/" 
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
-          >
-            ← Retour à l&apos;accueil
-          </Link>
+        <div className="flex flex-col md:flex-row gap-12 lg:gap-24">
+          {/* Table of Contents - Sticky Sidebar */}
+          <aside className="hidden md:block w-64 shrink-0">
+            <div className="sticky top-32">
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-6">Sommaire</h4>
+              <nav className="flex flex-col gap-3">
+                {SECTIONS.map((section) => {
+                  const Icon = section.icon;
+                  return (
+                    <a 
+                      key={section.id} 
+                      href={`#${section.id}`} 
+                      className="group flex items-center gap-3 text-sm text-slate-500 hover:text-slate-900 transition-all py-1"
+                    >
+                      <span className={`p-1 rounded-md border transition-colors ${section.color.split(' ').slice(1).join(' ')} group-hover:bg-opacity-80`}>
+                        <Icon className="w-3.5 h-3.5" />
+                      </span>
+                      <span>{section.title}</span>
+                    </a>
+                  );
+                })}
+              </nav>
+            </div>
+          </aside>
+
+          {/* Content */}
+          <article className="prose prose-slate max-w-3xl prose-headings:font-semibold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-16 prose-h2:mb-6 prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-li:text-slate-600">
+            
+            <section id="acceptation" className="scroll-mt-24">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="p-2 rounded-xl border bg-blue-50 border-blue-100 text-blue-500">
+                  <CheckCircle2 className="w-5 h-5" />
+                </span>
+                <h2 className="!my-0">1. Acceptation des Conditions</h2>
+              </div>
+              <p>
+                En accédant et en utilisant {APP_CONFIG.name}, vous acceptez d&apos;être lié par ces Conditions Générales d&apos;Utilisation (CGU) et nos Conditions Générales de Vente (CGV). 
+                Si vous n&apos;accepttez pas ces termes, nous vous invitons à cesser toute utilisation de nos services.
+              </p>
+            </section>
+
+            <hr className="my-12 border-slate-200/60" />
+
+            <section id="description" className="scroll-mt-24">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="p-2 rounded-xl border bg-indigo-50 border-indigo-100 text-indigo-500">
+                  <Globe className="w-5 h-5" />
+                </span>
+                <h2 className="!my-0">2. Description du Service et Accès</h2>
+              </div>
+              <p>
+                {APP_CONFIG.name} est une plateforme de nouvelle génération en mode SaaS (Software as a Service), optimisée par l&apos;Intelligence Artificielle. Notre technologie permet de :
+              </p>
+              <ul>
+                <li>Générer, formater et traduire des CV avec une mise en page de qualité professionnelle.</li>
+                <li>Rédiger des lettres de motivation contextuelles et ciblées.</li>
+                <li>Réaliser des évaluations de correspondance entre un profil et une offre d&apos;emploi.</li>
+                <li>Mener des simulations d&apos;entretiens préparatoires assistés par l&apos;IA.</li>
+              </ul>
+              <p>
+                L&apos;utilisation des fonctionnalités avancées nécessite la création d&apos;un compte et requiert des crédits prépayés.
+              </p>
+            </section>
+
+            <hr className="my-12 border-slate-200/60" />
+
+            <section id="credits-paiements" className="scroll-mt-24">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="p-2 rounded-xl border bg-cyan-50 border-cyan-100 text-cyan-500">
+                  <CreditCard className="w-5 h-5" />
+                </span>
+                <h2 className="!my-0">3. Système de Crédits et Paiements</h2>
+              </div>
+              <h4 className="text-slate-800 font-semibold mt-6 mb-2">Modèle Économique</h4>
+              <p>
+                L&apos;écosystème {APP_CONFIG.name} repose sur une facturation à l&apos;usage via des crédits virtuels. Chaque requête traitée par nos modèles d&apos;intelligence artificielle (génération, analyse, etc.) consomme un montant défini de crédits de votre solde.
+              </p>
+              <h4 className="text-slate-800 font-semibold mt-6 mb-2">Règle de Non-Remboursement</h4>
+              <p>
+                De par la nature numérique et de mise à disposition instantanée de nos algorithmes coûteux, <strong>les achats de crédits ou de forfaits sont définitifs</strong>. Le droit de rétractation ne s&apos;applique pas aux ressources informatiques immédiatement consommables. Aucun remboursement ne pourra être exigé, excepté en cas de défaillance avérée de nos systèmes.
+              </p>
+            </section>
+
+            <hr className="my-12 border-slate-200/60" />
+
+            <section id="contenu-ia" className="scroll-mt-24">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="p-2 rounded-xl border bg-violet-50 border-violet-100 text-violet-500">
+                  <Sparkles className="w-5 h-5" />
+                </span>
+                <h2 className="!my-0">4. Contenu Généré par l&apos;Intelligence Artificielle</h2>
+              </div>
+              <p>
+                L&apos;innovation comporte des spécificités. Nos outils emploient des modèles de traitement du langage naturel (LLM) avancés :
+              </p>
+              <ul>
+                <li>Les systèmes d&apos;IA peuvent occasionnellement produire des incohérences ou des formulations imparfaites (phénomène dit « d&apos;hallucination »).</li>
+                <li>Il est de <strong>votre responsabilité exclusive</strong> d&apos;examiner, de valider et, au besoin, de corriger l&apos;exactitude des informations figurant sur vos CV et lettres générés.</li>
+                <li>{APP_CONFIG.name} ne saurait être tenu responsable du résultat d&apos;une candidature basée sur nos documents générés.</li>
+              </ul>
+            </section>
+
+            <hr className="my-12 border-slate-200/60" />
+
+            <section id="propriete" className="scroll-mt-24">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="p-2 rounded-xl border bg-purple-50 border-purple-100 text-purple-500">
+                  <FileText className="w-5 h-5" />
+                </span>
+                <h2 className="!my-0">5. Propriété Intellectuelle</h2>
+              </div>
+              <p>
+                Le code, le design, l&apos;interface utilisateur et les algorithmes internes de {APP_CONFIG.name} demeurent notre propriété exclusive. 
+                À l&apos;inverse, vous conservez la pleine propriété de vos informations professionnelles, et vous bénéficiez du droit d&apos;utiliser et de diffuser sans limite les fichiers PDF que vous avez exportés.
+              </p>
+            </section>
+
+            <hr className="my-12 border-slate-200/60" />
+
+            <section id="confidentialite" className="scroll-mt-24">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="p-2 rounded-xl border bg-emerald-50 border-emerald-100 text-emerald-500">
+                  <Lock className="w-5 h-5" />
+                </span>
+                <h2 className="!my-0">6. Protection des Données</h2>
+              </div>
+              <p>
+                La sécurité de vos parcours professionnels est primordiale. Nous traitons vos données personnelles dans le plus strict respect de la confidentialité. Pour comprendre en détail nos mécanismes d&apos;anonymisation vis-à-vis des IA tierces, nous vous invitons à lire notre <Link href="/privacy">Politique de Confidentialité</Link>.
+              </p>
+            </section>
+
+            <hr className="my-12 border-slate-200/60" />
+
+            <section id="utilisation" className="scroll-mt-24">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="p-2 rounded-xl border bg-amber-50 border-amber-100 text-amber-500">
+                  <AlertTriangle className="w-5 h-5" />
+                </span>
+                <h2 className="!my-0">7. Utilisation Acceptable</h2>
+              </div>
+              <p>
+                La plateforme est destinée à un usage professionnel légitime. Il est formellement interdit de :
+              </p>
+              <ul>
+                <li>Générer des documents visant à usurper l&apos;identité d&apos;autrui ou falsifier des diplômes.</li>
+                <li>Fournir à nos modèles des requêtes au contenu illégal ou discriminatoire.</li>
+                <li>Mener des attaques techniques, du scraping automatisé, ou abuser de l&apos;architecture de nos API.</li>
+              </ul>
+            </section>
+
+            <hr className="my-12 border-slate-200/60" />
+
+            <section id="limitation" className="scroll-mt-24">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="p-2 rounded-xl border bg-red-50 border-red-100 text-red-500">
+                  <ShieldAlert className="w-5 h-5" />
+                </span>
+                <h2 className="!my-0">8. Limitation de Responsabilité</h2>
+              </div>
+              <p>
+                {APP_CONFIG.name} est fourni en mode &quot;best effort&quot;. Nous déclinons toute responsabilité pour d&apos;éventuelles interruptions de service, pertes de données ou latences, souvent liées aux fournisseurs technologiques sous-jacents. La plateforme ne garantit pas l&apos;obtention d&apos;un emploi.
+              </p>
+            </section>
+
+            <hr className="my-12 border-slate-200/60" />
+
+            <section id="contact" className="scroll-mt-24">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="p-2 rounded-xl border bg-rose-50 border-rose-100 text-rose-500">
+                  <Mail className="w-5 h-5" />
+                </span>
+                <h2 className="!my-0">9. Contact et Droit Applicable</h2>
+              </div>
+              <p>
+                Les présentes conditions sont régies par la juridiction du siège social de JobSira. Pour tout litige ou réclamation, le dialogue prévaut.
+              </p>
+              <p className="mt-6 text-xl font-medium">
+                <a href="mailto:contact@jobsira.com" className="text-slate-900 hover:text-primary transition-colors">contact@jobsira.com</a>
+              </p>
+            </section>
+
+          </article>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-slate-50 border-t border-slate-200 py-8 mt-12">
-        <div className="max-w-4xl mx-auto px-4 text-center text-slate-500 text-sm">
-          © 2026 {APP_CONFIG.name}. Tous droits réservés.
+      <footer className="border-t border-slate-200/60 bg-white py-12 mt-24">
+        <div className="max-w-6xl mx-auto px-6 text-slate-400 text-sm flex flex-col md:flex-row justify-between items-center gap-4">
+          <p>© {new Date().getFullYear()} {APP_CONFIG.name}. Tous droits réservés.</p>
+          <div className="flex gap-6">
+            <Link href="/privacy" className="hover:text-slate-900 transition-colors">Politique de Confidentialité</Link>
+          </div>
         </div>
       </footer>
     </div>

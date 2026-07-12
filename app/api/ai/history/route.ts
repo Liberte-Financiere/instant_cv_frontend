@@ -63,3 +63,31 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Failed to save history' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+    }
+
+    await prisma.analysisHistory.delete({
+      where: {
+        id: id,
+        userId: session.user.id, // Ensure user owns this item
+      }
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting history item:', error);
+    return NextResponse.json({ error: 'Failed to delete history item' }, { status: 500 });
+  }
+}

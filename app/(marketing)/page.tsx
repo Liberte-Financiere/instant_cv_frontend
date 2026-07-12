@@ -1,6 +1,7 @@
 import { Hero } from '@/components/landing/Hero';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { Features } from '@/components/landing/Features';
+import { AIToolbox } from '@/components/landing/AIToolbox';
 import { CoverLetterSection } from '@/components/landing/CoverLetterSection';
 import { StatsCounter } from '@/components/landing/StatsCounter';
 import { TargetAudience } from '@/components/landing/TargetAudience';
@@ -17,6 +18,7 @@ export default function Home() {
       <Hero />
       <HowItWorks />
       <Features />
+      <AIToolbox />
       <CoverLetterSection />
       <StatsCounter />
       <TargetAudience />

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { 
   LayoutList, Zap, MessageSquare, Mail, ShieldAlert, Activity, 
   CreditCard, Users, ArrowUpRight, TrendingUp, CheckCircle,
-  AlertTriangle, Clock, ArrowRight, ShieldCheck, Wallet
+  AlertTriangle, Clock, ArrowRight, Wallet
 } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
 
@@ -127,6 +127,15 @@ export default async function HqOpsDashboard() {
       borderColor: 'border-blue-100 hover:border-blue-300'
     },
     {
+      title: 'Tracker d\'Activités',
+      description: 'Historique et timeline des déploiements, bugs fixés et événements majeurs.',
+      icon: Activity,
+      href: '/dashboard/hq-ops/activities',
+      color: 'text-cyan-500',
+      bg: 'bg-cyan-50',
+      borderColor: 'border-cyan-100 hover:border-cyan-300'
+    },
+    {
       title: 'Avis Utilisateurs',
       description: 'Modérer et lire les feedbacks laissés par les utilisateurs de Jobsira.',
       icon: MessageSquare,
@@ -158,27 +167,12 @@ export default async function HqOpsDashboard() {
   return (
     <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8 min-h-screen">
       {/* Hero Banner Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white rounded-3xl p-6 lg:p-8 shadow-xl border border-slate-800">
-        <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-[radial-gradient(circle_at_bottom_right,var(--color-red-500),transparent_45%)] opacity-30 pointer-events-none" />
-        
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full w-fit">
-              <ShieldCheck className="w-4 h-4 text-red-400" />
-              <span className="text-xs font-bold uppercase tracking-wider text-red-300">Espace Sécurisé</span>
-            </div>
-            <h1 className="text-3xl font-black tracking-tight">Centre de Commandement (HQ Ops)</h1>
-            <p className="text-slate-400 text-sm max-w-xl">
-              Supervision technique et financière globale de JobSira en temps réel.
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-3 bg-slate-800/50 backdrop-blur-md p-4 rounded-2xl border border-slate-700/50">
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <div className="text-xs font-semibold text-slate-300">
-              Microservice IA : <span className="text-emerald-400 font-bold">ONLINE</span>
-            </div>
-          </div>
+      <div className="bg-slate-900 text-white rounded-3xl p-6 lg:p-8 border border-slate-800 shadow-sm">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-black tracking-tight">Centre de Commandement (HQ Ops)</h1>
+          <p className="text-slate-400 text-sm max-w-xl">
+            Supervision technique et financière globale de JobSira en temps réel.
+          </p>
         </div>
       </div>
 
