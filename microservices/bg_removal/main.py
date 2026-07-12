@@ -4,6 +4,8 @@ from rembg import remove
 from PIL import Image
 import io
 
+import asyncio
+
 app = FastAPI(title="Rembg Microservice")
 
 @app.post("/remove-bg")
@@ -16,8 +18,8 @@ async def remove_background(file: UploadFile = File(...)):
         contents = await file.read()
         input_image = Image.open(io.BytesIO(contents))
         
-        # Remove background (downloads u2net model on first run)
-        output_image = remove(input_image)
+        # Remove background (runs in a separate thread to avoid blocking the event loop)
+        output_image = await asyncio.to_thread(remove, input_image)
         
         # Save to buffer as PNG (to preserve alpha channel/transparency)
         img_byte_arr = io.BytesIO()
