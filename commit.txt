@@ -1,17 +1,15 @@
-[2026-07-12] — Perf: Support de la concurrence (multi-requêtes) sur le microservice Python
+[2026-07-12] — Fix: Crash Numba Cache (RuntimeError locator)
 
 What changed:
-- Remplacement de l'appel synchrone `remove()` par `await asyncio.to_thread(remove, ...)` dans FastAPI.
-- Ajout de `--workers 4` à la commande de lancement Uvicorn dans le Dockerfile.
+- Ajout de `ENV NUMBA_CACHE_DIR=/tmp` dans le Dockerfile.
+- Utilisation de `COPY --chown=appuser:appgroup` pour le transfert du dossier `/opt/venv`.
 
 Why:
-- Problème: FastAPI traite l'asyncio en boucle d'événement unique. `rembg` étant synchrone et très lourd pour le CPU (~2s), il bloquait totalement le thread principal. Si un utilisateur 1 lançait un détourage, les utilisateurs 2 et 3 étaient bloqués en attente sans même que la requête soit traitée.
-- Solution 1: `asyncio.to_thread` délègue l'exécution synchrone à un thread worker, débloquant la boucle d'événement.
-- Solution 2: `--workers 4` lance 4 processus Python distincts. L'IA de `rembg` (via onnxruntime) relâchant le GIL, cela permet une vraie parallélisation CPU pour traiter jusqu'à 4 requêtes lourdes exactement au même instant, et un queuing asynchrone non-bloquant pour les suivantes.
+- Problème: L'utilisateur `appuser` (non-root) n'avait pas les droits d'écriture sur le dossier `/opt/venv/lib/...` créé par `root` dans l'étape builder. Lors du premier import de `rembg` (qui charge `pymatting` et `numba`), le compilateur JIT de `numba` tentait d'écrire son cache (les fichiers `.pyc` compilés) dans le dossier de la librairie. Le manque de droits levait l'erreur `RuntimeError: cannot cache function '_make_tree': no locator available for file`.
+- Solution: Rediriger explicitement le cache de Numba vers un dossier temporaire inscriptible (`/tmp`) et assurer que l'utilisateur possède bien l'environnement virtuel en utilisant `--chown` directement lors du `COPY` multi-stage (ce qui évite aussi d'alourdir l'image avec un layer `RUN chown`).
 
 Files affected:
-- microservices/bg_removal/main.py — Utilisation de asyncio.to_thread.
-- microservices/bg_removal/Dockerfile — Configuration de 4 workers pour Uvicorn.
+- microservices/bg_removal/Dockerfile — Corrections des droits et env vars.
 
 Breaking changes:
 - None.

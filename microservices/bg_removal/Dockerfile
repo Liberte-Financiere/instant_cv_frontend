@@ -58,8 +58,11 @@ RUN apt-get update && \
         libgl1 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copie de l'environnement virtuel pré-compilé (sans le cache pip, sans les outils de build)
-COPY --from=builder /opt/venv /opt/venv
+# Copie de l'environnement virtuel pré-compilé (avec les bons droits pour Numba cache)
+COPY --chown=appuser:appgroup --from=builder /opt/venv /opt/venv
+
+# Variable d'environnement pour le cache de Numba (utilisé par rembg/pymatting)
+ENV NUMBA_CACHE_DIR=/tmp
 
 # Copie du modèle IA pré-téléchargé
 COPY --from=builder /build/models /app/models
