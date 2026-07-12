@@ -1,26 +1,21 @@
-[2026-07-12] — Module de Suivi des Dépenses Opérationnelles (Burn Rate Tracker)
+[2026-07-12] — Refonte des templates d'emails marketing (Canva/Stripo style)
 
 What changed:
-- Ajout du modèle Prisma `BusinessExpense` avec support multi-devises (FCFA, EUR, USD), 5 catégories et 3 fréquences.
-- Création de l'API CRUD complète (`GET/POST` sur `/api/admin/expenses`, `PATCH/DELETE` sur `/api/admin/expenses/[id]`).
-- Calcul serveur-side du burn mensuel par devise (les dépenses annuelles sont ramenées au mois automatiquement).
-- Validation stricte côté backend (catégories, devises, fréquences, montants positifs).
-- Page frontend complète avec KPIs, tableau filtrable, modales de création/édition/suppression, et gestion de l'état actif/arrêté.
-- Ajout d'une carte de navigation "Suivi des Dépenses" sur la page d'accueil HQ-Ops.
+- Suppression de toutes les images factices externes d'Unsplash dans les templates e-mails pour éviter les liens brisés.
+- Réécriture des 3 fonctions de génération d'e-mails (Annonce, Promo, Minimal) en HTML/CSS tabulaire robuste et propre.
+- Intégration de la charte de couleurs de Jobsira.
+- Mise à jour des tests unitaires de templates d'e-mails pour refléter les nouveaux designs et structures.
 
 Why:
-- Permettre aux administrateurs de suivre les coûts opérationnels de Jobsira (serveurs, abonnements, domaines, APIs) de manière centralisée et de comparer le burn rate mensuel aux revenus.
+- Les images de substitution externes (Unsplash/Spotify) nuisaient au professionnalisme des courriels et pouvaient être bloquées ou considérées comme spam par les clients mails de destination.
+- Améliorer l'esthétique générale pour avoir des designs "Canva/Stripo style" robustes et épurés.
 
 Files affected:
-- prisma/schema.prisma — Ajout du modèle BusinessExpense
-- app/api/admin/expenses/route.ts — [NEW] API GET/POST
-- app/api/admin/expenses/[id]/route.ts — [NEW] API PATCH/DELETE
-- app/dashboard/hq-ops/expenses/page.tsx — [NEW] Page frontend
-- app/dashboard/hq-ops/page.tsx — Ajout de la carte de navigation + import Wallet
+- lib/email-templates.ts — Réécriture des générateurs d'e-mails HTML/CSS.
+- __tests__/lib/email-templates.test.ts — Ajustement des assertions de test pour correspondre aux nouveaux textes.
 
 Breaking changes:
 - None
 
 Notes for review:
-- La base de données a été synchronisée via `prisma db push` (nouvelle table `BusinessExpense` créée en production Supabase).
-- Les saisies sont entièrement manuelles. Pas de connexion automatique aux fournisseurs.
+- Vérifier la structure visuelle des emails générés dans l'aperçu du dashboard marketing.

@@ -31,8 +31,8 @@ describe('Email Templates Generator', () => {
     it('should generate promo HTML containing proper styling and content', () => {
       const html = generatePromoEmail(mockProps);
       expect(html).toContain(mockProps.subject);
-      expect(html).toContain('Propulsé par l\'IA'); // Jobsira specific text
-      expect(html).toContain('01.'); // Advantage list
+      expect(html).toContain('Offre Spéciale'); // Jobsira specific text
+      expect(html).toContain('Pourquoi en profiter maintenant ?'); // Advantage list
     });
   });
 
@@ -40,7 +40,7 @@ describe('Email Templates Generator', () => {
     it('should generate minimal transactional HTML', () => {
       const html = generateMinimalEmail(mockProps);
       expect(html).toContain(mockProps.subject);
-      expect(html).toContain('Le Support Jobsira');
+      expect(html).toContain("L'équipe JobSira");
     });
   });
 
