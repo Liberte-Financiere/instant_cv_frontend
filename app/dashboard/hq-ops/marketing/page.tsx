@@ -198,6 +198,24 @@ export default function MarketingDashboard() {
           </div>
           <h1 className="text-3xl font-black text-slate-900 tracking-tight">Nouvelle Campagne</h1>
           <p className="text-slate-500 mt-1">Créez et envoyez votre newsletter via l'API Brevo.</p>
+          {process.env.NODE_ENV === 'development' && (
+            <button
+              type="button"
+              onClick={() => {
+                setCampaignName('Test Debug Campaign');
+                setPreheader('Ceci est un test rapide depuis le mode dev.');
+                setSubject('Nouveautés Jobsira - Mise à jour importante');
+                setMessage('Bonjour {{prenom}},\n\nNous avons le plaisir de vous annoncer de nouvelles fonctionnalités sur Jobsira.\n\n- Nouveau module de suivi des dépenses\n- Optimisation des performances IA\n- Amélioration du tableau de bord admin\n\nBonne navigation,\nL\'équipe Jobsira');
+                setTemplateId('annonce');
+                setExternalEmailsRaw('m9bikienga@gmail.com');
+                setTargetAudience('test');
+                toast.success('Champs remplis automatiquement (mode debug).');
+              }}
+              className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-md border border-amber-200 hover:bg-amber-200 transition-colors"
+            >
+              DEBUG: Remplir tout
+            </button>
+          )}
         </div>
 
         {/* Main Form Grid */}
