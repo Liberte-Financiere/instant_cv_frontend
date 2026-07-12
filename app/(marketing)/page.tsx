@@ -12,6 +12,8 @@ import { CallToAction } from '@/components/landing/CallToAction';
 import { Footer } from '@/components/landing/Footer';
 import { MarketingLinks } from '@/components/landing/MarketingLinks';
 
+export const revalidate = 60; // Met à jour la page (et les témoignages) toutes les 60 secondes en production
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-bg-light">

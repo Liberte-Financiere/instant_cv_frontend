@@ -20,7 +20,7 @@ export function CallToAction() {
                Commencer gratuitement
             </button>
           </Link>
-          <p className="text-slate-500 text-sm mt-4 sm:mt-0">Pas de carte de crédit requise</p>
+          <p className="text-slate-400 text-sm mt-4 sm:mt-0 font-medium">🎁 15 crédits offerts à l'inscription <span className="opacity-50 mx-1">•</span> Sans carte bancaire</p>
         </div>
       </div>
     </div>

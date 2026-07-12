@@ -38,6 +38,12 @@ export function Hero() {
                 <PlayCircle className="w-5 h-5 mr-2" /> Démo
               </Link>
             </div>
+            
+            <div className="flex items-center justify-center lg:justify-start mt-2">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-semibold shadow-sm">
+                🎁 <span className="text-white">15 crédits offerts</span> à l'inscription
+              </span>
+            </div>
 
             <div className="flex items-center justify-center lg:justify-start gap-4 pt-2">
               <AvatarGroup count={2} />
