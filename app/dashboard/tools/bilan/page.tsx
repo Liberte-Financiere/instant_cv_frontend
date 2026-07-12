@@ -83,7 +83,7 @@ export default function BilanDeCompetencesPage() {
       setLoadingStep(0);
       interval = setInterval(() => {
         setLoadingStep((prev) => (prev < loadingMessages.length - 1 ? prev + 1 : prev));
-      }, 3500); // Change message every 3.5s
+      }, 12000); // Change message every 12s
     }
     return () => clearInterval(interval);
   }, [isGenerating]);
