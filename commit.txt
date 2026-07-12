@@ -1,11 +1,14 @@
-[2026-07-12] — Fix de l'état bloquant "Envoi..." après envoi réussi de la campagne
+[2026-07-12] — Formattage propre des listes à puces dans le corps de l'email
 
 What changed:
-- Ajout d'un bloc `finally` dans la fonction `executeSend` de la page marketing pour remettre `loading` à `false` après l'envoi de la campagne (que ce soit un succès ou une erreur).
-- Ajout d'un affichage de l'erreur via un message `toast.error` en cas d'échec de la requête.
+- Implémentation d'une fonction `parseMessageToHtml` dans `lib/email-templates.ts`.
+- Elle détecte automatiquement les lignes commençant par `-`, `*` ou `•` pour les grouper au sein d'une liste `<ul>...</ul>` stylisée avec des balises `<li>` HTML spécifiques aux clients e-mails (marge, padding, typographie, couleur).
+- Redéfinition de `formatMessage` et `formatDarkMessage` pour utiliser cette fonction de parsing.
+- Ajout d'un test unitaire dans `__tests__/lib/email-templates.test.ts` vérifiant le bon parsing et l'injection des styles HTML de liste.
 
 Why:
-- Le bouton de soumission de campagne restait grisé et bloqué sur "Envoi..." après un envoi réussi car le changement d'état `setLoading(false)` n'était pas exécuté dans le bloc `try` de succès.
+- Demande de l'utilisateur de mieux gérer l'affichage des listes dans le contenu des messages envoyés par la plateforme marketing.
 
 Files affected:
-- app/dashboard/hq-ops/marketing/page.tsx — Ajout du bloc `finally { setLoading(false); }` dans la méthode `executeSend`.
+- lib/email-templates.ts — Ajout de `parseMessageToHtml` et branchement dans les formateurs de messages.
+- __tests__/lib/email-templates.test.ts — Ajout du scénario de test pour le parsing des listes à puces.

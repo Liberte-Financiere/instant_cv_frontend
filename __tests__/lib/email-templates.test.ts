@@ -25,6 +25,18 @@ describe('Email Templates Generator', () => {
       expect(html).not.toContain('Click Me');
       expect(html).not.toContain(mockProps.buttonUrl);
     });
+
+    it('should parse bullet points starting with - or * into html list items', () => {
+      const html = generateAnnouncementEmail({
+        ...mockProps,
+        message: "Intro paragraph\n- Point one\n- Point two\nOutro paragraph"
+      });
+      expect(html).toContain('Intro paragraph');
+      expect(html).toContain('<ul style="margin: 0 0 16px 0; padding-left: 20px; list-style-type: disc;');
+      expect(html).toContain('<li style="margin: 0 0 8px 0; font-size: 15px; line-height: 1.6; color: #334155;">Point one</li>');
+      expect(html).toContain('<li style="margin: 0 0 8px 0; font-size: 15px; line-height: 1.6; color: #334155;">Point two</li>');
+      expect(html).toContain('Outro paragraph');
+    });
   });
 
   describe('generatePromoEmail', () => {
