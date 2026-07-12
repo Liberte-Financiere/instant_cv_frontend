@@ -345,34 +345,34 @@ export default function BilanDeCompetencesPage() {
             </div>
 
             {/* 3. Formations Recommandées */}
-            <div className="bg-[#0B1120] border border-slate-800/80 p-6 md:p-8 rounded-2xl shadow-2xl text-white">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-slate-800/50 flex items-center justify-center border border-slate-700/50">
-                  <GraduationCap className="w-4 h-4 text-cyan-400" />
+            <div className="bg-white border border-slate-200 p-6 md:p-8 rounded-2xl shadow-sm">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <GraduationCap className="w-4 h-4 text-blue-600" />
                 </div>
-                <h3 className="font-bold text-white text-lg">Formations & Certifications Recommandées</h3>
+                <h3 className="font-bold text-slate-900 text-lg">Formations & Certifications Recommandées</h3>
               </div>
 
               <div className="space-y-4">
                 {lastBilan.recommendedTrainings?.map((training: any, i: number) => (
-                  <div key={i} className="flex items-start gap-4 p-5 rounded-xl bg-[#1E2536]/80 border border-slate-700/50 hover:bg-[#1E2536] transition-colors">
-                    <div className="w-12 h-12 rounded-xl bg-[#0B1120] flex items-center justify-center shrink-0 border border-cyan-900/50 shadow-inner">
-                      <GraduationCap className="w-5 h-5 text-cyan-400" />
+                  <div key={i} className="flex items-start gap-4 p-5 rounded-xl border border-slate-100 bg-slate-50 hover:bg-slate-100/70 transition-colors">
+                    <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shrink-0 border border-slate-200 shadow-sm">
+                      <GraduationCap className="w-5 h-5 text-blue-500" />
                     </div>
                     <div className="flex flex-col gap-1.5 mt-0.5">
-                      <h4 className="font-bold text-white text-[15px]">{training.title}</h4>
+                      <h4 className="font-bold text-slate-900 text-[15px]">{training.title}</h4>
                       <div>
-                        <span className="inline-block px-2.5 py-1 rounded bg-[#0B1120]/80 text-cyan-400 text-[10px] font-bold uppercase tracking-widest border border-cyan-900/30">
+                        <span className="inline-block px-2.5 py-1 rounded bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-widest border border-blue-100">
                           {training.type}
                         </span>
                       </div>
-                      <p className="text-[13px] text-slate-400 leading-relaxed mt-2">{training.benefit}</p>
+                      <p className="text-[13px] text-slate-500 leading-relaxed mt-2">{training.benefit}</p>
                     </div>
                   </div>
                 ))}
               </div>
               
-              <p className="text-[11px] text-slate-500 mt-6 pt-5 border-t border-slate-800/60">
+              <p className="text-[11px] text-slate-400 mt-6 pt-5 border-t border-slate-100">
                 Ces suggestions de formations sont indicatives. Nous vous recommandons de vérifier leur disponibilité et leur contenu directement sur les plateformes mentionnées.
               </p>
             </div>
