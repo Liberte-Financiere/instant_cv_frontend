@@ -99,6 +99,8 @@ export default function MarketingDashboard() {
       setCampaignName('');
       setPreheader('');
     } catch (error: any) {
+      toast.error(error.message);
+    } finally {
       setLoading(false);
     }
   };
