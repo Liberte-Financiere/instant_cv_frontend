@@ -1,20 +1,17 @@
-[2026-07-12] — Fix: Ajout des dépendances système critiques et améliorations du Dockerfile
+[2026-07-12] — Perf: Support de la concurrence (multi-requêtes) sur le microservice Python
 
 What changed:
-- Installation de `libgomp1` et `libgl1` dans l'étape runner du Dockerfile.
-- Définition d'un UID/GID fixe (1000) pour l'utilisateur `appuser`.
-- Ajout d'une directive `HEALTHCHECK` native Docker (utilisant python natif, sans curl).
+- Remplacement de l'appel synchrone `remove()` par `await asyncio.to_thread(remove, ...)` dans FastAPI.
+- Ajout de `--workers 4` à la commande de lancement Uvicorn dans le Dockerfile.
 
 Why:
-- Fix de crash critique: `onnxruntime` nécessite `libgomp1` pour le multi-threading et plantera au premier import sans cette librairie. `libgl1` est également sécurisant pour certaines implémentations de OpenCV.
-- L'UID fixe prévient les problèmes de permissions sur les montages de volumes externes.
-- Le Healthcheck permet aux orchestrateurs (Swarm/K8s/Compose) de savoir si l'API est effectivement disponible.
+- Problème: FastAPI traite l'asyncio en boucle d'événement unique. `rembg` étant synchrone et très lourd pour le CPU (~2s), il bloquait totalement le thread principal. Si un utilisateur 1 lançait un détourage, les utilisateurs 2 et 3 étaient bloqués en attente sans même que la requête soit traitée.
+- Solution 1: `asyncio.to_thread` délègue l'exécution synchrone à un thread worker, débloquant la boucle d'événement.
+- Solution 2: `--workers 4` lance 4 processus Python distincts. L'IA de `rembg` (via onnxruntime) relâchant le GIL, cela permet une vraie parallélisation CPU pour traiter jusqu'à 4 requêtes lourdes exactement au même instant, et un queuing asynchrone non-bloquant pour les suivantes.
 
 Files affected:
-- microservices/bg_removal/Dockerfile — Application des corrections et bonnes pratiques.
+- microservices/bg_removal/main.py — Utilisation de asyncio.to_thread.
+- microservices/bg_removal/Dockerfile — Configuration de 4 workers pour Uvicorn.
 
 Breaking changes:
 - None.
-
-Notes for review:
-- Le fix a été directement validé pour corriger l'ImportError potentiel en production.

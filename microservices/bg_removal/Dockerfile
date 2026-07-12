@@ -81,5 +81,5 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3001/docs')" || exit 1
 
-# Lancement sécurisé (pas de shell intermédiaire)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3001"]
+# Lancement sécurisé avec 4 workers pour le multi-processing (traitement parallèle des requêtes)
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3001", "--workers", "4"]
