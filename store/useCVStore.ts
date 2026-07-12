@@ -40,7 +40,7 @@ export interface MatchResultState {
   result: any; // Using any to avoid circular dependency, or import MatchResultData if possible
   cvSourceMode: 'select' | 'upload';
   selectedCVId: string;
-  bilanData: any; // Used to restore a bilan from history
+  bilanData?: any; // Used to restore a bilan from history
 }
 
 // History State

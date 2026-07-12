@@ -1,5 +1,5 @@
-import { prisma } from './lib/prisma';
-import { anonymizeProfile } from './lib/anonymize';
+import { prisma } from '../../lib/prisma';
+import { anonymizeProfile } from '../../lib/anonymize';
 
 async function main() {
   const id = 'cmpsort2m000003iwaj4k7tfs';

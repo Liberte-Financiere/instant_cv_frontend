@@ -66,13 +66,14 @@ export const authConfig = {
       }
 
       // Automatic silent restore if impersonation expired
-      if (token.impersonationExpiresAt && Date.now() > token.impersonationExpiresAt) {
+      if (token.impersonationExpiresAt && Date.now() > (token.impersonationExpiresAt as number)) {
          if (token.originalUser) {
-            token.sub = token.originalUser.sub;
-            token.role = token.originalUser.role;
-            token.email = token.originalUser.email;
-            token.name = token.originalUser.name;
-            token.picture = token.originalUser.picture;
+            const orig = token.originalUser as any;
+            token.sub = orig.sub;
+            token.role = orig.role;
+            token.email = orig.email;
+            token.name = orig.name;
+            token.picture = orig.picture;
          }
          delete token.originalUser;
          delete token.impersonatedBy;
@@ -114,7 +115,8 @@ export const authConfig = {
             token.name = payload.name as string;
             token.picture = payload.picture as string;
             
-            token.impersonatedBy = token.originalUser.sub;
+            const origUser = token.originalUser as any;
+            token.impersonatedBy = origUser.sub;
             token.impersonationExpiresAt = Date.now() + 60 * 60 * 1000; // 1 hour
             token.impersonationSessionId = payload.impersonationSessionId as string;
             token.impersonationJti = payload.jti as string;
@@ -125,11 +127,12 @@ export const authConfig = {
 
       if (trigger === "update" && session?.stopImpersonation) {
          if (token.originalUser) {
-            token.sub = token.originalUser.sub;
-            token.role = token.originalUser.role;
-            token.email = token.originalUser.email;
-            token.name = token.originalUser.name;
-            token.picture = token.originalUser.picture;
+            const orig = token.originalUser as any;
+            token.sub = orig.sub;
+            token.role = orig.role;
+            token.email = orig.email;
+            token.name = orig.name;
+            token.picture = orig.picture;
          }
          delete token.originalUser;
          delete token.impersonatedBy;
