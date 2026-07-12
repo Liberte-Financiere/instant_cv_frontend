@@ -47,7 +47,18 @@ export async function GET(req: Request) {
           where,
           orderBy: { createdAt: 'desc' },
           take: limit,
-          skip
+          skip,
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            credits: true,
+            role: true,
+            isBanned: true,
+            createdAt: true,
+            lastLogin: true,
+            lastActivity: true
+          }
       }),
       prisma.user.count({ where })
     ]);

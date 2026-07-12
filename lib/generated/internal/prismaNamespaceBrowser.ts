@@ -68,7 +68,8 @@ export const ModelName = {
   CandidateProfile: 'CandidateProfile',
   ProfileUnlock: 'ProfileUnlock',
   MarketingCampaign: 'MarketingCampaign',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  BusinessExpense: 'BusinessExpense'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -373,6 +374,24 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const BusinessExpenseScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  amount: 'amount',
+  currency: 'currency',
+  frequency: 'frequency',
+  isActive: 'isActive',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BusinessExpenseScalarFieldEnum = (typeof BusinessExpenseScalarFieldEnum)[keyof typeof BusinessExpenseScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -635,4 +654,16 @@ export const AuditLogOrderByRelevanceFieldEnum = {
 } as const
 
 export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
+export const BusinessExpenseOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  currency: 'currency',
+  frequency: 'frequency',
+  notes: 'notes'
+} as const
+
+export type BusinessExpenseOrderByRelevanceFieldEnum = (typeof BusinessExpenseOrderByRelevanceFieldEnum)[keyof typeof BusinessExpenseOrderByRelevanceFieldEnum]
 

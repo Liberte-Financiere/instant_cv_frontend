@@ -35,7 +35,20 @@ export default function AdminCreditPanel() {
   }, [search, roleFilter, bannedFilter]);
 
   useEffect(() => {
-    fetchUsers();
+    // Si la recherche est vide (moins de 2 caractères), on ne charge rien pour économiser la base de données.
+    if (search.trim().length < 2) {
+      setUsers([]);
+      setTotalPages(1);
+      setIsLoading(false);
+      return;
+    }
+
+    const delayDebounceFn = setTimeout(() => {
+      fetchUsers();
+    }, 400); // 400ms de délai de debounce pour ne pas spammer l'API
+
+    return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, roleFilter, bannedFilter, page]); // Refetch on filters or page change
 
   const fetchUsers = async () => {
@@ -158,9 +171,19 @@ export default function AdminCreditPanel() {
               </thead>
               <tbody>
                  {isLoading ? (
-                    <tr><td colSpan={5} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-400" /></td></tr>
+                    <tr><td colSpan={7} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-400" /></td></tr>
+                 ) : search.trim().length < 2 ? (
+                    <tr>
+                      <td colSpan={7} className="p-16 text-center text-slate-500">
+                        <div className="flex flex-col items-center gap-3">
+                          <Search className="w-12 h-12 text-slate-200" />
+                          <p className="text-lg font-medium text-slate-700">Recherchez un compte à recharger</p>
+                          <p className="text-sm max-w-sm">Tapez l'adresse email ou le nom de l'utilisateur dans la barre ci-dessus pour le trouver.</p>
+                        </div>
+                      </td>
+                    </tr>
                  ) : users.length === 0 ? (
-                    <tr><td colSpan={7} className="p-8 text-center text-slate-500">Aucun utilisateur trouvé.</td></tr>
+                    <tr><td colSpan={7} className="p-8 text-center text-slate-500">Aucun utilisateur trouvé pour "{search}".</td></tr>
                  ) : (
                     users.map((user) => (
                       <tr key={user.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">

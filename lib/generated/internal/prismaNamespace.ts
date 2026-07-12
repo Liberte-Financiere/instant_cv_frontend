@@ -401,7 +401,8 @@ export const ModelName = {
   CandidateProfile: 'CandidateProfile',
   ProfileUnlock: 'ProfileUnlock',
   MarketingCampaign: 'MarketingCampaign',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  BusinessExpense: 'BusinessExpense'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -417,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "aILog" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign" | "auditLog"
+    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "aILog" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign" | "auditLog" | "businessExpense"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1753,6 +1754,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BusinessExpense: {
+      payload: Prisma.$BusinessExpensePayload<ExtArgs>
+      fields: Prisma.BusinessExpenseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BusinessExpenseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BusinessExpenseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload>
+        }
+        findFirst: {
+          args: Prisma.BusinessExpenseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BusinessExpenseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload>
+        }
+        findMany: {
+          args: Prisma.BusinessExpenseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload>[]
+        }
+        create: {
+          args: Prisma.BusinessExpenseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload>
+        }
+        createMany: {
+          args: Prisma.BusinessExpenseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BusinessExpenseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload>[]
+        }
+        delete: {
+          args: Prisma.BusinessExpenseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload>
+        }
+        update: {
+          args: Prisma.BusinessExpenseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload>
+        }
+        deleteMany: {
+          args: Prisma.BusinessExpenseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BusinessExpenseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BusinessExpenseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload>[]
+        }
+        upsert: {
+          args: Prisma.BusinessExpenseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessExpensePayload>
+        }
+        aggregate: {
+          args: Prisma.BusinessExpenseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBusinessExpense>
+        }
+        groupBy: {
+          args: Prisma.BusinessExpenseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BusinessExpenseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BusinessExpenseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BusinessExpenseCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2078,6 +2153,24 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const BusinessExpenseScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  amount: 'amount',
+  currency: 'currency',
+  frequency: 'frequency',
+  isActive: 'isActive',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BusinessExpenseScalarFieldEnum = (typeof BusinessExpenseScalarFieldEnum)[keyof typeof BusinessExpenseScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2342,6 +2435,18 @@ export const AuditLogOrderByRelevanceFieldEnum = {
 export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
 
 
+export const BusinessExpenseOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  currency: 'currency',
+  frequency: 'frequency',
+  notes: 'notes'
+} as const
+
+export type BusinessExpenseOrderByRelevanceFieldEnum = (typeof BusinessExpenseOrderByRelevanceFieldEnum)[keyof typeof BusinessExpenseOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -2566,6 +2671,7 @@ export type GlobalOmitConfig = {
   profileUnlock?: Prisma.ProfileUnlockOmit
   marketingCampaign?: Prisma.MarketingCampaignOmit
   auditLog?: Prisma.AuditLogOmit
+  businessExpense?: Prisma.BusinessExpenseOmit
 }
 
 /* Types for Logging */
