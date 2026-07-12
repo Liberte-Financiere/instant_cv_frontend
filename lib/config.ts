@@ -86,21 +86,6 @@ export const APP_CONFIG = {
         ],
         popular: true,
       },
-      {
-        id: 'pro',
-        name: 'Pack Pro',
-        credits: 250,
-        price: 5_000,
-        priceLabel: '5 000',
-        description: 'La tranquillité ultime.',
-        features: [
-          'Valable à vie',
-          'Création sans limite',
-          'Coach IA complet à disposition',
-          'Toutes les options débloquées',
-        ],
-        popular: false,
-      },
     ] as const,
   },
 
@@ -141,6 +126,7 @@ export const APP_CONFIG = {
         fast: 'google/gemini-3.5-flash',
         pro: 'google/gemini-3.1-pro-preview',
         assistant: 'google/gemini-2.5-flash',
+        bilan: 'deepseek/deepseek-v4-pro',
       }
     },
     interview: {

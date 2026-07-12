@@ -70,20 +70,20 @@ export async function POST(req: Request) {
     const imageBuffer = await pythonRes.arrayBuffer();
 
     // Deduct credits only after successful generation
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: userId },
-        data: { credits: { decrement: REMBG_COST } },
-      }),
-      prisma.creditTransaction.create({
-        data: {
-          userId,
-          amount: -REMBG_COST,
-          type: 'USAGE',
-          description: 'Détourage photo par IA (Rembg)',
-        },
-      }),
-    ]);
+    // Deduct credits only after successful generation (using nested writes to avoid transaction connection pool timeouts in dev)
+    await prisma.user.update({
+      where: { id: userId },
+      data: { 
+        credits: { decrement: REMBG_COST },
+        creditTransactions: {
+          create: {
+            amount: -REMBG_COST,
+            type: 'USAGE',
+            description: 'Détourage photo par IA (Rembg)',
+          }
+        }
+      },
+    });
 
     // Return the transparent PNG image directly
     return new NextResponse(imageBuffer, {

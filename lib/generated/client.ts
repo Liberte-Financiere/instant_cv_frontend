@@ -136,3 +136,8 @@ export type AuditLog = Prisma.AuditLogModel
  * 
  */
 export type BusinessExpense = Prisma.BusinessExpenseModel
+/**
+ * Model CompanyActivity
+ * 
+ */
+export type CompanyActivity = Prisma.CompanyActivityModel

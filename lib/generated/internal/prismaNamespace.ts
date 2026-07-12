@@ -402,7 +402,8 @@ export const ModelName = {
   ProfileUnlock: 'ProfileUnlock',
   MarketingCampaign: 'MarketingCampaign',
   AuditLog: 'AuditLog',
-  BusinessExpense: 'BusinessExpense'
+  BusinessExpense: 'BusinessExpense',
+  CompanyActivity: 'CompanyActivity'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "aILog" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign" | "auditLog" | "businessExpense"
+    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "aILog" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign" | "auditLog" | "businessExpense" | "companyActivity"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1828,6 +1829,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CompanyActivity: {
+      payload: Prisma.$CompanyActivityPayload<ExtArgs>
+      fields: Prisma.CompanyActivityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CompanyActivityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CompanyActivityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload>
+        }
+        findFirst: {
+          args: Prisma.CompanyActivityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CompanyActivityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload>
+        }
+        findMany: {
+          args: Prisma.CompanyActivityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload>[]
+        }
+        create: {
+          args: Prisma.CompanyActivityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload>
+        }
+        createMany: {
+          args: Prisma.CompanyActivityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CompanyActivityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload>[]
+        }
+        delete: {
+          args: Prisma.CompanyActivityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload>
+        }
+        update: {
+          args: Prisma.CompanyActivityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload>
+        }
+        deleteMany: {
+          args: Prisma.CompanyActivityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CompanyActivityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CompanyActivityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload>[]
+        }
+        upsert: {
+          args: Prisma.CompanyActivityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyActivityPayload>
+        }
+        aggregate: {
+          args: Prisma.CompanyActivityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCompanyActivity>
+        }
+        groupBy: {
+          args: Prisma.CompanyActivityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanyActivityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CompanyActivityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanyActivityCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2171,6 +2246,18 @@ export const BusinessExpenseScalarFieldEnum = {
 export type BusinessExpenseScalarFieldEnum = (typeof BusinessExpenseScalarFieldEnum)[keyof typeof BusinessExpenseScalarFieldEnum]
 
 
+export const CompanyActivityScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  author: 'author',
+  createdAt: 'createdAt'
+} as const
+
+export type CompanyActivityScalarFieldEnum = (typeof CompanyActivityScalarFieldEnum)[keyof typeof CompanyActivityScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2447,6 +2534,17 @@ export const BusinessExpenseOrderByRelevanceFieldEnum = {
 export type BusinessExpenseOrderByRelevanceFieldEnum = (typeof BusinessExpenseOrderByRelevanceFieldEnum)[keyof typeof BusinessExpenseOrderByRelevanceFieldEnum]
 
 
+export const CompanyActivityOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  author: 'author'
+} as const
+
+export type CompanyActivityOrderByRelevanceFieldEnum = (typeof CompanyActivityOrderByRelevanceFieldEnum)[keyof typeof CompanyActivityOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -2672,6 +2770,7 @@ export type GlobalOmitConfig = {
   marketingCampaign?: Prisma.MarketingCampaignOmit
   auditLog?: Prisma.AuditLogOmit
   businessExpense?: Prisma.BusinessExpenseOmit
+  companyActivity?: Prisma.CompanyActivityOmit
 }
 
 /* Types for Logging */

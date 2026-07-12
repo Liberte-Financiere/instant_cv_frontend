@@ -40,12 +40,13 @@ export interface MatchResultState {
   result: any; // Using any to avoid circular dependency, or import MatchResultData if possible
   cvSourceMode: 'select' | 'upload';
   selectedCVId: string;
+  bilanData: any; // Used to restore a bilan from history
 }
 
 // History State
 export interface AnalysisHistoryItem {
   id: string;
-  type: 'analysis' | 'match';
+  type: 'analysis' | 'match' | 'bilan';
   date: string; // ISO string
   score: number;
   title: string;
@@ -60,7 +61,12 @@ interface CVState {
   // History
   history: AnalysisHistoryItem[];
   addToHistory: (item: AnalysisHistoryItem) => void;
+  removeFromHistory: (id: string) => void;
   clearHistory: () => void;
+
+  // Bilan State
+  lastBilan: any | null;
+  setBilanData: (data: any | null) => void;
 
   // Analysis State
   lastAnalysis: { analysis: DetailedAnalysis, cvData: Partial<CV> } | null;
@@ -230,6 +236,9 @@ export const useCVStore = create<CVState>()(
         }).catch(err => console.error('Failed to sync history item:', err));
       },
       
+      removeFromHistory: (id) => set((state) => ({
+        history: state.history.filter((item) => item.id !== id)
+      })),
       clearHistory: () => set({ history: [] }),
       
       lastAnalysis: null,
@@ -237,6 +246,9 @@ export const useCVStore = create<CVState>()(
 
       lastMatch: null,
       setMatchData: (data) => set({ lastMatch: data }),
+
+      lastBilan: null,
+      setBilanData: (data) => set({ lastBilan: data }),
 
       // API Sync
       fetchUserCVs: async () => {

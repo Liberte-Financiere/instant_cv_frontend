@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getHtmlForTemplate, generateAnnouncementEmail, generatePromoEmail, generateMinimalEmail, generateArtlistEmail, generateDreamforceEmail } from '@/lib/email-templates';
+import { getHtmlForTemplate, generateAnnouncementEmail, generatePromoEmail, generateMinimalEmail, generateDreamforceEmail } from '@/lib/email-templates';
 
 describe('Email Templates Generator', () => {
   const mockProps = {
@@ -43,7 +43,7 @@ describe('Email Templates Generator', () => {
     it('should generate promo HTML containing proper styling and content', () => {
       const html = generatePromoEmail(mockProps);
       expect(html).toContain(mockProps.subject);
-      expect(html).toContain('Offre Spéciale'); // Jobsira specific text
+      expect(html).toContain('OFFRE EXCLUSIVE'); // Jobsira specific text
       expect(html).toContain('Pourquoi en profiter maintenant ?'); // Advantage list
     });
   });
@@ -53,15 +53,6 @@ describe('Email Templates Generator', () => {
       const html = generateMinimalEmail(mockProps);
       expect(html).toContain(mockProps.subject);
       expect(html).toContain("L'équipe JobSira");
-    });
-  });
-
-  describe('generateArtlistEmail', () => {
-    it('should generate dark premium HTML inspired by Artlist', () => {
-      const html = generateArtlistEmail(mockProps);
-      expect(html).toContain(mockProps.subject);
-      expect(html).toContain('Nouveauté Live');
-      expect(html).toContain('L\'Innovateur 3.0');
     });
   });
 
@@ -85,12 +76,6 @@ describe('Email Templates Generator', () => {
       const minHtml = generateMinimalEmail(mockProps);
       const result = getHtmlForTemplate('minimal', mockProps);
       expect(result).toEqual(minHtml);
-    });
-
-    it('should return artlist template when templateId is "artlist"', () => {
-      const artlistHtml = generateArtlistEmail(mockProps);
-      const result = getHtmlForTemplate('artlist', mockProps);
-      expect(result).toEqual(artlistHtml);
     });
 
     it('should return dreamforce template when templateId is "dreamforce"', () => {

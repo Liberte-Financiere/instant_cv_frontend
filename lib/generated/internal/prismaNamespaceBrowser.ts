@@ -69,7 +69,8 @@ export const ModelName = {
   ProfileUnlock: 'ProfileUnlock',
   MarketingCampaign: 'MarketingCampaign',
   AuditLog: 'AuditLog',
-  BusinessExpense: 'BusinessExpense'
+  BusinessExpense: 'BusinessExpense',
+  CompanyActivity: 'CompanyActivity'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -392,6 +393,18 @@ export const BusinessExpenseScalarFieldEnum = {
 export type BusinessExpenseScalarFieldEnum = (typeof BusinessExpenseScalarFieldEnum)[keyof typeof BusinessExpenseScalarFieldEnum]
 
 
+export const CompanyActivityScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  author: 'author',
+  createdAt: 'createdAt'
+} as const
+
+export type CompanyActivityScalarFieldEnum = (typeof CompanyActivityScalarFieldEnum)[keyof typeof CompanyActivityScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -666,4 +679,15 @@ export const BusinessExpenseOrderByRelevanceFieldEnum = {
 } as const
 
 export type BusinessExpenseOrderByRelevanceFieldEnum = (typeof BusinessExpenseOrderByRelevanceFieldEnum)[keyof typeof BusinessExpenseOrderByRelevanceFieldEnum]
+
+
+export const CompanyActivityOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  author: 'author'
+} as const
+
+export type CompanyActivityOrderByRelevanceFieldEnum = (typeof CompanyActivityOrderByRelevanceFieldEnum)[keyof typeof CompanyActivityOrderByRelevanceFieldEnum]
 

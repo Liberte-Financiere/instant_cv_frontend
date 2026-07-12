@@ -1,14 +1,26 @@
-[2026-07-12] — Formattage propre des listes à puces dans le corps de l'email
+2026-07-12 — Pricing À La Carte and IA Suffix Cleanups
 
 What changed:
-- Implémentation d'une fonction `parseMessageToHtml` dans `lib/email-templates.ts`.
-- Elle détecte automatiquement les lignes commençant par `-`, `*` ou `•` pour les grouper au sein d'une liste `<ul>...</ul>` stylisée avec des balises `<li>` HTML spécifiques aux clients e-mails (marge, padding, typographie, couleur).
-- Redéfinition de `formatMessage` et `formatDarkMessage` pour utiliser cette fonction de parsing.
-- Ajout d'un test unitaire dans `__tests__/lib/email-templates.test.ts` vérifiant le bon parsing et l'injection des styles HTML de liste.
+- Removed superflous 'IA' suffixes from Bilan de Compétences page title and credit costs comments.
+- Cleaned up 'IA' occurrences in AIToolbox component titles, badges, and marketing descriptions.
+- Added Bilan de Compétences (2 cr.), Photo Pro (20 cr.), and Détourage Magique (1 cr.) to the landing page credit cost grid in Pricing.tsx.
+- Reduced dimensions, margins, and padding in the action pricing grid to display all 11 items compactly (6 columns on desktop, 3-4 on tablet/mobile).
+- Added an interactive À la Carte (pay-as-you-go) credit calculator card on the landing page pricing section with live pricing preview and stepper controls.
 
 Why:
-- Demande de l'utilisateur de mieux gérer l'affichage des listes dans le contenu des messages envoyés par la plateforme marketing.
+- To align with user request to remove repetitive 'IA' brand labels.
+- To display the full suite of career tools on the pricing page and let users know they can purchase exactly the number of credits they need without choosing a full package.
 
 Files affected:
-- lib/email-templates.ts — Ajout de `parseMessageToHtml` et branchement dans les formateurs de messages.
-- __tests__/lib/email-templates.test.ts — Ajout du scénario de test pour le parsing des listes à puces.
+- frontend/instant_cv/app/dashboard/tools/bilan/page.tsx — Removed 'IA' from main page title.
+- frontend/instant_cv/components/landing/AIToolbox.tsx — Removed 'IA' from AIToolbox headers, badges, and text.
+- frontend/instant_cv/app/api/ai/bilan/route.ts — Removed 'IA' from credit transaction descriptions.
+- frontend/instant_cv/app/api/ai/photo/route.ts — Removed 'IA' from credit transaction descriptions.
+- frontend/instant_cv/lib/credit-costs.ts — Updated comment for Bilan de Compétences credits cost.
+- frontend/instant_cv/components/landing/Pricing.tsx — Added interactive À la Carte calculator card, added new actions to the pricing grid, and optimized the layout to be extremely compact.
+
+Breaking changes:
+- None
+
+Notes for review:
+- Ensure the custom À la Carte stepper increments and decrements by 5 credits correctly on the landing page and matches the dashboard pricing behavior.

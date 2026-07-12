@@ -45,7 +45,7 @@ export default function MarketingDashboard() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const tpl = params.get('template');
-      if (tpl && ['annonce', 'promo', 'minimal'].includes(tpl)) {
+      if (tpl && ['annonce', 'promo', 'minimal', 'dreamforce'].includes(tpl)) {
         setTemplateId(tpl);
       }
     }
@@ -332,9 +332,8 @@ export default function MarketingDashboard() {
                         className="w-full px-12 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm text-slate-800 shadow-sm appearance-none cursor-pointer"
                       >
                         <option value="annonce">Annonce Standard</option>
-                        <option value="promo">Alerte Promo</option>
+                        <option value="promo">Alerte Promo (Flashy)</option>
                         <option value="minimal">Défaut Minimaliste</option>
-                        <option value="artlist">Premium Sombre (Style Artlist)</option>
                         <option value="dreamforce">Premium Événement (Style Dreamforce)</option>
                       </select>
                       <LayoutTemplate className="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />

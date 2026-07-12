@@ -12,7 +12,7 @@ const prismaClientSingleton = () => {
   // 1. On crée un pool de connexion Node-Postgres natif adapté pour un VPS persistant
   const pool = new Pool({ 
     connectionString,
-    max: 20,                    // Partagé entre toutes les requêtes du process
+    max: process.env.NODE_ENV === 'production' ? 20 : 2, // Partagé entre toutes les requêtes du process (limité en dev pour éviter la saturation)
     idleTimeoutMillis: 30000,   // Ferme les connexions inactives après 30s
     connectionTimeoutMillis: 10000, // Timeout de connexion après 10s
   });
