@@ -1,15 +1,26 @@
-[2026-07-12] — Fix: Crash Numba Cache (RuntimeError locator)
+[2026-07-12] — Module de Suivi des Dépenses Opérationnelles (Burn Rate Tracker)
 
 What changed:
-- Ajout de `ENV NUMBA_CACHE_DIR=/tmp` dans le Dockerfile.
-- Utilisation de `COPY --chown=appuser:appgroup` pour le transfert du dossier `/opt/venv`.
+- Ajout du modèle Prisma `BusinessExpense` avec support multi-devises (FCFA, EUR, USD), 5 catégories et 3 fréquences.
+- Création de l'API CRUD complète (`GET/POST` sur `/api/admin/expenses`, `PATCH/DELETE` sur `/api/admin/expenses/[id]`).
+- Calcul serveur-side du burn mensuel par devise (les dépenses annuelles sont ramenées au mois automatiquement).
+- Validation stricte côté backend (catégories, devises, fréquences, montants positifs).
+- Page frontend complète avec KPIs, tableau filtrable, modales de création/édition/suppression, et gestion de l'état actif/arrêté.
+- Ajout d'une carte de navigation "Suivi des Dépenses" sur la page d'accueil HQ-Ops.
 
 Why:
-- Problème: L'utilisateur `appuser` (non-root) n'avait pas les droits d'écriture sur le dossier `/opt/venv/lib/...` créé par `root` dans l'étape builder. Lors du premier import de `rembg` (qui charge `pymatting` et `numba`), le compilateur JIT de `numba` tentait d'écrire son cache (les fichiers `.pyc` compilés) dans le dossier de la librairie. Le manque de droits levait l'erreur `RuntimeError: cannot cache function '_make_tree': no locator available for file`.
-- Solution: Rediriger explicitement le cache de Numba vers un dossier temporaire inscriptible (`/tmp`) et assurer que l'utilisateur possède bien l'environnement virtuel en utilisant `--chown` directement lors du `COPY` multi-stage (ce qui évite aussi d'alourdir l'image avec un layer `RUN chown`).
+- Permettre aux administrateurs de suivre les coûts opérationnels de Jobsira (serveurs, abonnements, domaines, APIs) de manière centralisée et de comparer le burn rate mensuel aux revenus.
 
 Files affected:
-- microservices/bg_removal/Dockerfile — Corrections des droits et env vars.
+- prisma/schema.prisma — Ajout du modèle BusinessExpense
+- app/api/admin/expenses/route.ts — [NEW] API GET/POST
+- app/api/admin/expenses/[id]/route.ts — [NEW] API PATCH/DELETE
+- app/dashboard/hq-ops/expenses/page.tsx — [NEW] Page frontend
+- app/dashboard/hq-ops/page.tsx — Ajout de la carte de navigation + import Wallet
 
 Breaking changes:
-- None.
+- None
+
+Notes for review:
+- La base de données a été synchronisée via `prisma db push` (nouvelle table `BusinessExpense` créée en production Supabase).
+- Les saisies sont entièrement manuelles. Pas de connexion automatique aux fournisseurs.

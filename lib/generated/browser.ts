@@ -107,3 +107,8 @@ export type MarketingCampaign = Prisma.MarketingCampaignModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model BusinessExpense
+ * 
+ */
+export type BusinessExpense = Prisma.BusinessExpenseModel

@@ -20,6 +20,7 @@ export async function POST(req: Request) {
     const updatedUser = await prisma.user.update({
       where: { id: targetUserId },
       data: { isBanned },
+      select: { isBanned: true }
     });
 
     return NextResponse.json({ success: true, isBanned: updatedUser.isBanned });
