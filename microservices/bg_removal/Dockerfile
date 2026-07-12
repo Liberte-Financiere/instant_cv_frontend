@@ -45,16 +45,18 @@ ENV PATH="/opt/venv/bin:$PATH"
 ENV U2NET_HOME="/app/models"
 
 # Création d'un utilisateur système non-root (Sécurité)
-# Aucun mot de passe, pas de répertoire home complexe, shell désactivé
-RUN groupadd -r appgroup && useradd -r -s /bin/false -g appgroup appuser
+# Aucun mot de passe, pas de répertoire home complexe, shell désactivé, UID fixe (1000)
+RUN groupadd -g 1000 appgroup && useradd -u 1000 -r -s /bin/false -g appgroup appuser
 
 WORKDIR /app
 
-# On installe UNIQUEMENT les libs systèmes vitales (si OpenCV headless en a encore besoin)
-# En général, opencv-python-headless nécessite peu de choses, mais au cas où :
+# On installe les libs systèmes vitales pour OpenCV et ONNXRuntime
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends libglib2.0-0 && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends \
+        libglib2.0-0 \
+        libgomp1 \
+        libgl1 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copie de l'environnement virtuel pré-compilé (sans le cache pip, sans les outils de build)
 COPY --from=builder /opt/venv /opt/venv
@@ -73,6 +75,11 @@ USER appuser
 
 # Le port d'écoute
 EXPOSE 3001
+
+# Healthcheck natif pour orchestration (Docker Compose / K8s)
+# FastAPI ne gérant pas nativement curl s'il n'est pas installé, on utilise python -c avec urllib
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3001/docs')" || exit 1
 
 # Lancement sécurisé (pas de shell intermédiaire)
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3001"]
