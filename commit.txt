@@ -1,18 +1,20 @@
-[2026-07-11] — Ajout d'un script d'automatisation pour le déploiement Docker
+[2026-07-12] — Fix: Ajout des dépendances système critiques et améliorations du Dockerfile
 
 What changed:
-- Création du script `deploy_python_bg.sh` à la racine du projet frontend.
+- Installation de `libgomp1` et `libgl1` dans l'étape runner du Dockerfile.
+- Définition d'un UID/GID fixe (1000) pour l'utilisateur `appuser`.
+- Ajout d'une directive `HEALTHCHECK` native Docker (utilisant python natif, sans curl).
 
 Why:
-- Pour simplifier au maximum le déploiement sur le serveur.
-- Le script vérifie si Docker est installé (l'installe si besoin), build l'image de façon sécurisée, nettoie les anciens conteneurs, et lance le nouveau avec le bon binding de port (127.0.0.1:3001).
-- Évite les erreurs humaines de copier-coller des commandes du Markdown.
+- Fix de crash critique: `onnxruntime` nécessite `libgomp1` pour le multi-threading et plantera au premier import sans cette librairie. `libgl1` est également sécurisant pour certaines implémentations de OpenCV.
+- L'UID fixe prévient les problèmes de permissions sur les montages de volumes externes.
+- Le Healthcheck permet aux orchestrateurs (Swarm/K8s/Compose) de savoir si l'API est effectivement disponible.
 
 Files affected:
-- deploy_python_bg.sh — Nouveau fichier bash (exécutable).
+- microservices/bg_removal/Dockerfile — Application des corrections et bonnes pratiques.
 
 Breaking changes:
 - None.
 
 Notes for review:
-- Le script doit être lancé à la racine du projet `frontend/instant_cv` avec `bash deploy_python_bg.sh` (ou `./deploy_python_bg.sh`).
+- Le fix a été directement validé pour corriger l'ImportError potentiel en production.
