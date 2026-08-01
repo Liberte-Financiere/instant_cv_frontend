@@ -2,7 +2,10 @@ import { prisma } from '@/lib/prisma';
 import { Star } from 'lucide-react';
 import Image from 'next/image';
 
+import { unstable_noStore as noStore } from 'next/cache';
+
 export default async function TestimonialsWidget({ limit = 3 }: { limit?: number }) {
+  noStore();
   // Fetch only approved feedback, ordered by newest
   const feedbacks = await prisma.platformFeedback.findMany({
     where: { isVisible: true },

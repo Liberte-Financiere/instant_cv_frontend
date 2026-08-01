@@ -32,7 +32,10 @@ const gradients = [
   'from-rose-500 to-red-400'
 ];
 
+import { unstable_noStore as noStore } from 'next/cache';
+
 export async function Testimonials() {
+  noStore();
   // Fetch approved feedback, max 6 for the landing page
   const dbFeedbacks = await prisma.platformFeedback.findMany({
     where: { isVisible: true },
