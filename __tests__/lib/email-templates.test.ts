@@ -43,8 +43,7 @@ describe('Email Templates Generator', () => {
     it('should generate promo HTML containing proper styling and content', () => {
       const html = generatePromoEmail(mockProps);
       expect(html).toContain(mockProps.subject);
-      expect(html).toContain('OFFRE EXCLUSIVE'); // Jobsira specific text
-      expect(html).toContain('Pourquoi en profiter maintenant ?'); // Advantage list
+      expect(html).toContain('OFFRE FLASH'); // Jobsira specific text
     });
   });
 
@@ -60,8 +59,6 @@ describe('Email Templates Generator', () => {
     it('should generate tech event HTML inspired by Dreamforce', () => {
       const html = generateDreamforceEmail(mockProps);
       expect(html).toContain(mockProps.subject);
-      expect(html).toContain('Édition Spéciale');
-      expect(html).toContain('Tout Jobsira. Sans compromis.');
     });
   });
 

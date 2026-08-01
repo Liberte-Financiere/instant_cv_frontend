@@ -98,10 +98,17 @@ describe('APP_CONFIG.pricing', () => {
 
 describe('APP_CONFIG.ai', () => {
   it('all model names are non-empty strings', () => {
-    for (const [key, value] of Object.entries(APP_CONFIG.ai.models)) {
-      expect(typeof value, `model ${key} should be a string`).toBe('string');
-      expect((value as string).length, `model ${key} should not be empty`).toBeGreaterThan(0);
-    }
+    const checkModels = (models: any) => {
+      for (const [key, value] of Object.entries(models)) {
+        if (typeof value === 'object' && value !== null) {
+          checkModels(value);
+        } else {
+          expect(typeof value, `model ${key} should be a string`).toBe('string');
+          expect((value as string).length, `model ${key} should not be empty`).toBeGreaterThan(0);
+        }
+      }
+    };
+    checkModels(APP_CONFIG.ai.models);
   });
 
   it('interview maxQuestions is a positive integer', () => {
