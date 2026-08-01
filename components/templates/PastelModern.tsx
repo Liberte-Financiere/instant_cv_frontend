@@ -1,5 +1,6 @@
 'use client';
 
+import { CVDescription } from '../cv-sections/CVDescription';
 import Image from "next/image";
 import { CV } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
@@ -70,7 +71,7 @@ export function PastelModern({ cv }: TemplateProps) {
                     <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: pastelBg, color: accent }}>{exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}</span>
                   </div>
                   <p className="text-xs font-semibold" style={{ color: accent }}>{exp.company}</p>
-                  {exp.description && <p className="text-xs text-slate-500 mt-1 whitespace-pre-line">{exp.description}</p>}
+                  {exp.description && <CVDescription description={exp.description} className="text-xs text-slate-500 mt-1 whitespace-pre-line" />}
                 </div>
               ))}
             </div>

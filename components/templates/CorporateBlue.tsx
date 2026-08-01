@@ -1,5 +1,6 @@
 'use client';
 
+import { CVDescription } from '../cv-sections/CVDescription';
 import Image from "next/image";
 import { CV } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
@@ -209,11 +210,7 @@ export function CorporateBlue({ cv }: TemplateProps) {
                         <h3 className="font-bold text-sm text-slate-900">
                           {exp.position} — <span className="font-semibold">{exp.company}</span>
                         </h3>
-                        {exp.description && (
-                          <p className="text-sm text-slate-600 mt-1 leading-relaxed whitespace-pre-line">
-                            {exp.description}
-                          </p>
-                        )}
+                        {exp.description && <CVDescription description={exp.description} className="text-sm text-slate-600 mt-1 leading-relaxed whitespace-pre-line" />}
                       </div>
                     </div>
                   ))}

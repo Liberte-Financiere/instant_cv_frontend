@@ -1,5 +1,6 @@
 'use client';
 
+import { CVDescription } from '../cv-sections/CVDescription';
 import { CV } from '@/types/cv';
 import { formatDate } from '@/lib/utils';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
@@ -63,9 +64,7 @@ export function ATSIron({ cv }: TemplateProps) {
                   </span>
                 </div>
                 <div className="italic mb-2 font-medium">{exp.position}</div>
-                {exp.description && (
-                  <p className="whitespace-pre-line pl-2 border-l-2 border-gray-200">{exp.description}</p>
-                )}
+                {exp.description && <CVDescription description={exp.description} className="whitespace-pre-line pl-2 border-l-2 border-gray-200" />}
               </div>
             ))}
           </div>

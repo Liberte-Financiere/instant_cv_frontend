@@ -1,5 +1,6 @@
 'use client';
 
+import { CVDescription } from '../cv-sections/CVDescription';
 import { CV } from '@/types/cv';
 import { formatDate } from '@/lib/utils';
 
@@ -79,9 +80,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
                   </span>
                 </div>
                 <p className="italic">{exp.company}</p>
-                {exp.description && (
-                  <p className="mt-1 whitespace-pre-line">{exp.description}</p>
-                )}
+                {exp.description && <CVDescription description={exp.description} className="mt-1 whitespace-pre-line" />}
               </div>
             ))}
           </div>

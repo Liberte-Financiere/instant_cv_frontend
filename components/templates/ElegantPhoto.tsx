@@ -1,5 +1,6 @@
 'use client';
 
+import { CVDescription } from '../cv-sections/CVDescription';
 import Image from "next/image";
 import { CV } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
@@ -118,12 +119,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                     <p className="text-xs mt-0.5" style={{ color: accentColor }}>
                       {exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}
                     </p>
-                    {exp.description && (
-                      <div 
-                        className="text-sm text-slate-600 mt-1.5 leading-relaxed whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
-                        dangerouslySetInnerHTML={{ __html: exp.description }}
-                      />
-                    )}
+                    {exp.description && <CVDescription description={exp.description} className="text-sm text-slate-600 mt-1.5 leading-relaxed whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0" />}
                   </div>
                 ))}
               </div>
