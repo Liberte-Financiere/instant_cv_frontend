@@ -6,21 +6,27 @@ import { unstable_noStore as noStore } from 'next/cache';
 
 export default async function TestimonialsWidget({ limit = 3 }: { limit?: number }) {
   noStore();
-  // Fetch only approved feedback, ordered by newest
-  const feedbacks = await prisma.platformFeedback.findMany({
-    where: { isVisible: true },
-    orderBy: { createdAt: 'desc' },
-    take: limit,
-    include: {
-      user: {
-        select: {
-          name: true,
-          image: true,
-          jobTitle: true,
+  let feedbacks: any[] = [];
+  try {
+    // Fetch only approved feedback, ordered by newest
+    feedbacks = await prisma.platformFeedback.findMany({
+      where: { isVisible: true },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+      include: {
+        user: {
+          select: {
+            name: true,
+            image: true,
+            jobTitle: true,
+          },
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.warn('Failed to fetch TestimonialsWidget from database:', error);
+    feedbacks = [];
+  }
 
   if (!feedbacks || feedbacks.length === 0) {
     return null; // Don't render anything if no testimonials are available to show

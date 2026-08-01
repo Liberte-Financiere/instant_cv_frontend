@@ -36,32 +36,38 @@ import { unstable_noStore as noStore } from 'next/cache';
 
 export async function Testimonials() {
   noStore();
-  // Fetch approved feedback, max 6 for the landing page
-  const dbFeedbacks = await prisma.platformFeedback.findMany({
-    where: { isVisible: true },
-    orderBy: { createdAt: 'desc' },
-    take: 6,
-    include: {
-      user: {
-        select: {
-          name: true,
-          image: true,
-          jobTitle: true,
+  let mappedFeedbacks: any[] = [];
+  try {
+    // Fetch approved feedback, max 6 for the landing page
+    const dbFeedbacks = await prisma.platformFeedback.findMany({
+      where: { isVisible: true },
+      orderBy: { createdAt: 'desc' },
+      take: 6,
+      include: {
+        user: {
+          select: {
+            name: true,
+            image: true,
+            jobTitle: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  // Map DB data to the format expected by the client component
-  const mappedFeedbacks = dbFeedbacks.map((f, i) => ({
-    id: f.id,
-    name: f.user.name || 'Anonyme',
-    role: f.user.jobTitle || 'Utilisateur',
-    quote: f.content,
-    rating: f.rating || 5, // Default to 5 if no rating
-    image: f.user.image,
-    gradient: gradients[i % gradients.length],
-  }));
+    // Map DB data to the format expected by the client component
+    mappedFeedbacks = dbFeedbacks.map((f, i) => ({
+      id: f.id,
+      name: f.user.name || 'Anonyme',
+      role: f.user.jobTitle || 'Utilisateur',
+      quote: f.content,
+      rating: f.rating || 5, // Default to 5 if no rating
+      image: f.user.image,
+      gradient: gradients[i % gradients.length],
+    }));
+  } catch (error) {
+    console.warn('Failed to fetch testimonials from database, using fallbacks:', error);
+    mappedFeedbacks = [];
+  }
 
   // If we have DB feedbacks, use them. Otherwise, use fallbacks.
   const finalTestimonials = mappedFeedbacks.length > 0 ? mappedFeedbacks : fallbackTestimonials;
