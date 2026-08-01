@@ -37,7 +37,10 @@ jobs:
 
       - name: Build
         run: npm run build
-        
+        env:
+          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+          NEXTAUTH_SECRET: "dummy_secret_for_ci_only"
+          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
       - name: Run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.13.x
