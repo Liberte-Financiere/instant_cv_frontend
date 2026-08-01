@@ -21,7 +21,10 @@ export function ATSIron({ cv }: TemplateProps) {
   const accentColor = cv.settings?.accentColor;
   const personalInfo = cv.personalInfo || {};
   const { experiences = [], education = [], skills = [], languages = [] } = cv;
+  const certifications = cv.certifications || [];
   const projects = cv.projects || [];
+  const references = cv.references || [];
+  const divers = cv.divers || '';
   const footer = cv.footer || { showFooter: false, madeAt: '', madeDate: '' };
 
   return (
@@ -120,6 +123,28 @@ export function ATSIron({ cv }: TemplateProps) {
         </section>
       )}
 
+      {/* Certifications */}
+      {certifications.length > 0 && (
+        <section className="mb-6">
+           <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>{getSectionTitle('certifications', cv.settings, lang)}</h2>
+           <ul className="list-disc list-inside">
+               {certifications.map(c => (
+                   <li key={c.id}>
+                       <span className="font-bold">{c.name}</span> - {c.organization} {c.date && `(${c.date})`}
+                   </li>
+               ))}
+           </ul>
+        </section>
+      )}
+
+      {/* Qualities */}
+      {cv.qualities && cv.qualities.length > 0 && (
+        <section className="mb-6">
+           <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>{getSectionTitle('qualities', cv.settings, lang)}</h2>
+           <p>{cv.qualities.map((q) => q.name).join(', ')}</p>
+        </section>
+      )}
+
       {/* Projects */}
       {projects.length > 0 && (
         <section className="mb-6">
@@ -132,6 +157,32 @@ export function ATSIron({ cv }: TemplateProps) {
                    </div>
                ))}
            </div>
+        </section>
+      )}
+      
+      {/* References */}
+      {references.length > 0 && (
+        <section className="mb-6">
+           <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>{getSectionTitle('references', cv.settings, lang)}</h2>
+           <div className="space-y-2">
+               {references.map(r => (
+                   <div key={r.id}>
+                       <span className="font-bold">{r.name}</span>, {r.position} {r.company && `at ${r.company}`}
+                       <br />
+                       {!r.hideContact && r.email && <span>{r.email}</span>}
+                       {!r.hideContact && r.email && r.phone && <span> | </span>}
+                       {!r.hideContact && r.phone && <span>{r.phone}</span>}
+                   </div>
+               ))}
+           </div>
+        </section>
+      )}
+
+      {/* Divers */}
+      {divers && (
+        <section className="mb-6">
+           <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>INFORMATIONS COMPLÉMENTAIRES</h2>
+           <p className="whitespace-pre-line">{divers}</p>
         </section>
       )}
       
