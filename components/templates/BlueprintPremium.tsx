@@ -1,5 +1,6 @@
 'use client';
 
+import { CVDescription } from '../cv-sections/CVDescription';
 import Image from "next/image";
 import { CV } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
@@ -222,12 +223,7 @@ export function BlueprintPremium({ cv }: TemplateProps) {
                     <p className="text-xs mt-0.5" style={{ color: accent }}>
                       {exp.startDate} - {exp.current ? getPresentLabel(lang) : exp.endDate}
                     </p>
-                    {exp.description && (
-                      <div 
-                        className="text-xs text-slate-500 mt-2 leading-relaxed whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
-                        dangerouslySetInnerHTML={{ __html: exp.description }}
-                      />
-                    )}
+                    {exp.description && <CVDescription description={exp.description} className="text-xs text-slate-500 mt-2 leading-relaxed whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0" />}
                   </div>
                 ))}
               </div>

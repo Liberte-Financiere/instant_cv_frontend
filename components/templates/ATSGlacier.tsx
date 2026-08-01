@@ -1,5 +1,6 @@
 'use client';
 
+import { CVDescription } from '../cv-sections/CVDescription';
 import { CV } from '@/types/cv';
 import { formatDate } from '@/lib/utils';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
@@ -88,9 +89,7 @@ export function ATSGlacier({ cv }: TemplateProps) {
                   </span>
                 </div>
                 <div className="font-medium mb-2" style={accentColor ? { color: accentColor } : { color: '#2563eb' }}>{exp.company}</div>
-                {exp.description && (
-                  <p className="text-slate-600 whitespace-pre-line">{exp.description}</p>
-                )}
+                {exp.description && <CVDescription description={exp.description} className="text-slate-600 whitespace-pre-line" />}
               </div>
             ))}
           </div>

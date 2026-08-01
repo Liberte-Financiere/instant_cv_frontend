@@ -4,6 +4,7 @@ import { Experience, CVVariant } from '@/types/cv';
 import { formatDate } from '@/lib/utils';
 import { getPresentLabel } from '@/constants/sections';
 import { variantStyles } from './styles';
+import { CVDescription } from './CVDescription';
 
 interface CVExperienceProps {
   experiences: Experience[];
@@ -44,9 +45,9 @@ export function CVExperience({ experiences, variant, title = 'Expérience Profes
               {exp.company}
             </div>
             {exp.description && (
-              <div 
-                className={`text-sm leading-relaxed break-words whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 ${variant === 'tech' ? 'text-gray-400' : 'text-slate-600'}`}
-                dangerouslySetInnerHTML={{ __html: exp.description }}
+              <CVDescription 
+                description={exp.description}
+                className={`text-sm leading-relaxed break-words prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 ${variant === 'tech' ? 'text-gray-400' : 'text-slate-600'}`}
               />
             )}
           </div>
