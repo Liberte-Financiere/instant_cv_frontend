@@ -8,6 +8,10 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+      NEXTAUTH_SECRET: "dummy_secret_for_ci_only"
+      NEXT_PUBLIC_APP_URL: "http://localhost:3000"
 
     steps:
       - name: Checkout du code source
