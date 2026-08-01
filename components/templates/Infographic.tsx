@@ -115,7 +115,7 @@ export function Infographic({ cv }: TemplateProps) {
                       <p className="text-xs" style={{ color: accent }}>{exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}</p>
                       {exp.description && (
                         <div 
-                          className="text-xs text-slate-600 mt-1 leading-relaxed prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
+                          className="text-xs text-slate-600 mt-1 leading-relaxed whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
                           dangerouslySetInnerHTML={{ __html: exp.description }}
                         />
                       )}

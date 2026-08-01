@@ -52,7 +52,7 @@ export function CompactSingle({ cv }: TemplateProps) {
                   <span className="text-[10px] text-slate-400 w-[65px] shrink-0 pt-0.5">{exp.startDate}<br/>{exp.current ? getPresentLabel(lang) : exp.endDate}</span>
                   <div className="flex-1 border-l pl-3" style={{ borderColor: `${accent}30` }}>
                     <p className="font-semibold text-xs">{exp.position} — {exp.company}</p>
-                    {exp.description && <p className="text-[11px] text-slate-500 mt-0.5 ">{exp.description}</p>}
+                    {exp.description && <p className="text-[11px] text-slate-500 mt-0.5 whitespace-pre-line">{exp.description}</p>}
                   </div>
                 </div>
               ))}

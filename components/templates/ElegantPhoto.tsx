@@ -120,7 +120,7 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                     </p>
                     {exp.description && (
                       <div 
-                        className="text-sm text-slate-600 mt-1.5 leading-relaxed prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
+                        className="text-sm text-slate-600 mt-1.5 leading-relaxed whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
                         dangerouslySetInnerHTML={{ __html: exp.description }}
                       />
                     )}

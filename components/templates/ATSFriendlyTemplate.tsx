@@ -80,7 +80,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
                 </div>
                 <p className="italic">{exp.company}</p>
                 {exp.description && (
-                  <p className="mt-1 ">{exp.description}</p>
+                  <p className="mt-1 whitespace-pre-line">{exp.description}</p>
                 )}
               </div>
             ))}

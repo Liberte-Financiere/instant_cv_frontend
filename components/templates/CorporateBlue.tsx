@@ -210,7 +210,7 @@ export function CorporateBlue({ cv }: TemplateProps) {
                           {exp.position} — <span className="font-semibold">{exp.company}</span>
                         </h3>
                         {exp.description && (
-                          <p className="text-sm text-slate-600 mt-1  leading-relaxed">
+                          <p className="text-sm text-slate-600 mt-1 leading-relaxed whitespace-pre-line">
                             {exp.description}
                           </p>
                         )}

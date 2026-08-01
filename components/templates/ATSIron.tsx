@@ -64,7 +64,7 @@ export function ATSIron({ cv }: TemplateProps) {
                 </div>
                 <div className="italic mb-2 font-medium">{exp.position}</div>
                 {exp.description && (
-                  <p className=" pl-2 border-l-2 border-gray-200">{exp.description}</p>
+                  <p className="whitespace-pre-line pl-2 border-l-2 border-gray-200">{exp.description}</p>
                 )}
               </div>
             ))}

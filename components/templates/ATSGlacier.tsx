@@ -89,7 +89,7 @@ export function ATSGlacier({ cv }: TemplateProps) {
                 </div>
                 <div className="font-medium mb-2" style={accentColor ? { color: accentColor } : { color: '#2563eb' }}>{exp.company}</div>
                 {exp.description && (
-                  <p className="text-slate-600 ">{exp.description}</p>
+                  <p className="text-slate-600 whitespace-pre-line">{exp.description}</p>
                 )}
               </div>
             ))}

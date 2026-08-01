@@ -49,6 +49,9 @@ jobs:
       - name: Verification du code (Lint)
         run: npm run lint
 
+      - name: Verification des types (TypeScript)
+        run: npx tsc --noEmit
+
       - name: Execution des tests (Vitest)
         run: npm run test
 

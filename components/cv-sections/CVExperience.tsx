@@ -45,7 +45,7 @@ export function CVExperience({ experiences, variant, title = 'Expérience Profes
             </div>
             {exp.description && (
               <div 
-                className={`text-sm leading-relaxed break-words prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 ${variant === 'tech' ? 'text-gray-400' : 'text-slate-600'}`}
+                className={`text-sm leading-relaxed break-words whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 ${variant === 'tech' ? 'text-gray-400' : 'text-slate-600'}`}
                 dangerouslySetInnerHTML={{ __html: exp.description }}
               />
             )}
