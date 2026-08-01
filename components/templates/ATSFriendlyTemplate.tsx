@@ -202,13 +202,15 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
       {/* Footer */}
       {footer.showFooter && (footer.madeAt || footer.madeDate) && (
         <footer className="mt-8 pt-4 border-t border-gray-300 text-right text-sm text-gray-600">
-          Fait{footer.madeAt && ` à ${footer.madeAt}`}
+          {lang === 'fr' ? 'Fait' : 'Done'}
+          {footer.madeAt && (lang === 'fr' ? ` à ${footer.madeAt}` : ` in ${footer.madeAt}`)}
           {footer.madeAt && footer.madeDate && ', '}
-          {footer.madeDate && `le ${new Date(footer.madeDate).toLocaleDateString('fr-FR', { 
+          {footer.madeDate && (lang === 'fr' ? 'le ' : 'on ')}
+          {footer.madeDate && new Date(footer.madeDate).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { 
             day: 'numeric', 
             month: 'long', 
             year: 'numeric' 
-          })}`}
+          })}
         </footer>
       )}
     </div>
