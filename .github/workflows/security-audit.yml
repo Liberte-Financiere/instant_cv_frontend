@@ -8,9 +8,6 @@ on:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend/instant_cv
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
