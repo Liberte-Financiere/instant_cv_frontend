@@ -224,7 +224,7 @@ export function BlueprintPremium({ cv }: TemplateProps) {
                     </p>
                     {exp.description && (
                       <div 
-                        className="text-xs text-slate-500 mt-2 leading-relaxed prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
+                        className="text-xs text-slate-500 mt-2 leading-relaxed whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0"
                         dangerouslySetInnerHTML={{ __html: exp.description }}
                       />
                     )}

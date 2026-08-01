@@ -57,7 +57,7 @@ export function TwoTone({ cv }: TemplateProps) {
                     <h3 className="font-bold text-sm">{exp.position} — <span style={{ color: accent }}>{exp.company}</span></h3>
                     <span className="text-xs text-slate-400">{exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}</span>
                   </div>
-                  {exp.description && <p className="text-xs text-slate-600 mt-1 ">{exp.description}</p>}
+                  {exp.description && <p className="text-xs text-slate-600 mt-1 whitespace-pre-line">{exp.description}</p>}
                 </div>
               ))}
             </div>

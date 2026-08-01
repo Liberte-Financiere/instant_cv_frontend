@@ -1,0 +1,32 @@
+name: Security Audit
+
+on:
+  schedule:
+    - cron: '0 4 * * 1' # Tous les lundis à 4h00 UTC
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend/instant_cv
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Run npm audit
+        run: npm audit --audit-level=high
+        
+      - name: Résumé de sécurité
+        if: always()
+        run: |
+          {
+            echo "## Résumé Audit de Sécurité (npm audit)"
+            echo "| Statut | ${{ job.status }} |"
+          } >> "$GITHUB_STEP_SUMMARY"

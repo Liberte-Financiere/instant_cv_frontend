@@ -66,7 +66,7 @@ export function Swiss({ cv }: TemplateProps) {
                         <span className="text-xs text-slate-400">{exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}</span>
                       </div>
                       <p className="text-xs font-semibold" style={{ color: accent }}>{exp.company}</p>
-                      {exp.description && <p className="text-xs text-slate-600 mt-1 ">{exp.description}</p>}
+                      {exp.description && <p className="text-xs text-slate-600 mt-1 whitespace-pre-line">{exp.description}</p>}
                     </div>
                   ))}
                 </div>

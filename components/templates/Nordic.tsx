@@ -59,7 +59,7 @@ export function Nordic({ cv }: TemplateProps) {
                   <div>
                     <h3 className="font-semibold text-slate-800">{exp.position}</h3>
                     <p className="text-xs" style={{ color: accent }}>{exp.company}</p>
-                    {exp.description && <p className="text-xs text-slate-500 mt-1.5  leading-relaxed">{exp.description}</p>}
+                    {exp.description && <p className="text-xs text-slate-500 mt-1.5 leading-relaxed whitespace-pre-line">{exp.description}</p>}
                   </div>
                 </div>
               ))}

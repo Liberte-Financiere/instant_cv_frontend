@@ -1,30 +1,30 @@
-[2026-07-12] — Refonte Tarification, CGU/Confidentialité et Outils de Carrière (Bilan, Détourage)
+[2026-08-01] — CI/CD enhancements: Dependabot, PR verification, and Lighthouse CI
 
 What changed:
-- Retrait définitif du "Pack Pro" (5 000 FCFA / 250 crédits) et harmonisation de la grille de prix à 3 colonnes.
-- Intégration de la tarification à la carte avec calculateur interactif de crédits.
-- Mise à jour du coût de la traduction de CV à 5 crédits.
-- Création et rédaction complète de la page CGU (/terms) avec design premium Stripe-like et sommaire interactif collant.
-- Création et rédaction complète de la page Politique de Confidentialité (/privacy) avec design premium Stripe-like et sommaire interactif collant.
-- Anonymisation des données personnelles (Nom, Prénom, E-mail, Téléphone) vis-à-vis des requêtes transmises aux IA.
-- Nettoyage des suffixes "IA" redondants dans les titres et les libellés (Bilan de Compétences, Photo Pro, Détourage Magique, Boîte à Outils).
-- Stabilisation des couleurs de thème (JobSira bleu solid, pas de dégradés superflus).
+- Added `.github/dependabot.yml` for automated weekly dependency updates
+- Added `.github/workflows/security-audit.yml` to run `npm audit` weekly
+- Added `.github/workflows/ci-pull-request.yml` to test PRs before merging to main/dev
+- Added `.github/workflows/stale.yml` to automatically manage and close old issues/PRs
+- Added `.github/workflows/lighthouse.yml` to measure performance/SEO on PRs and main
+- Modified `build-deploy.yml` to include `npx tsc --noEmit` before tests
 
 Why:
-- Répondre aux nouvelles exigences de clarté légale, de tarification simplifiée par crédit et de suppression des labels "IA" répétitifs.
+- Ensure dependencies are kept secure without manual intervention
+- Prevent broken code or type errors from being merged and deployed to production
+- Keep the repository clean by closing stale/abandoned tasks automatically
+- Monitor performance regressions on the Next.js app using Lighthouse
 
 Files affected:
-- frontend/instant_cv/app/privacy/page.tsx — Nouvelle page Politique de Confidentialité avec menu collant et style JobSira.
-- frontend/instant_cv/app/terms/page.tsx — Nouvelle page Conditions d'Utilisation avec menu collant et style JobSira.
-- frontend/instant_cv/components/landing/Pricing.tsx — Grille de prix à 3 colonnes, retrait du Pack Pro, et ajout du calculateur interactif.
-- frontend/instant_cv/lib/credit-costs.ts — Mise à jour du tarif de traduction de CV à 5 crédits et nettoyage des commentaires de coûts.
-- frontend/instant_cv/components/landing/AIToolbox.tsx — Retrait des suffixes "IA".
-- frontend/instant_cv/app/dashboard/tools/bilan/page.tsx — Suppression du suffixe "IA" dans le titre principal.
-- frontend/instant_cv/app/api/ai/bilan/route.ts — Suppression du suffixe "IA" dans la description de transaction.
-- frontend/instant_cv/app/api/ai/photo/route.ts — Suppression du suffixe "IA" dans la description de transaction.
+- .github/dependabot.yml [NEW] — dependabot config
+- .github/workflows/security-audit.yml [NEW] — weekly npm audit workflow
+- .github/workflows/ci-pull-request.yml [NEW] — PR verification workflow
+- .github/workflows/stale.yml [NEW] — stale issue bot workflow
+- .github/workflows/lighthouse.yml [NEW] — performance measurement workflow
+- frontend/instant_cv/.github/workflows/build-deploy.yml — added typescript check
 
 Breaking changes:
-- Le forfait "Pack Pro" n'est plus proposé aux utilisateurs.
+- None
 
 Notes for review:
-- Vérifier que la grille de tarification et le calculateur à la carte s'affichent correctement sans dégradés et correspondent à la charte graphique bleue de JobSira.
+- Workflows rely on the `npm ci` and Next.js standard caching behaviors.
+- Lighthouse uses a temporary public storage (provided by Google via lhci) to store and share reports for PRs.
