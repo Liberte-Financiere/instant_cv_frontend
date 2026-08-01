@@ -51,30 +51,36 @@ describe('Match API Route', () => {
     const req = new Request('http://localhost/api/ai/match', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cvText: 'test', jobDescription: 'test' })
+      body: JSON.stringify({ 
+        cvData: 'Ceci est un CV de test suffisamment long pour passer la validation', 
+        jobDescription: 'test de description assez longue pour que cela passe' 
+      })
     });
     
     const response = await POST(req) as any;
     expect(response.status).toBe(500);
-    expect(response.body.error).toContain('Erreur serveur');
+    expect(response.body.error).toContain('AI Quota Exceeded');
   });
 
   it('devrait réussir et retourner le résultat IA (0 token dépensé)', async () => {
     vi.mocked(auth).mockResolvedValueOnce({ user: { id: 'test-user' } } as any);
     
     vi.mocked(generateObject).mockResolvedValueOnce({
-      object: { score: 95, recommendations: [] },
+      object: { compatibilityScore: 95, recommendations: [] },
       usage: { promptTokens: 10, completionTokens: 20 }
     } as any);
     
     const req = new Request('http://localhost/api/ai/match', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cvText: 'test cv', jobDescription: 'test job' })
+      body: JSON.stringify({ 
+        cvData: 'Ceci est un CV de test très long pour passer la validation de la taille minimale qui est de 30 caracteres', 
+        jobDescription: 'Ceci est une description de poste très longue pour passer la validation de taille minimale' 
+      })
     });
     
     const response = await POST(req) as any;
     expect(response.status).toBe(200);
-    expect(response.body.score).toBe(95);
+    expect(response.body.compatibilityScore).toBe(95);
   });
 });

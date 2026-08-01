@@ -1,10 +1,20 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { 
   sanitizeRawText, 
   sanitizeStructuredCV, 
   BilanResultSchema, 
   stripMarkdownFences 
 } from '../app/api/ai/bilan/route';
+
+vi.mock('next/server', () => ({
+  NextResponse: {
+    json: vi.fn(),
+  }
+}));
+
+vi.mock('@/auth', () => ({
+  auth: vi.fn(),
+}));
 
 describe('Bilan de Compétences - Tests de Sécurité et de Validation', () => {
 
@@ -92,6 +102,9 @@ describe('Bilan de Compétences - Tests de Sécurité et de Validation', () => {
         ],
         recommendedTrainings: [
           { title: "Certification AWS", type: "Certificat", benefit: "Améliorer le CI/CD" }
+        ],
+        recommendedCertifications: [
+          { title: "AWS Developer Associate", type: "Certification", benefit: "Valide les compétences Cloud" }
         ]
       };
 
