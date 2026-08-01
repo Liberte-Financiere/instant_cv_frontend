@@ -32,7 +32,7 @@ export const CVDescription: React.FC<CVDescriptionProps> = ({ description, class
   const lines = cleanDescription.split('\n');
 
   return (
-    <div className={`cv-description flex flex-col gap-0.5 ${cleanClassName}`}>
+    <div className={`cv-description flex flex-col gap-[0.7rem] ${cleanClassName}`}>
       {lines.map((line, index) => (
         <span key={index} className="block">
           {line}
