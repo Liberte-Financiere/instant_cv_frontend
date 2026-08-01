@@ -152,7 +152,41 @@ export function ATSGlacier({ cv }: TemplateProps) {
         </section>
       )}
       
-      {/* Projects, Certifications, etc. can follow similar patterns if needed */}
+      {/* Certifications */}
+      {certifications.length > 0 && (
+        <section className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+             <h2 className="text-sm font-bold uppercase tracking-wider min-w-fit" style={accentColor ? { color: accentColor } : { color: '#94a3b8' }}>{getSectionTitle('certifications', cv.settings, lang)}</h2>
+             <div className="h-px w-full" style={accentColor ? { backgroundColor: `${accentColor}40` } : { backgroundColor: '#e2e8f0' }} />
+          </div>
+          <div className="space-y-3">
+            {certifications.map((cert) => (
+              <div key={cert.id}>
+                 <div className="flex justify-between items-baseline mb-1">
+                    <h3 className="font-bold text-slate-800">{cert.name}</h3>
+                    {cert.date && <span className="text-sm text-slate-500">{cert.date}</span>}
+                 </div>
+                 <p className="text-slate-600 text-sm">{cert.organization}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Qualities */}
+      {cv.qualities && cv.qualities.length > 0 && (
+        <section className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+             <h2 className="text-sm font-bold uppercase tracking-wider min-w-fit" style={accentColor ? { color: accentColor } : { color: '#94a3b8' }}>{getSectionTitle('qualities', cv.settings, lang)}</h2>
+             <div className="h-px w-full" style={accentColor ? { backgroundColor: `${accentColor}40` } : { backgroundColor: '#e2e8f0' }} />
+          </div>
+          <p className="text-slate-600 leading-relaxed">
+              {cv.qualities.map(q => q.name).join(' • ')}
+          </p>
+        </section>
+      )}
+
+      {/* Projects */}
       {projects.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center gap-4 mb-4">
@@ -170,6 +204,41 @@ export function ATSGlacier({ cv }: TemplateProps) {
               </div>
             ))}
           </div>
+        </section>
+      )}
+
+      {/* References */}
+      {references.length > 0 && (
+        <section className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+             <h2 className="text-sm font-bold uppercase tracking-wider min-w-fit" style={accentColor ? { color: accentColor } : { color: '#94a3b8' }}>{getSectionTitle('references', cv.settings, lang)}</h2>
+             <div className="h-px w-full" style={accentColor ? { backgroundColor: `${accentColor}40` } : { backgroundColor: '#e2e8f0' }} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {references.map((ref) => (
+              <div key={ref.id} className="text-sm">
+                 <h3 className="font-bold text-slate-800">{ref.name}</h3>
+                 <p className="text-slate-600">{ref.position}{ref.company && `, ${ref.company}`}</p>
+                 {!ref.hideContact && (ref.email || ref.phone) && (
+                     <div className="text-slate-500 mt-1 flex flex-col gap-0.5 text-xs">
+                         {ref.email && <span>{ref.email}</span>}
+                         {ref.phone && <span>{ref.phone}</span>}
+                     </div>
+                 )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Divers */}
+      {divers && (
+        <section className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+             <h2 className="text-sm font-bold uppercase tracking-wider min-w-fit" style={accentColor ? { color: accentColor } : { color: '#94a3b8' }}>INFORMATIONS COMPLÉMENTAIRES</h2>
+             <div className="h-px w-full" style={accentColor ? { backgroundColor: `${accentColor}40` } : { backgroundColor: '#e2e8f0' }} />
+          </div>
+          <p className="text-slate-600 leading-relaxed whitespace-pre-line">{divers}</p>
         </section>
       )}
 
