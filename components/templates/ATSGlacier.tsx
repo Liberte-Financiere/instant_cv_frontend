@@ -176,7 +176,10 @@ export function ATSGlacier({ cv }: TemplateProps) {
       {/* Footer */}
       {footer.showFooter && (footer.madeAt || footer.madeDate) && (
         <footer className="mt-12 pt-6 border-t border-slate-100 text-center text-xs text-slate-400 uppercase tracking-widest">
-            Document généré le {footer.madeDate && new Date(footer.madeDate).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US')}
+            {lang === 'fr' 
+                ? (footer.madeAt ? `Fait à ${footer.madeAt}, le ` : 'Fait le ') 
+                : (footer.madeAt ? `Done in ${footer.madeAt}, on ` : 'Done on ')}
+            {(footer.madeDate ? new Date(footer.madeDate) : new Date()).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US')}
         </footer>
       )}
     </div>
