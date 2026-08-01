@@ -141,7 +141,7 @@ export function ATSIron({ cv }: TemplateProps) {
       {/* Footer */}
       {footer.showFooter && (
           <div className="mt-auto border-t-4 border-double border-black pt-2 text-center text-xs">
-              CV généré le {new Date().toLocaleDateString()}
+              CV généré le {new Date().toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US')}
           </div>
       )}
 
