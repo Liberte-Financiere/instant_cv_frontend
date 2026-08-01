@@ -91,35 +91,32 @@ export function ATSIron({ cv }: TemplateProps) {
         </section>
       )}
 
-      {/* Skills in columns */}
-      {(skills.length > 0 || languages.length > 0) && (
+      {/* Skills */}
+      {skills.length > 0 && (
         <section className="mb-6">
-            <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>Compétences & Langues</h2>
-            <div className="flex gap-12">
-               {skills.length > 0 && (
-                   <div className="flex-1">
-                       <ul className="list-disc list-inside">
-                           {skills.map(s => (
-                               <li key={s.id}>
-                                   <span className="font-semibold">{s.name}</span>
-                                   {s.level > 0 && <span className="text-gray-500 text-xs ml-1">({s.level}/5)</span>}
-                               </li>
-                           ))}
-                       </ul>
-                   </div>
-               )}
-               {languages.length > 0 && (
-                   <div className="flex-1">
-                        <ul className="list-disc list-inside">
-                           {languages.map(l => (
-                               <li key={l.id}>
-                                   <span className="font-semibold">{l.name}</span>: {l.level}
-                               </li>
-                           ))}
-                       </ul>
-                   </div>
-               )}
-            </div>
+            <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>{getSectionTitle('skills', cv.settings, lang)}</h2>
+            <ul className="list-disc list-inside">
+                {skills.map(s => (
+                    <li key={s.id}>
+                        <span className="font-semibold">{s.name}</span>
+                        {s.level > 0 && <span className="text-gray-500 text-xs ml-1">({s.level}/5)</span>}
+                    </li>
+                ))}
+            </ul>
+        </section>
+      )}
+
+      {/* Languages */}
+      {languages.length > 0 && (
+        <section className="mb-6">
+            <h2 className="font-bold text-sm uppercase border-b mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: 'black' }}>{getSectionTitle('languages', cv.settings, lang)}</h2>
+            <ul className="list-disc list-inside">
+                {languages.map(l => (
+                    <li key={l.id}>
+                        <span className="font-semibold">{l.name}</span>: {l.level}
+                    </li>
+                ))}
+            </ul>
         </section>
       )}
 
