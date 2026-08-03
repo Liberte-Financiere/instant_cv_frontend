@@ -31,10 +31,10 @@ export function HistoryList({ type }: HistoryListProps) {
   const handleItemClick = (item: AnalysisHistoryItem) => {
     if (item.type === 'analysis') {
       setAnalysisData(item.data);
-      router.push('/dashboard/ai/analyze');
+      router.push('/analysis');
     } else if (item.type === 'match') {
       setMatchData(item.data);
-      router.push('/dashboard/ai/match');
+      router.push('/match');
     } else if (item.type === 'bilan') {
       useCVStore.getState().setBilanData(item.data);
       router.push('/dashboard/tools/bilan');

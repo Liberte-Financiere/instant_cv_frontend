@@ -1,30 +1,16 @@
-[2026-08-01] — CI/CD enhancements: Dependabot, PR verification, and Lighthouse CI
+[2026-08-03] — FIX: AI History Navigation Routes
 
 What changed:
-- Added `.github/dependabot.yml` for automated weekly dependency updates
-- Added `.github/workflows/security-audit.yml` to run `npm audit` weekly
-- Added `.github/workflows/ci-pull-request.yml` to test PRs before merging to main/dev
-- Added `.github/workflows/stale.yml` to automatically manage and close old issues/PRs
-- Added `.github/workflows/lighthouse.yml` to measure performance/SEO on PRs and main
-- Modified `build-deploy.yml` to include `npx tsc --noEmit` before tests
+- Updated the routing paths in `handleItemClick` inside `HistoryList.tsx`.
 
 Why:
-- Ensure dependencies are kept secure without manual intervention
-- Prevent broken code or type errors from being merged and deployed to production
-- Keep the repository clean by closing stale/abandoned tasks automatically
-- Monitor performance regressions on the Next.js app using Lighthouse
+- The component was incorrectly pushing users to the tool index pages (`/dashboard/ai/analyze` and `/dashboard/ai/match`) instead of the actual results pages (`/analysis` and `/match`). Because React router is an SPA router, pushing to the current active path causes no visible action, making the UI appear unresponsive.
 
 Files affected:
-- .github/dependabot.yml [NEW] — dependabot config
-- .github/workflows/security-audit.yml [NEW] — weekly npm audit workflow
-- .github/workflows/ci-pull-request.yml [NEW] — PR verification workflow
-- .github/workflows/stale.yml [NEW] — stale issue bot workflow
-- .github/workflows/lighthouse.yml [NEW] — performance measurement workflow
-- frontend/instant_cv/.github/workflows/build-deploy.yml — added typescript check
+- frontend/instant_cv/components/dashboard/ai/HistoryList.tsx — corrected router.push targets for 'analysis' and 'match' history items.
 
 Breaking changes:
 - None
 
 Notes for review:
-- Workflows rely on the `npm ci` and Next.js standard caching behaviors.
-- Lighthouse uses a temporary public storage (provided by Google via lhci) to store and share reports for PRs.
+- The 'bilan' route was already correctly pointing to `/dashboard/tools/bilan` and was not changed.
