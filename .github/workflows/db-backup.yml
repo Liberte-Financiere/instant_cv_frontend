@@ -44,6 +44,7 @@ jobs:
         run: |
           supabase db dump \
             --db-url "$SUPABASE_DB_URL" \
+            --remote \
             -f "${{ env.BACKUP_DIR }}/roles.sql" \
             --role-only
 
@@ -53,6 +54,7 @@ jobs:
         run: |
           supabase db dump \
             --db-url "$SUPABASE_DB_URL" \
+            --remote \
             -f "${{ env.BACKUP_DIR }}/schema.sql"
 
       - name: Dump data
@@ -61,6 +63,7 @@ jobs:
         run: |
           supabase db dump \
             --db-url "$SUPABASE_DB_URL" \
+            --remote \
             -f "${{ env.BACKUP_DIR }}/data.sql" \
             --data-only \
             --use-copy
