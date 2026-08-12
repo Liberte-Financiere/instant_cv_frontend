@@ -2,10 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 import { prisma } from '@/lib/prisma';
-import { CREDIT_COSTS } from '@/lib/credits';
-
-const REMBG_COST = CREDIT_COSTS.AI_REMOVE_BG;
-
+import { checkAndConsumeCredits, refundCredits } from '@/lib/credits';
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -37,15 +34,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Le fichier doit être une image' }, { status: 400 });
     }
 
-    // Verify user has enough credits
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { credits: true }
-    });
-
-    if (!user || user.credits < REMBG_COST) {
+    // Verify user has enough credits and consume them
+    let creditResult;
+    try {
+      creditResult = await checkAndConsumeCredits(userId, 'AI_REMOVE_BG', 'Détourage photo par IA (Rembg)');
+    } catch (e: any) {
       return NextResponse.json(
-        { error: `Crédits insuffisants. Il vous faut ${REMBG_COST} crédits.` },
+        { error: e.message || 'Crédits insuffisants.' },
         { status: 402 }
       );
     }
@@ -64,26 +59,13 @@ export async function POST(req: Request) {
 
     if (!pythonRes.ok) {
       console.error('[REMBG_PYTHON_ERROR]', await pythonRes.text());
+      if (!creditResult.isFree) {
+        await refundCredits(userId, 'AI_REMOVE_BG', 'Remboursement: Échec détourage photo');
+      }
       return new NextResponse("Service de détourage indisponible", { status: 503 });
     }
 
     const imageBuffer = await pythonRes.arrayBuffer();
-
-    // Deduct credits only after successful generation
-    // Deduct credits only after successful generation (using nested writes to avoid transaction connection pool timeouts in dev)
-    await prisma.user.update({
-      where: { id: userId },
-      data: { 
-        credits: { decrement: REMBG_COST },
-        creditTransactions: {
-          create: {
-            amount: -REMBG_COST,
-            type: 'USAGE',
-            description: 'Détourage photo par IA (Rembg)',
-          }
-        }
-      },
-    });
 
     // Return the transparent PNG image directly
     return new NextResponse(imageBuffer, {
