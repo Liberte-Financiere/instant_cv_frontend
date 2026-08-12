@@ -1,5 +1,22 @@
-import { describe, it, expect } from 'vitest';
-import { CREDIT_COSTS, InsufficientCreditsError } from '@/lib/credits';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { prisma } from '@/lib/prisma';
+import { CREDIT_COSTS, InsufficientCreditsError, checkAndConsumeCredits } from '@/lib/credits';
+
+vi.mock('@/lib/prisma', () => ({
+  prisma: {
+    $transaction: vi.fn(async (cb) => {
+      // Pour simuler la transaction, on exécute simplement le callback avec l'objet prisma mocké
+      return cb(prisma);
+    }),
+    user: {
+      findUnique: vi.fn(),
+      update: vi.fn(),
+    },
+    creditTransaction: {
+      create: vi.fn(),
+    },
+  },
+}));
 
 /**
  * Tests for the candidate credit system.
@@ -110,5 +127,97 @@ describe('cost hierarchy invariants', () => {
   it('has a reasonable maximum cost', () => {
     const maxCost = Math.max(...Object.values(CREDIT_COSTS));
     expect(maxCost).toBeLessThanOrEqual(50);
+  });
+});
+
+// -- FREE_SERVICES ----------------------------------------------------------
+
+describe('FREE_SERVICES & checkAndConsumeCredits', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('contains CREATE_CV in config', async () => {
+    // Dynamically import to ensure we get the latest
+    const { FREE_SERVICES } = await import('@/lib/credit-costs');
+    expect(FREE_SERVICES).toContain('CREATE_CV');
+  });
+
+  describe('checkAndConsumeCredits behavior', () => {
+    it('Cas 1 - Utilisateur avec des crédits (CREATE_CV est gratuit)', async () => {
+      (prisma.user.findUnique as any).mockResolvedValue({ credits: 10 });
+
+      const result = await checkAndConsumeCredits('user-1', 'CREATE_CV', 'Test free service');
+      
+      // Doit retourner success: true, le vrai solde (10) et isFree: true
+      expect(result).toEqual({
+        success: true,
+        newBalance: 10,
+        isFree: true
+      });
+
+      // Ne doit pas débiter le solde
+      expect(prisma.user.update).not.toHaveBeenCalled();
+      
+      // Ne doit générer aucune transaction
+      expect(prisma.creditTransaction.create).not.toHaveBeenCalled();
+    });
+
+    it('Cas 2 - Utilisateur sans crédit (CREATE_CV autorisé)', async () => {
+      (prisma.user.findUnique as any).mockResolvedValue({ credits: 0 });
+
+      const result = await checkAndConsumeCredits('user-2', 'CREATE_CV', 'Test free service no credits');
+      
+      // Autorisé même à 0 crédit
+      expect(result).toEqual({
+        success: true,
+        newBalance: 0,
+        isFree: true
+      });
+
+      // Aucun débit ni transaction
+      expect(prisma.user.update).not.toHaveBeenCalled();
+      expect(prisma.creditTransaction.create).not.toHaveBeenCalled();
+    });
+
+    it('Cas 4 - Service payant normal (AI_ANALYZE)', async () => {
+      (prisma.user.findUnique as any).mockResolvedValue({ credits: 10 });
+      const cost = CREDIT_COSTS.AI_ANALYZE;
+
+      const result = await checkAndConsumeCredits('user-3', 'AI_ANALYZE', 'Test paid service');
+      
+      expect(result).toEqual({
+        success: true,
+        newBalance: 10 - cost,
+      });
+
+      // Le solde doit être débité de manière atomique
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-3' },
+        data: { credits: { decrement: cost } }
+      });
+
+      // La transaction doit être loggée
+      expect(prisma.creditTransaction.create).toHaveBeenCalledWith({
+        data: {
+          userId: 'user-3',
+          amount: -cost,
+          type: 'USAGE',
+          description: 'Test paid service'
+        }
+      });
+    });
+
+    it('Cas 5 - Service payant avec crédits insuffisants', async () => {
+      (prisma.user.findUnique as any).mockResolvedValue({ credits: 1 });
+      const cost = CREDIT_COSTS.AI_ANALYZE; // 2
+
+      await expect(
+        checkAndConsumeCredits('user-4', 'AI_ANALYZE', 'Test insufficient')
+      ).rejects.toThrow(InsufficientCreditsError);
+
+      expect(prisma.user.update).not.toHaveBeenCalled();
+      expect(prisma.creditTransaction.create).not.toHaveBeenCalled();
+    });
   });
 });

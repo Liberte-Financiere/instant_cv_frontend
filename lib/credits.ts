@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { CREDIT_COSTS, type ActionType } from '@/lib/credit-costs';
 
-// Re-export so existing server-side imports keep working
-export { CREDIT_COSTS, type ActionType } from '@/lib/credit-costs';
+export { CREDIT_COSTS, FREE_SERVICES, type ActionType } from '@/lib/credit-costs';
 
 export class InsufficientCreditsError extends Error {
   constructor(cost: number, balance: number) {
@@ -22,7 +21,19 @@ export async function checkAndConsumeCredits(
   userId: string,
   actionType: ActionType,
   description: string
-): Promise<{ success: boolean; newBalance: number }> {
+): Promise<{ success: boolean; newBalance: number; isFree?: boolean }> {
+  
+  // 1. Vérifier si le service est gratuit
+  const { FREE_SERVICES } = await import('@/lib/credit-costs');
+  if (FREE_SERVICES.includes(actionType)) {
+    // Si gratuit, on retourne le vrai solde sans rien débiter
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { credits: true },
+    });
+    return { success: true, newBalance: user?.credits || 0, isFree: true };
+  }
+
   const cost = CREDIT_COSTS[actionType];
 
   try {
@@ -42,13 +53,13 @@ export async function checkAndConsumeCredits(
 
       const newBalance = user.credits - cost;
 
-      // 1. Décrément atomique pour éviter les conditions de course (Race conditions)
+      // 2. Décrément atomique pour éviter les conditions de course (Race conditions)
       await tx.user.update({
         where: { id: userId },
         data: { credits: { decrement: cost } },
       });
 
-      // 2. Log transaction (non-blocking — if this fails, don't block the action)
+      // 3. Log transaction (non-blocking — if this fails, don't block the action)
       try {
         await tx.creditTransaction.create({
           data: {

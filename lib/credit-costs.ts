@@ -29,3 +29,12 @@ export const CREDIT_COSTS = {
 };
 
 export type ActionType = keyof typeof CREDIT_COSTS;
+
+/**
+ * List of services that are currently free.
+ * If an ActionType is in this list, the credit engine will skip billing
+ * but still return success.
+ */
+export const FREE_SERVICES: ActionType[] = [
+  'CREATE_CV',
+];
