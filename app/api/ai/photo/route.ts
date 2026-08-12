@@ -2,10 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
-import { CREDIT_COSTS } from '@/lib/credits';
-
-const COST = CREDIT_COSTS.AI_PHOTO;
-
+import { checkAndConsumeCredits, refundCredits } from '@/lib/credits';
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -24,15 +21,13 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2. Vérification du solde
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { credits: true }
-    });
-
-    if (!user || user.credits < COST) {
+    // 2. Vérification et consommation du solde (Centralisé)
+    let creditResult;
+    try {
+      creditResult = await checkAndConsumeCredits(userId, 'AI_PHOTO', 'Génération Photo Pro');
+    } catch (e: any) {
       return NextResponse.json(
-        { error: `Crédits insuffisants. Il vous faut ${COST} crédits.` },
+        { error: e.message || 'Crédits insuffisants.' },
         { status: 402 }
       );
     }
@@ -148,34 +143,25 @@ export async function POST(req: Request) {
 
     const latencyMs = performance.now() - startTime;
 
-    // 4. Déduire les crédits et historiser (ou rembourser si échec total)
+    // 4. Historiser (ou rembourser si échec total)
     if (apiSuccess) {
-      await prisma.user.update({
-        where: { id: userId },
+      await prisma.aILog.create({
         data: {
-          credits: { decrement: COST },
-          creditTransactions: {
-            create: {
-              amount: -COST,
-              type: 'USAGE',
-              description: 'Génération Photo Pro'
-            }
-          },
-          aiLogs: {
-            create: {
-              type: 'photo-generation',
-              model: 'gemini-3.1-flash-image',
-              status: 'success',
-              promptTokens: 0,
-              completionTokens: 0,
-              totalTokens: 0,
-              latencyMs
-            }
-          }
+          userId,
+          type: 'photo-generation',
+          model: 'gemini-3.1-flash-image',
+          status: 'success',
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0,
+          latencyMs
         }
       });
     } else {
-      // Échec de l'API : on logge l'erreur mais on ne débite pas l'utilisateur
+      // Échec de l'API : on rembourse si le service n'était pas gratuit
+      if (!creditResult.isFree) {
+        await refundCredits(userId, 'AI_PHOTO', 'Remboursement: Échec génération Photo Pro');
+      }
       await prisma.aILog.create({
         data: {
           userId,
