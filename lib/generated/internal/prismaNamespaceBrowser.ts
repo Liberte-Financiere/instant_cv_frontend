@@ -70,7 +70,12 @@ export const ModelName = {
   MarketingCampaign: 'MarketingCampaign',
   AuditLog: 'AuditLog',
   BusinessExpense: 'BusinessExpense',
-  CompanyActivity: 'CompanyActivity'
+  CompanyActivity: 'CompanyActivity',
+  School: 'School',
+  SchoolCreditWallet: 'SchoolCreditWallet',
+  SchoolCreditTransaction: 'SchoolCreditTransaction',
+  SchoolInvitation: 'SchoolInvitation',
+  SchoolMembership: 'SchoolMembership'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -180,7 +185,8 @@ export const UserScalarFieldEnum = {
   premiumUntil: 'premiumUntil',
   companyName: 'companyName',
   recruiterCredits: 'recruiterCredits',
-  freeUnlocksUsed: 'freeUnlocksUsed'
+  freeUnlocksUsed: 'freeUnlocksUsed',
+  schoolId: 'schoolId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -405,6 +411,82 @@ export const CompanyActivityScalarFieldEnum = {
 export type CompanyActivityScalarFieldEnum = (typeof CompanyActivityScalarFieldEnum)[keyof typeof CompanyActivityScalarFieldEnum]
 
 
+export const SchoolScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  logoUrl: 'logoUrl',
+  contactEmail: 'contactEmail',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolScalarFieldEnum = (typeof SchoolScalarFieldEnum)[keyof typeof SchoolScalarFieldEnum]
+
+
+export const SchoolCreditWalletScalarFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId',
+  balance: 'balance',
+  totalBought: 'totalBought',
+  totalUsed: 'totalUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolCreditWalletScalarFieldEnum = (typeof SchoolCreditWalletScalarFieldEnum)[keyof typeof SchoolCreditWalletScalarFieldEnum]
+
+
+export const SchoolCreditTransactionScalarFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId',
+  userId: 'userId',
+  performedByUserId: 'performedByUserId',
+  amount: 'amount',
+  type: 'type',
+  balanceBefore: 'balanceBefore',
+  balanceAfter: 'balanceAfter',
+  idempotencyKey: 'idempotencyKey',
+  reference: 'reference',
+  actionType: 'actionType',
+  referenceId: 'referenceId',
+  description: 'description',
+  createdAt: 'createdAt'
+} as const
+
+export type SchoolCreditTransactionScalarFieldEnum = (typeof SchoolCreditTransactionScalarFieldEnum)[keyof typeof SchoolCreditTransactionScalarFieldEnum]
+
+
+export const SchoolInvitationScalarFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId',
+  email: 'email',
+  codeHash: 'codeHash',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  revokedAt: 'revokedAt',
+  acceptedByUserId: 'acceptedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolInvitationScalarFieldEnum = (typeof SchoolInvitationScalarFieldEnum)[keyof typeof SchoolInvitationScalarFieldEnum]
+
+
+export const SchoolMembershipScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  schoolId: 'schoolId',
+  role: 'role',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolMembershipScalarFieldEnum = (typeof SchoolMembershipScalarFieldEnum)[keyof typeof SchoolMembershipScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -519,7 +601,8 @@ export const UserOrderByRelevanceFieldEnum = {
   sector: 'sector',
   referralCode: 'referralCode',
   referredById: 'referredById',
-  companyName: 'companyName'
+  companyName: 'companyName',
+  schoolId: 'schoolId'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
@@ -690,4 +773,59 @@ export const CompanyActivityOrderByRelevanceFieldEnum = {
 } as const
 
 export type CompanyActivityOrderByRelevanceFieldEnum = (typeof CompanyActivityOrderByRelevanceFieldEnum)[keyof typeof CompanyActivityOrderByRelevanceFieldEnum]
+
+
+export const SchoolOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  logoUrl: 'logoUrl',
+  contactEmail: 'contactEmail'
+} as const
+
+export type SchoolOrderByRelevanceFieldEnum = (typeof SchoolOrderByRelevanceFieldEnum)[keyof typeof SchoolOrderByRelevanceFieldEnum]
+
+
+export const SchoolCreditWalletOrderByRelevanceFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId'
+} as const
+
+export type SchoolCreditWalletOrderByRelevanceFieldEnum = (typeof SchoolCreditWalletOrderByRelevanceFieldEnum)[keyof typeof SchoolCreditWalletOrderByRelevanceFieldEnum]
+
+
+export const SchoolCreditTransactionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId',
+  userId: 'userId',
+  performedByUserId: 'performedByUserId',
+  idempotencyKey: 'idempotencyKey',
+  reference: 'reference',
+  actionType: 'actionType',
+  referenceId: 'referenceId',
+  description: 'description'
+} as const
+
+export type SchoolCreditTransactionOrderByRelevanceFieldEnum = (typeof SchoolCreditTransactionOrderByRelevanceFieldEnum)[keyof typeof SchoolCreditTransactionOrderByRelevanceFieldEnum]
+
+
+export const SchoolInvitationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId',
+  email: 'email',
+  codeHash: 'codeHash',
+  acceptedByUserId: 'acceptedByUserId'
+} as const
+
+export type SchoolInvitationOrderByRelevanceFieldEnum = (typeof SchoolInvitationOrderByRelevanceFieldEnum)[keyof typeof SchoolInvitationOrderByRelevanceFieldEnum]
+
+
+export const SchoolMembershipOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  schoolId: 'schoolId',
+  role: 'role'
+} as const
+
+export type SchoolMembershipOrderByRelevanceFieldEnum = (typeof SchoolMembershipOrderByRelevanceFieldEnum)[keyof typeof SchoolMembershipOrderByRelevanceFieldEnum]
 

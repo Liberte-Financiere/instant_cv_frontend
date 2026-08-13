@@ -2,6 +2,7 @@
 
 import { Sidebar } from '@/components/dashboard/Sidebar';
 import { HqSidebar } from '@/components/dashboard/HqSidebar';
+import { SchoolSidebar } from '@/components/dashboard/SchoolSidebar';
 import { MobileHeader } from '@/components/dashboard/MobileHeader';
 import { OutOfCreditsModal } from '@/components/shared/OutOfCreditsModal';
 import { MarketingOptInModal } from '@/components/shared/MarketingOptInModal';
@@ -15,6 +16,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname() || '';
   const isHqOps = pathname.startsWith('/dashboard/hq-ops');
+  const isSchoolAdmin = pathname.startsWith('/dashboard/school-admin');
 
   if (isHqOps) {
     return (
@@ -25,6 +27,22 @@ export default function DashboardLayout({
           <HqSidebar />
         </div>
         {/* We can reuse MobileHeader or create HqMobileHeader. For now we use the main layout padding */}
+        <main className="lg:pl-72 w-full flex-grow bg-slate-50">
+          {children}
+        </main>
+      </div>
+    );
+  }
+
+  if (isSchoolAdmin) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col">
+        <ImpersonationBanner />
+        <div className="fixed inset-0 bg-slate-50 -z-50" aria-hidden="true" />
+        <div className="hidden lg:block">
+          <SchoolSidebar />
+        </div>
+        {/* We can reuse MobileHeader or create SchoolMobileHeader. For now we use the main layout padding */}
         <main className="lg:pl-72 w-full flex-grow bg-slate-50">
           {children}
         </main>

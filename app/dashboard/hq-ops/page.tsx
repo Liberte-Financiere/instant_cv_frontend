@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { 
   LayoutList, Zap, MessageSquare, Mail, ShieldAlert, Activity, 
   CreditCard, Users, ArrowUpRight, TrendingUp, CheckCircle,
-  AlertTriangle, Clock, ArrowRight, Wallet
+  AlertTriangle, Clock, ArrowRight, Wallet, GraduationCap
 } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
 
@@ -161,6 +161,15 @@ export default async function HqOpsDashboard() {
       color: 'text-orange-500',
       bg: 'bg-orange-50',
       borderColor: 'border-orange-100 hover:border-orange-300'
+    },
+    {
+      title: 'Gestion B2B (Écoles)',
+      description: 'Administrer les partenariats institutionnels, crédits et accès administrateurs.',
+      icon: GraduationCap,
+      href: '/dashboard/hq-ops/schools',
+      color: 'text-teal-500',
+      bg: 'bg-teal-50',
+      borderColor: 'border-teal-100 hover:border-teal-300'
     }
   ];
 

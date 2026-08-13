@@ -61,10 +61,10 @@ model AnalysisHistory {
 
 model AILog {
   id               String   @id @default(cuid())
-  userId           String?  
+  userId           String?
   user             User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  type             String   // ex: 'chat', 'search', 'embedding', 'analysis', 'cover-letter'
-  model            String   // ex: 'gemini-3.5-flash', 'gemini-embedding-001'
+  type             String // ex: 'chat', 'search', 'embedding', 'analysis', 'cover-letter'
+  model            String // ex: 'gemini-3.5-flash', 'gemini-embedding-001'
   status           String   @default("success") // "success" | "error" | "timeout"
   promptTokens     Int      @default(0)
   completionTokens Int      @default(0)
@@ -84,22 +84,23 @@ enum Role {
   USER
   ADMIN
   RECRUITER
+  SCHOOL_ADMIN
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  role          Role      @default(USER)
-  credits       Float     @default(15) // Utilisation de Float pour supporter les retraits de 0.5
-  isBanned      Boolean   @default(false)
-  acceptsMarketing Boolean @default(false) // Opt-in pour les newsletters et alertes
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  lastLogin     DateTime? // Date de la dernière vraie authentification (login)
-  lastActivity  DateTime? // Date du dernier ping d'activité applicative
+  id               String    @id @default(cuid())
+  name             String?
+  email            String?   @unique
+  emailVerified    DateTime?
+  image            String?
+  role             Role      @default(USER)
+  credits          Float     @default(15) // Utilisation de Float pour supporter les retraits de 0.5
+  isBanned         Boolean   @default(false)
+  acceptsMarketing Boolean   @default(false) // Opt-in pour les newsletters et alertes
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  lastLogin        DateTime? // Date de la dernière vraie authentification (login)
+  lastActivity     DateTime? // Date du dernier ping d'activité applicative
 
   // Professional Infos
   phone    String?
@@ -115,9 +116,9 @@ model User {
   premiumUntil  DateTime? // Premium access expiry date (reward)
 
   // Recruiter-specific fields (populated when role = RECRUITER)
-  companyName       String?
-  recruiterCredits  Int       @default(0)
-  freeUnlocksUsed   Int       @default(0) // Max 3 free unlocks
+  companyName      String?
+  recruiterCredits Int     @default(0)
+  freeUnlocksUsed  Int     @default(0) // Max 3 free unlocks
 
   accounts            Account[]
   sessions            Session[]
@@ -132,10 +133,19 @@ model User {
   profileUnlocks      ProfileUnlock[]
   aiLogs              AILog[]
 
+  // Relations B2B
+  schoolId                 String?
+  school                   School?                   @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  acceptedInvitations      SchoolInvitation[]
+  schoolCreditTransactions SchoolCreditTransaction[]
+  schoolMemberships        SchoolMembership[]
+  performedSchoolCredits   SchoolCreditTransaction[] @relation("PerformedBy")
+
   @@index([acceptsMarketing])
   @@index([referredById])
   @@index([lastLogin])
   @@index([lastActivity])
+  @@index([schoolId])
 }
 
 model PlatformFeedback {
@@ -215,48 +225,48 @@ model CreditTransaction {
 }
 
 model AdminTask {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
-  description String?  @db.Text
-  status      String   @default("todo")
-  priority    String   @default("medium")
+  description String?   @db.Text
+  status      String    @default("todo")
+  priority    String    @default("medium")
   assignee    String?
   dueDate     DateTime?
-  tags        String[] @default([])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  tags        String[]  @default([])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model InterviewSession {
-  id            String   @id @default(cuid())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  jobTitle      String
-  jobContext    String?  @db.Text
-  cvSummary     String   @db.Text
-  status        String   @default("active")
-  format        String   @default("text")
+  id              String             @id @default(cuid())
+  userId          String
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobTitle        String
+  jobContext      String?            @db.Text
+  cvSummary       String             @db.Text
+  status          String             @default("active")
+  format          String             @default("text")
   voicePreference String?
-  totalScore    Int?
-  summary       String?  @db.Text
-  questionCount Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  messages      InterviewMessage[]
+  totalScore      Int?
+  summary         String?            @db.Text
+  questionCount   Int                @default(0)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  messages        InterviewMessage[]
 
   @@index([userId])
 }
 
 model InterviewMessage {
-  id         String   @id @default(cuid())
+  id         String           @id @default(cuid())
   sessionId  String
   session    InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   role       String
-  content    String   @db.Text
+  content    String           @db.Text
   score      Int?
   audioUrl   String?
-  transcript String?  @db.Text
-  createdAt  DateTime @default(now())
+  transcript String?          @db.Text
+  createdAt  DateTime         @default(now())
 
   @@index([sessionId])
 }
@@ -264,11 +274,11 @@ model InterviewMessage {
 // Recruiter Portal Models
 
 model CandidateProfile {
-  id              String   @id @default(cuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  cvId            String   @unique
-  cv              CV       @relation(fields: [cvId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cvId   String @unique
+  cv     CV     @relation(fields: [cvId], references: [id], onDelete: Cascade)
 
   anonymousName   String
   title           String
@@ -282,13 +292,13 @@ model CandidateProfile {
   lastCvUpdate    DateTime
   anonymousData   Json?    @db.JsonB
 
-  isActive        Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   embedding Unsupported("vector(3072)")?
 
-  unlocks         ProfileUnlock[]
+  unlocks ProfileUnlock[]
 
   @@index([sector])
   @@index([experienceYears])
@@ -318,26 +328,26 @@ model ProfileUnlock {
 
 model MarketingCampaign {
   id             String   @id @default(cuid())
-  name           String   // Internal name
-  subject        String   // Email subject
-  preheader      String?  // Preheader text
+  name           String // Internal name
+  subject        String // Email subject
+  preheader      String? // Preheader text
   content        String   @db.Text // The HTML or plaintext content
   type           String   @default("Newsletter") // "Newsletter", "Annonce", "Transactionnel", "Promotion"
   status         String   @default("draft") // "draft", "scheduled", "sent"
   templateId     String?
   targetAudience String   @default("all") // "all", "segment"
   externalEmails String[] @default([]) // Custom emails added
-  
-  scheduledAt    DateTime?
-  sentAt         DateTime?
-  
+
+  scheduledAt DateTime?
+  sentAt      DateTime?
+
   // Basic stats caching
-  recipientsCount Int     @default(0)
+  recipientsCount Int    @default(0)
   openRate        Float?
   clickRate       Float?
-  
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model AuditLog {
@@ -348,7 +358,7 @@ model AuditLog {
   action    String
   ipAddress String?
   createdAt DateTime @default(now())
-  
+
   @@index([adminId])
   @@index([sessionId])
 }
@@ -356,10 +366,10 @@ model AuditLog {
 model BusinessExpense {
   id        String    @id @default(cuid())
   name      String
-  category  String    // SERVER, SUBSCRIPTION, DOMAIN, API, OTHER
+  category  String // SERVER, SUBSCRIPTION, DOMAIN, API, OTHER
   amount    Float
   currency  String    @default("FCFA") // FCFA, EUR, USD
-  frequency String    // MONTHLY, YEARLY, ONE_TIME
+  frequency String // MONTHLY, YEARLY, ONE_TIME
   isActive  Boolean   @default(true)
   startDate DateTime  @default(now())
   endDate   DateTime?
@@ -384,3 +394,125 @@ model CompanyActivity {
   @@index([createdAt])
 }
 
+// ==========================================
+// JOBSIRA EDUCATION (B2B)
+// ==========================================
+
+model School {
+  id           String  @id @default(cuid())
+  name         String
+  slug         String  @unique
+  logoUrl      String?
+  contactEmail String?
+  isActive     Boolean @default(true)
+
+  creditWallet SchoolCreditWallet?
+  users        User[]
+  invitations  SchoolInvitation[]
+  transactions SchoolCreditTransaction[]
+  memberships  SchoolMembership[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SchoolCreditWallet {
+  id       String @id @default(cuid())
+  schoolId String @unique
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  balance     Decimal @default(0)
+  totalBought Decimal @default(0)
+  totalUsed   Decimal @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum SchoolCreditTransactionType {
+  PURCHASE
+  CONSUMPTION
+  REFUND
+  ADJUSTMENT
+  EXPIRATION
+  REVERSAL
+}
+
+model SchoolCreditTransaction {
+  id String @id @default(cuid())
+
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id])
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  performedByUserId String?
+  performedBy       User?   @relation("PerformedBy", fields: [performedByUserId], references: [id])
+
+  amount        Decimal
+  type          SchoolCreditTransactionType
+  balanceBefore Decimal
+  balanceAfter  Decimal
+
+  idempotencyKey String? @unique
+  reference      String?
+  actionType     String?
+  referenceId    String?
+  description    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([schoolId])
+  @@index([userId])
+  @@index([performedByUserId])
+  @@index([type])
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
+
+model SchoolInvitation {
+  id String @id @default(cuid())
+
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  email    String?
+  codeHash String  @unique
+
+  status InvitationStatus @default(PENDING)
+
+  expiresAt DateTime?
+  usedAt    DateTime?
+  revokedAt DateTime?
+
+  acceptedByUserId String?
+  acceptedByUser   User?   @relation(fields: [acceptedByUserId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([schoolId])
+  @@index([status])
+}
+
+model SchoolMembership {
+  id       String @id @default(cuid())
+  userId   String
+  schoolId String
+  role     String @default("SCHOOL_ADMIN")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, schoolId])
+  @@index([schoolId])
+}

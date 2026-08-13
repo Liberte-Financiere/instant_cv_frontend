@@ -1,16 +1,33 @@
-[2026-08-03] — FIX: AI History Navigation Routes
+[2026-08-13] — Feature: B2B School Portals & HQ-Ops Architecture
 
 What changed:
-- Updated the routing paths in `handleItemClick` inside `HistoryList.tsx`.
+- Implemented a complete B2B Super Admin architecture for School Management.
+- Created `SchoolMembership` logic for robust RBAC and strict data isolation.
+- Implemented an idempotent billing engine via `SchoolCreditTransaction` and `SchoolCreditWallet`.
+- Created a fully isolated `SchoolAdmin` portal with dedicated `SchoolSidebar` components.
+- Configured HQ-Ops routing to manage schools, assign admins, and top-up school credits.
+- Added a `ConfirmModal` UI component to replace native `window.confirm` for destructive actions.
+- Automatically generate intuitive acronym-based slugs for schools.
 
 Why:
-- The component was incorrectly pushing users to the tool index pages (`/dashboard/ai/analyze` and `/dashboard/ai/match`) instead of the actual results pages (`/analysis` and `/match`). Because React router is an SPA router, pushing to the current active path causes no visible action, making the UI appear unresponsive.
+- To allow JobSira to manage B2B clients securely without exposing the main B2C features to school administrators.
+- To guarantee atomicity and avoid race conditions when consuming credits or topping up a school wallet.
+- To improve user experience by migrating from native browser alerts to polished Framer Motion modals.
 
 Files affected:
-- frontend/instant_cv/components/dashboard/ai/HistoryList.tsx — corrected router.push targets for 'analysis' and 'match' history items.
+- prisma/schema.prisma — Added SchoolMembership, SchoolCreditTransaction, and updated relations.
+- lib/credits.ts — Refactored engine to automatically debit from B2B wallets when `isB2B` is true.
+- app/api/hq-ops/schools/* — Created full CRUD for B2B schools (creation, top-up, assign-admin, ledger, memberships).
+- app/api/b2b/* — Built secure endpoints for School Admins (managing students and invitations).
+- app/dashboard/hq-ops/schools/* — Created dashboard interfaces for managing schools.
+- app/dashboard/school-admin/* — Created dedicated pages and sidebar for school administrators.
+- components/dashboard/SchoolSidebar.tsx — New dedicated navigation for the B2B portal.
+- components/ui/ConfirmModal.tsx — New reusable modal component for destructive actions.
+- app/dashboard/layout.tsx — Updated layout to conditionally switch between sidebars.
 
 Breaking changes:
-- None
+- None.
 
 Notes for review:
-- The 'bilan' route was already correctly pointing to `/dashboard/tools/bilan` and was not changed.
+- The database schema requires running `npx prisma db push` and `npx prisma generate` in production to instantiate the new B2B tables.
+- All AI routes are now linked with the B2B wallet implicitly if a user belongs to an active school.

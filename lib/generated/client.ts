@@ -141,3 +141,28 @@ export type BusinessExpense = Prisma.BusinessExpenseModel
  * 
  */
 export type CompanyActivity = Prisma.CompanyActivityModel
+/**
+ * Model School
+ * 
+ */
+export type School = Prisma.SchoolModel
+/**
+ * Model SchoolCreditWallet
+ * 
+ */
+export type SchoolCreditWallet = Prisma.SchoolCreditWalletModel
+/**
+ * Model SchoolCreditTransaction
+ * 
+ */
+export type SchoolCreditTransaction = Prisma.SchoolCreditTransactionModel
+/**
+ * Model SchoolInvitation
+ * 
+ */
+export type SchoolInvitation = Prisma.SchoolInvitationModel
+/**
+ * Model SchoolMembership
+ * 
+ */
+export type SchoolMembership = Prisma.SchoolMembershipModel

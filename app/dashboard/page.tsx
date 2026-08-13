@@ -165,6 +165,15 @@ export default function DashboardPage() {
               Espace Recruteur
             </Link>
           )}
+          {session?.user?.role === 'SCHOOL_ADMIN' && (
+            <Link 
+              href="/dashboard/school-admin"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold rounded-xl shadow-sm transition-all active:scale-95 whitespace-nowrap"
+            >
+              <Building2 className="w-5 h-5" />
+              Espace École
+            </Link>
+          )}
           <Link 
             href="/dashboard/templates"
             className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap"

@@ -120,12 +120,8 @@ export function Sidebar() {
               return <NavLink key={item.name} item={item} />;
             })}
           </nav>
-        </div> 
-
-      {/* Admin Section Removed */}
-
+        </div>
       </div>
-
 
       {/* Preferences Section */}
       <div className="px-4 mb-2">

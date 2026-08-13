@@ -12,7 +12,30 @@
 export const Role = {
   USER: 'USER',
   ADMIN: 'ADMIN',
-  RECRUITER: 'RECRUITER'
+  RECRUITER: 'RECRUITER',
+  SCHOOL_ADMIN: 'SCHOOL_ADMIN'
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
+
+
+export const SchoolCreditTransactionType = {
+  PURCHASE: 'PURCHASE',
+  CONSUMPTION: 'CONSUMPTION',
+  REFUND: 'REFUND',
+  ADJUSTMENT: 'ADJUSTMENT',
+  EXPIRATION: 'EXPIRATION',
+  REVERSAL: 'REVERSAL'
+} as const
+
+export type SchoolCreditTransactionType = (typeof SchoolCreditTransactionType)[keyof typeof SchoolCreditTransactionType]
+
+
+export const InvitationStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type InvitationStatus = (typeof InvitationStatus)[keyof typeof InvitationStatus]
