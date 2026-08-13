@@ -403,7 +403,12 @@ export const ModelName = {
   MarketingCampaign: 'MarketingCampaign',
   AuditLog: 'AuditLog',
   BusinessExpense: 'BusinessExpense',
-  CompanyActivity: 'CompanyActivity'
+  CompanyActivity: 'CompanyActivity',
+  School: 'School',
+  SchoolCreditWallet: 'SchoolCreditWallet',
+  SchoolCreditTransaction: 'SchoolCreditTransaction',
+  SchoolInvitation: 'SchoolInvitation',
+  SchoolMembership: 'SchoolMembership'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "aILog" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign" | "auditLog" | "businessExpense" | "companyActivity"
+    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "aILog" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign" | "auditLog" | "businessExpense" | "companyActivity" | "school" | "schoolCreditWallet" | "schoolCreditTransaction" | "schoolInvitation" | "schoolMembership"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1903,6 +1908,376 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    School: {
+      payload: Prisma.$SchoolPayload<ExtArgs>
+      fields: Prisma.SchoolFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SchoolFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SchoolFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload>
+        }
+        findFirst: {
+          args: Prisma.SchoolFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SchoolFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload>
+        }
+        findMany: {
+          args: Prisma.SchoolFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload>[]
+        }
+        create: {
+          args: Prisma.SchoolCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload>
+        }
+        createMany: {
+          args: Prisma.SchoolCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SchoolCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload>[]
+        }
+        delete: {
+          args: Prisma.SchoolDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload>
+        }
+        update: {
+          args: Prisma.SchoolUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload>
+        }
+        deleteMany: {
+          args: Prisma.SchoolDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SchoolUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SchoolUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload>[]
+        }
+        upsert: {
+          args: Prisma.SchoolUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolPayload>
+        }
+        aggregate: {
+          args: Prisma.SchoolAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSchool>
+        }
+        groupBy: {
+          args: Prisma.SchoolGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SchoolCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolCountAggregateOutputType> | number
+        }
+      }
+    }
+    SchoolCreditWallet: {
+      payload: Prisma.$SchoolCreditWalletPayload<ExtArgs>
+      fields: Prisma.SchoolCreditWalletFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SchoolCreditWalletFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SchoolCreditWalletFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload>
+        }
+        findFirst: {
+          args: Prisma.SchoolCreditWalletFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SchoolCreditWalletFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload>
+        }
+        findMany: {
+          args: Prisma.SchoolCreditWalletFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload>[]
+        }
+        create: {
+          args: Prisma.SchoolCreditWalletCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload>
+        }
+        createMany: {
+          args: Prisma.SchoolCreditWalletCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SchoolCreditWalletCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload>[]
+        }
+        delete: {
+          args: Prisma.SchoolCreditWalletDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload>
+        }
+        update: {
+          args: Prisma.SchoolCreditWalletUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload>
+        }
+        deleteMany: {
+          args: Prisma.SchoolCreditWalletDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SchoolCreditWalletUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SchoolCreditWalletUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload>[]
+        }
+        upsert: {
+          args: Prisma.SchoolCreditWalletUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditWalletPayload>
+        }
+        aggregate: {
+          args: Prisma.SchoolCreditWalletAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSchoolCreditWallet>
+        }
+        groupBy: {
+          args: Prisma.SchoolCreditWalletGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolCreditWalletGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SchoolCreditWalletCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolCreditWalletCountAggregateOutputType> | number
+        }
+      }
+    }
+    SchoolCreditTransaction: {
+      payload: Prisma.$SchoolCreditTransactionPayload<ExtArgs>
+      fields: Prisma.SchoolCreditTransactionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SchoolCreditTransactionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SchoolCreditTransactionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload>
+        }
+        findFirst: {
+          args: Prisma.SchoolCreditTransactionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SchoolCreditTransactionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload>
+        }
+        findMany: {
+          args: Prisma.SchoolCreditTransactionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload>[]
+        }
+        create: {
+          args: Prisma.SchoolCreditTransactionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload>
+        }
+        createMany: {
+          args: Prisma.SchoolCreditTransactionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SchoolCreditTransactionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload>[]
+        }
+        delete: {
+          args: Prisma.SchoolCreditTransactionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload>
+        }
+        update: {
+          args: Prisma.SchoolCreditTransactionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload>
+        }
+        deleteMany: {
+          args: Prisma.SchoolCreditTransactionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SchoolCreditTransactionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SchoolCreditTransactionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload>[]
+        }
+        upsert: {
+          args: Prisma.SchoolCreditTransactionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolCreditTransactionPayload>
+        }
+        aggregate: {
+          args: Prisma.SchoolCreditTransactionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSchoolCreditTransaction>
+        }
+        groupBy: {
+          args: Prisma.SchoolCreditTransactionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolCreditTransactionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SchoolCreditTransactionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolCreditTransactionCountAggregateOutputType> | number
+        }
+      }
+    }
+    SchoolInvitation: {
+      payload: Prisma.$SchoolInvitationPayload<ExtArgs>
+      fields: Prisma.SchoolInvitationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SchoolInvitationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SchoolInvitationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload>
+        }
+        findFirst: {
+          args: Prisma.SchoolInvitationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SchoolInvitationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload>
+        }
+        findMany: {
+          args: Prisma.SchoolInvitationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload>[]
+        }
+        create: {
+          args: Prisma.SchoolInvitationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload>
+        }
+        createMany: {
+          args: Prisma.SchoolInvitationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SchoolInvitationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload>[]
+        }
+        delete: {
+          args: Prisma.SchoolInvitationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload>
+        }
+        update: {
+          args: Prisma.SchoolInvitationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload>
+        }
+        deleteMany: {
+          args: Prisma.SchoolInvitationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SchoolInvitationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SchoolInvitationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload>[]
+        }
+        upsert: {
+          args: Prisma.SchoolInvitationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolInvitationPayload>
+        }
+        aggregate: {
+          args: Prisma.SchoolInvitationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSchoolInvitation>
+        }
+        groupBy: {
+          args: Prisma.SchoolInvitationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolInvitationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SchoolInvitationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolInvitationCountAggregateOutputType> | number
+        }
+      }
+    }
+    SchoolMembership: {
+      payload: Prisma.$SchoolMembershipPayload<ExtArgs>
+      fields: Prisma.SchoolMembershipFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SchoolMembershipFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SchoolMembershipFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload>
+        }
+        findFirst: {
+          args: Prisma.SchoolMembershipFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SchoolMembershipFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload>
+        }
+        findMany: {
+          args: Prisma.SchoolMembershipFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload>[]
+        }
+        create: {
+          args: Prisma.SchoolMembershipCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload>
+        }
+        createMany: {
+          args: Prisma.SchoolMembershipCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SchoolMembershipCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload>[]
+        }
+        delete: {
+          args: Prisma.SchoolMembershipDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload>
+        }
+        update: {
+          args: Prisma.SchoolMembershipUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload>
+        }
+        deleteMany: {
+          args: Prisma.SchoolMembershipDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SchoolMembershipUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SchoolMembershipUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload>[]
+        }
+        upsert: {
+          args: Prisma.SchoolMembershipUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolMembershipPayload>
+        }
+        aggregate: {
+          args: Prisma.SchoolMembershipAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSchoolMembership>
+        }
+        groupBy: {
+          args: Prisma.SchoolMembershipGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolMembershipGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SchoolMembershipCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolMembershipCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2033,7 +2408,8 @@ export const UserScalarFieldEnum = {
   premiumUntil: 'premiumUntil',
   companyName: 'companyName',
   recruiterCredits: 'recruiterCredits',
-  freeUnlocksUsed: 'freeUnlocksUsed'
+  freeUnlocksUsed: 'freeUnlocksUsed',
+  schoolId: 'schoolId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -2258,6 +2634,82 @@ export const CompanyActivityScalarFieldEnum = {
 export type CompanyActivityScalarFieldEnum = (typeof CompanyActivityScalarFieldEnum)[keyof typeof CompanyActivityScalarFieldEnum]
 
 
+export const SchoolScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  logoUrl: 'logoUrl',
+  contactEmail: 'contactEmail',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolScalarFieldEnum = (typeof SchoolScalarFieldEnum)[keyof typeof SchoolScalarFieldEnum]
+
+
+export const SchoolCreditWalletScalarFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId',
+  balance: 'balance',
+  totalBought: 'totalBought',
+  totalUsed: 'totalUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolCreditWalletScalarFieldEnum = (typeof SchoolCreditWalletScalarFieldEnum)[keyof typeof SchoolCreditWalletScalarFieldEnum]
+
+
+export const SchoolCreditTransactionScalarFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId',
+  userId: 'userId',
+  performedByUserId: 'performedByUserId',
+  amount: 'amount',
+  type: 'type',
+  balanceBefore: 'balanceBefore',
+  balanceAfter: 'balanceAfter',
+  idempotencyKey: 'idempotencyKey',
+  reference: 'reference',
+  actionType: 'actionType',
+  referenceId: 'referenceId',
+  description: 'description',
+  createdAt: 'createdAt'
+} as const
+
+export type SchoolCreditTransactionScalarFieldEnum = (typeof SchoolCreditTransactionScalarFieldEnum)[keyof typeof SchoolCreditTransactionScalarFieldEnum]
+
+
+export const SchoolInvitationScalarFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId',
+  email: 'email',
+  codeHash: 'codeHash',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  revokedAt: 'revokedAt',
+  acceptedByUserId: 'acceptedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolInvitationScalarFieldEnum = (typeof SchoolInvitationScalarFieldEnum)[keyof typeof SchoolInvitationScalarFieldEnum]
+
+
+export const SchoolMembershipScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  schoolId: 'schoolId',
+  role: 'role',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolMembershipScalarFieldEnum = (typeof SchoolMembershipScalarFieldEnum)[keyof typeof SchoolMembershipScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2372,7 +2824,8 @@ export const UserOrderByRelevanceFieldEnum = {
   sector: 'sector',
   referralCode: 'referralCode',
   referredById: 'referredById',
-  companyName: 'companyName'
+  companyName: 'companyName',
+  schoolId: 'schoolId'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
@@ -2545,6 +2998,61 @@ export const CompanyActivityOrderByRelevanceFieldEnum = {
 export type CompanyActivityOrderByRelevanceFieldEnum = (typeof CompanyActivityOrderByRelevanceFieldEnum)[keyof typeof CompanyActivityOrderByRelevanceFieldEnum]
 
 
+export const SchoolOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  logoUrl: 'logoUrl',
+  contactEmail: 'contactEmail'
+} as const
+
+export type SchoolOrderByRelevanceFieldEnum = (typeof SchoolOrderByRelevanceFieldEnum)[keyof typeof SchoolOrderByRelevanceFieldEnum]
+
+
+export const SchoolCreditWalletOrderByRelevanceFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId'
+} as const
+
+export type SchoolCreditWalletOrderByRelevanceFieldEnum = (typeof SchoolCreditWalletOrderByRelevanceFieldEnum)[keyof typeof SchoolCreditWalletOrderByRelevanceFieldEnum]
+
+
+export const SchoolCreditTransactionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId',
+  userId: 'userId',
+  performedByUserId: 'performedByUserId',
+  idempotencyKey: 'idempotencyKey',
+  reference: 'reference',
+  actionType: 'actionType',
+  referenceId: 'referenceId',
+  description: 'description'
+} as const
+
+export type SchoolCreditTransactionOrderByRelevanceFieldEnum = (typeof SchoolCreditTransactionOrderByRelevanceFieldEnum)[keyof typeof SchoolCreditTransactionOrderByRelevanceFieldEnum]
+
+
+export const SchoolInvitationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  schoolId: 'schoolId',
+  email: 'email',
+  codeHash: 'codeHash',
+  acceptedByUserId: 'acceptedByUserId'
+} as const
+
+export type SchoolInvitationOrderByRelevanceFieldEnum = (typeof SchoolInvitationOrderByRelevanceFieldEnum)[keyof typeof SchoolInvitationOrderByRelevanceFieldEnum]
+
+
+export const SchoolMembershipOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  schoolId: 'schoolId',
+  role: 'role'
+} as const
+
+export type SchoolMembershipOrderByRelevanceFieldEnum = (typeof SchoolMembershipOrderByRelevanceFieldEnum)[keyof typeof SchoolMembershipOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -2639,6 +3147,48 @@ export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SchoolCreditTransactionType'
+ */
+export type EnumSchoolCreditTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SchoolCreditTransactionType'>
+    
+
+
+/**
+ * Reference to a field of type 'SchoolCreditTransactionType[]'
+ */
+export type ListEnumSchoolCreditTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SchoolCreditTransactionType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'InvitationStatus'
+ */
+export type EnumInvitationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvitationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InvitationStatus[]'
+ */
+export type ListEnumInvitationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvitationStatus[]'>
     
 
 /**
@@ -2771,6 +3321,11 @@ export type GlobalOmitConfig = {
   auditLog?: Prisma.AuditLogOmit
   businessExpense?: Prisma.BusinessExpenseOmit
   companyActivity?: Prisma.CompanyActivityOmit
+  school?: Prisma.SchoolOmit
+  schoolCreditWallet?: Prisma.SchoolCreditWalletOmit
+  schoolCreditTransaction?: Prisma.SchoolCreditTransactionOmit
+  schoolInvitation?: Prisma.SchoolInvitationOmit
+  schoolMembership?: Prisma.SchoolMembershipOmit
 }
 
 /* Types for Logging */

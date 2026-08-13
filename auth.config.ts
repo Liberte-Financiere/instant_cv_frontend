@@ -63,6 +63,7 @@ export const authConfig = {
     async jwt({ token, user, trigger, session }) {
       if (user) {
          token.role = user.role;
+         token.schoolId = user.schoolId;
       }
 
       // Automatic silent restore if impersonation expired
@@ -71,6 +72,7 @@ export const authConfig = {
             const orig = token.originalUser as any;
             token.sub = orig.sub;
             token.role = orig.role;
+            token.schoolId = orig.schoolId;
             token.email = orig.email;
             token.name = orig.name;
             token.picture = orig.picture;
@@ -103,6 +105,7 @@ export const authConfig = {
             token.originalUser = {
                sub: token.sub,
                role: token.role,
+               schoolId: token.schoolId,
                email: token.email,
                name: token.name,
                picture: token.picture,
@@ -130,6 +133,7 @@ export const authConfig = {
             const orig = token.originalUser as any;
             token.sub = orig.sub;
             token.role = orig.role;
+            token.schoolId = orig.schoolId;
             token.email = orig.email;
             token.name = orig.name;
             token.picture = orig.picture;
@@ -156,6 +160,7 @@ export const authConfig = {
              const orig = token.originalUser as any;
              session.user.id = orig.sub;
              session.user.role = orig.role;
+             session.user.schoolId = orig.schoolId;
              session.user.name = orig.name;
              session.user.email = orig.email;
              session.user.image = orig.picture;
@@ -165,6 +170,7 @@ export const authConfig = {
       } else if (session.user && token?.sub) {
         session.user.id = token.sub
         session.user.role = token.role as import('@/types/next-auth').AppRole;
+        if (token.schoolId !== undefined) session.user.schoolId = token.schoolId as string | null;
         if (token.email) session.user.email = token.email as string;
         if (token.name) session.user.name = token.name as string;
         if (token.picture) session.user.image = token.picture as string;

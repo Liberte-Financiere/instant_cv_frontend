@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { ReferralSection } from '@/components/dashboard/ReferralSection';
 import { useCreditStore } from '@/store/useCreditStore';
 import Link from 'next/link';
+import { SchoolEnrollmentSection } from '@/components/dashboard/SchoolEnrollmentSection';
 import { SECTORS } from '@/lib/constants';
 
 interface CvEntry {
@@ -28,6 +29,9 @@ export default function SettingsPage() {
   const [togglingCvId, setTogglingCvId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 5;
+
+  // B2B State
+  const [schoolData, setSchoolData] = useState<{ id: string; name: string } | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -58,6 +62,9 @@ export default function SettingsPage() {
                  sector: userData.user.sector || prev.sector,
                  acceptsMarketing: userData.user.acceptsMarketing || false,
               }));
+              if (userData.user.school) {
+                setSchoolData(userData.user.school);
+              }
            }
         }
       } catch (error) {
@@ -345,6 +352,17 @@ export default function SettingsPage() {
               </Link>
             </div>
           </div>
+        </section>
+
+        {/* B2B Education Section */}
+        <section>
+          <SchoolEnrollmentSection 
+            schoolData={schoolData} 
+            onSuccess={(schoolName) => {
+              // Reload profile data to get the school details
+              window.location.reload();
+            }} 
+          />
         </section>
 
         {/* Recruiter Opt-in */}
