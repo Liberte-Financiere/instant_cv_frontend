@@ -41,12 +41,9 @@ func main() {
 	executeTask(targetURL, cronSecret)
 
 	// Boucle infinie
-	for {
-		select {
-		case t := <-ticker.C:
-			log.Printf("--- Exécution du cron à %s ---", t.Format(time.RFC3339))
-			executeTask(targetURL, cronSecret)
-		}
+	for t := range ticker.C {
+		log.Printf("--- Exécution du cron à %s ---", t.Format(time.RFC3339))
+		executeTask(targetURL, cronSecret)
 	}
 }
 
