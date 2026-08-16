@@ -469,6 +469,13 @@ model SchoolCreditTransaction {
   @@index([type])
 }
 
+enum EmailStatus {
+  QUEUED
+  SENDING
+  SENT
+  FAILED
+}
+
 enum InvitationStatus {
   PENDING
   ACCEPTED
@@ -477,28 +484,37 @@ enum InvitationStatus {
 }
 
 model SchoolInvitation {
-  id String @id @default(cuid())
+  id               String           @id @default(cuid())
+  schoolId         String
+  school           School           @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
-  schoolId String
-  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  email            String?
+  firstName        String?
+  lastName         String?
+  codeHash         String           @unique
+  emailCode        String?          // Temporaire : effacé après l'envoi de l'email
 
-  email    String?
-  codeHash String  @unique
+  status           InvitationStatus @default(PENDING)
 
-  status InvitationStatus @default(PENDING)
+  // Suivi de l'envoi d'email
+  emailStatus      EmailStatus      @default(QUEUED)
+  emailAttempts    Int              @default(0)
+  emailError       String?          @db.Text
+  emailSentAt      DateTime?
 
-  expiresAt DateTime?
-  usedAt    DateTime?
-  revokedAt DateTime?
+  expiresAt        DateTime?
+  usedAt           DateTime?
+  revokedAt        DateTime?
 
   acceptedByUserId String?
-  acceptedByUser   User?   @relation(fields: [acceptedByUserId], references: [id])
+  acceptedByUser   User?            @relation(fields: [acceptedByUserId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
   @@index([schoolId])
   @@index([status])
+  @@index([emailStatus])
 }
 
 model SchoolMembership {

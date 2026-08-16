@@ -31,6 +31,16 @@ export const SchoolCreditTransactionType = {
 export type SchoolCreditTransactionType = (typeof SchoolCreditTransactionType)[keyof typeof SchoolCreditTransactionType]
 
 
+export const EmailStatus = {
+  QUEUED: 'QUEUED',
+  SENDING: 'SENDING',
+  SENT: 'SENT',
+  FAILED: 'FAILED'
+} as const
+
+export type EmailStatus = (typeof EmailStatus)[keyof typeof EmailStatus]
+
+
 export const InvitationStatus = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',

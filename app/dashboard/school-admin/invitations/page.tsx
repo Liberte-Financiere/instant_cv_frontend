@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { FileText, Loader2, Ban, Plus, Copy, Check } from 'lucide-react';
+import { FileText, Loader2, Ban, Plus, Copy, Check, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
@@ -22,6 +22,7 @@ export default function SchoolAdminInvitationsPage() {
   const [loading, setLoading] = useState(true);
   const [newEmail, setNewEmail] = useState('');
   const [generating, setGenerating] = useState(false);
+  const [importing, setImporting] = useState(false);
   
   // To display the generated clear code to the admin
   const [generatedCode, setGeneratedCode] = useState<{ email: string, code: string } | null>(null);
@@ -105,6 +106,74 @@ export default function SchoolAdminInvitationsPage() {
     }
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        setImporting(true);
+        const text = event.target?.result as string;
+        const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+        
+        // Remove header if present
+        if (lines[0].toLowerCase().includes('email')) {
+           lines.shift();
+        }
+
+        const students = lines.map(line => {
+           const parts = line.split(',');
+           return {
+              email: parts[0]?.trim() || '',
+              nom: parts[1]?.trim() || '',
+              prenom: parts[2]?.trim() || ''
+           };
+        }).filter(s => s.email && s.email.includes('@'));
+
+        if (students.length === 0) {
+           throw new Error('Aucun email valide trouvé dans le fichier.');
+        }
+
+        const res = await fetch('/api/b2b/school-admin/invitations/bulk', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ students })
+        });
+
+        if (!res.ok) {
+           const err = await res.json();
+           throw new Error(err.error || 'Erreur lors de l\'import');
+        }
+
+        // Trigger download of the result CSV
+        const blob = await res.blob();
+        const createdCount = res.headers.get('X-Created-Count') || '0';
+        const ignoredCount = res.headers.get('X-Ignored-Count') || '0';
+        
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'invitations_result.csv';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        toast.success(`${createdCount} invitations créées (${ignoredCount} ignorées). Le fichier résultat a été téléchargé.`);
+        fetchInvitations();
+
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setImporting(false);
+        // Reset input
+        e.target.value = '';
+      }
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <div className="p-8 max-w-6xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
@@ -139,6 +208,40 @@ export default function SchoolAdminInvitationsPage() {
               Générer le code
             </button>
           </form>
+
+          <div className="relative my-6">
+             <div className="absolute inset-0 flex items-center">
+               <div className="w-full border-t border-slate-200"></div>
+             </div>
+             <div className="relative flex justify-center text-sm">
+               <span className="px-2 bg-white text-slate-500">Ou</span>
+             </div>
+          </div>
+
+          <div>
+             <div className="flex items-center justify-between mb-2">
+               <h3 className="font-bold text-slate-900">Import en masse (CSV)</h3>
+               <a 
+                 href="data:text/csv;charset=utf-8,email,nom,prenom%0Ajean.dupont@ecole.com,Dupont,Jean%0Amarie.curie@ecole.com,Curie,Marie" 
+                 download="modele_import_etudiants.csv"
+                 className="text-xs text-indigo-600 hover:text-indigo-700 hover:underline font-medium"
+               >
+                 Télécharger le modèle
+               </a>
+             </div>
+             <p className="text-xs text-slate-500 mb-3">Format attendu : <code>email,nom,prenom</code></p>
+             <label className="w-full flex flex-col items-center justify-center px-4 py-4 bg-slate-50 border-2 border-dashed border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
+                {importing ? (
+                   <Loader2 className="w-5 h-5 text-indigo-500 animate-spin" />
+                ) : (
+                   <>
+                     <Upload className="w-5 h-5 text-slate-400 mb-2" />
+                     <span className="text-sm font-medium text-slate-600">Sélectionner un fichier CSV</span>
+                   </>
+                )}
+                <input type="file" accept=".csv,.txt" className="hidden" onChange={handleFileUpload} disabled={importing} />
+             </label>
+          </div>
 
           {/* Success Code Display */}
           {generatedCode && (

@@ -20,16 +20,33 @@ export type SchoolInvitationModel = runtime.Types.Result.DefaultSelection<Prisma
 
 export type AggregateSchoolInvitation = {
   _count: SchoolInvitationCountAggregateOutputType | null
+  _avg: SchoolInvitationAvgAggregateOutputType | null
+  _sum: SchoolInvitationSumAggregateOutputType | null
   _min: SchoolInvitationMinAggregateOutputType | null
   _max: SchoolInvitationMaxAggregateOutputType | null
+}
+
+export type SchoolInvitationAvgAggregateOutputType = {
+  emailAttempts: number | null
+}
+
+export type SchoolInvitationSumAggregateOutputType = {
+  emailAttempts: number | null
 }
 
 export type SchoolInvitationMinAggregateOutputType = {
   id: string | null
   schoolId: string | null
   email: string | null
+  firstName: string | null
+  lastName: string | null
   codeHash: string | null
+  emailCode: string | null
   status: $Enums.InvitationStatus | null
+  emailStatus: $Enums.EmailStatus | null
+  emailAttempts: number | null
+  emailError: string | null
+  emailSentAt: Date | null
   expiresAt: Date | null
   usedAt: Date | null
   revokedAt: Date | null
@@ -42,8 +59,15 @@ export type SchoolInvitationMaxAggregateOutputType = {
   id: string | null
   schoolId: string | null
   email: string | null
+  firstName: string | null
+  lastName: string | null
   codeHash: string | null
+  emailCode: string | null
   status: $Enums.InvitationStatus | null
+  emailStatus: $Enums.EmailStatus | null
+  emailAttempts: number | null
+  emailError: string | null
+  emailSentAt: Date | null
   expiresAt: Date | null
   usedAt: Date | null
   revokedAt: Date | null
@@ -56,8 +80,15 @@ export type SchoolInvitationCountAggregateOutputType = {
   id: number
   schoolId: number
   email: number
+  firstName: number
+  lastName: number
   codeHash: number
+  emailCode: number
   status: number
+  emailStatus: number
+  emailAttempts: number
+  emailError: number
+  emailSentAt: number
   expiresAt: number
   usedAt: number
   revokedAt: number
@@ -68,12 +99,27 @@ export type SchoolInvitationCountAggregateOutputType = {
 }
 
 
+export type SchoolInvitationAvgAggregateInputType = {
+  emailAttempts?: true
+}
+
+export type SchoolInvitationSumAggregateInputType = {
+  emailAttempts?: true
+}
+
 export type SchoolInvitationMinAggregateInputType = {
   id?: true
   schoolId?: true
   email?: true
+  firstName?: true
+  lastName?: true
   codeHash?: true
+  emailCode?: true
   status?: true
+  emailStatus?: true
+  emailAttempts?: true
+  emailError?: true
+  emailSentAt?: true
   expiresAt?: true
   usedAt?: true
   revokedAt?: true
@@ -86,8 +132,15 @@ export type SchoolInvitationMaxAggregateInputType = {
   id?: true
   schoolId?: true
   email?: true
+  firstName?: true
+  lastName?: true
   codeHash?: true
+  emailCode?: true
   status?: true
+  emailStatus?: true
+  emailAttempts?: true
+  emailError?: true
+  emailSentAt?: true
   expiresAt?: true
   usedAt?: true
   revokedAt?: true
@@ -100,8 +153,15 @@ export type SchoolInvitationCountAggregateInputType = {
   id?: true
   schoolId?: true
   email?: true
+  firstName?: true
+  lastName?: true
   codeHash?: true
+  emailCode?: true
   status?: true
+  emailStatus?: true
+  emailAttempts?: true
+  emailError?: true
+  emailSentAt?: true
   expiresAt?: true
   usedAt?: true
   revokedAt?: true
@@ -149,6 +209,18 @@ export type SchoolInvitationAggregateArgs<ExtArgs extends runtime.Types.Extensio
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: SchoolInvitationAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: SchoolInvitationSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: SchoolInvitationMinAggregateInputType
@@ -179,6 +251,8 @@ export type SchoolInvitationGroupByArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   _count?: SchoolInvitationCountAggregateInputType | true
+  _avg?: SchoolInvitationAvgAggregateInputType
+  _sum?: SchoolInvitationSumAggregateInputType
   _min?: SchoolInvitationMinAggregateInputType
   _max?: SchoolInvitationMaxAggregateInputType
 }
@@ -187,8 +261,15 @@ export type SchoolInvitationGroupByOutputType = {
   id: string
   schoolId: string
   email: string | null
+  firstName: string | null
+  lastName: string | null
   codeHash: string
+  emailCode: string | null
   status: $Enums.InvitationStatus
+  emailStatus: $Enums.EmailStatus
+  emailAttempts: number
+  emailError: string | null
+  emailSentAt: Date | null
   expiresAt: Date | null
   usedAt: Date | null
   revokedAt: Date | null
@@ -196,6 +277,8 @@ export type SchoolInvitationGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   _count: SchoolInvitationCountAggregateOutputType | null
+  _avg: SchoolInvitationAvgAggregateOutputType | null
+  _sum: SchoolInvitationSumAggregateOutputType | null
   _min: SchoolInvitationMinAggregateOutputType | null
   _max: SchoolInvitationMaxAggregateOutputType | null
 }
@@ -222,8 +305,15 @@ export type SchoolInvitationWhereInput = {
   id?: Prisma.StringFilter<"SchoolInvitation"> | string
   schoolId?: Prisma.StringFilter<"SchoolInvitation"> | string
   email?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
+  firstName?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
+  lastName?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
   codeHash?: Prisma.StringFilter<"SchoolInvitation"> | string
+  emailCode?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
   status?: Prisma.EnumInvitationStatusFilter<"SchoolInvitation"> | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFilter<"SchoolInvitation"> | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFilter<"SchoolInvitation"> | number
+  emailError?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
+  emailSentAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
   usedAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
   revokedAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
@@ -238,8 +328,15 @@ export type SchoolInvitationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   codeHash?: Prisma.SortOrder
+  emailCode?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  emailStatus?: Prisma.SortOrder
+  emailAttempts?: Prisma.SortOrder
+  emailError?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   usedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -259,7 +356,14 @@ export type SchoolInvitationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SchoolInvitationWhereInput | Prisma.SchoolInvitationWhereInput[]
   schoolId?: Prisma.StringFilter<"SchoolInvitation"> | string
   email?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
+  firstName?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
+  lastName?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
+  emailCode?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
   status?: Prisma.EnumInvitationStatusFilter<"SchoolInvitation"> | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFilter<"SchoolInvitation"> | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFilter<"SchoolInvitation"> | number
+  emailError?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
+  emailSentAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
   usedAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
   revokedAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
@@ -274,8 +378,15 @@ export type SchoolInvitationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   codeHash?: Prisma.SortOrder
+  emailCode?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  emailStatus?: Prisma.SortOrder
+  emailAttempts?: Prisma.SortOrder
+  emailError?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   usedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -283,8 +394,10 @@ export type SchoolInvitationOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SchoolInvitationCountOrderByAggregateInput
+  _avg?: Prisma.SchoolInvitationAvgOrderByAggregateInput
   _max?: Prisma.SchoolInvitationMaxOrderByAggregateInput
   _min?: Prisma.SchoolInvitationMinOrderByAggregateInput
+  _sum?: Prisma.SchoolInvitationSumOrderByAggregateInput
 }
 
 export type SchoolInvitationScalarWhereWithAggregatesInput = {
@@ -294,8 +407,15 @@ export type SchoolInvitationScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"SchoolInvitation"> | string
   schoolId?: Prisma.StringWithAggregatesFilter<"SchoolInvitation"> | string
   email?: Prisma.StringNullableWithAggregatesFilter<"SchoolInvitation"> | string | null
+  firstName?: Prisma.StringNullableWithAggregatesFilter<"SchoolInvitation"> | string | null
+  lastName?: Prisma.StringNullableWithAggregatesFilter<"SchoolInvitation"> | string | null
   codeHash?: Prisma.StringWithAggregatesFilter<"SchoolInvitation"> | string
+  emailCode?: Prisma.StringNullableWithAggregatesFilter<"SchoolInvitation"> | string | null
   status?: Prisma.EnumInvitationStatusWithAggregatesFilter<"SchoolInvitation"> | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusWithAggregatesFilter<"SchoolInvitation"> | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntWithAggregatesFilter<"SchoolInvitation"> | number
+  emailError?: Prisma.StringNullableWithAggregatesFilter<"SchoolInvitation"> | string | null
+  emailSentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SchoolInvitation"> | Date | string | null
   expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SchoolInvitation"> | Date | string | null
   usedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SchoolInvitation"> | Date | string | null
   revokedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SchoolInvitation"> | Date | string | null
@@ -307,8 +427,15 @@ export type SchoolInvitationScalarWhereWithAggregatesInput = {
 export type SchoolInvitationCreateInput = {
   id?: string
   email?: string | null
+  firstName?: string | null
+  lastName?: string | null
   codeHash: string
+  emailCode?: string | null
   status?: $Enums.InvitationStatus
+  emailStatus?: $Enums.EmailStatus
+  emailAttempts?: number
+  emailError?: string | null
+  emailSentAt?: Date | string | null
   expiresAt?: Date | string | null
   usedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -322,8 +449,15 @@ export type SchoolInvitationUncheckedCreateInput = {
   id?: string
   schoolId: string
   email?: string | null
+  firstName?: string | null
+  lastName?: string | null
   codeHash: string
+  emailCode?: string | null
   status?: $Enums.InvitationStatus
+  emailStatus?: $Enums.EmailStatus
+  emailAttempts?: number
+  emailError?: string | null
+  emailSentAt?: Date | string | null
   expiresAt?: Date | string | null
   usedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -335,8 +469,15 @@ export type SchoolInvitationUncheckedCreateInput = {
 export type SchoolInvitationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumInvitationStatusFieldUpdateOperationsInput | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  emailError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -350,8 +491,15 @@ export type SchoolInvitationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   schoolId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumInvitationStatusFieldUpdateOperationsInput | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  emailError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -364,8 +512,15 @@ export type SchoolInvitationCreateManyInput = {
   id?: string
   schoolId: string
   email?: string | null
+  firstName?: string | null
+  lastName?: string | null
   codeHash: string
+  emailCode?: string | null
   status?: $Enums.InvitationStatus
+  emailStatus?: $Enums.EmailStatus
+  emailAttempts?: number
+  emailError?: string | null
+  emailSentAt?: Date | string | null
   expiresAt?: Date | string | null
   usedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -377,8 +532,15 @@ export type SchoolInvitationCreateManyInput = {
 export type SchoolInvitationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumInvitationStatusFieldUpdateOperationsInput | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  emailError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -390,8 +552,15 @@ export type SchoolInvitationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   schoolId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumInvitationStatusFieldUpdateOperationsInput | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  emailError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -420,8 +589,15 @@ export type SchoolInvitationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
+  emailCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  emailStatus?: Prisma.SortOrder
+  emailAttempts?: Prisma.SortOrder
+  emailError?: Prisma.SortOrder
+  emailSentAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   usedAt?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
@@ -430,12 +606,23 @@ export type SchoolInvitationCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type SchoolInvitationAvgOrderByAggregateInput = {
+  emailAttempts?: Prisma.SortOrder
+}
+
 export type SchoolInvitationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
+  emailCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  emailStatus?: Prisma.SortOrder
+  emailAttempts?: Prisma.SortOrder
+  emailError?: Prisma.SortOrder
+  emailSentAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   usedAt?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
@@ -448,14 +635,25 @@ export type SchoolInvitationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
+  emailCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  emailStatus?: Prisma.SortOrder
+  emailAttempts?: Prisma.SortOrder
+  emailError?: Prisma.SortOrder
+  emailSentAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   usedAt?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
   acceptedByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SchoolInvitationSumOrderByAggregateInput = {
+  emailAttempts?: Prisma.SortOrder
 }
 
 export type SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput = {
@@ -546,11 +744,22 @@ export type EnumInvitationStatusFieldUpdateOperationsInput = {
   set?: $Enums.InvitationStatus
 }
 
+export type EnumEmailStatusFieldUpdateOperationsInput = {
+  set?: $Enums.EmailStatus
+}
+
 export type SchoolInvitationCreateWithoutAcceptedByUserInput = {
   id?: string
   email?: string | null
+  firstName?: string | null
+  lastName?: string | null
   codeHash: string
+  emailCode?: string | null
   status?: $Enums.InvitationStatus
+  emailStatus?: $Enums.EmailStatus
+  emailAttempts?: number
+  emailError?: string | null
+  emailSentAt?: Date | string | null
   expiresAt?: Date | string | null
   usedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -563,8 +772,15 @@ export type SchoolInvitationUncheckedCreateWithoutAcceptedByUserInput = {
   id?: string
   schoolId: string
   email?: string | null
+  firstName?: string | null
+  lastName?: string | null
   codeHash: string
+  emailCode?: string | null
   status?: $Enums.InvitationStatus
+  emailStatus?: $Enums.EmailStatus
+  emailAttempts?: number
+  emailError?: string | null
+  emailSentAt?: Date | string | null
   expiresAt?: Date | string | null
   usedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -605,8 +821,15 @@ export type SchoolInvitationScalarWhereInput = {
   id?: Prisma.StringFilter<"SchoolInvitation"> | string
   schoolId?: Prisma.StringFilter<"SchoolInvitation"> | string
   email?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
+  firstName?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
+  lastName?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
   codeHash?: Prisma.StringFilter<"SchoolInvitation"> | string
+  emailCode?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
   status?: Prisma.EnumInvitationStatusFilter<"SchoolInvitation"> | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFilter<"SchoolInvitation"> | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFilter<"SchoolInvitation"> | number
+  emailError?: Prisma.StringNullableFilter<"SchoolInvitation"> | string | null
+  emailSentAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
   usedAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
   revokedAt?: Prisma.DateTimeNullableFilter<"SchoolInvitation"> | Date | string | null
@@ -618,8 +841,15 @@ export type SchoolInvitationScalarWhereInput = {
 export type SchoolInvitationCreateWithoutSchoolInput = {
   id?: string
   email?: string | null
+  firstName?: string | null
+  lastName?: string | null
   codeHash: string
+  emailCode?: string | null
   status?: $Enums.InvitationStatus
+  emailStatus?: $Enums.EmailStatus
+  emailAttempts?: number
+  emailError?: string | null
+  emailSentAt?: Date | string | null
   expiresAt?: Date | string | null
   usedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -631,8 +861,15 @@ export type SchoolInvitationCreateWithoutSchoolInput = {
 export type SchoolInvitationUncheckedCreateWithoutSchoolInput = {
   id?: string
   email?: string | null
+  firstName?: string | null
+  lastName?: string | null
   codeHash: string
+  emailCode?: string | null
   status?: $Enums.InvitationStatus
+  emailStatus?: $Enums.EmailStatus
+  emailAttempts?: number
+  emailError?: string | null
+  emailSentAt?: Date | string | null
   expiresAt?: Date | string | null
   usedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -671,8 +908,15 @@ export type SchoolInvitationCreateManyAcceptedByUserInput = {
   id?: string
   schoolId: string
   email?: string | null
+  firstName?: string | null
+  lastName?: string | null
   codeHash: string
+  emailCode?: string | null
   status?: $Enums.InvitationStatus
+  emailStatus?: $Enums.EmailStatus
+  emailAttempts?: number
+  emailError?: string | null
+  emailSentAt?: Date | string | null
   expiresAt?: Date | string | null
   usedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -683,8 +927,15 @@ export type SchoolInvitationCreateManyAcceptedByUserInput = {
 export type SchoolInvitationUpdateWithoutAcceptedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumInvitationStatusFieldUpdateOperationsInput | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  emailError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -697,8 +948,15 @@ export type SchoolInvitationUncheckedUpdateWithoutAcceptedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   schoolId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumInvitationStatusFieldUpdateOperationsInput | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  emailError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -710,8 +968,15 @@ export type SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   schoolId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumInvitationStatusFieldUpdateOperationsInput | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  emailError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -722,8 +987,15 @@ export type SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserInput = {
 export type SchoolInvitationCreateManySchoolInput = {
   id?: string
   email?: string | null
+  firstName?: string | null
+  lastName?: string | null
   codeHash: string
+  emailCode?: string | null
   status?: $Enums.InvitationStatus
+  emailStatus?: $Enums.EmailStatus
+  emailAttempts?: number
+  emailError?: string | null
+  emailSentAt?: Date | string | null
   expiresAt?: Date | string | null
   usedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -735,8 +1007,15 @@ export type SchoolInvitationCreateManySchoolInput = {
 export type SchoolInvitationUpdateWithoutSchoolInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumInvitationStatusFieldUpdateOperationsInput | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  emailError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -748,8 +1027,15 @@ export type SchoolInvitationUpdateWithoutSchoolInput = {
 export type SchoolInvitationUncheckedUpdateWithoutSchoolInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumInvitationStatusFieldUpdateOperationsInput | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  emailError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -761,8 +1047,15 @@ export type SchoolInvitationUncheckedUpdateWithoutSchoolInput = {
 export type SchoolInvitationUncheckedUpdateManyWithoutSchoolInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumInvitationStatusFieldUpdateOperationsInput | $Enums.InvitationStatus
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  emailAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  emailError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -777,8 +1070,15 @@ export type SchoolInvitationSelect<ExtArgs extends runtime.Types.Extensions.Inte
   id?: boolean
   schoolId?: boolean
   email?: boolean
+  firstName?: boolean
+  lastName?: boolean
   codeHash?: boolean
+  emailCode?: boolean
   status?: boolean
+  emailStatus?: boolean
+  emailAttempts?: boolean
+  emailError?: boolean
+  emailSentAt?: boolean
   expiresAt?: boolean
   usedAt?: boolean
   revokedAt?: boolean
@@ -793,8 +1093,15 @@ export type SchoolInvitationSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   id?: boolean
   schoolId?: boolean
   email?: boolean
+  firstName?: boolean
+  lastName?: boolean
   codeHash?: boolean
+  emailCode?: boolean
   status?: boolean
+  emailStatus?: boolean
+  emailAttempts?: boolean
+  emailError?: boolean
+  emailSentAt?: boolean
   expiresAt?: boolean
   usedAt?: boolean
   revokedAt?: boolean
@@ -809,8 +1116,15 @@ export type SchoolInvitationSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   id?: boolean
   schoolId?: boolean
   email?: boolean
+  firstName?: boolean
+  lastName?: boolean
   codeHash?: boolean
+  emailCode?: boolean
   status?: boolean
+  emailStatus?: boolean
+  emailAttempts?: boolean
+  emailError?: boolean
+  emailSentAt?: boolean
   expiresAt?: boolean
   usedAt?: boolean
   revokedAt?: boolean
@@ -825,8 +1139,15 @@ export type SchoolInvitationSelectScalar = {
   id?: boolean
   schoolId?: boolean
   email?: boolean
+  firstName?: boolean
+  lastName?: boolean
   codeHash?: boolean
+  emailCode?: boolean
   status?: boolean
+  emailStatus?: boolean
+  emailAttempts?: boolean
+  emailError?: boolean
+  emailSentAt?: boolean
   expiresAt?: boolean
   usedAt?: boolean
   revokedAt?: boolean
@@ -835,7 +1156,7 @@ export type SchoolInvitationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SchoolInvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "schoolId" | "email" | "codeHash" | "status" | "expiresAt" | "usedAt" | "revokedAt" | "acceptedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["schoolInvitation"]>
+export type SchoolInvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "schoolId" | "email" | "firstName" | "lastName" | "codeHash" | "emailCode" | "status" | "emailStatus" | "emailAttempts" | "emailError" | "emailSentAt" | "expiresAt" | "usedAt" | "revokedAt" | "acceptedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["schoolInvitation"]>
 export type SchoolInvitationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   school?: boolean | Prisma.SchoolDefaultArgs<ExtArgs>
   acceptedByUser?: boolean | Prisma.SchoolInvitation$acceptedByUserArgs<ExtArgs>
@@ -859,8 +1180,15 @@ export type $SchoolInvitationPayload<ExtArgs extends runtime.Types.Extensions.In
     id: string
     schoolId: string
     email: string | null
+    firstName: string | null
+    lastName: string | null
     codeHash: string
+    emailCode: string | null
     status: $Enums.InvitationStatus
+    emailStatus: $Enums.EmailStatus
+    emailAttempts: number
+    emailError: string | null
+    emailSentAt: Date | null
     expiresAt: Date | null
     usedAt: Date | null
     revokedAt: Date | null
@@ -1295,8 +1623,15 @@ export interface SchoolInvitationFieldRefs {
   readonly id: Prisma.FieldRef<"SchoolInvitation", 'String'>
   readonly schoolId: Prisma.FieldRef<"SchoolInvitation", 'String'>
   readonly email: Prisma.FieldRef<"SchoolInvitation", 'String'>
+  readonly firstName: Prisma.FieldRef<"SchoolInvitation", 'String'>
+  readonly lastName: Prisma.FieldRef<"SchoolInvitation", 'String'>
   readonly codeHash: Prisma.FieldRef<"SchoolInvitation", 'String'>
+  readonly emailCode: Prisma.FieldRef<"SchoolInvitation", 'String'>
   readonly status: Prisma.FieldRef<"SchoolInvitation", 'InvitationStatus'>
+  readonly emailStatus: Prisma.FieldRef<"SchoolInvitation", 'EmailStatus'>
+  readonly emailAttempts: Prisma.FieldRef<"SchoolInvitation", 'Int'>
+  readonly emailError: Prisma.FieldRef<"SchoolInvitation", 'String'>
+  readonly emailSentAt: Prisma.FieldRef<"SchoolInvitation", 'DateTime'>
   readonly expiresAt: Prisma.FieldRef<"SchoolInvitation", 'DateTime'>
   readonly usedAt: Prisma.FieldRef<"SchoolInvitation", 'DateTime'>
   readonly revokedAt: Prisma.FieldRef<"SchoolInvitation", 'DateTime'>
