@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Building2, Gift, Shield, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -43,10 +43,8 @@ export default function RecruiterRegisterPage() {
       const data = await res.json();
       if (!res.ok) { setError(data.error); return; }
       
-      // Update local NextAuth session to reflect the new RECRUITER role
-      await update({ role: 'RECRUITER' });
-      
-      router.push('/recruiter');
+      // Force user to sign out and log back in to get their new role
+      await signOut({ callbackUrl: '/login?message=recruiter_success' });
     } catch {
       setError('Erreur de connexion.');
     } finally {

@@ -145,10 +145,6 @@ export const authConfig = {
          delete token.impersonationJti;
       }
 
-      if (trigger === "update" && session?.role && !session?.impersonationToken && !session?.stopImpersonation) {
-         token.role = session.role;
-      }
-
       return token;
     },
     session({ session, user, token }) {
