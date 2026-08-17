@@ -31,9 +31,7 @@ export async function POST(req: Request) {
     const baseUrl = `${protocol}://${host}`;
     
     // Construct the target URL. Add headless=true to skip window.print()
-    const headlessToken = process.env.MY_GEMINI_KEY?.slice(0, 10) || 'fallbackToken';
-    console.log('[PDF Gen] Calling headless browser...');
-    const targetUrl = `${baseUrl}/${pagePath}/${id}?print=true&headless=true&token=${headlessToken}`;
+    const targetUrl = `${baseUrl}/${pagePath}/${id}?print=true&headless=true`;
 
     // Define real Google Chrome paths based on the OS for both dev and prod
     let chromeExecutablePath = '';
@@ -91,6 +89,15 @@ export async function POST(req: Request) {
          await page.setCookie(...cookieArray);
        }
     }
+
+    // Sécurité: Injection du headless_token par Cookie strict pour éviter le Referer Leak
+    await page.setCookie({
+      name: 'headless_token',
+      value: process.env.INTERNAL_API_KEY || 'fallbackToken',
+      url: baseUrl,
+      path: '/',
+    });
+
 
     // Emulate print media type
     await page.emulateMediaType('print');

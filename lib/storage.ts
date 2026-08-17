@@ -4,6 +4,7 @@ import { get, set, del } from 'idb-keyval';
 // Custom storage adapter for IndexedDB
 export const indexedDBStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
+    if (typeof window === 'undefined') return null;
     try {
       return (await get(name)) || null;
     } catch (e) {
@@ -12,6 +13,7 @@ export const indexedDBStorage: StateStorage = {
     }
   },
   setItem: async (name: string, value: string): Promise<void> => {
+    if (typeof window === 'undefined') return;
     try {
       await set(name, value);
     } catch (e) {
@@ -19,6 +21,7 @@ export const indexedDBStorage: StateStorage = {
     }
   },
   removeItem: async (name: string): Promise<void> => {
+    if (typeof window === 'undefined') return;
     try {
       await del(name);
     } catch (e) {

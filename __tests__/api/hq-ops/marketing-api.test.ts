@@ -170,7 +170,7 @@ describe('Marketing HQ Ops API', () => {
         body: JSON.stringify(payload)
       });
 
-      (global.fetch as any).mockResolvedValue({ ok: true });
+      (global.fetch as any).mockResolvedValue({ ok: true, json: async () => ({}) });
       (prisma.marketingCampaign.create as any).mockResolvedValue({ id: '123' });
 
       const res = await sendMarketing(req);
@@ -181,9 +181,9 @@ describe('Marketing HQ Ops API', () => {
         expect.objectContaining({ data: expect.objectContaining({ status: 'sent', recipientsCount: 1 }) })
       );
 
-      // Verify Brevo API Call
+      // Verify Microservice Call
       expect(global.fetch).toHaveBeenCalledWith(
-        'https://api.brevo.com/v3/smtp/email',
+        expect.stringContaining('/v1/emails/send'),
         expect.objectContaining({
           method: 'POST',
           body: expect.stringContaining('test@example.com')

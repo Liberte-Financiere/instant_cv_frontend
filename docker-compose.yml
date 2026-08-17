@@ -1,0 +1,27 @@
+services:
+  bg-removal:
+    build:
+      context: ./microservices/bg_removal
+    container_name: jobsira-bg-removal
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+
+  email-worker:
+    build:
+      context: ./microservices/email_service
+    container_name: jobsira-email-worker
+    ports:
+      - "3002:3002"
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  cron-worker:
+    build:
+      context: ./microservices/cron_service
+    container_name: jobsira-cron-worker
+    network_mode: "host"
+    env_file:
+      - .env
+    restart: unless-stopped
