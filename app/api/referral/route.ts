@@ -120,16 +120,23 @@ export async function POST(request: Request) {
 
     // 1. Link the new user to referrer and increment referrer count
     await prisma.$transaction(async (tx) => {
-      // Link the new user to referrer
-      await tx.user.update({
-        where: { id: currentUserId },
+      // Link the new user to referrer only if not already referred
+      const updateResult = await tx.user.updateMany({
+        where: { 
+          id: currentUserId,
+          referredById: null
+        },
         data: { referredById: referrer.id },
       });
 
-      // Increment referrer's count
+      if (updateResult.count === 0) {
+        throw new Error("ALREADY_REFERRED");
+      }
+
+      // Increment referrer's count atomically
       await tx.user.update({
         where: { id: referrer.id },
-        data: { referralCount: referrer.referralCount + 1 },
+        data: { referralCount: { increment: 1 } },
       });
     });
     
@@ -154,8 +161,11 @@ export async function POST(request: Request) {
       success: true, 
       message: 'Parrainage enregistré avec succès ! Crédits ajoutés.' 
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('[REFERRAL_POST]', error);
+    if (error.message === 'ALREADY_REFERRED') {
+        return NextResponse.json({ error: 'Déjà parrainé ou requête en double' }, { status: 409 });
+    }
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }
