@@ -74,8 +74,7 @@ export default function PublicCVPage({ params }: PageProps) {
         const forceFetch = searchParams.get('headless') === 'true';
 
         if (forceFetch || !currentCV || currentCV.id !== id) {
-          const token = searchParams.get('token') || undefined;
-          const fetchedCV = await fetchCV(id, token);
+          const fetchedCV = await fetchCV(id);
           if (fetchedCV) {
             setServerCV(fetchedCV);
           } else {

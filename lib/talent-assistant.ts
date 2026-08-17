@@ -296,9 +296,9 @@ async function searchCandidatesInternal(
       const vectorString = `[${vector.join(',')}]`;
 
       // Récupérer les profils sémantiquement proches
-      const results = await prisma.$queryRawUnsafe<Array<{id: string, distance: number}>>(
-        `SELECT "id", ("embedding" <=> '${vectorString}'::vector) as distance FROM "CandidateProfile" WHERE "isActive" = true ORDER BY distance ASC LIMIT 50`
-      );
+      const results = await prisma.$queryRaw<Array<{id: string, distance: number}>>`
+        SELECT "id", ("embedding" <=> ${vectorString}::vector) as distance FROM "CandidateProfile" WHERE "isActive" = true ORDER BY distance ASC LIMIT 50
+      `;
       
       closestIds = results.filter(r => r.distance < 0.45).map(r => r.id);
     } catch (err) {

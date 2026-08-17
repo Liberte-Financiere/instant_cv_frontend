@@ -8,8 +8,9 @@ export async function GET(
 ) {
   try {
     const url = new URL(req.url);
-    const headlessKey = url.searchParams.get('headlessToken');
-    const isServerGenerator = headlessKey === process.env.MY_GEMINI_KEY?.slice(0, 10); // Simple secure static proxy token without relying on new ENVs
+    const cookiesStr = req.headers.get('cookie') || '';
+    const headlessKey = cookiesStr.split('; ').find(row => row.startsWith('headless_token='))?.split('=')[1];
+    const isServerGenerator = headlessKey === process.env.INTERNAL_API_KEY; // Sécurisé: lu depuis les cookies, pas de Referer leak
     
     const session = await auth();
     if (!session?.user?.id && !isServerGenerator) {

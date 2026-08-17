@@ -78,7 +78,7 @@ interface CVState {
   
   // API Sync
   fetchUserCVs: () => Promise<void>;
-  fetchCV: (id: string, token?: string) => Promise<CV | null>;
+  fetchCV: (id: string) => Promise<CV | null>;
   saveCurrentCV: () => Promise<void>;
   
   // Core Actions
@@ -307,20 +307,18 @@ export const useCVStore = create<CVState>()(
         }
       },
 
-      fetchCV: async (id: string, token?: string) => {
+      fetchCV: async (id: string) => {
         try {
-          // Check local first (unless we are forcing a token fetch which means SSR bypass)
-          if (!token) {
-            const localCV = get().cvList.find(c => c.id === id);
-            // ONLY use local CV if it's a FULL cv (contains experiences array), otherwise we must fetch
-            if (localCV && localCV.experiences) {
-              set({ currentCV: localCV });
-              return localCV;
-            }
+          // Check local first
+          const localCV = get().cvList.find(c => c.id === id);
+          // ONLY use local CV if it's a FULL cv (contains experiences array), otherwise we must fetch
+          if (localCV && localCV.experiences) {
+            set({ currentCV: localCV });
+            return localCV;
           }
 
           // Check server
-          const serverCV = await CVService.getById(id, token);
+          const serverCV = await CVService.getById(id);
           
           // Add to local list and format if needed
           // Assuming API returns correct full format due to previous fix

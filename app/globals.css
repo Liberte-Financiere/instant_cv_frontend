@@ -4,17 +4,36 @@
   --font-manrope: "Manrope", sans-serif;
   --primary: #2463eb;
   --primary-dark: #1d4ed8;
+  --primary-light: #eff6ff;
   --background-dark: #0f172a;
   --background-light: #f6f6f8;
+  --success: #10b981;
+  --success-light: #ecfdf5;
+  --warning: #f59e0b;
+  --warning-light: #fffbeb;
+  --destructive: #ef4444;
+  --destructive-light: #fef2f2;
+  --muted: #64748b;
+  --muted-light: #f8fafc;
+  --border-color: #f1f5f9;
 }
 
 @theme {
   --font-sans: var(--font-manrope);
-  --color-primary: var(--primary);
-  --color-primary-dark: var(--primary-dark);
-  --color-bg-dark: var(--background-dark);
-  --color-bg-light: var(--background-light);
-
+  --color-primary: #2463eb;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-light: #eff6ff;
+  --color-bg-dark: #0f172a;
+  --color-bg-light: #f6f6f8;
+  --color-success: #10b981;
+  --color-success-light: #ecfdf5;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fffbeb;
+  --color-destructive: #ef4444;
+  --color-destructive-light: #fef2f2;
+  --color-muted: #64748b;
+  --color-muted-light: #f8fafc;
+  --color-border: #f1f5f9;
 }
 
 body {

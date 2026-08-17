@@ -11,6 +11,7 @@ vi.mock('@/lib/prisma', () => ({
     user: {
       findUnique: vi.fn(),
       update: vi.fn(),
+      updateMany: vi.fn(),
     },
     creditTransaction: {
       create: vi.fn(),
@@ -135,6 +136,7 @@ describe('cost hierarchy invariants', () => {
 describe('FREE_SERVICES & checkAndConsumeCredits', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    (prisma.user.updateMany as any).mockResolvedValue({ count: 1 });
   });
 
   it('contains CREATE_CV in config', async () => {
@@ -181,7 +183,9 @@ describe('FREE_SERVICES & checkAndConsumeCredits', () => {
     });
 
     it('Cas 4 - Service payant normal (AI_ANALYZE)', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue({ credits: 10 });
+      (prisma.user.findUnique as any)
+        .mockResolvedValueOnce({ credits: 10 })
+        .mockResolvedValueOnce({ credits: 10 - CREDIT_COSTS.AI_ANALYZE });
       const cost = CREDIT_COSTS.AI_ANALYZE;
 
       const result = await checkAndConsumeCredits('user-3', 'AI_ANALYZE', 'Test paid service');
@@ -189,11 +193,12 @@ describe('FREE_SERVICES & checkAndConsumeCredits', () => {
       expect(result).toEqual({
         success: true,
         newBalance: 10 - cost,
+        isB2B: false,
       });
 
       // Le solde doit être débité de manière atomique
-      expect(prisma.user.update).toHaveBeenCalledWith({
-        where: { id: 'user-3' },
+      expect(prisma.user.updateMany).toHaveBeenCalledWith({
+        where: { id: 'user-3', credits: { gte: cost } },
         data: { credits: { decrement: cost } }
       });
 
@@ -216,7 +221,7 @@ describe('FREE_SERVICES & checkAndConsumeCredits', () => {
         checkAndConsumeCredits('user-4', 'AI_ANALYZE', 'Test insufficient')
       ).rejects.toThrow(InsufficientCreditsError);
 
-      expect(prisma.user.update).not.toHaveBeenCalled();
+      expect(prisma.user.updateMany).not.toHaveBeenCalled();
       expect(prisma.creditTransaction.create).not.toHaveBeenCalled();
     });
   });

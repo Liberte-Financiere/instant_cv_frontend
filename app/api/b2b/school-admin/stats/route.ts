@@ -25,10 +25,11 @@ export async function GET() {
     }
 
     // Fetch stats
-    const [totalStudents, pendingInvitations, acceptedInvitations] = await Promise.all([
+    const [totalStudents, pendingInvitations, failedEmails, processingEmails] = await Promise.all([
       prisma.user.count({ where: { schoolId } }),
       prisma.schoolInvitation.count({ where: { schoolId, status: 'PENDING' } }),
-      prisma.schoolInvitation.count({ where: { schoolId, status: 'ACCEPTED' } })
+      prisma.schoolInvitation.count({ where: { schoolId, emailStatus: 'FAILED' } }),
+      prisma.schoolInvitation.count({ where: { schoolId, emailStatus: { in: ['QUEUED', 'SENDING'] } } })
     ]);
 
     return NextResponse.json({
@@ -42,7 +43,8 @@ export async function GET() {
       stats: {
         totalStudents,
         pendingInvitations,
-        acceptedInvitations
+        failedEmails,
+        processingEmails
       }
     });
 

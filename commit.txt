@@ -1,18 +1,18 @@
-[2026-08-16] — Implémentation de l'Orchestrateur Cron (Go)
+[2026-08-17] — Design System: Migration vers les Design Tokens
 
 What changed:
-- Création d'un micro-service d'orchestration en Go (`microservices/cron_service/main.go`).
-- Création d'un Dockerfile multi-stage (`golang:alpine` -> `scratch`) pour une image finale ultra-légère (~5-10 Mo).
-- Le service ping une URL cible à intervalle régulier en passant un Header d'autorisation.
+- Added semantic design tokens (success, warning, destructive, muted, border) to globals.css
+- Refactored the school admin dashboard to use these new semantic tokens instead of hardcoded Tailwind colors.
 
 Why:
-- Isoler la logique de déclenchement temporel (Cron) de l'application Next.js et de l'infrastructure hôte (Linux crontab).
-- Utiliser Go avec l'image Docker `scratch` permet d'avoir un conteneur d'une légèreté et d'une sécurité imbattables (pas de shell, pas de package manager).
+- To eliminate hardcoded CSS colors and ensure the UI strictly respects the global design system. This sets a solid foundation for future theming (e.g., dark mode) and UI consistency.
 
 Files affected:
-- microservices/cron_service/main.go — Script principal Go gérant le ticker et les requêtes HTTP.
-- microservices/cron_service/Dockerfile — Compilation statique (CGO_ENABLED=0) et transfert des certificats SSL (ca-certificates).
+- app/globals.css — Added semantic color tokens to :root and @theme.
+- app/dashboard/school-admin/page.tsx — Refactored all statistics cards to use bg-primary-light, text-warning, border-border, etc.
+
+Breaking changes:
+- None
 
 Notes for review:
-- Le conteneur peut être lancé avec les variables d'environnement `TARGET_URL`, `CRON_SECRET` et `CRON_INTERVAL` (ex: `5m`).
-- Si exécuté en local pour cibler Next.js, utiliser `--network host` pour accéder à `localhost:3000`.
+- The design is now fully driven by tokens. Any future color adjustments should be made centrally in globals.css.
