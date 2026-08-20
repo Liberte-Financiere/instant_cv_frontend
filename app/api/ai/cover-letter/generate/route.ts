@@ -47,10 +47,10 @@ export async function POST(req: Request) {
       4. Structure : Coordonnées (utilise des placeholders si manquants), Objet, Salutations, Corps (3-4 paragraphes : Vous, Moi, Nous), Formule de politesse.
       5. Retourne UNIQUEMENT le corps de la lettre au format JSON avec la structure suivante :
       {
-        "subject": "Objet de la lettre",
-        "salutation": "Madame, Monsieur,",
+        "subject": "Objet de la lettre (clair et professionnel)",
+        "salutation": "Salutation appropriée (ex: 'Monsieur Dupont,' si le nom du recruteur est mentionné dans l'offre, sinon 'Madame, Monsieur,')",
         "body": "Texte complet du corps de la lettre, sans les coordonnées ni la signature.",
-        "closing": "Formule de politesse"
+        "closing": "Formule de politesse de fin (ex: 'Je vous prie d'agréer...')"
       }
     `;
 
