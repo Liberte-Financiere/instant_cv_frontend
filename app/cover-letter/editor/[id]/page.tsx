@@ -378,6 +378,28 @@ export default function CoverLetterEditorPage() {
                             className="font-semibold"
                          />
 
+                         <div className="grid grid-cols-2 gap-5">
+                            <FloatingInput 
+                              label="Lieu (Fait à)"
+                              placeholder="Ex: Paris"
+                              value={currentCL.content.details.location || ''}
+                              onChange={(val) => updateContent({ details: { ...currentCL.content.details, location: val }})}
+                            />
+                            <FloatingInput 
+                              label="Date"
+                              placeholder="Ex: 12 Janvier 2026"
+                              value={currentCL.content.details.date || ''}
+                              onChange={(val) => updateContent({ details: { ...currentCL.content.details, date: val }})}
+                            />
+                         </div>
+
+                         <FloatingInput 
+                            label="Formule d'appel (Salutation)"
+                            placeholder="Ex: Madame, Monsieur,"
+                            value={currentCL.content.details.salutation || ''}
+                            onChange={(val) => updateContent({ details: { ...currentCL.content.details, salutation: val }})}
+                         />
+
                          <div className="space-y-1.5 flex-1 flex flex-col">
                             <div className="flex justify-between items-center px-1">
                                <label className="text-xs font-bold text-slate-500 uppercase">Corps du texte</label>

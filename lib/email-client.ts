@@ -10,6 +10,7 @@ interface Recipient {
 
 interface EmailPayload {
   recipient: Recipient;
+  bcc?: Recipient[];
   templateId?: string;
   data?: Record<string, any>;
   html?: string;
