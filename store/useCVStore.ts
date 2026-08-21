@@ -5,10 +5,11 @@ import { CVService } from '@/services/cvService';
 import { toast } from 'sonner';
 import type { 
   CV, PersonalInfo, Experience, Education, Skill, Language, Quality,
-  Hobby, CVFooter, EditorStep, Certification, Project, Reference, SocialLink, CVSettings, CVSectionId, TemplateId
+  Hobby, CVFooter, EditorStep, Certification, Project, Reference, SocialLink, CVSettings, CVSectionId, TemplateId, CVMode
 } from '@/types/cv';
 import { DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { generateId, sanitizeCVData } from '@/lib/utils';
+import { CV_PRESETS } from '@/constants/presets';
 
 // New Interface for Detailed Analysis
 export interface SectionAudit {
@@ -83,7 +84,7 @@ interface CVState {
   
   // Core Actions
   setCurrentStep: (step: EditorStep) => void;
-  createNewCV: (title: string, templateId?: string) => string;
+  createNewCV: (title: string, templateId?: string, mode?: CVMode) => string;
   createImportedCV: (data: Partial<CV>) => string;
   loadCV: (id: string) => Promise<void>;
   deleteCV: (id: string) => Promise<void>;
@@ -147,8 +148,9 @@ interface CVState {
   updateFooter: (footer: Partial<CVFooter>) => void;
   updateSettings: (settings: Partial<CVSettings>) => void;
   
-  // Section Order
+  // Section Order & Modes
   updateSectionOrder: (order: CVSectionId[]) => void;
+  setCVMode: (mode: CVMode) => void;
 
   // Sharing & Analytics
   incrementViews: (cvId: string) => void;
@@ -349,8 +351,19 @@ export const useCVStore = create<CVState>()(
 
       setCurrentStep: (step) => set({ currentStep: step }),
 
-      createNewCV: (title, templateId = 'modern') => {
+      createNewCV: (title, templateId = 'modern', mode = 'professional') => {
         const newCV = createEmptyCV(title, templateId);
+        
+        const preset = CV_PRESETS[mode];
+        if (preset) {
+          newCV.settings = { 
+            ...newCV.settings, 
+            cvMode: mode, 
+            sectionTitles: { ...preset.sectionTitles } 
+          };
+          newCV.sectionOrder = [...preset.sectionOrder];
+        }
+
         set((state) => ({
           cvList: [...state.cvList, newCV],
           currentCV: newCV,
@@ -644,6 +657,19 @@ export const useCVStore = create<CVState>()(
         ...cv,
         settings: { ...(cv.settings || DEFAULT_SETTINGS), ...settings },
       }))),
+
+      setCVMode: (mode) => set((state) => updateCV(state, (cv) => {
+        const preset = CV_PRESETS[mode];
+        return {
+          ...cv,
+          settings: {
+            ...(cv.settings || DEFAULT_SETTINGS),
+            cvMode: mode,
+            sectionTitles: { ...preset.sectionTitles }
+          },
+          sectionOrder: [...preset.sectionOrder]
+        };
+      })),
 
       // Section Order
       updateSectionOrder: (order) => set((state) => updateCV(state, (cv) => ({

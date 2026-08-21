@@ -91,6 +91,18 @@ export function CorporateBlue({ cv }: TemplateProps) {
                     <p>{personalInfo.phone}</p>
                   </div>
                 )}
+                {personalInfo.nationality && (
+                  <div>
+                    <p className="font-bold text-white/60 text-[10px] uppercase tracking-wider">{lang === 'fr' ? 'Nationalité' : 'Nationality'}</p>
+                    <p>{personalInfo.nationality}</p>
+                  </div>
+                )}
+                {personalInfo.dateOfBirth && (
+                  <div>
+                    <p className="font-bold text-white/60 text-[10px] uppercase tracking-wider">{lang === 'fr' ? 'Âge / Date de naissance' : 'Age / Date of Birth'}</p>
+                    <p>{personalInfo.dateOfBirth}</p>
+                  </div>
+                )}
               </div>
             </section>
 

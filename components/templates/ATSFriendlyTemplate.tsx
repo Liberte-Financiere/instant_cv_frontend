@@ -52,6 +52,15 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
             .join(' | ')}
         </p>
         
+        {(personalInfo.nationality || personalInfo.dateOfBirth) && (
+          <p className="mt-1 text-sm">
+            {[
+              personalInfo.nationality && `Nationalité : ${personalInfo.nationality}`,
+              personalInfo.dateOfBirth && `Âge : ${personalInfo.dateOfBirth}`
+            ].filter(Boolean).join(' | ')}
+          </p>
+        )}
+        
         {socialLinks.length > 0 && (
           <p className="mt-1 text-sm">
             {socialLinks.map((link) => link.url).join(' | ')}

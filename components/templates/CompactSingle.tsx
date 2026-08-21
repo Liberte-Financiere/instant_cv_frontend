@@ -37,6 +37,8 @@ export function CompactSingle({ cv }: TemplateProps) {
           {p.email && <p>{p.email}</p>}
           {p.phone && <p>{p.phone}</p>}
           {p.address && <p>{p.address}</p>}
+          {p.nationality && <p>{lang === 'fr' ? 'Nationalité' : 'Nationality'}: {p.nationality}</p>}
+          {p.dateOfBirth && <p>{p.dateOfBirth}</p>}
         </div>
       </header>
 

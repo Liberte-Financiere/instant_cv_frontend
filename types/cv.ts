@@ -7,6 +7,8 @@ export interface PersonalInfo {
   photoUrl?: string;
   title: string;
   summary: string;
+  nationality?: string;
+  dateOfBirth?: string;
 }
 
 export interface Experience {
@@ -98,7 +100,10 @@ export interface CVFooter {
 }
 
 // NEW: CV Settings for customization
+export type CVMode = 'professional' | 'academic';
+
 export interface CVSettings {
+  cvMode?: CVMode;
   accentColor: string; // hex color
   sidebarColor?: string; // hex color
   tagsColor?: string; // hex color

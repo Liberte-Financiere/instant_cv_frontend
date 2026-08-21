@@ -41,6 +41,8 @@ export function TwoTone({ cv }: TemplateProps) {
             {p.email && <p>✉ {p.email}</p>}
             {p.phone && <p>📞 {p.phone}</p>}
             {p.address && <p>📍 {p.address}</p>}
+            {p.nationality && <p>{lang === 'fr' ? 'Nationalité' : 'Nationality'}: {p.nationality}</p>}
+            {p.dateOfBirth && <p>{p.dateOfBirth}</p>}
           </div>
           {p.summary && <p className="text-xs text-white/80 leading-relaxed ">{p.summary}</p>}
         </div>

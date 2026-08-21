@@ -39,6 +39,12 @@ export function ClassicSerif({ cv }: TemplateProps) {
             {p.phone && <span>{p.phone}</span>}
             {p.address && <span>{p.address}</span>}
           </div>
+          {(p.nationality || p.dateOfBirth) && (
+            <div className="flex justify-center gap-6 mt-1 text-xs text-slate-500">
+              {p.nationality && <span>Nationalité : {p.nationality}</span>}
+              {p.dateOfBirth && <span>Âge : {p.dateOfBirth}</span>}
+            </div>
+          )}
         </header>
 
         {sectionOrder.map((sectionId) => {

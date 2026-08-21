@@ -138,6 +138,22 @@ export function BlueprintPremium({ cv }: TemplateProps) {
             </div>
           </div>
         )}
+        {p.nationality && (
+          <div className="flex items-center gap-2">
+            <div className="min-w-0">
+              <p className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">{lang === 'fr' ? 'Nationalité' : 'Nationality'}</p>
+              <p className="text-[11px] text-slate-700 font-medium truncate">{p.nationality}</p>
+            </div>
+          </div>
+        )}
+        {p.dateOfBirth && (
+          <div className="flex items-center gap-2">
+            <div className="min-w-0">
+              <p className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">{lang === 'fr' ? 'Âge / Date' : 'Age / Date'}</p>
+              <p className="text-[11px] text-slate-700 font-medium truncate">{p.dateOfBirth}</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ─── MAIN 2-COLUMN CONTENT ─── */}

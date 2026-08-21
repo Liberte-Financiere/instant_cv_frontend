@@ -38,6 +38,8 @@ export function CleanGrid({ cv }: TemplateProps) {
             {personalInfo.address && <span>{personalInfo.address}</span>}
             {personalInfo.phone && <span>{personalInfo.phone}</span>}
             {personalInfo.email && <span>{personalInfo.email}</span>}
+            {personalInfo.nationality && <span>{lang === 'fr' ? 'Nationalité' : 'Nationality'}: {personalInfo.nationality}</span>}
+            {personalInfo.dateOfBirth && <span>{personalInfo.dateOfBirth}</span>}
           </div>
         </div>
         {personalInfo.photoUrl && (

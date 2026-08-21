@@ -34,10 +34,12 @@ export function Nordic({ cv }: TemplateProps) {
           <div>
             <h1 className="text-2xl font-light text-slate-800 tracking-wide">{p.firstName} <span className="font-bold">{p.lastName}</span></h1>
             <p className="text-sm mt-0.5" style={{ color: accent }}>{p.title}</p>
-            <div className="flex flex-wrap gap-x-4 mt-2 text-xs text-slate-400">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-slate-400">
               {p.email && <span>{p.email}</span>}
               {p.phone && <span>{p.phone}</span>}
               {p.address && <span>{p.address}</span>}
+              {p.nationality && <span>{lang === 'fr' ? 'Nationalité' : 'Nationality'}: {p.nationality}</span>}
+              {p.dateOfBirth && <span>{p.dateOfBirth}</span>}
             </div>
           </div>
         </header>

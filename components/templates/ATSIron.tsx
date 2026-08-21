@@ -40,10 +40,12 @@ export function ATSIron({ cv }: TemplateProps) {
         >
           {personalInfo.firstName} {personalInfo.lastName}
         </h1>
-        <div className="mt-3 flex justify-center gap-4 text-sm font-medium">
+        <div className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm font-medium">
              {personalInfo.email && <span>{personalInfo.email}</span>}
              {personalInfo.phone && <span>{personalInfo.phone}</span>}
              {personalInfo.address && <span>{personalInfo.address}</span>}
+             {personalInfo.nationality && <span>{lang === 'fr' ? 'Nationalité' : 'Nationality'}: {personalInfo.nationality}</span>}
+             {personalInfo.dateOfBirth && <span>{personalInfo.dateOfBirth}</span>}
         </div>
       </header>
 

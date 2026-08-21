@@ -43,6 +43,8 @@ export function PersonalInfoForm() {
       <div className="col-span-full">
         <Input label="Adresse" value={personalInfo?.address || ''} onChange={(e) => updatePersonalInfo({ address: e.target.value })} placeholder="Ex: Paris, France" autoComplete="street-address" />
       </div>
+      <Input label="Nationalité (Optionnel)" value={personalInfo?.nationality || ''} onChange={(e) => updatePersonalInfo({ nationality: e.target.value })} placeholder="Ex: Burkinabè" />
+      <Input label="Date de naissance ou Âge (Optionnel)" value={personalInfo?.dateOfBirth || ''} onChange={(e) => updatePersonalInfo({ dateOfBirth: e.target.value })} placeholder="Ex: 25 ans ou 01/01/2000" />
 
       {/* Social Links */}
       <div className="col-span-full mt-4 pt-4 border-t border-slate-100">
