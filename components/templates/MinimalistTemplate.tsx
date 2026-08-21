@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import { CV } from '@/types/cv';
+import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
   CVSkills, CVLanguages, CVCertifications, CVHobbies,
@@ -29,6 +29,7 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
   
   const accentColor = getAccentColor('professional', cv.settings?.accentColor);
   const variant = 'professional';
+  const sectionOrder: CVSectionId[] = cv.sectionOrder || [...DEFAULT_SECTION_ORDER];
 
   return (
     <div className="cv-template w-full h-full bg-white text-slate-900 font-sans text-sm leading-relaxed min-h-[297mm]">
@@ -77,76 +78,87 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
 
       {/* Content */}
       <main className="px-10 py-6 space-y-6">
-        <CVSummary summary={personalInfo.summary} variant={variant} accentColor={accentColor}  title={getSectionTitle('summary', cv.settings, lang)} />
-        <CVExperience experiences={experiences} variant={variant} accentColor={accentColor}  title={getSectionTitle('experience', cv.settings, lang)}  lang={lang}/>
-        <CVEducation education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', cv.settings, lang)}  lang={lang}/>
-        
-        {/* Skills inline */}
-        {skills.length > 0 && (
-          <section>
-            <h2 
-              className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b pb-2 mb-3"
-              style={{ borderColor: accentColor }}
-            >{getSectionTitle('skills', cv.settings, lang)}</h2>
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill) => (
-                <span 
-                  key={skill.id} 
-                  className="px-3 py-1 text-xs rounded-full"
-                  style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
-                >
-                  {skill.name}
-                </span>
-              ))}
-            </div>
-          </section>
-        )}
-        
-        {/* Qualities inline */}
-        {cv.qualities && cv.qualities.length > 0 && (
-          <section>
-            <h2 
-              className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b pb-2 mb-3"
-              style={{ borderColor: accentColor }}
-            >
-              {getSectionTitle('qualities', cv.settings, lang)}
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {cv.qualities.map((quality) => (
-                <span 
-                  key={quality.id} 
-                  className="px-3 py-1 text-xs rounded-full"
-                  style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
-                >
-                  {quality.name}
-                </span>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Languages inline */}
-        {languages.length > 0 && (
-          <section>
-            <h2 
-              className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b pb-2 mb-3"
-              style={{ borderColor: accentColor }}
-            >{getSectionTitle('languages', cv.settings, lang)}</h2>
-            <div className="flex flex-wrap gap-4 text-sm">
-              {languages.map((lang) => (
-                <span key={lang.id} className="text-slate-700">
-                  <strong>{lang.name}</strong> — {lang.level}
-                </span>
-              ))}
-            </div>
-          </section>
-        )}
-        
-        <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', cv.settings, lang)} />
-        <CVProjects projects={projects} variant={variant} accentColor={accentColor}  title={getSectionTitle('projects', cv.settings, lang)} />
-        <CVHobbies hobbies={hobbies} variant={variant} accentColor={accentColor}  title={getSectionTitle('hobbies', cv.settings, lang)} />
-        <CVReferences references={references} variant={variant} accentColor={accentColor}  title={getSectionTitle('references', cv.settings, lang)} />
-        <CVDivers divers={divers} variant={variant} accentColor={accentColor}  title={getSectionTitle('divers', cv.settings, lang)} />
+        {/* Dynamic Content */}
+        {sectionOrder.map((sectionId) => {
+          switch (sectionId) {
+            case 'summary':
+              return <CVSummary key={sectionId} summary={personalInfo.summary} variant={variant} accentColor={accentColor} title={getSectionTitle('summary', cv.settings, lang)} />;
+            case 'experience':
+              return <CVExperience key={sectionId} experiences={experiences} variant={variant} accentColor={accentColor} title={getSectionTitle('experience', cv.settings, lang)} lang={lang} />;
+            case 'education':
+              return <CVEducation key={sectionId} education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', cv.settings, lang)} lang={lang} />;
+            case 'skills':
+              return skills.length > 0 ? (
+                <section key={sectionId}>
+                  <h2 
+                    className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b pb-2 mb-3"
+                    style={{ borderColor: accentColor }}
+                  >{getSectionTitle('skills', cv.settings, lang)}</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {skills.map((skill) => (
+                      <span 
+                        key={skill.id} 
+                        className="px-3 py-1 text-xs rounded-full"
+                        style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
+                      >
+                        {skill.name}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              ) : null;
+            case 'qualities':
+              return cv.qualities && cv.qualities.length > 0 ? (
+                <section key={sectionId}>
+                  <h2 
+                    className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b pb-2 mb-3"
+                    style={{ borderColor: accentColor }}
+                  >
+                    {getSectionTitle('qualities', cv.settings, lang)}
+                  </h2>
+                  <div className="flex flex-wrap gap-2">
+                    {cv.qualities.map((quality) => (
+                      <span 
+                        key={quality.id} 
+                        className="px-3 py-1 text-xs rounded-full"
+                        style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
+                      >
+                        {quality.name}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              ) : null;
+            case 'languages':
+              return languages.length > 0 ? (
+                <section key={sectionId}>
+                  <h2 
+                    className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b pb-2 mb-3"
+                    style={{ borderColor: accentColor }}
+                  >{getSectionTitle('languages', cv.settings, lang)}</h2>
+                  <div className="flex flex-wrap gap-4 text-sm">
+                    {languages.map((lang) => (
+                      <span key={lang.id} className="text-slate-700">
+                        <strong>{lang.name}</strong> — {lang.level}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              ) : null;
+            case 'certifications':
+              return <CVCertifications key={sectionId} certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', cv.settings, lang)} />;
+            case 'projects':
+              return <CVProjects key={sectionId} projects={projects} variant={variant} accentColor={accentColor} title={getSectionTitle('projects', cv.settings, lang)} />;
+            case 'hobbies':
+              return <CVHobbies key={sectionId} hobbies={hobbies} variant={variant} accentColor={accentColor} title={getSectionTitle('hobbies', cv.settings, lang)} />;
+            case 'references':
+              return <CVReferences key={sectionId} references={references} variant={variant} accentColor={accentColor} title={getSectionTitle('references', cv.settings, lang)} />;
+            case 'divers':
+              return <CVDivers key={sectionId} divers={divers} variant={variant} accentColor={accentColor} title={getSectionTitle('divers', cv.settings, lang)} />;
+            default:
+              return null;
+          }
+        })}
         <CVFooter footer={footer} variant={variant}  lang={lang}/>
       </main>
     </div>

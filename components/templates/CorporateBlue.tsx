@@ -2,7 +2,7 @@
 
 import { CVDescription } from '../cv-sections/CVDescription';
 import Image from "next/image";
-import { CV } from '@/types/cv';
+import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
 import {
   CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter
@@ -25,6 +25,12 @@ export function CorporateBlue({ cv }: TemplateProps) {
   const footer = cv.footer || { showFooter: false, madeAt: '', madeDate: '' };
 
   const sidebarColor = cv.settings?.sidebarColor || '#1e3a5f';
+  
+  const sectionOrder: CVSectionId[] = cv.sectionOrder || [...DEFAULT_SECTION_ORDER];
+  const SIDEBAR_SECTIONS: CVSectionId[] = ['skills', 'languages', 'hobbies', 'qualities'];
+  const MAIN_SECTIONS: CVSectionId[] = ['summary', 'experience', 'education', 'certifications', 'projects', 'references', 'divers'];
+  const sidebarOrder = sectionOrder.filter(s => SIDEBAR_SECTIONS.includes(s));
+  const mainOrder = sectionOrder.filter(s => MAIN_SECTIONS.includes(s));
 
   // Dots for skill level
   const renderDots = (level: number) => (
@@ -88,73 +94,81 @@ export function CorporateBlue({ cv }: TemplateProps) {
               </div>
             </section>
 
-            {/* Compétences with dots */}
-            {skills.length > 0 && (
-              <section>
-                <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
-                  {getSectionTitle('skills', cv.settings, lang) || 'COMPÉTENCES'}
-                </h2>
-                <div className="space-y-2">
-                  {skills.map((skill) => (
-                    <div key={skill.id} className="flex items-center justify-between gap-2">
-                      <span className="text-xs text-white/90 truncate">{skill.name}</span>
-                      {renderDots(skill.level)}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+            {/* Dynamic Sidebar Sections */}
+            {sidebarOrder.map((sectionId) => {
+              switch (sectionId) {
+                case 'skills':
+                  return skills.length > 0 ? (
+                    <section key={sectionId}>
+                      <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
+                        {getSectionTitle('skills', cv.settings, lang) || 'COMP\u00c9TENCES'}
+                      </h2>
+                      <div className="space-y-2">
+                        {skills.map((skill) => (
+                          <div key={skill.id} className="flex items-center justify-between gap-2">
+                            <span className="text-xs text-white/90 truncate">{skill.name}</span>
+                            {renderDots(skill.level)}
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null;
+                
+                case 'languages':
+                  return languages.length > 0 ? (
+                    <section key={sectionId}>
+                      <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
+                        {getSectionTitle('languages', cv.settings, lang) || 'LANGUES'}
+                      </h2>
+                      <div className="space-y-1.5">
+                        {languages.map((lang) => (
+                          <div key={lang.id} className="flex items-center justify-between text-xs">
+                            <span className="text-white/90">{lang.name}</span>
+                            <span className="text-white/50">{lang.level}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null;
+                  
+                case 'hobbies':
+                  return hobbies.length > 0 ? (
+                    <section key={sectionId}>
+                      <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
+                        {getSectionTitle('hobbies', cv.settings, lang) || 'LOISIRS'}
+                      </h2>
+                      <div className="space-y-1.5">
+                        {hobbies.map((hobby) => (
+                          <div key={hobby.id} className="flex items-center gap-2 text-xs text-white/90">
+                            <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
+                            <span>{hobby.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null;
+                  
+                case 'qualities':
+                  return qualities.length > 0 ? (
+                    <section key={sectionId}>
+                      <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
+                        {getSectionTitle('qualities', cv.settings, lang)}
+                      </h2>
+                      <div className="space-y-1.5">
+                        {qualities.map((q) => (
+                          <div key={q.id} className="flex items-center gap-2 text-xs text-white/90">
+                            <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
+                            <span>{q.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null;
 
-            {/* Langues */}
-            {languages.length > 0 && (
-              <section>
-                <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
-                  {getSectionTitle('languages', cv.settings, lang) || 'LANGUES'}
-                </h2>
-                <div className="space-y-1.5">
-                  {languages.map((lang) => (
-                    <div key={lang.id} className="flex items-center justify-between text-xs">
-                      <span className="text-white/90">{lang.name}</span>
-                      <span className="text-white/50">{lang.level}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Loisirs */}
-            {hobbies.length > 0 && (
-              <section>
-                <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
-                  {getSectionTitle('hobbies', cv.settings, lang) || 'LOISIRS'}
-                </h2>
-                <div className="space-y-1.5">
-                  {hobbies.map((hobby) => (
-                    <div key={hobby.id} className="flex items-center gap-2 text-xs text-white/90">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
-                      <span>{hobby.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Qualités */}
-            {qualities.length > 0 && (
-              <section>
-                <h2 className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 pb-1 border-b border-white/20">
-                  {getSectionTitle('qualities', cv.settings, lang)}
-                </h2>
-                <div className="space-y-1.5">
-                  {qualities.map((q) => (
-                    <div key={q.id} className="flex items-center gap-2 text-xs text-white/90">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
-                      <span>{q.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+                default:
+                  return null;
+              }
+            })}
           </div>
         </div>
 
@@ -177,84 +191,92 @@ export function CorporateBlue({ cv }: TemplateProps) {
           {/* Content */}
           <div className="p-8 flex-1 space-y-6">
 
-            {/* Summary */}
-            {personalInfo.summary && (
-              <p className="text-sm text-slate-600 leading-relaxed ">
-                {personalInfo.summary}
-              </p>
-            )}
+            {/* Dynamic Main Sections */}
+            {mainOrder.map((sectionId) => {
+              switch (sectionId) {
+                case 'summary':
+                  return personalInfo.summary ? (
+                    <p key={sectionId} className="text-sm text-slate-600 leading-relaxed ">
+                      {personalInfo.summary}
+                    </p>
+                  ) : null;
+                
+                case 'experience':
+                  return experiences.length > 0 ? (
+                    <section key={sectionId}>
+                      <h2 
+                        className="text-sm font-bold uppercase tracking-widest text-center py-1.5 px-4 border-2 mb-4"
+                        style={{ borderColor: sidebarColor, color: sidebarColor }}
+                      >
+                        {getSectionTitle('experience', cv.settings, lang) || 'EXP\u00c9RIENCES PROFESSIONNELLES'}
+                      </h2>
+                      <div className="space-y-4">
+                        {experiences.map((exp) => (
+                          <div key={exp.id} className="flex gap-4">
+                            <div className="w-[80px] shrink-0 text-right">
+                              <p className="text-xs font-semibold" style={{ color: sidebarColor }}>
+                                {exp.startDate}
+                              </p>
+                              <p className="text-xs text-slate-400">
+                                {exp.current ? getPresentLabel(lang) : exp.endDate}
+                              </p>
+                            </div>
+                            <div className="flex-1 border-l-2 pl-4" style={{ borderColor: `${sidebarColor}30` }}>
+                              <h3 className="font-bold text-sm text-slate-900">
+                                {exp.position} \u2014 <span className="font-semibold">{exp.company}</span>
+                              </h3>
+                              {exp.description && <CVDescription description={exp.description} className="text-sm text-slate-600 mt-1 leading-relaxed whitespace-pre-line" />}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null;
 
-            {/* Expériences */}
-            {experiences.length > 0 && (
-              <section>
-                <h2 
-                  className="text-sm font-bold uppercase tracking-widest text-center py-1.5 px-4 border-2 mb-4"
-                  style={{ borderColor: sidebarColor, color: sidebarColor }}
-                >
-                  {getSectionTitle('experience', cv.settings, lang) || 'EXPÉRIENCES PROFESSIONNELLES'}
-                </h2>
-                <div className="space-y-4">
-                  {experiences.map((exp) => (
-                    <div key={exp.id} className="flex gap-4">
-                      {/* Date column */}
-                      <div className="w-[80px] shrink-0 text-right">
-                        <p className="text-xs font-semibold" style={{ color: sidebarColor }}>
-                          {exp.startDate}
-                        </p>
-                        <p className="text-xs text-slate-400">
-                          {exp.current ? getPresentLabel(lang) : exp.endDate}
-                        </p>
+                case 'education':
+                  return education.length > 0 ? (
+                    <section key={sectionId}>
+                      <h2 
+                        className="text-sm font-bold uppercase tracking-widest text-center py-1.5 px-4 border-2 mb-4"
+                        style={{ borderColor: sidebarColor, color: sidebarColor }}
+                      >
+                        {getSectionTitle('education', cv.settings, lang) || 'FORMATIONS'}
+                      </h2>
+                      <div className="space-y-4">
+                        {education.map((edu) => (
+                          <div key={edu.id} className="flex gap-4">
+                            <div className="w-[80px] shrink-0 text-right">
+                              <p className="text-xs font-semibold" style={{ color: sidebarColor }}>
+                                {edu.startDate}
+                              </p>
+                              <p className="text-xs text-slate-400">{edu.endDate}</p>
+                            </div>
+                            <div className="flex-1 border-l-2 pl-4" style={{ borderColor: `${sidebarColor}30` }}>
+                              <h3 className="font-bold text-sm text-slate-900">{edu.degree}</h3>
+                              <p className="text-xs text-slate-600 font-semibold">{edu.institution}</p>
+                              {edu.field && <p className="text-xs text-slate-500 mt-0.5">{edu.field}</p>}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      {/* Content */}
-                      <div className="flex-1 border-l-2 pl-4" style={{ borderColor: `${sidebarColor}30` }}>
-                        <h3 className="font-bold text-sm text-slate-900">
-                          {exp.position} — <span className="font-semibold">{exp.company}</span>
-                        </h3>
-                        {exp.description && <CVDescription description={exp.description} className="text-sm text-slate-600 mt-1 leading-relaxed whitespace-pre-line" />}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+                    </section>
+                  ) : null;
+                
+                case 'certifications':
+                  return <CVCertifications key={sectionId} certifications={certifications} variant="professional" accentColor={sidebarColor} title={getSectionTitle('certifications', cv.settings, lang)} />;
+                case 'projects':
+                  return <CVProjects key={sectionId} projects={projects} variant="professional" accentColor={sidebarColor} title={getSectionTitle('projects', cv.settings, lang)} />;
+                case 'references':
+                  return <CVReferences key={sectionId} references={references} variant="professional" accentColor={sidebarColor} title={getSectionTitle('references', cv.settings, lang)} />;
+                case 'divers':
+                  return <CVDivers key={sectionId} divers={divers} variant="professional" accentColor={sidebarColor} title={getSectionTitle('divers', cv.settings, lang)} />;
 
-            {/* Formations / Education */}
-            {education.length > 0 && (
-              <section>
-                <h2 
-                  className="text-sm font-bold uppercase tracking-widest text-center py-1.5 px-4 border-2 mb-4"
-                  style={{ borderColor: sidebarColor, color: sidebarColor }}
-                >
-                  {getSectionTitle('education', cv.settings, lang) || 'FORMATIONS'}
-                </h2>
-                <div className="space-y-4">
-                  {education.map((edu) => (
-                    <div key={edu.id} className="flex gap-4">
-                      {/* Date column */}
-                      <div className="w-[80px] shrink-0 text-right">
-                        <p className="text-xs font-semibold" style={{ color: sidebarColor }}>
-                          {edu.startDate}
-                        </p>
-                        <p className="text-xs text-slate-400">{edu.endDate}</p>
-                      </div>
-                      {/* Content */}
-                      <div className="flex-1 border-l-2 pl-4" style={{ borderColor: `${sidebarColor}30` }}>
-                        <h3 className="font-bold text-sm text-slate-900">{edu.degree}</h3>
-                        <p className="text-xs text-slate-600 font-semibold">{edu.institution}</p>
-                        {edu.field && <p className="text-xs text-slate-500 mt-0.5">{edu.field}</p>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+                default:
+                  return null;
+              }
+            })}
 
-            {/* Additional sections */}
-            <CVCertifications certifications={certifications} variant="professional" accentColor={sidebarColor} title={getSectionTitle('certifications', cv.settings, lang)} />
-            <CVProjects projects={projects} variant="professional" accentColor={sidebarColor}  title={getSectionTitle('projects', cv.settings, lang)} />
-            <CVReferences references={references} variant="professional" accentColor={sidebarColor}  title={getSectionTitle('references', cv.settings, lang)} />
-            <CVDivers divers={divers} variant="professional" accentColor={sidebarColor}  title={getSectionTitle('divers', cv.settings, lang)} />
-            <CVFooter footer={footer} variant="professional"  lang={lang}/>
+            <CVFooter footer={footer} variant="professional" lang={lang}/>
           </div>
         </div>
       </div>
