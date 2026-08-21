@@ -1,6 +1,6 @@
 // Service Worker for JobSira PWA
 // Version-based cache busting
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = '{{VERSION}}';
 const STATIC_CACHE = `jobsira-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `jobsira-dynamic-${CACHE_VERSION}`;
 
@@ -65,7 +65,7 @@ self.addEventListener('fetch', (event) => {
 });
 
 function isStaticAsset(pathname) {
-  return /\.(js|css|woff2?|ttf|eot|svg|png|jpg|jpeg|webp|ico|json)$/.test(pathname) ||
+  return /\.(js|css|woff2?|ttf|eot|svg|png|jpg|jpeg|webp|ico)$/.test(pathname) ||
     pathname.startsWith('/_next/static/');
 }
 
