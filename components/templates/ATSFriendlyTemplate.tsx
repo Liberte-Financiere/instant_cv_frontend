@@ -1,7 +1,7 @@
 'use client';
 
 import { CVDescription } from '../cv-sections/CVDescription';
-import { CV } from '@/types/cv';
+import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { formatDate } from '@/lib/utils';
 
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
@@ -29,6 +29,7 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
   const socialLinks = cv.socialLinks || [];
   const divers = cv.divers || '';
   const footer = cv.footer || { showFooter: false, madeAt: '', madeDate: '' };
+  const sectionOrder: CVSectionId[] = cv.sectionOrder || [...DEFAULT_SECTION_ORDER];
 
   return (
     <div className="cv-template w-full h-full bg-white text-black font-serif text-sm leading-relaxed min-h-[297mm] p-10">
@@ -58,146 +59,155 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
         )}
       </header>
 
-      {/* Summary */}
-      {personalInfo.summary && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('summary', cv.settings, lang)}</h2>
-          <p className="text-justify">{personalInfo.summary}</p>
-        </section>
-      )}
+      {/* Dynamic sections based on user-defined order */}
+      {sectionOrder.map((sectionId) => {
+        const headingStyle = accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' };
+        const headingClass = "text-sm font-bold uppercase border-b pb-1 mb-3";
 
-      {/* Experience */}
-      {experiences.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('experience', cv.settings, lang)}</h2>
-          <div className="space-y-4">
-            {experiences.map((exp) => (
-              <div key={exp.id} className="cv-item">
-                <div className="flex justify-between items-baseline">
-                  <strong className="text-base">{exp.position}</strong>
-                  <span className="text-sm">
-                    {exp.startDate && formatDate(exp.startDate, lang)} - {exp.current ? getPresentLabel(lang) : (exp.endDate && formatDate(exp.endDate, lang))}
-                  </span>
+        switch (sectionId) {
+          case 'summary':
+            return personalInfo.summary ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('summary', cv.settings, lang)}</h2>
+                <p className="text-justify">{personalInfo.summary}</p>
+              </section>
+            ) : null;
+
+          case 'experience':
+            return experiences.length > 0 ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('experience', cv.settings, lang)}</h2>
+                <div className="space-y-4">
+                  {experiences.map((exp) => (
+                    <div key={exp.id} className="cv-item">
+                      <div className="flex justify-between items-baseline">
+                        <strong className="text-base">{exp.position}</strong>
+                        <span className="text-sm">
+                          {exp.startDate && formatDate(exp.startDate, lang)} - {exp.current ? getPresentLabel(lang) : (exp.endDate && formatDate(exp.endDate, lang))}
+                        </span>
+                      </div>
+                      <p className="italic">{exp.company}</p>
+                      {exp.description && <CVDescription description={exp.description} className="mt-1 whitespace-pre-line" />}
+                    </div>
+                  ))}
                 </div>
-                <p className="italic">{exp.company}</p>
-                {exp.description && <CVDescription description={exp.description} className="mt-1 whitespace-pre-line" />}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              </section>
+            ) : null;
 
-      {/* Education */}
-      {education.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>
-            {getSectionTitle('education', cv.settings, lang)}
-          </h2>
-          <div className="space-y-3">
-            {education.map((edu) => (
-              <div key={edu.id} className="cv-item">
-                <div className="flex justify-between items-baseline">
-                  <strong>{edu.degree}{edu.field && ` - ${edu.field}`}</strong>
-                  <span className="text-sm">
-                    {edu.startDate && `${edu.startDate}`}{(edu.endDate || edu.current) && ` - ${edu.current ? getPresentLabel(lang) : edu.endDate}`}
-                  </span>
+          case 'education':
+            return education.length > 0 ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('education', cv.settings, lang)}</h2>
+                <div className="space-y-3">
+                  {education.map((edu) => (
+                    <div key={edu.id} className="cv-item">
+                      <div className="flex justify-between items-baseline">
+                        <strong>{edu.degree}{edu.field && ` - ${edu.field}`}</strong>
+                        <span className="text-sm">
+                          {edu.startDate && `${edu.startDate}`}{(edu.endDate || edu.current) && ` - ${edu.current ? getPresentLabel(lang) : edu.endDate}`}
+                        </span>
+                      </div>
+                      <p className="italic">{edu.institution}</p>
+                    </div>
+                  ))}
                 </div>
-                <p className="italic">{edu.institution}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              </section>
+            ) : null;
 
-      {/* Skills */}
-      {skills.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('skills', cv.settings, lang)}</h2>
-          <p>{skills.map((s) => s.name).join(', ')}</p>
-        </section>
-      )}
+          case 'skills':
+            return skills.length > 0 ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('skills', cv.settings, lang)}</h2>
+                <p>{skills.map((s) => s.name).join(', ')}</p>
+              </section>
+            ) : null;
 
-      {/* Languages */}
-      {languages.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('languages', cv.settings, lang)}</h2>
-          <p>
-            {languages.map((lang) => `${lang.name} (${lang.level})`).join(', ')}
-          </p>
-        </section>
-      )}
+          case 'languages':
+            return languages.length > 0 ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('languages', cv.settings, lang)}</h2>
+                <p>{languages.map((l) => `${l.name} (${l.level})`).join(', ')}</p>
+              </section>
+            ) : null;
 
-      {/* Certifications */}
-      {certifications.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>
-            {getSectionTitle('certifications', cv.settings, lang)}
-          </h2>
-          <div className="space-y-1">
-            {certifications.map((cert) => (
-              <p key={cert.id} className="cv-item">
-                <strong>{cert.name}</strong> - {cert.organization}
-                {cert.date && ` (${cert.date})`}
-              </p>
-            ))}
-          </div>
-        </section>
-      )}
+          case 'certifications':
+            return certifications.length > 0 ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('certifications', cv.settings, lang)}</h2>
+                <div className="space-y-1">
+                  {certifications.map((cert) => (
+                    <p key={cert.id} className="cv-item">
+                      <strong>{cert.name}</strong> - {cert.organization}
+                      {cert.date && ` (${cert.date})`}
+                    </p>
+                  ))}
+                </div>
+              </section>
+            ) : null;
 
-      {/* Qualities */}
-      {cv.qualities && cv.qualities.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>
-            {getSectionTitle('qualities', cv.settings, lang)}
-          </h2>
-          <p>{cv.qualities.map((q) => q.name).join(', ')}</p>
-        </section>
-      )}
+          case 'qualities':
+            return (cv.qualities?.length || 0) > 0 ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('qualities', cv.settings, lang)}</h2>
+                <p>{cv.qualities!.map((q) => q.name).join(', ')}</p>
+              </section>
+            ) : null;
 
-      {/* Projects */}
-      {projects.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('projects', cv.settings, lang)}</h2>
-          <div className="space-y-2">
-            {projects.map((project) => (
-              <div key={project.id} className="cv-item">
-                <strong>{project.name}</strong>
-                {project.description && <p>{project.description}</p>}
-                {project.technologies && (
-                  <p className="text-sm italic">Technologies: {project.technologies}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+          case 'projects':
+            return projects.length > 0 ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('projects', cv.settings, lang)}</h2>
+                <div className="space-y-2">
+                  {projects.map((project) => (
+                    <div key={project.id} className="cv-item">
+                      <strong>{project.name}</strong>
+                      {project.description && <p>{project.description}</p>}
+                      {project.technologies && (
+                        <p className="text-sm italic">Technologies: {project.technologies}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null;
 
-      {/* References */}
-      {references.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>{getSectionTitle('references', cv.settings, lang)}</h2>
-          <div className="space-y-2">
-            {references.map((ref) => (
-              <p key={ref.id} className="cv-item">
-                <strong>{ref.name}</strong> - {ref.position}
-                {ref.company && `, ${ref.company}`}
-                {!ref.hideContact && ref.email && ` | ${ref.email}`}
-                {!ref.hideContact && ref.phone && ` | ${ref.phone}`}
-              </p>
-            ))}
-          </div>
-        </section>
-      )}
+          case 'references':
+            return references.length > 0 ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('references', cv.settings, lang)}</h2>
+                <div className="space-y-2">
+                  {references.map((ref) => (
+                    <p key={ref.id} className="cv-item">
+                      <strong>{ref.name}</strong> - {ref.position}
+                      {ref.company && `, ${ref.company}`}
+                      {!ref.hideContact && ref.email && ` | ${ref.email}`}
+                      {!ref.hideContact && ref.phone && ` | ${ref.phone}`}
+                    </p>
+                  ))}
+                </div>
+              </section>
+            ) : null;
 
-      {/* Divers */}
-      {divers && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold uppercase border-b pb-1 mb-3" style={accentColor ? { borderColor: accentColor, color: accentColor } : { borderColor: '#9ca3af' }}>
-            INFORMATIONS COMPLÉMENTAIRES
-          </h2>
-          <p className="">{divers}</p>
-        </section>
-      )}
+          case 'divers':
+            return divers ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('divers', cv.settings, lang)}</h2>
+                <p>{divers}</p>
+              </section>
+            ) : null;
+
+          case 'hobbies':
+            return (cv.hobbies?.length || 0) > 0 ? (
+              <section key={sectionId} className="mb-6">
+                <h2 className={headingClass} style={headingStyle}>{getSectionTitle('hobbies', cv.settings, lang)}</h2>
+                <p>{cv.hobbies!.map((h) => h.name).join(', ')}</p>
+              </section>
+            ) : null;
+
+          default:
+            return null;
+        }
+      })}
 
       {/* Footer */}
       {footer.showFooter && (footer.madeAt || footer.madeDate) && (
