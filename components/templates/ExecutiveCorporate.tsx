@@ -1,6 +1,6 @@
 'use client';
 
-import { CV } from '@/types/cv';
+import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
   CVSkills, CVLanguages, CVHobbies, CVCertifications, 
@@ -27,6 +27,7 @@ export function ExecutiveCorporate({ cv }: TemplateProps) {
   const footer = cv.footer || { showFooter: false, madeAt: '', madeDate: '' };
 
   const variant = 'executive';
+  const sectionOrder: CVSectionId[] = cv.sectionOrder || [...DEFAULT_SECTION_ORDER];
 
   return (
     <div className="cv-template w-full h-full bg-white text-black font-serif p-12 min-h-[297mm] leading-snug flex flex-col">
@@ -45,28 +46,40 @@ export function ExecutiveCorporate({ cv }: TemplateProps) {
           </div>
         </div>
 
-        {/* Content */}
+        {/* Dynamic sections */}
         <div className="space-y-8">
-          <CVSummary summary={personalInfo.summary} variant={variant} accentColor={accentColor} title={getSectionTitle('summary', cv.settings, lang)} />
-          <CVExperience experiences={experiences} variant={variant} accentColor={accentColor} title={getSectionTitle('experience', cv.settings, lang)} lang={lang} />
-          <CVEducation education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', cv.settings, lang)} lang={lang} />
-          <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', cv.settings, lang)} />
-          
-          {/* Skills & Languages */}
-          <div className="grid grid-cols-2 gap-8">
-            <CVSkills skills={skills} variant={variant} accentColor={accentColor} layout="list" title={getSectionTitle('skills', cv.settings, lang)} />
-            <CVLanguages languages={languages} variant={variant} accentColor={accentColor} title={getSectionTitle('languages', cv.settings, lang)} />
-          </div>
-
-          <CVProjects projects={projects} variant={variant} accentColor={accentColor} title={getSectionTitle('projects', cv.settings, lang)} />
-          <CVQualities qualities={cv.qualities || []} variant={variant} accentColor={accentColor} title={getSectionTitle('qualities', cv.settings, lang)} />
-          <CVHobbies hobbies={hobbies} variant={variant} accentColor={accentColor} title={getSectionTitle('hobbies', cv.settings, lang)} />
-          <CVReferences references={references} variant={variant} accentColor={accentColor} title={getSectionTitle('references', cv.settings, lang)} />
-          <CVDivers divers={divers} variant={variant} accentColor={accentColor} title={getSectionTitle('divers', cv.settings, lang)} />
+          {sectionOrder.map((sectionId) => {
+            switch (sectionId) {
+              case 'summary':
+                return <CVSummary key={sectionId} summary={personalInfo.summary} variant={variant} accentColor={accentColor} title={getSectionTitle('summary', cv.settings, lang)} />;
+              case 'experience':
+                return <CVExperience key={sectionId} experiences={experiences} variant={variant} accentColor={accentColor} title={getSectionTitle('experience', cv.settings, lang)} lang={lang} />;
+              case 'education':
+                return <CVEducation key={sectionId} education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', cv.settings, lang)} lang={lang} />;
+              case 'certifications':
+                return <CVCertifications key={sectionId} certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', cv.settings, lang)} />;
+              case 'skills':
+                return <CVSkills key={sectionId} skills={skills} variant={variant} accentColor={accentColor} layout="list" title={getSectionTitle('skills', cv.settings, lang)} />;
+              case 'languages':
+                return <CVLanguages key={sectionId} languages={languages} variant={variant} accentColor={accentColor} title={getSectionTitle('languages', cv.settings, lang)} />;
+              case 'projects':
+                return <CVProjects key={sectionId} projects={projects} variant={variant} accentColor={accentColor} title={getSectionTitle('projects', cv.settings, lang)} />;
+              case 'qualities':
+                return <CVQualities key={sectionId} qualities={cv.qualities || []} variant={variant} accentColor={accentColor} title={getSectionTitle('qualities', cv.settings, lang)} />;
+              case 'hobbies':
+                return <CVHobbies key={sectionId} hobbies={hobbies} variant={variant} accentColor={accentColor} title={getSectionTitle('hobbies', cv.settings, lang)} />;
+              case 'references':
+                return <CVReferences key={sectionId} references={references} variant={variant} accentColor={accentColor} title={getSectionTitle('references', cv.settings, lang)} />;
+              case 'divers':
+                return <CVDivers key={sectionId} divers={divers} variant={variant} accentColor={accentColor} title={getSectionTitle('divers', cv.settings, lang)} />;
+              default:
+                return null;
+            }
+          })}
         </div>
       </div>
 
-      <CVFooter footer={footer} variant={variant}  lang={lang}/>
+      <CVFooter footer={footer} variant={variant} lang={lang} />
     </div>
   );
 }
