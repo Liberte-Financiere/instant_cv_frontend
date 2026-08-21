@@ -2,7 +2,7 @@
 
 import { CVDescription } from '../cv-sections/CVDescription';
 import Image from "next/image";
-import { CV } from '@/types/cv';
+import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
 import { CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter } from '@/components/cv-sections';
 
@@ -20,6 +20,7 @@ export function ClassicSerif({ cv }: TemplateProps) {
   const divers = cv.divers || '';
   const footer = cv.footer || { showFooter: false, madeAt: '', madeDate: '' };
   const accent = cv.settings?.accentColor || '#78350f';
+  const sectionOrder: CVSectionId[] = cv.sectionOrder || [...DEFAULT_SECTION_ORDER];
 
   return (
     <div className="cv-template w-full h-full min-h-[297mm] font-serif text-sm leading-relaxed" style={{ backgroundColor: '#faf8f5', color: '#3d2b1f' }}>
@@ -40,103 +41,111 @@ export function ClassicSerif({ cv }: TemplateProps) {
           </div>
         </header>
 
-        {/* Summary */}
-        {p.summary && (
-          <section className="mb-6 text-center max-w-xl mx-auto">
-            <p className="text-sm italic text-slate-600 leading-relaxed ">{p.summary}</p>
-          </section>
-        )}
+        {sectionOrder.map((sectionId) => {
+          switch (sectionId) {
+            case 'summary':
+              return p.summary ? (
+                <section key={sectionId} className="mb-6 text-center max-w-xl mx-auto">
+                  <p className="text-sm italic text-slate-600 leading-relaxed ">{p.summary}</p>
+                </section>
+              ) : null;
 
-        {/* Experience */}
-        {experiences.length > 0 && (
-          <section className="mb-6">
-            <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>
-              {getSectionTitle('experience', cv.settings, lang)}
-            </h2>
-            <div className="space-y-4">
-              {experiences.map((exp) => (
-                <div key={exp.id} className="break-inside-avoid">
-                  <div className="flex justify-between items-baseline">
-                    <h3 className="font-bold">{exp.position}</h3>
-                    <span className="text-xs italic text-slate-500">{exp.startDate} — {exp.current ? getPresentLabel(lang) : exp.endDate}</span>
-                  </div>
-                  <p className="text-xs font-semibold italic" style={{ color: accent }}>{exp.company}</p>
-                  {exp.description && <CVDescription description={exp.description} className="text-xs text-slate-600 mt-1 leading-relaxed whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0" />}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Education */}
-        {education.length > 0 && (
-          <section className="mb-6">
-            <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>
-              {getSectionTitle('education', cv.settings, lang)}
-            </h2>
-            <div className="space-y-3">
-              {education.map((edu) => (
-                <div key={edu.id} className="flex justify-between items-baseline break-inside-avoid">
-                  <div>
-                    <p className="font-bold">{edu.degree}</p>
-                    <p className="text-xs italic text-slate-500">{edu.institution} {edu.field && `— ${edu.field}`}</p>
-                  </div>
-                  <span className="text-xs italic text-slate-500 shrink-0">{edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' — ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Skills + Languages + Hobbies via Table */}
-        <table className="w-full mt-4" style={{ tableLayout: 'fixed' }}>
-          <tbody>
-            <tr>
-              <td className="align-top pr-4 w-1/3">
-                {skills.length > 0 && (
-                  <section>
-                    <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('skills', cv.settings, lang)}</h2>
-                    {skills.map((s) => <p key={s.id} className="text-xs text-center break-inside-avoid">• {s.name}</p>)}
-                  </section>
-                )}
-              </td>
-              <td className="align-top px-2 w-1/3">
-                {languages.length > 0 && (
-                  <section>
-                    <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('languages', cv.settings, lang)}</h2>
-                    {languages.map((l) => <p key={l.id} className="text-xs text-center break-inside-avoid">{l.name} — <em>{l.level}</em></p>)}
-                  </section>
-                )}
-              </td>
-              <td className="align-top pl-4 w-1/3">
-                {(hobbies.length > 0 || qualities.length > 0) && (
-                  <section>
-                    {qualities.length > 0 && (
-                      <div className="break-inside-avoid">
-                        <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('qualities', cv.settings, lang)}</h2>
-                        {qualities.map((q) => <p key={q.id} className="text-xs text-center">• {q.name}</p>)}
+            case 'experience':
+              return experiences.length > 0 ? (
+                <section key={sectionId} className="mb-6">
+                  <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>
+                    {getSectionTitle('experience', cv.settings, lang)}
+                  </h2>
+                  <div className="space-y-4">
+                    {experiences.map((exp) => (
+                      <div key={exp.id} className="break-inside-avoid">
+                        <div className="flex justify-between items-baseline">
+                          <h3 className="font-bold">{exp.position}</h3>
+                          <span className="text-xs italic text-slate-500">{exp.startDate} \u2014 {exp.current ? getPresentLabel(lang) : exp.endDate}</span>
+                        </div>
+                        <p className="text-xs font-semibold italic" style={{ color: accent }}>{exp.company}</p>
+                        {exp.description && <CVDescription description={exp.description} className="text-xs text-slate-600 mt-1 leading-relaxed whitespace-pre-line prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0" />}
                       </div>
-                    )}
-                    {hobbies.length > 0 && (
-                      <div className="break-inside-avoid">
-                        <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-center mb-2 pb-1 border-b mt-3" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('hobbies', cv.settings, lang)}</h2>
-                        {hobbies.map((h) => <p key={h.id} className="text-xs text-center">• {h.name}</p>)}
-                      </div>
-                    )}
-                  </section>
-                )}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                    ))}
+                  </div>
+                </section>
+              ) : null;
 
-        <div className="mt-4">
-          <CVCertifications certifications={certifications} variant="executive" accentColor={accent} title={getSectionTitle('certifications', cv.settings, lang)} />
-          <CVProjects projects={projects} variant="executive" accentColor={accent}  title={getSectionTitle('projects', cv.settings, lang)} />
-          <CVReferences references={references} variant="executive" accentColor={accent}  title={getSectionTitle('references', cv.settings, lang)} />
-          <CVDivers divers={divers} variant="executive" accentColor={accent}  title={getSectionTitle('divers', cv.settings, lang)} />
-          <CVFooter footer={footer} variant="executive"  lang={lang}/>
-        </div>
+            case 'education':
+              return education.length > 0 ? (
+                <section key={sectionId} className="mb-6">
+                  <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>
+                    {getSectionTitle('education', cv.settings, lang)}
+                  </h2>
+                  <div className="space-y-3">
+                    {education.map((edu) => (
+                      <div key={edu.id} className="flex justify-between items-baseline break-inside-avoid">
+                        <div>
+                          <p className="font-bold">{edu.degree}</p>
+                          <p className="text-xs italic text-slate-500">{edu.institution} {edu.field && `\u2014 ${edu.field}`}</p>
+                        </div>
+                        <span className="text-xs italic text-slate-500 shrink-0">{edu.startDate}{edu.startDate && (edu.endDate || edu.current) ? ' \u2014 ' : ''}{edu.current ? getPresentLabel(lang) : edu.endDate}</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : null;
+
+            case 'skills':
+              return skills.length > 0 ? (
+                <section key={sectionId} className="mb-6">
+                  <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('skills', cv.settings, lang)}</h2>
+                  <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+                    {skills.map((s) => <p key={s.id} className="text-sm text-center break-inside-avoid">• {s.name}</p>)}
+                  </div>
+                </section>
+              ) : null;
+
+            case 'languages':
+              return languages.length > 0 ? (
+                <section key={sectionId} className="mb-6">
+                  <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('languages', cv.settings, lang)}</h2>
+                  <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+                    {languages.map((l) => <p key={l.id} className="text-sm text-center break-inside-avoid">{l.name} \u2014 <em>{l.level}</em></p>)}
+                  </div>
+                </section>
+              ) : null;
+
+            case 'qualities':
+              return qualities.length > 0 ? (
+                <section key={sectionId} className="mb-6">
+                  <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('qualities', cv.settings, lang)}</h2>
+                  <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+                    {qualities.map((q) => <p key={q.id} className="text-sm text-center break-inside-avoid">• {q.name}</p>)}
+                  </div>
+                </section>
+              ) : null;
+
+            case 'hobbies':
+              return hobbies.length > 0 ? (
+                <section key={sectionId} className="mb-6">
+                  <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('hobbies', cv.settings, lang)}</h2>
+                  <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+                    {hobbies.map((h) => <p key={h.id} className="text-sm text-center break-inside-avoid">• {h.name}</p>)}
+                  </div>
+                </section>
+              ) : null;
+
+            case 'certifications':
+              return <div key={sectionId} className="mb-6"><CVCertifications certifications={certifications} variant="executive" accentColor={accent} title={getSectionTitle('certifications', cv.settings, lang)} /></div>;
+            case 'projects':
+              return <div key={sectionId} className="mb-6"><CVProjects projects={projects} variant="executive" accentColor={accent} title={getSectionTitle('projects', cv.settings, lang)} /></div>;
+            case 'references':
+              return <div key={sectionId} className="mb-6"><CVReferences references={references} variant="executive" accentColor={accent} title={getSectionTitle('references', cv.settings, lang)} /></div>;
+            case 'divers':
+              return <div key={sectionId} className="mb-6"><CVDivers divers={divers} variant="executive" accentColor={accent} title={getSectionTitle('divers', cv.settings, lang)} /></div>;
+            
+            default:
+              return null;
+          }
+        })}
+
+        <CVFooter footer={footer} variant="executive" lang={lang}/>
       </div>
     </div>
   );
