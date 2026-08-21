@@ -12,6 +12,8 @@ import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { getSectionTitle } from '@/constants/sections';
+import { CVMode } from '@/types/cv';
+import { Briefcase, GraduationCap } from 'lucide-react';
 
 interface TemplatePreviewModalProps {
   template: TemplateOption | null;
@@ -24,11 +26,13 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
   const { createNewCV } = useCVStore();
   const [isLoading, setIsLoading] = useState(false);
   const [cvTitle, setCvTitle] = useState('');
+  const [cvMode, setCvMode] = useState<CVMode>('professional');
 
   // Reset title when template changes
   useEffect(() => {
     if (template) {
       setCvTitle(`Mon CV ${template.name}`);
+      setCvMode('professional'); // Default mode
     }
   }, [template?.id]);
 
@@ -52,7 +56,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
     
     try {
       // Create new CV with selected template
-      const cvId = createNewCV(cvTitle, template.id);
+      const cvId = createNewCV(cvTitle, template.id, cvMode);
       
       // Redirect to editor
       router.push(`/editor/${cvId}`);
@@ -149,7 +153,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
             {/* CTA & Input */}
             <div className="mt-auto pt-4 md:pt-6 border-t border-slate-100 space-y-3 md:space-y-4">
               <div>
-                <Label htmlFor="cv-title" className="text-slate-700 mb-1.5 block">Nom de votre CV</Label>
+                <Label htmlFor="cv-title" className="text-slate-700 mb-1.5 block font-semibold">Nom de votre CV</Label>
                 <Input 
                    id="cv-title"
                    value={cvTitle}
@@ -158,6 +162,26 @@ export function TemplatePreviewModal({ template, isOpen, onClose }: TemplatePrev
                    className="bg-slate-50 border-slate-200 focus:bg-white transition-colors"
                    autoFocus
                 />
+              </div>
+
+              <div>
+                <Label className="text-slate-700 mb-1.5 block font-semibold">Type de Profil</Label>
+                <div className="grid grid-cols-2 gap-2">
+                   <button 
+                     onClick={() => setCvMode('professional')}
+                     className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${cvMode === 'professional' ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300 hover:bg-slate-50'}`}
+                   >
+                     <Briefcase className="w-5 h-5 mb-1.5" />
+                     <span className="text-xs font-bold">Professionnel</span>
+                   </button>
+                   <button 
+                     onClick={() => setCvMode('academic')}
+                     className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${cvMode === 'academic' ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-emerald-300 hover:bg-slate-50'}`}
+                   >
+                     <GraduationCap className="w-5 h-5 mb-1.5" />
+                     <span className="text-xs font-bold">Académique</span>
+                   </button>
+                </div>
               </div>
 
               <Button 

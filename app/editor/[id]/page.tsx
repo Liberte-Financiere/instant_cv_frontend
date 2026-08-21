@@ -13,6 +13,7 @@ import { CVPreview } from '@/components/editor/CVPreview';
 import { ColorPicker } from '@/components/editor/ColorPicker';
 import { SectionOrderEditor } from '@/components/editor/SectionOrderEditor';
 import { TemplateSelector } from '@/components/editor/TemplateSelector';
+import { CVModeSelector } from '@/components/editor/CVModeSelector';
 import { TranslateCVButton } from '@/components/editor/TranslateCVButton';
 import { LanguageSelector } from '@/components/editor/LanguageSelector';
 import { MobilePreviewModal } from '@/components/editor/MobilePreviewModal';
@@ -271,6 +272,7 @@ export default function EditorPage() {
 
            {/* Design & Structure */}
            <TemplateSelector showNudge={showNudge} onNudgeDismiss={handleNudgeDismiss} />
+           <CVModeSelector />
            <ColorPicker />
            <SectionOrderEditor />
 

@@ -57,6 +57,18 @@ export function ATSGlacier({ cv }: TemplateProps) {
                     <span>{personalInfo.phone}</span>
                 </>
             )}
+            {personalInfo.nationality && (
+                <>
+                    <span className="text-slate-300">•</span>
+                    <span>{lang === 'fr' ? 'Nationalité' : 'Nationality'}: {personalInfo.nationality}</span>
+                </>
+            )}
+            {personalInfo.dateOfBirth && (
+                <>
+                    <span className="text-slate-300">•</span>
+                    <span>{personalInfo.dateOfBirth}</span>
+                </>
+            )}
             {socialLinks.map((link) => (
                 <div key={link.id} className="flex items-center gap-1">
                      <span className="text-slate-300">•</span>

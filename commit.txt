@@ -1,18 +1,32 @@
-[2026-08-17] — Design System: Migration vers les Design Tokens
+[2026-08-21] — Academic Mode: Integration of nationality and dateOfBirth in 15 Premium Templates
 
 What changed:
-- Added semantic design tokens (success, warning, destructive, muted, border) to globals.css
-- Refactored the school admin dashboard to use these new semantic tokens instead of hardcoded Tailwind colors.
+- Added conditional rendering for `nationality` and `dateOfBirth` in the headers of the 15 remaining premium templates.
+- Mapped these fields using multilingual text labels (Nationalité / Nationality, Âge / Age) rather than specific icons to respect their layout.
+- Tested compilation (`npx tsc --noEmit`) to ensure type safety.
 
 Why:
-- To eliminate hardcoded CSS colors and ensure the UI strictly respects the global design system. This sets a solid foundation for future theming (e.g., dark mode) and UI consistency.
+- To ensure full consistency across all generated PDFs, regardless of the chosen template, when a user enters Academic mode and provides their nationality and date of birth.
 
 Files affected:
-- app/globals.css — Added semantic color tokens to :root and @theme.
-- app/dashboard/school-admin/page.tsx — Refactored all statistics cards to use bg-primary-light, text-warning, border-border, etc.
+- components/templates/ATSGlacier.tsx — added text fields in header
+- components/templates/ATSIron.tsx — added text fields in header flex layout
+- components/templates/BlueprintPremium.tsx — added text fields in contact grid
+- components/templates/BoldHeader.tsx — added text fields in flex layout
+- components/templates/CleanGrid.tsx — added text fields in contact block
+- components/templates/CompactSingle.tsx — added text fields in right-aligned contact list
+- components/templates/CorporateBlue.tsx — added text fields in left sidebar contact block
+- components/templates/ElegantPhoto.tsx — added text fields in left sidebar contact block
+- components/templates/GradientHeader.tsx — added text fields in header flex layout
+- components/templates/Infographic.tsx — added text fields in sidebar contact list
+- components/templates/Nordic.tsx — added text fields in flex layout
+- components/templates/PastelModern.tsx — added text fields in flex layout
+- components/templates/Swiss.tsx — added text fields in top contact list
+- components/templates/TimelinePro.tsx — added text fields in header contact block
+- components/templates/TwoTone.tsx — added text fields in contact grid
 
 Breaking changes:
 - None
 
 Notes for review:
-- The design is now fully driven by tokens. Any future color adjustments should be made centrally in globals.css.
+- Visual QA on PDF exports might be needed for edge cases where the contact grid gets too crowded, though CSS Flexbox and Grid layouts should naturally accommodate the new fields.

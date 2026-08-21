@@ -49,6 +49,8 @@ export function Swiss({ cv }: TemplateProps) {
             {p.email && <p>{p.email}</p>}
             {p.phone && <p>{p.phone}</p>}
             {p.address && <p>{p.address}</p>}
+            {p.nationality && <p>{lang === 'fr' ? 'Nationalité' : 'Nationality'}: {p.nationality}</p>}
+            {p.dateOfBirth && <p>{p.dateOfBirth}</p>}
             {p.photoUrl && (
               <Image src={p.photoUrl} alt={`${p.firstName} ${p.lastName}`} width={60} height={60} className="w-14 h-14 rounded-full object-cover ml-auto mt-2 border" style={{ borderColor: accent }} />
             )}

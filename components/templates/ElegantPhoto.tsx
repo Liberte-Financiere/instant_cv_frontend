@@ -192,6 +192,18 @@ export function ElegantPhoto({ cv }: TemplateProps) {
                   <span className="text-xs">{personalInfo.address}</span>
                 </div>
               )}
+              {personalInfo.nationality && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold">{lang === 'fr' ? 'Nationalité :' : 'Nationality :'}</span>
+                  <span className="text-xs">{personalInfo.nationality}</span>
+                </div>
+              )}
+              {personalInfo.dateOfBirth && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold">{lang === 'fr' ? 'Âge :' : 'Age :'}</span>
+                  <span className="text-xs">{personalInfo.dateOfBirth}</span>
+                </div>
+              )}
               {socialLinks.map((link) => (
                 <div key={link.id} className="flex items-center gap-2">
                   <span className="text-xs" style={{ color: accentColor }}>🔗</span>

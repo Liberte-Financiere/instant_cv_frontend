@@ -1,6 +1,6 @@
 'use client';
 
-import { Mail, Phone, MapPin, Linkedin, Github, Globe, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Github, Globe, Twitter, Calendar, Flag } from 'lucide-react';
 import { PersonalInfo, SocialLink, CVVariant } from '@/types/cv';
 
 interface CVContactProps {
@@ -27,6 +27,8 @@ export function CVContact({ personalInfo, socialLinks = [], variant, layout = 'v
     { icon: Mail, value: personalInfo.email, breakAll: true },
     { icon: Phone, value: personalInfo.phone },
     { icon: MapPin, value: personalInfo.address },
+    { icon: Flag, value: personalInfo.nationality },
+    { icon: Calendar, value: personalInfo.dateOfBirth },
   ].filter(item => item.value);
 
   if (contactItems.length === 0 && socialLinks.length === 0) return null;

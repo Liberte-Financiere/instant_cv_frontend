@@ -48,6 +48,8 @@ export function TimelinePro({ cv }: TemplateProps) {
             {p.email && <span>{p.email}</span>}
             {p.phone && <span>{p.phone}</span>}
             {p.address && <span>{p.address}</span>}
+            {p.nationality && <span>{lang === 'fr' ? 'Nationalité' : 'Nationality'}: {p.nationality}</span>}
+            {p.dateOfBirth && <span>{p.dateOfBirth}</span>}
           </div>
         </div>
         {p.photoUrl && (

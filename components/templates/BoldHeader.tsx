@@ -39,10 +39,12 @@ export function BoldHeader({ cv }: TemplateProps) {
           )}
         </div>
         {/* Contact bar */}
-        <div className="flex flex-wrap gap-x-6 mt-5 text-xs text-white/60">
+        <div className="flex flex-wrap gap-x-6 gap-y-2 mt-5 text-xs text-white/60">
           {p.email && <span>{p.email}</span>}
           {p.phone && <span>{p.phone}</span>}
           {p.address && <span>{p.address}</span>}
+          {p.nationality && <span>{lang === 'fr' ? 'Nationalité' : 'Nationality'}: {p.nationality}</span>}
+          {p.dateOfBirth && <span>{p.dateOfBirth}</span>}
         </div>
       </header>
 

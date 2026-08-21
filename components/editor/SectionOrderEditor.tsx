@@ -21,26 +21,15 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Settings2 } from 'lucide-react';
 import { useCVStore } from '@/store/useCVStore';
 import { CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
-
-const SECTION_LABELS: Record<CVSectionId, string> = {
-  summary: 'Profil',
-  experience: 'Expériences',
-  education: 'Éducation',
-  skills: 'Compétences',
-  languages: 'Langues',
-  hobbies: 'Centres d\'intérêt',
-  certifications: 'Formations',
-  projects: 'Projets',
-  references: 'Références',
-  divers: 'Divers',
-  qualities: 'Qualités',
-};
+import { getSectionTitle } from '@/constants/sections';
 
 interface SortableItemProps {
   id: CVSectionId;
 }
 
 function SortableItem({ id }: SortableItemProps) {
+  const { currentCV } = useCVStore();
+  const title = currentCV ? getSectionTitle(id, currentCV.settings, currentCV.settings?.language) : id;
   const {
     attributes,
     listeners,
@@ -71,8 +60,8 @@ function SortableItem({ id }: SortableItemProps) {
       >
         <GripVertical className="w-4 h-4" />
       </button>
-      <span className="text-sm font-medium text-slate-700">
-        {SECTION_LABELS[id]}
+      <span className="text-sm font-medium text-slate-700 uppercase">
+        {title}
       </span>
     </div>
   );

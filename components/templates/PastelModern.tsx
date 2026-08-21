@@ -38,10 +38,12 @@ export function PastelModern({ cv }: TemplateProps) {
           <div>
             <h1 className="text-3xl font-bold" style={{ color: accent }}>{p.firstName} {p.lastName}</h1>
             <p className="text-base mt-1 text-slate-500">{p.title}</p>
-            <div className="flex flex-wrap gap-x-4 mt-2 text-xs text-slate-400">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-slate-400">
               {p.email && <span>{p.email}</span>}
               {p.phone && <span>{p.phone}</span>}
               {p.address && <span>{p.address}</span>}
+              {p.nationality && <span>{lang === 'fr' ? 'Nationalité' : 'Nationality'}: {p.nationality}</span>}
+              {p.dateOfBirth && <span>{p.dateOfBirth}</span>}
             </div>
           </div>
         </div>
