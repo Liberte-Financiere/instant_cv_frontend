@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import { CV } from '@/types/cv';
+import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { 
   CVContact, CVSummary, CVExperience, CVEducation, 
   CVCertifications, 
@@ -30,6 +30,12 @@ export function ModernSidebar({ cv }: TemplateProps) {
   const accentColor = getAccentColor('modern', cv.settings?.accentColor);
   const sidebarColor = cv.settings?.sidebarColor || '#0f172a'; // Default to Slate 900
   const tagsColor = cv.settings?.tagsColor || 'transparent';
+
+  const sectionOrder: CVSectionId[] = cv.sectionOrder || [...DEFAULT_SECTION_ORDER];
+  const SIDEBAR_SECTIONS: CVSectionId[] = ['skills', 'languages', 'hobbies'];
+  const MAIN_SECTIONS: CVSectionId[] = ['summary', 'experience', 'education', 'certifications', 'projects', 'qualities', 'references', 'divers'];
+  const sidebarOrder = sectionOrder.filter(s => SIDEBAR_SECTIONS.includes(s));
+  const mainOrder = sectionOrder.filter(s => MAIN_SECTIONS.includes(s));
   
   // Fonction pour déterminer si une couleur hex est claire
   const isColorLight = (color: string) => {
@@ -108,69 +114,91 @@ export function ModernSidebar({ cv }: TemplateProps) {
              <CVContact personalInfo={personalInfo} socialLinks={socialLinks} variant={variant} layout="sidebar" accentColor={accentColor} />
           </div>
 
-          {/* Skills - Sidebar version */}
-          {skills.length > 0 && (
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('skills', cv.settings, lang)}</h3>
-              <div className="flex flex-wrap gap-2">
-                {skills.map((skill, index) => (
-                  <span 
-                    key={skill.id || index} 
-                    className={`px-3 py-1.5 rounded text-xs font-medium ${tagBgClass} ${tagTextColorClass}`}
-                    style={{ backgroundColor: !isTagsTransparent ? tagsColor : undefined }}
-                  >
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Languages - Sidebar version */}
-          {languages.length > 0 && (
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('languages', cv.settings, lang)}</h3>
-              <div className="space-y-3">
-                 {languages.map((lang, index) => (
-                  <div key={lang.id || index} className="flex justify-between items-center text-sm">
-                    <span className="text-white/90">{lang.name}</span>
-                    <span className="text-xs text-white/60 font-medium">{lang.level}</span>
+          {/* Sidebar sections in user-defined order */}
+          {sidebarOrder.map((sectionId) => {
+            switch (sectionId) {
+              case 'skills':
+                return skills.length > 0 ? (
+                  <div key={sectionId}>
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('skills', cv.settings, lang)}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {skills.map((skill, index) => (
+                        <span 
+                          key={skill.id || index} 
+                          className={`px-3 py-1.5 rounded text-xs font-medium ${tagBgClass} ${tagTextColorClass}`}
+                          style={{ backgroundColor: !isTagsTransparent ? tagsColor : undefined }}
+                        >
+                          {skill.name}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
+                ) : null;
 
-          {/* Hobbies - Sidebar version */}
-          {hobbies.length > 0 && (
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('hobbies', cv.settings, lang)}</h3>
-              <div className="flex flex-wrap gap-2">
-                 {hobbies.map((hobby, index) => (
-                  <span 
-                    key={hobby.id || index} 
-                    className={`px-3 py-1.5 rounded text-xs font-medium ${tagBgClass} ${tagTextColorClass}`}
-                    style={{ backgroundColor: !isTagsTransparent ? tagsColor : undefined }}
-                  >
-                    {hobby.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+              case 'languages':
+                return languages.length > 0 ? (
+                  <div key={sectionId}>
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('languages', cv.settings, lang)}</h3>
+                    <div className="space-y-3">
+                      {languages.map((lang, index) => (
+                        <div key={lang.id || index} className="flex justify-between items-center text-sm">
+                          <span className="text-white/90">{lang.name}</span>
+                          <span className="text-xs text-white/60 font-medium">{lang.level}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null;
+
+              case 'hobbies':
+                return hobbies.length > 0 ? (
+                  <div key={sectionId}>
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('hobbies', cv.settings, lang)}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {hobbies.map((hobby, index) => (
+                        <span 
+                          key={hobby.id || index} 
+                          className={`px-3 py-1.5 rounded text-xs font-medium ${tagBgClass} ${tagTextColorClass}`}
+                          style={{ backgroundColor: !isTagsTransparent ? tagsColor : undefined }}
+                        >
+                          {hobby.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null;
+
+              default:
+                return null;
+            }
+          })}
         </div>
 
-        {/* Main Content (Right Column) */}
+        {/* Main sections in user-defined order */}
         <div className="flex-1 p-6 sm:p-8 space-y-6 bg-white">
-           <CVSummary summary={personalInfo.summary} variant={variant} accentColor={accentColor}  title={getSectionTitle('summary', cv.settings, lang)} />
-           <CVExperience experiences={experiences} variant={variant} accentColor={accentColor}  title={getSectionTitle('experience', cv.settings, lang)}  lang={lang}/>
-           <CVEducation education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', cv.settings, lang)}  lang={lang}/>
-           <CVCertifications certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', cv.settings, lang)} />
-           <CVProjects projects={projects} variant={variant} accentColor={accentColor}  title={getSectionTitle('projects', cv.settings, lang)} />
-           <CVQualities qualities={cv.qualities || []} variant={variant} accentColor={accentColor} title={getSectionTitle('qualities', cv.settings, lang)} />
-           <CVReferences references={references} variant={variant} accentColor={accentColor}  title={getSectionTitle('references', cv.settings, lang)} />
-           <CVDivers divers={divers} variant={variant} accentColor={accentColor}  title={getSectionTitle('divers', cv.settings, lang)} />
-           <CVFooter footer={footer} variant={variant}  lang={lang}/>
+          {mainOrder.map((sectionId) => {
+            switch (sectionId) {
+              case 'summary':
+                return <CVSummary key={sectionId} summary={personalInfo.summary} variant={variant} accentColor={accentColor} title={getSectionTitle('summary', cv.settings, lang)} />;
+              case 'experience':
+                return <CVExperience key={sectionId} experiences={experiences} variant={variant} accentColor={accentColor} title={getSectionTitle('experience', cv.settings, lang)} lang={lang} />;
+              case 'education':
+                return <CVEducation key={sectionId} education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', cv.settings, lang)} lang={lang} />;
+              case 'certifications':
+                return <CVCertifications key={sectionId} certifications={certifications} variant={variant} accentColor={accentColor} title={getSectionTitle('certifications', cv.settings, lang)} />;
+              case 'projects':
+                return <CVProjects key={sectionId} projects={projects} variant={variant} accentColor={accentColor} title={getSectionTitle('projects', cv.settings, lang)} />;
+              case 'qualities':
+                return <CVQualities key={sectionId} qualities={cv.qualities || []} variant={variant} accentColor={accentColor} title={getSectionTitle('qualities', cv.settings, lang)} />;
+              case 'references':
+                return <CVReferences key={sectionId} references={references} variant={variant} accentColor={accentColor} title={getSectionTitle('references', cv.settings, lang)} />;
+              case 'divers':
+                return <CVDivers key={sectionId} divers={divers} variant={variant} accentColor={accentColor} title={getSectionTitle('divers', cv.settings, lang)} />;
+              default:
+                return null;
+            }
+          })}
+          <CVFooter footer={footer} variant={variant} lang={lang} />
         </div>
       </div>
     </div>
