@@ -394,6 +394,7 @@ export type UserWhereInput = {
   candidateProfiles?: Prisma.CandidateProfileListRelationFilter
   profileUnlocks?: Prisma.ProfileUnlockListRelationFilter
   aiLogs?: Prisma.AILogListRelationFilter
+  jobOffers?: Prisma.JobOfferListRelationFilter
   school?: Prisma.XOR<Prisma.SchoolNullableScalarRelationFilter, Prisma.SchoolWhereInput> | null
   acceptedInvitations?: Prisma.SchoolInvitationListRelationFilter
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionListRelationFilter
@@ -440,6 +441,7 @@ export type UserOrderByWithRelationInput = {
   candidateProfiles?: Prisma.CandidateProfileOrderByRelationAggregateInput
   profileUnlocks?: Prisma.ProfileUnlockOrderByRelationAggregateInput
   aiLogs?: Prisma.AILogOrderByRelationAggregateInput
+  jobOffers?: Prisma.JobOfferOrderByRelationAggregateInput
   school?: Prisma.SchoolOrderByWithRelationInput
   acceptedInvitations?: Prisma.SchoolInvitationOrderByRelationAggregateInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionOrderByRelationAggregateInput
@@ -490,6 +492,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   candidateProfiles?: Prisma.CandidateProfileListRelationFilter
   profileUnlocks?: Prisma.ProfileUnlockListRelationFilter
   aiLogs?: Prisma.AILogListRelationFilter
+  jobOffers?: Prisma.JobOfferListRelationFilter
   school?: Prisma.XOR<Prisma.SchoolNullableScalarRelationFilter, Prisma.SchoolWhereInput> | null
   acceptedInvitations?: Prisma.SchoolInvitationListRelationFilter
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionListRelationFilter
@@ -596,6 +599,7 @@ export type UserCreateInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -641,6 +645,7 @@ export type UserUncheckedCreateInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -684,6 +689,7 @@ export type UserUpdateInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -729,6 +735,7 @@ export type UserUncheckedUpdateInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -1281,6 +1288,20 @@ export type UserUpdateOneRequiredWithoutSchoolMembershipsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSchoolMembershipsInput, Prisma.UserUpdateWithoutSchoolMembershipsInput>, Prisma.UserUncheckedUpdateWithoutSchoolMembershipsInput>
 }
 
+export type UserCreateNestedOneWithoutJobOffersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJobOffersInput, Prisma.UserUncheckedCreateWithoutJobOffersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJobOffersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutJobOffersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJobOffersInput, Prisma.UserUncheckedCreateWithoutJobOffersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJobOffersInput
+  upsert?: Prisma.UserUpsertWithoutJobOffersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutJobOffersInput, Prisma.UserUpdateWithoutJobOffersInput>, Prisma.UserUncheckedUpdateWithoutJobOffersInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -1317,6 +1338,7 @@ export type UserCreateWithoutAccountsInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -1361,6 +1383,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -1419,6 +1442,7 @@ export type UserUpdateWithoutAccountsInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -1463,6 +1487,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -1505,6 +1530,7 @@ export type UserCreateWithoutSessionsInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -1549,6 +1575,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -1607,6 +1634,7 @@ export type UserUpdateWithoutSessionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -1651,6 +1679,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -1693,6 +1722,7 @@ export type UserCreateWithoutAnalysesInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -1737,6 +1767,7 @@ export type UserUncheckedCreateWithoutAnalysesInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -1795,6 +1826,7 @@ export type UserUpdateWithoutAnalysesInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -1839,6 +1871,7 @@ export type UserUncheckedUpdateWithoutAnalysesInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -1881,6 +1914,7 @@ export type UserCreateWithoutAiLogsInput = {
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -1925,6 +1959,7 @@ export type UserUncheckedCreateWithoutAiLogsInput = {
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -1983,6 +2018,7 @@ export type UserUpdateWithoutAiLogsInput = {
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -2027,6 +2063,7 @@ export type UserUncheckedUpdateWithoutAiLogsInput = {
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -2069,6 +2106,7 @@ export type UserCreateWithoutReferredUsersInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -2113,6 +2151,7 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -2160,6 +2199,7 @@ export type UserCreateWithoutReferredByInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -2204,6 +2244,7 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -2267,6 +2308,7 @@ export type UserUpdateWithoutReferredUsersInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -2311,6 +2353,7 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -2399,6 +2442,7 @@ export type UserCreateWithoutFeedbacksInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -2443,6 +2487,7 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -2501,6 +2546,7 @@ export type UserUpdateWithoutFeedbacksInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -2545,6 +2591,7 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -2587,6 +2634,7 @@ export type UserCreateWithoutPaymentTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -2631,6 +2679,7 @@ export type UserUncheckedCreateWithoutPaymentTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -2689,6 +2738,7 @@ export type UserUpdateWithoutPaymentTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -2733,6 +2783,7 @@ export type UserUncheckedUpdateWithoutPaymentTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -2775,6 +2826,7 @@ export type UserCreateWithoutCvsInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -2819,6 +2871,7 @@ export type UserUncheckedCreateWithoutCvsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -2877,6 +2930,7 @@ export type UserUpdateWithoutCvsInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -2921,6 +2975,7 @@ export type UserUncheckedUpdateWithoutCvsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -2963,6 +3018,7 @@ export type UserCreateWithoutCoverLettersInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -3007,6 +3063,7 @@ export type UserUncheckedCreateWithoutCoverLettersInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -3065,6 +3122,7 @@ export type UserUpdateWithoutCoverLettersInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -3109,6 +3167,7 @@ export type UserUncheckedUpdateWithoutCoverLettersInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -3151,6 +3210,7 @@ export type UserCreateWithoutCreditTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -3195,6 +3255,7 @@ export type UserUncheckedCreateWithoutCreditTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -3253,6 +3314,7 @@ export type UserUpdateWithoutCreditTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -3297,6 +3359,7 @@ export type UserUncheckedUpdateWithoutCreditTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -3339,6 +3402,7 @@ export type UserCreateWithoutInterviewSessionsInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -3383,6 +3447,7 @@ export type UserUncheckedCreateWithoutInterviewSessionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -3441,6 +3506,7 @@ export type UserUpdateWithoutInterviewSessionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -3485,6 +3551,7 @@ export type UserUncheckedUpdateWithoutInterviewSessionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -3527,6 +3594,7 @@ export type UserCreateWithoutCandidateProfilesInput = {
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -3571,6 +3639,7 @@ export type UserUncheckedCreateWithoutCandidateProfilesInput = {
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -3629,6 +3698,7 @@ export type UserUpdateWithoutCandidateProfilesInput = {
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -3673,6 +3743,7 @@ export type UserUncheckedUpdateWithoutCandidateProfilesInput = {
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -3715,6 +3786,7 @@ export type UserCreateWithoutProfileUnlocksInput = {
   interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -3759,6 +3831,7 @@ export type UserUncheckedCreateWithoutProfileUnlocksInput = {
   interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -3817,6 +3890,7 @@ export type UserUpdateWithoutProfileUnlocksInput = {
   interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -3861,6 +3935,7 @@ export type UserUncheckedUpdateWithoutProfileUnlocksInput = {
   interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -3904,6 +3979,7 @@ export type UserCreateWithoutSchoolInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipCreateNestedManyWithoutUserInput
@@ -3947,6 +4023,7 @@ export type UserUncheckedCreateWithoutSchoolInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -4016,6 +4093,7 @@ export type UserCreateWithoutSchoolCreditTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolMemberships?: Prisma.SchoolMembershipCreateNestedManyWithoutUserInput
@@ -4060,6 +4138,7 @@ export type UserUncheckedCreateWithoutSchoolCreditTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
   performedSchoolCredits?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutPerformedByInput
@@ -4107,6 +4186,7 @@ export type UserCreateWithoutPerformedSchoolCreditsInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -4151,6 +4231,7 @@ export type UserUncheckedCreateWithoutPerformedSchoolCreditsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -4209,6 +4290,7 @@ export type UserUpdateWithoutSchoolCreditTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUpdateManyWithoutUserNestedInput
@@ -4253,6 +4335,7 @@ export type UserUncheckedUpdateWithoutSchoolCreditTransactionsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
   performedSchoolCredits?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutPerformedByNestedInput
@@ -4306,6 +4389,7 @@ export type UserUpdateWithoutPerformedSchoolCreditsInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -4350,6 +4434,7 @@ export type UserUncheckedUpdateWithoutPerformedSchoolCreditsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -4392,6 +4477,7 @@ export type UserCreateWithoutAcceptedInvitationsInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipCreateNestedManyWithoutUserInput
@@ -4436,6 +4522,7 @@ export type UserUncheckedCreateWithoutAcceptedInvitationsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
   performedSchoolCredits?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutPerformedByInput
@@ -4494,6 +4581,7 @@ export type UserUpdateWithoutAcceptedInvitationsInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUpdateManyWithoutUserNestedInput
@@ -4538,6 +4626,7 @@ export type UserUncheckedUpdateWithoutAcceptedInvitationsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
   performedSchoolCredits?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutPerformedByNestedInput
@@ -4580,6 +4669,7 @@ export type UserCreateWithoutSchoolMembershipsInput = {
   candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferCreateNestedManyWithoutRecruiterInput
   school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
   acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
@@ -4624,6 +4714,7 @@ export type UserUncheckedCreateWithoutSchoolMembershipsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
   aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  jobOffers?: Prisma.JobOfferUncheckedCreateNestedManyWithoutRecruiterInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
   performedSchoolCredits?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutPerformedByInput
@@ -4682,6 +4773,7 @@ export type UserUpdateWithoutSchoolMembershipsInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -4726,8 +4818,201 @@ export type UserUncheckedUpdateWithoutSchoolMembershipsInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
+  performedSchoolCredits?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutPerformedByNestedInput
+}
+
+export type UserCreateWithoutJobOffersInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.Role
+  credits?: number
+  isBanned?: boolean
+  acceptsMarketing?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
+  phone?: string | null
+  jobTitle?: string | null
+  sector?: string | null
+  referralCode?: string | null
+  referralCount?: number
+  premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
+  referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  cvs?: Prisma.CVCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterCreateNestedManyWithoutUserInput
+  analyses?: Prisma.AnalysisHistoryCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.PlatformFeedbackCreateNestedManyWithoutUserInput
+  paymentTransactions?: Prisma.PaymentTransactionCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockCreateNestedManyWithoutUnlockerUserInput
+  aiLogs?: Prisma.AILogCreateNestedManyWithoutUserInput
+  school?: Prisma.SchoolCreateNestedOneWithoutUsersInput
+  acceptedInvitations?: Prisma.SchoolInvitationCreateNestedManyWithoutAcceptedByUserInput
+  schoolCreditTransactions?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutUserInput
+  schoolMemberships?: Prisma.SchoolMembershipCreateNestedManyWithoutUserInput
+  performedSchoolCredits?: Prisma.SchoolCreditTransactionCreateNestedManyWithoutPerformedByInput
+}
+
+export type UserUncheckedCreateWithoutJobOffersInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.Role
+  credits?: number
+  isBanned?: boolean
+  acceptsMarketing?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  lastActivity?: Date | string | null
+  phone?: string | null
+  jobTitle?: string | null
+  sector?: string | null
+  referralCode?: string | null
+  referredById?: string | null
+  referralCount?: number
+  premiumUntil?: Date | string | null
+  companyName?: string | null
+  recruiterCredits?: number
+  freeUnlocksUsed?: number
+  schoolId?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  cvs?: Prisma.CVUncheckedCreateNestedManyWithoutUserInput
+  coverLetters?: Prisma.CoverLetterUncheckedCreateNestedManyWithoutUserInput
+  analyses?: Prisma.AnalysisHistoryUncheckedCreateNestedManyWithoutUserInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.PlatformFeedbackUncheckedCreateNestedManyWithoutUserInput
+  paymentTransactions?: Prisma.PaymentTransactionUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedCreateNestedManyWithoutUserInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedCreateNestedManyWithoutUnlockerUserInput
+  aiLogs?: Prisma.AILogUncheckedCreateNestedManyWithoutUserInput
+  acceptedInvitations?: Prisma.SchoolInvitationUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutUserInput
+  schoolMemberships?: Prisma.SchoolMembershipUncheckedCreateNestedManyWithoutUserInput
+  performedSchoolCredits?: Prisma.SchoolCreditTransactionUncheckedCreateNestedManyWithoutPerformedByInput
+}
+
+export type UserCreateOrConnectWithoutJobOffersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutJobOffersInput, Prisma.UserUncheckedCreateWithoutJobOffersInput>
+}
+
+export type UserUpsertWithoutJobOffersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutJobOffersInput, Prisma.UserUncheckedUpdateWithoutJobOffersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutJobOffersInput, Prisma.UserUncheckedCreateWithoutJobOffersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutJobOffersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutJobOffersInput, Prisma.UserUncheckedUpdateWithoutJobOffersInput>
+}
+
+export type UserUpdateWithoutJobOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCount?: Prisma.IntFieldUpdateOperationsInput | number
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  cvs?: Prisma.CVUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUpdateManyWithoutUserNestedInput
+  analyses?: Prisma.AnalysisHistoryUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.PlatformFeedbackUpdateManyWithoutUserNestedInput
+  paymentTransactions?: Prisma.PaymentTransactionUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
+  aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
+  acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
+  schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
+  schoolMemberships?: Prisma.SchoolMembershipUpdateManyWithoutUserNestedInput
+  performedSchoolCredits?: Prisma.SchoolCreditTransactionUpdateManyWithoutPerformedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutJobOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  acceptsMarketing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastActivity?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralCount?: Prisma.IntFieldUpdateOperationsInput | number
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
+  freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  cvs?: Prisma.CVUncheckedUpdateManyWithoutUserNestedInput
+  coverLetters?: Prisma.CoverLetterUncheckedUpdateManyWithoutUserNestedInput
+  analyses?: Prisma.AnalysisHistoryUncheckedUpdateManyWithoutUserNestedInput
+  creditTransactions?: Prisma.CreditTransactionUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.PlatformFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  paymentTransactions?: Prisma.PaymentTransactionUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
+  profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
+  aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
+  schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
   performedSchoolCredits?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
@@ -4793,6 +5078,7 @@ export type UserUpdateWithoutReferredByInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   school?: Prisma.SchoolUpdateOneWithoutUsersNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
@@ -4837,6 +5123,7 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -4932,6 +5219,7 @@ export type UserUpdateWithoutSchoolInput = {
   candidateProfiles?: Prisma.CandidateProfileUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUpdateManyWithoutUserNestedInput
@@ -4975,6 +5263,7 @@ export type UserUncheckedUpdateWithoutSchoolInput = {
   candidateProfiles?: Prisma.CandidateProfileUncheckedUpdateManyWithoutUserNestedInput
   profileUnlocks?: Prisma.ProfileUnlockUncheckedUpdateManyWithoutUnlockerUserNestedInput
   aiLogs?: Prisma.AILogUncheckedUpdateManyWithoutUserNestedInput
+  jobOffers?: Prisma.JobOfferUncheckedUpdateManyWithoutRecruiterNestedInput
   acceptedInvitations?: Prisma.SchoolInvitationUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   schoolCreditTransactions?: Prisma.SchoolCreditTransactionUncheckedUpdateManyWithoutUserNestedInput
   schoolMemberships?: Prisma.SchoolMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -5026,6 +5315,7 @@ export type UserCountOutputType = {
   candidateProfiles: number
   profileUnlocks: number
   aiLogs: number
+  jobOffers: number
   acceptedInvitations: number
   schoolCreditTransactions: number
   schoolMemberships: number
@@ -5046,6 +5336,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   candidateProfiles?: boolean | UserCountOutputTypeCountCandidateProfilesArgs
   profileUnlocks?: boolean | UserCountOutputTypeCountProfileUnlocksArgs
   aiLogs?: boolean | UserCountOutputTypeCountAiLogsArgs
+  jobOffers?: boolean | UserCountOutputTypeCountJobOffersArgs
   acceptedInvitations?: boolean | UserCountOutputTypeCountAcceptedInvitationsArgs
   schoolCreditTransactions?: boolean | UserCountOutputTypeCountSchoolCreditTransactionsArgs
   schoolMemberships?: boolean | UserCountOutputTypeCountSchoolMembershipsArgs
@@ -5156,6 +5447,13 @@ export type UserCountOutputTypeCountAiLogsArgs<ExtArgs extends runtime.Types.Ext
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountJobOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JobOfferWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountAcceptedInvitationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SchoolInvitationWhereInput
 }
@@ -5221,6 +5519,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   candidateProfiles?: boolean | Prisma.User$candidateProfilesArgs<ExtArgs>
   profileUnlocks?: boolean | Prisma.User$profileUnlocksArgs<ExtArgs>
   aiLogs?: boolean | Prisma.User$aiLogsArgs<ExtArgs>
+  jobOffers?: boolean | Prisma.User$jobOffersArgs<ExtArgs>
   school?: boolean | Prisma.User$schoolArgs<ExtArgs>
   acceptedInvitations?: boolean | Prisma.User$acceptedInvitationsArgs<ExtArgs>
   schoolCreditTransactions?: boolean | Prisma.User$schoolCreditTransactionsArgs<ExtArgs>
@@ -5330,6 +5629,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   candidateProfiles?: boolean | Prisma.User$candidateProfilesArgs<ExtArgs>
   profileUnlocks?: boolean | Prisma.User$profileUnlocksArgs<ExtArgs>
   aiLogs?: boolean | Prisma.User$aiLogsArgs<ExtArgs>
+  jobOffers?: boolean | Prisma.User$jobOffersArgs<ExtArgs>
   school?: boolean | Prisma.User$schoolArgs<ExtArgs>
   acceptedInvitations?: boolean | Prisma.User$acceptedInvitationsArgs<ExtArgs>
   schoolCreditTransactions?: boolean | Prisma.User$schoolCreditTransactionsArgs<ExtArgs>
@@ -5363,6 +5663,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     candidateProfiles: Prisma.$CandidateProfilePayload<ExtArgs>[]
     profileUnlocks: Prisma.$ProfileUnlockPayload<ExtArgs>[]
     aiLogs: Prisma.$AILogPayload<ExtArgs>[]
+    jobOffers: Prisma.$JobOfferPayload<ExtArgs>[]
     school: Prisma.$SchoolPayload<ExtArgs> | null
     acceptedInvitations: Prisma.$SchoolInvitationPayload<ExtArgs>[]
     schoolCreditTransactions: Prisma.$SchoolCreditTransactionPayload<ExtArgs>[]
@@ -5802,6 +6103,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   candidateProfiles<T extends Prisma.User$candidateProfilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$candidateProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CandidateProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   profileUnlocks<T extends Prisma.User$profileUnlocksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileUnlocksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileUnlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiLogs<T extends Prisma.User$aiLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AILogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jobOffers<T extends Prisma.User$jobOffersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$jobOffersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   school<T extends Prisma.User$schoolArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$schoolArgs<ExtArgs>>): Prisma.Prisma__SchoolClient<runtime.Types.Result.GetResult<Prisma.$SchoolPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   acceptedInvitations<T extends Prisma.User$acceptedInvitationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$acceptedInvitationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchoolInvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   schoolCreditTransactions<T extends Prisma.User$schoolCreditTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$schoolCreditTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchoolCreditTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6589,6 +6891,30 @@ export type User$aiLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.AILogScalarFieldEnum | Prisma.AILogScalarFieldEnum[]
+}
+
+/**
+ * User.jobOffers
+ */
+export type User$jobOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobOffer
+   */
+  select?: Prisma.JobOfferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JobOffer
+   */
+  omit?: Prisma.JobOfferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobOfferInclude<ExtArgs> | null
+  where?: Prisma.JobOfferWhereInput
+  orderBy?: Prisma.JobOfferOrderByWithRelationInput | Prisma.JobOfferOrderByWithRelationInput[]
+  cursor?: Prisma.JobOfferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JobOfferScalarFieldEnum | Prisma.JobOfferScalarFieldEnum[]
 }
 
 /**

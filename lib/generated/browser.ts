@@ -142,3 +142,8 @@ export type SchoolInvitation = Prisma.SchoolInvitationModel
  * 
  */
 export type SchoolMembership = Prisma.SchoolMembershipModel
+/**
+ * Model JobOffer
+ * 
+ */
+export type JobOffer = Prisma.JobOfferModel

@@ -1,27 +1,31 @@
-[2026-08-21] — Fix B2B Admin Auth and UI Cleanup
+2026-08-22 — Finalisation du Job Board et corrections UI
 
 What changed:
-- Switched all B2B API endpoints to fetch user data directly from the DB instead of relying on the JWT session.
-- Excluded SCHOOL_ADMIN users from the B2B students list.
-- Added explicit protection to prevent detaching SCHOOL_ADMIN users via the students API.
-- Completely removed the Sparkles (✨) icon from the codebase.
-- Replaced Sparkles with Wand2 for AI actions and Coins for credit/billing actions.
+- Ajout du champ optionnel `expiresAt` pour définir une date limite de candidature.
+- Sécurisation des routes de gestion des offres (`/recruiter/jobs`) avec vérification stricte du rôle `RECRUITER` ou `ADMIN`.
+- Filtrage automatique côté serveur des offres expirées sur le Job Board public (`/api/jobs`).
+- Refonte visuelle de la page de détails d'une annonce (passage en mode Light) pour correspondre au design du Job Board public.
+- Correction d'un bug d'invisibilité du texte sur les champs de sélection du formulaire de création d'offre (dû à un conflit avec globals.css).
+- Restauration des dégradés "Vercel style" (bleu nuit) sur les bannières de la landing page.
 
 Why:
-- JWT tokens can contain stale data (e.g. `schoolId` being null) if an admin's rights are updated post-login, causing random 403 Forbidden errors. Fetching from the DB ensures accurate real-time authorization.
-- Admins were erroneously appearing in the students list and could accidentally delete themselves, nullifying their own `schoolId` and breaking their admin access.
-- The UI needed to be cleaned up and the use of the Sparkles icon was deemed unprofessional and distracting. 
+- Pour permettre aux recruteurs de fermer automatiquement les offres.
+- Pour empêcher les utilisateurs classiques (ou non connectés) d'accéder au dashboard recruteur.
+- Pour garantir une lisibilité parfaite des textes dans les menus déroulants en mode sombre (bypass de la règle CSS globale).
 
 Files affected:
-- app/api/b2b/school-admin/invitations/route.ts — Fetch user from DB to fix 403.
-- app/api/b2b/school-admin/invitations/[id]/revoke/route.ts — Fetch user from DB to fix 403.
-- app/api/b2b/school-admin/students/route.ts — Fetch user from DB, exclude admins from list, block admin deletion.
-- app/api/b2b/school-admin/stats/route.ts — Fetch user from DB to fix 403.
-- (Multiple UI files) — Replaced Sparkles icon with Wand2/Coins across the codebase.
+- prisma/schema.prisma — Ajout de `expiresAt` dans `JobOffer`.
+- app/api/recruiter/jobs/route.ts — Validation du champ optionnel et gestion des permissions.
+- app/api/jobs/route.ts — Filtrage des annonces expirées (expiresAt > now()).
+- app/api/jobs/[id]/route.ts — Filtrage des annonces expirées sur la route de détail.
+- app/recruiter/jobs/create/page.tsx — Ajout du champ Date, ajout de `useEffect` pour la redirection sécurisée, et patch CSS (`!text-white`, `bg-slate-900`) pour corriger l'affichage.
+- app/recruiter/jobs/page.tsx — Affichage de la date d'expiration dans la liste des offres du recruteur.
+- app/jobs/page.tsx — Affichage de la date d'expiration sur le listing public.
+- app/jobs/[id]/page.tsx — Migration vers le Light mode et ajout du badge d'expiration.
+- components/landing/Features.tsx — Ajustement des bannières B2B en bleu nuit.
 
 Breaking changes:
-- None.
+- La base de données a été modifiée. Le `prisma db push` a déjà été exécuté sur l'environnement local.
 
 Notes for review:
-- The `schoolId` bug caused some admins to have `schoolId: null` in production. This was manually fixed via SQL for the concerned user.
-- The Sparkles replacement touched many components (Toolbar, Modals, Pricing, Sidebar). Everything was verified to be visually consistent.
+- Le système filtre désormais automatiquement les offres échues du Job Board public. Si une offre semble "disparaître", vérifier sa date `expiresAt` depuis le portail recruteur.
