@@ -123,7 +123,7 @@ export const APP_CONFIG = {
       
       /** Modèles via OpenRouter */
       openrouter: {
-        fast: 'google/gemini-3.5-flash',
+        fast: 'google/gemini-3.7-flash',
         pro: 'google/gemini-3.1-pro-preview',
         assistant: 'google/gemini-3.5-flash',
         bilan: 'deepseek/deepseek-v4-pro',
