@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Users, Loader2, UserMinus, Search } from 'lucide-react';
+import { Users, Loader2, UserMinus, Search, Eye } from 'lucide-react';
+import Link from 'next/link';
 import { toast } from 'sonner';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
@@ -11,6 +12,9 @@ interface Student {
   email: string | null;
   joinedAt: string;
   consumedCredits: number;
+  cvCount: number;
+  coverLetterCount: number;
+  interviewCount: number;
 }
 
 export default function SchoolAdminStudentsPage() {
@@ -103,7 +107,8 @@ export default function SchoolAdminStudentsPage() {
                   <th className="px-6 py-4">Nom</th>
                   <th className="px-6 py-4">Email</th>
                   <th className="px-6 py-4">Rejoint le</th>
-                  <th className="px-6 py-4">Crédits Consommés</th>
+                  <th className="px-6 py-4 text-center">Activités</th>
+                  <th className="px-6 py-4 text-center">Crédits Consommés</th>
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -113,19 +118,41 @@ export default function SchoolAdminStudentsPage() {
                     <td className="px-6 py-4 font-medium text-slate-900">{student.name || '-'}</td>
                     <td className="px-6 py-4">{student.email || '-'}</td>
                     <td className="px-6 py-4">{new Date(student.joinedAt).toLocaleDateString('fr-FR')}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex items-center justify-center gap-2 text-xs">
+                        <span title="CVs" className="px-2 py-1 bg-slate-100 rounded-md font-medium text-slate-600 border border-slate-200">
+                          {student.cvCount} CV
+                        </span>
+                        <span title="Lettres" className="px-2 py-1 bg-slate-100 rounded-md font-medium text-slate-600 border border-slate-200">
+                          {student.coverLetterCount} LM
+                        </span>
+                        <span title="Entretiens" className="px-2 py-1 bg-slate-100 rounded-md font-medium text-slate-600 border border-slate-200">
+                          {student.interviewCount} IA
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                          {student.consumedCredits} cr
                        </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => setConfirmModal({ isOpen: true, id: student.id, name: student.name })}
-                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Retirer l'étudiant"
-                      >
-                        <UserMinus className="w-5 h-5" />
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <Link
+                          href={`/dashboard/school-admin/students/${student.id}`}
+                          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Voir les détails"
+                        >
+                          <Eye className="w-5 h-5" />
+                        </Link>
+                        <button
+                          onClick={() => setConfirmModal({ isOpen: true, id: student.id, name: student.name })}
+                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Retirer l'étudiant"
+                        >
+                          <UserMinus className="w-5 h-5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
