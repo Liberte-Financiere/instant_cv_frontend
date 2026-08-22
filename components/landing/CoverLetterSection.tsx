@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { FileText, Upload, Sparkles, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
+import {FileText, Upload, Clock, CheckCircle2, ArrowRight, Wand2} from 'lucide-react';
 import Link from 'next/link';
 
 const benefits = [
@@ -20,7 +20,7 @@ const steps = [
     bg: 'bg-blue-50',
   },
   {
-    icon: Sparkles,
+    icon: Wand2,
     title: 'L\'IA rédige',
     description: 'Lettre persuasive en 30s',
     color: 'from-purple-500 to-pink-400',
@@ -144,7 +144,7 @@ export function CoverLetterSection() {
               </div>
               {/* AI badge */}
               <div className="flex items-center gap-1.5 mt-4 text-xs text-purple-600 font-medium">
-                <Sparkles className="w-3 h-3" />
+                <Wand2 className="w-3 h-3" />
                 Généré par l&apos;IA en 30 secondes
               </div>
             </div>

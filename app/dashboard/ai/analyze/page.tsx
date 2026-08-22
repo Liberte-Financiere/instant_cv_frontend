@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Sparkles, Loader2, ArrowLeft, Upload, FileText } from 'lucide-react';
+import {Loader2, ArrowLeft, Upload, FileText, Wand2} from 'lucide-react';
 import { useCVStore } from '@/store/useCVStore';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -118,7 +118,7 @@ export default function AIAnalyzePage() {
         >
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-8 h-8 text-blue-600" />
+              <Wand2 className="w-8 h-8 text-blue-600" />
             </div>
             <h1 className="text-2xl font-bold text-slate-900 mb-2">Analyser mon CV</h1>
             <p className="text-slate-500 max-w-md mx-auto text-sm">
@@ -154,7 +154,7 @@ export default function AIAnalyzePage() {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-5 h-5 relative z-10" />
+                    <Wand2 className="w-5 h-5 relative z-10" />
                     <span className="relative z-10">Analyser mon CV</span>
                   </>
                 )}

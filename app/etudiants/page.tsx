@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GraduationCap, FileText, Brain, Sparkles, Target, ArrowRight, Check } from 'lucide-react';
+import {GraduationCap, FileText, Brain, Target, ArrowRight, Check, Wand2} from 'lucide-react';
 import Link from 'next/link';
 import { Navbar } from '@/components/shared/Navbar';
 import { APP_CONFIG } from '@/lib/config';
@@ -23,7 +23,7 @@ const benefits = [
     desc: 'Pour chaque offre de stage ou premier emploi, générez une lettre personnalisée qui montre votre motivation et votre potentiel, pas juste un texte générique.',
   },
   {
-    icon: Sparkles,
+    icon: Wand2,
     title: 'Gratuit pour commencer',
     desc: `${APP_CONFIG.credits.signupBonus} crédits offerts dès l'inscription. Assez pour créer votre CV, générer plusieurs lettres de motivation et postuler à vos premières offres.`,
   },

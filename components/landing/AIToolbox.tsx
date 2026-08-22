@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Camera, ClipboardList, Scissors, Globe, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import {Camera, ClipboardList, Scissors, Globe, ArrowRight, CheckCircle2, Wand2} from 'lucide-react';
 import Link from 'next/link';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 

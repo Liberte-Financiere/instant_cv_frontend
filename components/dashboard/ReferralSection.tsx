@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Copy, Gift, Users, Share2, Check, Loader2, Sparkles } from 'lucide-react';
+import {Copy, Gift, Users, Share2, Check, Loader2, Coins, Wand2} from 'lucide-react';
 import { toast } from 'sonner';
 import { APP_CONFIG } from '@/lib/config';
 
@@ -136,7 +136,7 @@ export function ReferralSection() {
           
           <div className="text-center">
              <div className="flex items-center justify-center gap-1 text-amber-500">
-               <Sparkles className="w-4 h-4" />
+               <Coins className="w-4 h-4" />
                <span className="text-lg font-bold">{data.referralCount * 10}</span>
              </div>
              <p className="text-xs text-slate-500">Crédits générés</p>

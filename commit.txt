@@ -1,32 +1,27 @@
-[2026-08-21] — Academic Mode: Integration of nationality and dateOfBirth in 15 Premium Templates
+[2026-08-21] — Fix B2B Admin Auth and UI Cleanup
 
 What changed:
-- Added conditional rendering for `nationality` and `dateOfBirth` in the headers of the 15 remaining premium templates.
-- Mapped these fields using multilingual text labels (Nationalité / Nationality, Âge / Age) rather than specific icons to respect their layout.
-- Tested compilation (`npx tsc --noEmit`) to ensure type safety.
+- Switched all B2B API endpoints to fetch user data directly from the DB instead of relying on the JWT session.
+- Excluded SCHOOL_ADMIN users from the B2B students list.
+- Added explicit protection to prevent detaching SCHOOL_ADMIN users via the students API.
+- Completely removed the Sparkles (✨) icon from the codebase.
+- Replaced Sparkles with Wand2 for AI actions and Coins for credit/billing actions.
 
 Why:
-- To ensure full consistency across all generated PDFs, regardless of the chosen template, when a user enters Academic mode and provides their nationality and date of birth.
+- JWT tokens can contain stale data (e.g. `schoolId` being null) if an admin's rights are updated post-login, causing random 403 Forbidden errors. Fetching from the DB ensures accurate real-time authorization.
+- Admins were erroneously appearing in the students list and could accidentally delete themselves, nullifying their own `schoolId` and breaking their admin access.
+- The UI needed to be cleaned up and the use of the Sparkles icon was deemed unprofessional and distracting. 
 
 Files affected:
-- components/templates/ATSGlacier.tsx — added text fields in header
-- components/templates/ATSIron.tsx — added text fields in header flex layout
-- components/templates/BlueprintPremium.tsx — added text fields in contact grid
-- components/templates/BoldHeader.tsx — added text fields in flex layout
-- components/templates/CleanGrid.tsx — added text fields in contact block
-- components/templates/CompactSingle.tsx — added text fields in right-aligned contact list
-- components/templates/CorporateBlue.tsx — added text fields in left sidebar contact block
-- components/templates/ElegantPhoto.tsx — added text fields in left sidebar contact block
-- components/templates/GradientHeader.tsx — added text fields in header flex layout
-- components/templates/Infographic.tsx — added text fields in sidebar contact list
-- components/templates/Nordic.tsx — added text fields in flex layout
-- components/templates/PastelModern.tsx — added text fields in flex layout
-- components/templates/Swiss.tsx — added text fields in top contact list
-- components/templates/TimelinePro.tsx — added text fields in header contact block
-- components/templates/TwoTone.tsx — added text fields in contact grid
+- app/api/b2b/school-admin/invitations/route.ts — Fetch user from DB to fix 403.
+- app/api/b2b/school-admin/invitations/[id]/revoke/route.ts — Fetch user from DB to fix 403.
+- app/api/b2b/school-admin/students/route.ts — Fetch user from DB, exclude admins from list, block admin deletion.
+- app/api/b2b/school-admin/stats/route.ts — Fetch user from DB to fix 403.
+- (Multiple UI files) — Replaced Sparkles icon with Wand2/Coins across the codebase.
 
 Breaking changes:
-- None
+- None.
 
 Notes for review:
-- Visual QA on PDF exports might be needed for edge cases where the contact grid gets too crowded, though CSS Flexbox and Grid layouts should naturally accommodate the new fields.
+- The `schoolId` bug caused some admins to have `schoolId: null` in production. This was manually fixed via SQL for the concerned user.
+- The Sparkles replacement touched many components (Toolbar, Modals, Pricing, Sidebar). Everything was verified to be visually consistent.

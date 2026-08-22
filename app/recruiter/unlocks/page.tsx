@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Unlock, Mail, Phone, User, Briefcase, MapPin, Loader2, Clock, CreditCard, Sparkles, ArrowRight, Zap, Gift, Award, Copy, Check } from 'lucide-react';
+import {Unlock, Mail, Phone, User, Briefcase, MapPin, Loader2, Clock, CreditCard, ArrowRight, Zap, Gift, Award, Copy, Check, Wand2} from 'lucide-react';
 import { toast } from 'sonner';
 
 interface UnlockEntry {

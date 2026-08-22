@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Upload, Loader2, Sparkles, AlertCircle, CheckCircle2, Download, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import {Camera, Upload, Loader2, AlertCircle, CheckCircle2, Download, ArrowLeft, Image as ImageIcon, Wand2} from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCreditStore } from '@/store/useCreditStore';
@@ -213,7 +213,7 @@ export default function PhotoProToolPage() {
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm font-medium text-slate-700">Coût de la génération</span>
               <span className="text-sm font-bold text-slate-900 bg-white px-3 py-1 rounded-lg border border-slate-200 shadow-sm flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <Wand2 className="w-3.5 h-3.5 text-amber-500" />
                 {cost} crédits
               </span>
             </div>
@@ -235,7 +235,7 @@ export default function PhotoProToolPage() {
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-5 h-5 mr-2" />
+                  <Wand2 className="w-5 h-5 mr-2" />
                   Générer ma photo pro
                 </>
               )}
@@ -263,7 +263,7 @@ export default function PhotoProToolPage() {
                   <div className="relative w-24 h-24 mb-6">
                     <div className="absolute inset-0 border-4 border-slate-200 rounded-full"></div>
                     <div className="absolute inset-0 border-4 border-purple-500 rounded-full border-t-transparent animate-spin"></div>
-                    <Sparkles className="absolute inset-0 m-auto w-8 h-8 text-purple-500 animate-pulse" />
+                    <Wand2 className="absolute inset-0 m-auto w-8 h-8 text-purple-500 animate-pulse" />
                   </div>
                   <p className="text-slate-600 font-medium">Traitement Gemini 3 Pro en cours...</p>
                   <p className="text-slate-400 text-sm mt-2">Détourage et amélioration studio</p>

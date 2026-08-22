@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Sparkles, Linkedin, Camera, Globe, Mail, Coins, ClipboardList, ArrowRight, Lock, Image as ImageIcon } from 'lucide-react';
+import {Linkedin, Camera, Globe, Mail, Coins, ClipboardList, ArrowRight, Lock, Image as ImageIcon, Wand2} from 'lucide-react';
 import Link from 'next/link';
 
 const tools = [
@@ -59,7 +59,7 @@ export default function ToolsPage() {
       <div className="mb-10">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-blue-400" />
+            <Wand2 className="w-6 h-6 text-blue-400" />
           </div>
           <div>
             <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Boîte à Outils</h1>

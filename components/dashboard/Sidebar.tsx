@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, Sparkles, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap, Building2, Wand2 } from 'lucide-react';
+import {LayoutDashboard, FileText, Settings, LogOut, User, LayoutTemplate, ChevronUp, LayoutList, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap, Building2, Wand2} from 'lucide-react';
 import { cn, clearAllLocalData } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { useCVStore } from '@/store/useCVStore';
@@ -20,7 +20,7 @@ const navigation = [
   { name: 'Mes CV', href: '/dashboard/list', icon: LayoutList },
   { name: 'Mes lettres', href: '/dashboard/cover-letters', icon: FileText },
   { name: 'Modèles', href: '/dashboard/templates', icon: LayoutTemplate },
-  { name: 'Acheter des Crédits', href: '/dashboard/pricing', icon: Sparkles },
+  { name: 'Acheter des Crédits', href: '/dashboard/pricing', icon: Wand2 },
 ];
 
 const aiNavigation = [
@@ -101,17 +101,27 @@ export function Sidebar() {
 
       {/* Navigation */}
       <div className="flex-1 px-4 space-y-6 overflow-y-auto">
-        {/* Main Nav */}
+        {/* Dashboard Home */}
         <nav className="space-y-1">
-          {navigation.map((item) => (
-            <NavLink key={item.name} item={item} />
-          ))}
+          <NavLink item={navigation.find(n => n.name === 'Dashboard')!} />
         </nav>
+
+        {/* Documents Section */}
+        <div className="mt-8">
+          <div className="flex items-center gap-2 px-4 mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Mes Documents</span>
+          </div>
+          <nav className="space-y-1">
+            {navigation.filter(n => ['Mes CV', 'Mes lettres', 'Modèles'].includes(n.name)).map((item) => (
+              <NavLink key={item.name} item={item} />
+            ))}
+          </nav>
+        </div>
 
         {/* AI Section */}
         <div className="mt-8">
           <div className="flex items-center gap-2 px-4 mb-2">
-            <Sparkles className="w-4 h-4 text-blue-400" />
+            <Wand2 className="w-4 h-4 text-blue-400" />
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Outils IA</span>
           </div>
           <nav className="space-y-1">
@@ -121,22 +131,30 @@ export function Sidebar() {
             })}
           </nav>
         </div>
-      </div>
 
-      {/* Preferences Section */}
-      <div className="px-4 mb-2">
-        <div className="px-4 mb-2">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Préférences</span>
+        {/* Preferences Section */}
+        <div className="mt-8 mb-4">
+          <div className="px-4 mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Préférences</span>
+          </div>
+          <nav className="space-y-1">
+            {secondaryNavigation.map((item) => (
+              <NavLink key={item.name} item={item} />
+            ))}
+          </nav>
         </div>
-        <nav className="space-y-1">
-          {secondaryNavigation.map((item) => (
-            <NavLink key={item.name} item={item} />
-          ))}
-        </nav>
       </div>
 
-      {/* User Profile */}
-      <div className="p-4 border-t border-slate-800">
+      {/* Credits & User Profile Bottom Area */}
+      <div className="p-4 border-t border-slate-800 space-y-4">
+        {/* Shiny Credits Button */}
+        <Link 
+          href="/dashboard/pricing"
+          className="w-full relative flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02]"
+        >
+          Acheter des Crédits
+        </Link>
+
         <div className="relative">
         <button 
           onClick={() => setShowUserMenu(!showUserMenu)}

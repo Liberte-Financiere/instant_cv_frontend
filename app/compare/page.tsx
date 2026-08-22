@@ -1,6 +1,6 @@
 import { allCompetitors } from '@/data/compare';
 import { CompareSearch } from '@/components/compare/CompareSearch';
-import { Sparkles, CheckCircle2, ShieldCheck, Wallet, ArrowLeft } from 'lucide-react';
+import {CheckCircle2, ShieldCheck, Wallet, ArrowLeft, Wand2} from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata = {
@@ -27,7 +27,7 @@ export default function CompareHubPage() {
         </Link>
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
-            <Sparkles className="w-4 h-4" /> Comparatif Solutions CV
+            <Wand2 className="w-4 h-4" /> Comparatif Solutions CV
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Jobsira vs les autres outils — Comparaison complète

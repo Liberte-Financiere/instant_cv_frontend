@@ -1,10 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  User, Briefcase, GraduationCap, Wrench, Languages, 
-  Heart, FileText, Award, FolderOpen, UserCheck, Sparkles
-} from 'lucide-react';
+import {User, Briefcase, GraduationCap, Wrench, Languages, Heart, FileText, Award, FolderOpen, UserCheck, Wand2} from 'lucide-react';
 import { useCVStore } from '@/store/useCVStore';
 import { Accordion } from '@/components/ui/Accordion';
 import { EditorStep } from '@/types/cv';
@@ -152,7 +149,7 @@ export function FormSection({ currentStep }: FormSectionProps) {
       {/* 9. QUALITÉS */}
       <Accordion 
         title="Qualités" 
-        icon={<Sparkles className="w-5 h-5" />}
+        icon={<Wand2 className="w-5 h-5" />}
         isOpen={openSection === 'qualities' && isExpanded}
         onToggle={() => handleToggle('qualities')}
       >

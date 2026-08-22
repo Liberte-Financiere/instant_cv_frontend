@@ -2,7 +2,7 @@
 
 import { useCVStore } from '@/store/useCVStore';
 import { Input } from '@/components/ui/Input';
-import { Trash2, Plus, Sparkles } from 'lucide-react';
+import {Trash2, Plus, Wand2} from 'lucide-react';
 
 export function QualitiesForm() {
   const { currentCV, updateSettings, addQuality, updateQuality, removeQuality } = useCVStore();
@@ -28,7 +28,7 @@ export function QualitiesForm() {
       </div>
       {qualities.length === 0 ? (
         <div className="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-          <Sparkles className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+          <Wand2 className="w-10 h-10 text-slate-300 mx-auto mb-3" />
           <p className="text-slate-500 font-medium">Aucune qualité ajoutée.</p>
           <button onClick={() => addQuality({ name: '' })} className="text-blue-600 font-bold hover:underline mt-2 text-sm">
             Ajouter ma première qualité

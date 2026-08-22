@@ -7,6 +7,16 @@ interface LetterPreviewProps {
 }
 
 export const LetterPreview: React.FC<LetterPreviewProps> = ({ coverLetter, className }) => {
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [year, month, day] = dateString.split('-');
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+    return dateString;
+  };
+
   return (
     <div 
       className={`bg-white p-[16mm] print:pt-[6mm] block font-serif text-slate-800 text-[11pt] leading-relaxed relative z-10 ${className || ''}`}
@@ -28,7 +38,7 @@ export const LetterPreview: React.FC<LetterPreviewProps> = ({ coverLetter, class
 
       {/* Date & Location */}
       <p className="text-right text-sm mb-8 text-slate-600">
-         Fait à <span className="font-medium text-slate-900">{coverLetter.content.details.location || '...'}</span>, le {coverLetter.content.details.date}
+         Fait à <span className="font-medium text-slate-900">{coverLetter.content.details.location || '...'}</span>, le {formatDate(coverLetter.content.details.date)}
       </p>
 
       {/* Subject */}

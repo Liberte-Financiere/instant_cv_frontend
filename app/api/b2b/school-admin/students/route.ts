@@ -6,14 +6,26 @@ export async function GET() {
   try {
     const session = await auth();
     
-    if (!session || !session.user || session.user.role !== 'SCHOOL_ADMIN' || !session.user.schoolId) {
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true, schoolId: true }
+    });
+
+    if (!user || user.role !== 'SCHOOL_ADMIN' || !user.schoolId) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }
 
-    const schoolId = session.user.schoolId;
+    const schoolId = user.schoolId;
 
     const students = await prisma.user.findMany({
-      where: { schoolId },
+      where: { 
+        schoolId,
+        role: { not: 'SCHOOL_ADMIN' }
+      },
       select: {
         id: true,
         name: true,
@@ -61,7 +73,16 @@ export async function DELETE(req: Request) {
   try {
     const session = await auth();
     
-    if (!session || !session.user || session.user.role !== 'SCHOOL_ADMIN' || !session.user.schoolId) {
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const adminUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true, schoolId: true }
+    });
+
+    if (!adminUser || adminUser.role !== 'SCHOOL_ADMIN' || !adminUser.schoolId) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }
 
@@ -72,7 +93,7 @@ export async function DELETE(req: Request) {
        return NextResponse.json({ error: 'ID de l\'étudiant manquant' }, { status: 400 });
     }
 
-    const schoolId = session.user.schoolId;
+    const schoolId = adminUser.schoolId;
 
     // Verify the student belongs to this school
     const student = await prisma.user.findUnique({
@@ -81,6 +102,10 @@ export async function DELETE(req: Request) {
 
     if (!student || student.schoolId !== schoolId) {
       return NextResponse.json({ error: 'Étudiant introuvable dans votre établissement' }, { status: 404 });
+    }
+
+    if (student.role === 'SCHOOL_ADMIN') {
+      return NextResponse.json({ error: 'Impossible de retirer un administrateur via cette interface' }, { status: 403 });
     }
 
     // Detach student

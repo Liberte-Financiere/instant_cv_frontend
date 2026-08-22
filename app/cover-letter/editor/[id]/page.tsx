@@ -3,11 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  ArrowLeft, Save, Download, Sparkles, Loader2, Wand2,
-  MapPin, Phone, Mail, User, Building2, FileText, CheckCircle2,
-  ChevronRight, Printer, AlertCircle, FileType, Eye, X
-} from 'lucide-react';
+import {ArrowLeft, Save, Download, Loader2, Wand2, MapPin, Phone, Mail, User, Building2, FileText, CheckCircle2, ChevronRight, Printer, AlertCircle, FileType, Eye, X} from 'lucide-react';
 import { LetterPreview } from '@/components/cover-letter/LetterPreview';
 import { AIToolbar } from '@/components/editor/AIToolbar';
 import Link from 'next/link';
@@ -365,7 +361,7 @@ export default function CoverLetterEditorPage() {
                                 onClick={() => setShowAIModal(true)}
                                 className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all active:scale-95"
                               >
-                                 <Sparkles className="w-3.5 h-3.5" />
+                                 <Wand2 className="w-3.5 h-3.5" />
                                  Continuer avec l'IA
                               </button>
                             )}
@@ -387,6 +383,7 @@ export default function CoverLetterEditorPage() {
                             />
                             <FloatingInput 
                               label="Date"
+                              type="date"
                               placeholder="Ex: 12 Janvier 2026"
                               value={currentCL.content.details.date || ''}
                               onChange={(val) => updateContent({ details: { ...currentCL.content.details, date: val }})}
@@ -528,7 +525,7 @@ export default function CoverLetterEditorPage() {
                     ) : (
                       <>
                         <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-2xl" />
-                        <Sparkles className="w-5 h-5 relative z-10" />
+                        <Wand2 className="w-5 h-5 relative z-10" />
                         <span className="relative z-10">Générer ma Lettre Maintenant</span>
                       </>
                     )}

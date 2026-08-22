@@ -3,7 +3,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { CVPreview } from '@/components/editor/CVPreview';
 import { Button } from '@/components/ui/Button';
-import { Check, Copy, Share2, Sparkles } from 'lucide-react';
+import {Check, Copy, Share2, Wand2} from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -15,6 +15,7 @@ export function SharePageClient({ cv }: { cv: any }) {
   const [copied, setCopied] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+  const [isMounted, setIsMounted] = useState(false);
 
   // Responsive scaling
   const updateScale = useCallback(() => {
@@ -26,6 +27,7 @@ export function SharePageClient({ cv }: { cv: any }) {
   }, []);
 
   useEffect(() => {
+    setIsMounted(true);
     updateScale();
     window.addEventListener('resize', updateScale);
     return () => window.removeEventListener('resize', updateScale);
@@ -46,7 +48,7 @@ export function SharePageClient({ cv }: { cv: any }) {
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-bold text-lg sm:text-xl tracking-tight text-slate-900">
              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0">
-                <Sparkles className="w-5 h-5" />
+                <Wand2 className="w-5 h-5" />
              </div>
              <span className="hidden sm:inline">{APP_CONFIG.name}</span>
           </Link>
@@ -71,13 +73,15 @@ export function SharePageClient({ cv }: { cv: any }) {
       {/* Main Content */}
       <main ref={containerRef} className="flex-1 p-4 md:p-8 flex flex-col items-center overflow-y-auto overflow-x-hidden pb-32 sm:pb-8">
         <div 
-          className="bg-white shadow-2xl rounded-sm shrink-0"
+          className="bg-white shadow-2xl rounded-sm shrink-0 transition-transform duration-200"
           style={{
             width: `${A4_WIDTH_PX}px`,
             minHeight: '1123px', // Standard A4
-            transform: `scale(${scale})`,
-            transformOrigin: 'top center',
-            marginBottom: scale < 1 ? `calc((${scale} - 1) * 1123px)` : undefined,
+            ...(isMounted ? {
+              transform: `scale(${scale})`,
+              transformOrigin: 'top center',
+              marginBottom: scale < 1 ? `calc((${scale} - 1) * 1123px)` : undefined,
+            } : {})
           }}
         >
           <CVPreview data={cv} hideToolbar />

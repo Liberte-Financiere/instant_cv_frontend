@@ -2,21 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ClipboardList, 
-  ArrowLeft, 
-  Loader2, 
-  Target, 
-  Briefcase, 
-  GraduationCap, 
-  AlertCircle, 
-  Sparkles,
-  CheckCircle2,
-  TrendingUp,
-  Compass,
-  ArrowRight,
-  Award
-} from 'lucide-react';
+import {ClipboardList, ArrowLeft, Loader2, Target, Briefcase, GraduationCap, AlertCircle, CheckCircle2, TrendingUp, Compass, ArrowRight, Award, Wand2} from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCreditStore } from '@/store/useCreditStore';
@@ -211,7 +197,7 @@ export default function BilanDeCompetencesPage() {
               <div>
                 <span className="text-sm font-medium text-slate-700 block mb-1">Coût de l'analyse</span>
                 <span className="text-sm font-bold text-slate-900 bg-white px-3 py-1 rounded-lg border border-slate-200 shadow-sm inline-flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <Wand2 className="w-3.5 h-3.5 text-amber-500" />
                   {cost} crédits
                 </span>
               </div>
@@ -228,7 +214,7 @@ export default function BilanDeCompetencesPage() {
               disabled={!isReady || credits < cost}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl shadow-sm disabled:opacity-50 disabled:shadow-none transition-colors"
             >
-              <Sparkles className="w-5 h-5 mr-2" />
+              <Wand2 className="w-5 h-5 mr-2" />
               Lancer mon Bilan de Compétences
             </Button>
           </div>
@@ -246,7 +232,7 @@ export default function BilanDeCompetencesPage() {
             <div className="absolute inset-0 border-4 border-blue-100 rounded-full"></div>
             <div className="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <Sparkles className="w-8 h-8 text-blue-600" />
+              <Wand2 className="w-8 h-8 text-blue-600" />
             </div>
           </div>
           <h3 className="text-2xl font-bold text-slate-900 mb-3">Création de votre Bilan...</h3>

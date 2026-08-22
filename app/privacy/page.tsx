@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/lib/config';
-import { Info, Database, Sparkles, Share2, ShieldCheck, Fingerprint, Mail } from 'lucide-react';
+import {Info, Database, Share2, ShieldCheck, Fingerprint, Mail, Wand2} from 'lucide-react';
 
 export const metadata: Metadata = {
   title: `Politique de Confidentialité | ${APP_CONFIG.name}`,
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const SECTIONS = [
   { id: 'introduction', title: '1. Introduction', icon: Info, colorClass: 'text-primary bg-primary/5 border-primary/10' },
   { id: 'donnees-collectees', title: '2. Données collectées', icon: Database, colorClass: 'text-indigo-600 bg-indigo-50 border-indigo-100' },
-  { id: 'ia-anonymisation', title: '3. IA et Anonymisation', icon: Sparkles, colorClass: 'text-cyan-600 bg-cyan-50 border-cyan-100' },
+  { id: 'ia-anonymisation', title: '3. IA et Anonymisation', icon: Wand2, colorClass: 'text-cyan-600 bg-cyan-50 border-cyan-100' },
   { id: 'partage-stockage', title: '4. Partage et Stockage', icon: Share2, colorClass: 'text-violet-600 bg-violet-50 border-violet-100' },
   { id: 'securite', title: '5. Sécurité', icon: ShieldCheck, colorClass: 'text-emerald-600 bg-emerald-50 border-emerald-100' },
   { id: 'vos-droits', title: '6. Vos Droits', icon: Fingerprint, colorClass: 'text-amber-600 bg-amber-50 border-amber-100' },
@@ -113,7 +113,7 @@ export default function PrivacyPage() {
             <section id="ia-anonymisation" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
                 <span className="p-2 rounded-xl border bg-cyan-50 border-cyan-100 text-cyan-600">
-                  <Sparkles className="w-5 h-5" />
+                  <Wand2 className="w-5 h-5" />
                 </span>
                 <h2 className="!my-0 text-slate-955">3. IA et Anonymisation</h2>
               </div>

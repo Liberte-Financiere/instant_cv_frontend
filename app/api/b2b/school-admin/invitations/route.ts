@@ -7,11 +7,20 @@ export async function GET() {
   try {
     const session = await auth();
     
-    if (!session || !session.user || session.user.role !== 'SCHOOL_ADMIN' || !session.user.schoolId) {
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true, schoolId: true }
+    });
+
+    if (!user || user.role !== 'SCHOOL_ADMIN' || !user.schoolId) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }
 
-    const schoolId = session.user.schoolId;
+    const schoolId = user.schoolId;
 
     const invitations = await prisma.schoolInvitation.findMany({
       where: { schoolId },
@@ -38,11 +47,20 @@ export async function POST(req: Request) {
   try {
     const session = await auth();
     
-    if (!session || !session.user || session.user.role !== 'SCHOOL_ADMIN' || !session.user.schoolId) {
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true, schoolId: true }
+    });
+
+    if (!user || user.role !== 'SCHOOL_ADMIN' || !user.schoolId) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }
 
-    const schoolId = session.user.schoolId;
+    const schoolId = user.schoolId;
     const { email } = await req.json();
 
     if (!email) {

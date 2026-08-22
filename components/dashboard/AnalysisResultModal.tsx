@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { X, Check, AlertCircle, TrendingUp, Sparkles, ArrowRight } from 'lucide-react';
+import {X, Check, AlertCircle, TrendingUp, ArrowRight, Wand2} from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 interface AnalysisResult {
@@ -44,7 +44,7 @@ export function AnalysisResultModal({ result, isOpen, onClose, onImport }: Analy
         <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-3">
              <div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-white">
-               <Sparkles className="w-6 h-6" />
+               <Wand2 className="w-6 h-6" />
              </div>
              <div>
                <h2 className="text-xl font-bold text-slate-900">Analyse de votre CV</h2>
