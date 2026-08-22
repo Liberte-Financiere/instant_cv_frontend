@@ -108,7 +108,7 @@ export const APP_CONFIG = {
   ai: {
     models: {
       /** Modèle rapide et intelligent pour les tâches générales (Analyse, Match) */
-      fast: 'gemini-3.5-flash',
+      fast: 'gemini-3.7-flash',
       /** Modèle très léger et rapide pour les petites tâches (Correction, Génération de petites listes) */
       lite: 'gemini-3.1-flash-lite',
 
