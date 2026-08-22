@@ -132,6 +132,7 @@ model User {
   candidateProfiles   CandidateProfile[]
   profileUnlocks      ProfileUnlock[]
   aiLogs              AILog[]
+  jobOffers           JobOffer[]
 
   // Relations B2B
   schoolId                 String?
@@ -531,4 +532,27 @@ model SchoolMembership {
 
   @@unique([userId, schoolId])
   @@index([schoolId])
+}
+
+model JobOffer {
+  id             String   @id @default(cuid())
+  title          String
+  company        String
+  location       String?
+  type           String   // 'CDI', 'CDD', 'Stage', 'Alternance', 'Freelance'
+  description    String   @db.Text
+  requirements   String[]
+  salary         String?  
+  applyMethod    String   // 'URL' ou 'EMAIL'
+  applyUrlOrMail String
+  status         String   @default("ACTIVE") // 'ACTIVE', 'CLOSED'
+  expiresAt      DateTime? // Date limite de candidature
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  recruiterId    String
+  recruiter      User     @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+
+  @@index([recruiterId])
+  @@index([status])
 }

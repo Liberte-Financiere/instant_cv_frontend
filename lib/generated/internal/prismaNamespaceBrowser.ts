@@ -75,7 +75,8 @@ export const ModelName = {
   SchoolCreditWallet: 'SchoolCreditWallet',
   SchoolCreditTransaction: 'SchoolCreditTransaction',
   SchoolInvitation: 'SchoolInvitation',
-  SchoolMembership: 'SchoolMembership'
+  SchoolMembership: 'SchoolMembership',
+  JobOffer: 'JobOffer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -494,6 +495,27 @@ export const SchoolMembershipScalarFieldEnum = {
 export type SchoolMembershipScalarFieldEnum = (typeof SchoolMembershipScalarFieldEnum)[keyof typeof SchoolMembershipScalarFieldEnum]
 
 
+export const JobOfferScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  company: 'company',
+  location: 'location',
+  type: 'type',
+  description: 'description',
+  requirements: 'requirements',
+  salary: 'salary',
+  applyMethod: 'applyMethod',
+  applyUrlOrMail: 'applyUrlOrMail',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  recruiterId: 'recruiterId'
+} as const
+
+export type JobOfferScalarFieldEnum = (typeof JobOfferScalarFieldEnum)[keyof typeof JobOfferScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -839,4 +861,22 @@ export const SchoolMembershipOrderByRelevanceFieldEnum = {
 } as const
 
 export type SchoolMembershipOrderByRelevanceFieldEnum = (typeof SchoolMembershipOrderByRelevanceFieldEnum)[keyof typeof SchoolMembershipOrderByRelevanceFieldEnum]
+
+
+export const JobOfferOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  company: 'company',
+  location: 'location',
+  type: 'type',
+  description: 'description',
+  requirements: 'requirements',
+  salary: 'salary',
+  applyMethod: 'applyMethod',
+  applyUrlOrMail: 'applyUrlOrMail',
+  status: 'status',
+  recruiterId: 'recruiterId'
+} as const
+
+export type JobOfferOrderByRelevanceFieldEnum = (typeof JobOfferOrderByRelevanceFieldEnum)[keyof typeof JobOfferOrderByRelevanceFieldEnum]
 

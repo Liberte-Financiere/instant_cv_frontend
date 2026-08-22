@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Radar, Zap, FileText, Star, ArrowRight, Download, WifiOff, Mic, Briefcase, Lock, Unlock, Building2, Users } from 'lucide-react';
+import { Radar, Zap, FileText, Star, ArrowRight, Download, WifiOff, Mic, Briefcase, Lock, Unlock, Building2, Users, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { SectionHeader } from '@/components/ui/SectionHeader';
@@ -154,37 +154,40 @@ export function Features() {
           </FeatureCard>
 
           {/* B2B School Promo Banner (Full Width) */}
-          <div className="md:col-span-3 mt-4 bg-gradient-to-r from-amber-950 via-slate-900 to-slate-900 rounded-3xl p-8 md:p-12 shadow-2xl border border-amber-500/20 flex flex-col md:flex-row-reverse items-center gap-12 hover:border-amber-500/40 transition-colors">
-            <div className="flex-1 text-left space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 text-sm font-bold border border-amber-500/20">
+          <div className="md:col-span-3 mt-4 bg-gradient-to-r from-blue-950 via-slate-900 to-slate-900 rounded-3xl p-8 md:p-12 shadow-2xl border border-blue-500/20 flex flex-col md:flex-row-reverse items-center gap-12 hover:border-blue-500/40 transition-colors relative overflow-hidden">
+            {/* Subtle Vercel-like blue glow */}
+            <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+            <div className="flex-1 text-left space-y-6 relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-400 text-sm font-medium border border-blue-500/20">
                 <Building2 className="w-4 h-4" /> Espace École (B2B)
               </div>
               <h3 className="text-white text-3xl md:text-4xl font-bold tracking-tight">Le partenaire carrière de vos étudiants</h3>
-              <p className="text-slate-300 text-lg leading-relaxed">
-                Offrez à vos étudiants un accès Premium illimité. Notre portail Admin vous permet de distribuer des crédits IA, de suivre l'évolution des cohortes en temps réel et de booster massivement leur taux d'insertion.
+              <p className="text-slate-400 text-lg leading-relaxed font-light">
+                Offrez à vos étudiants un accès Premium illimité. Notre portail Admin vous permet de suivre l'évolution des cohortes en temps réel et de booster massivement leur taux d'insertion.
               </p>
-              <Link href="/auth" className="inline-block mt-2">
-                <Button className="bg-amber-500 text-slate-900 hover:bg-amber-400 h-12 px-8 text-base font-bold shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+              <Link href="/auth" className="inline-block mt-4">
+                <Button className="bg-blue-600 text-white hover:bg-blue-700 h-12 px-8 text-base font-semibold rounded-full shadow-[0_0_20px_rgba(37,99,235,0.2)] transition-all">
                   Découvrir l'Espace École
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
             </div>
             
-            <div className="flex-1 w-full max-w-md perspective-1000">
+            <div className="flex-1 w-full max-w-md perspective-1000 relative z-10">
                {/* UI Mockup for School Admin */}
-               <div className="w-full rounded-2xl bg-white/5 border border-white/10 p-5 space-y-4 backdrop-blur-md transform rotate-y-[5deg] rotate-x-[5deg] hover:rotate-0 transition-transform duration-500 shadow-2xl shadow-black/50">
-                  <div className="flex items-center justify-between border-b border-white/5 pb-4">
+               <div className="w-full rounded-2xl bg-slate-900 border border-blue-500/20 p-5 space-y-4 shadow-[0_0_50px_rgba(37,99,235,0.1)] transform rotate-y-[2deg] hover:rotate-0 transition-transform duration-500">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center border border-amber-500/30">
-                        <Users className="w-5 h-5 text-amber-400" />
+                      <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                        <Users className="w-5 h-5 text-blue-400" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-white">Gestion de Cohorte</div>
-                        <div className="text-xs text-slate-400">Master 2 • 2026</div>
+                        <div className="text-sm font-medium text-white">Gestion de Cohorte</div>
+                        <div className="text-xs text-slate-500">Master 2 • 2026</div>
                       </div>
                     </div>
-                    <div className="text-xs font-bold bg-amber-500/10 text-amber-400 px-2.5 py-1.5 rounded-lg border border-amber-500/20">
+                    <div className="text-xs font-medium bg-blue-500/10 text-blue-400 px-3 py-1.5 rounded-full border border-blue-500/20">
                       150 Crédits
                     </div>
                   </div>
@@ -263,6 +266,63 @@ export function Features() {
                       <Unlock className="w-4 h-4" />
                       Débloquer (1 cr.)
                     </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+
+          {/* Job Board Promo Banner (Full Width) */}
+          <div className="md:col-span-3 mt-4 bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-900 rounded-3xl p-8 md:p-12 shadow-2xl border border-indigo-500/20 flex flex-col md:flex-row items-center gap-12 hover:border-indigo-500/40 transition-colors relative overflow-hidden">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+            <div className="flex-1 text-left space-y-6 relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 text-sm font-medium border border-indigo-500/20">
+                <Briefcase className="w-4 h-4" /> Place de Marché de l'Emploi
+              </div>
+              <h3 className="text-white text-3xl md:text-4xl font-bold tracking-tight">Trouvez votre prochain défi ou recrutez des talents</h3>
+              <p className="text-slate-300 text-lg leading-relaxed">
+                Jobsira intègre désormais un Job Board public. Parcourez les offres d'emploi (CDI, CDD, Freelance) qui matchent parfaitement avec votre profil généré par l'IA, ou publiez vos propres offres 100% gratuitement !
+              </p>
+              <div className="flex flex-wrap gap-4 mt-4">
+                <Link href="/jobs" className="inline-block">
+                  <Button className="bg-indigo-600 text-white hover:bg-indigo-700 h-12 px-8 text-base font-bold shadow-[0_0_20px_rgba(79,70,229,0.3)] rounded-full">
+                    Rechercher une offre
+                    <Search className="w-5 h-5 ml-2" />
+                  </Button>
+                </Link>
+                <Link href="/recruiter/jobs/create" className="inline-block">
+                  <Button variant="outline" className="text-slate-300 hover:text-white border-white/10 hover:border-white/20 hover:bg-white/5 h-12 px-8 text-base font-semibold rounded-full">
+                    Publier une offre (Gratuit)
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            
+            <div className="flex-1 w-full max-w-md perspective-1000 relative z-10">
+               {/* UI Mockup for Job Board */}
+               <div className="w-full rounded-2xl bg-slate-900 border border-indigo-500/20 p-5 space-y-4 shadow-[0_0_50px_rgba(79,70,229,0.1)] transform rotate-y-[-5deg] rotate-x-[2deg] hover:rotate-0 transition-transform duration-500">
+                  <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
+                        <Briefcase className="w-5 h-5 text-indigo-400" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-white">Développeur Fullstack</div>
+                        <div className="text-xs text-slate-400">TechCorp • Paris (Hybride)</div>
+                      </div>
+                    </div>
+                    <div className="text-xs font-bold bg-emerald-500/10 text-emerald-400 px-2.5 py-1.5 rounded-lg border border-emerald-500/20">
+                      95% Match
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                     <p className="text-sm text-slate-400 line-clamp-2">Rejoignez une équipe dynamique. Missions : React, Node.js, et PostgreSQL en environnement cloud natif.</p>
+                     <div className="flex gap-2">
+                        <span className="text-[10px] px-2 py-1 bg-white/5 rounded text-slate-300 border border-white/10">React</span>
+                        <span className="text-[10px] px-2 py-1 bg-white/5 rounded text-slate-300 border border-white/10">Node.js</span>
+                        <span className="text-[10px] px-2 py-1 bg-white/5 rounded text-slate-300 border border-white/10">TypeScript</span>
+                     </div>
                   </div>
                </div>
             </div>

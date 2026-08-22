@@ -408,7 +408,8 @@ export const ModelName = {
   SchoolCreditWallet: 'SchoolCreditWallet',
   SchoolCreditTransaction: 'SchoolCreditTransaction',
   SchoolInvitation: 'SchoolInvitation',
-  SchoolMembership: 'SchoolMembership'
+  SchoolMembership: 'SchoolMembership',
+  JobOffer: 'JobOffer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -424,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "aILog" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign" | "auditLog" | "businessExpense" | "companyActivity" | "school" | "schoolCreditWallet" | "schoolCreditTransaction" | "schoolInvitation" | "schoolMembership"
+    modelProps: "account" | "session" | "verificationToken" | "analysisHistory" | "aILog" | "user" | "platformFeedback" | "paymentTransaction" | "cV" | "coverLetter" | "creditTransaction" | "adminTask" | "interviewSession" | "interviewMessage" | "candidateProfile" | "profileUnlock" | "marketingCampaign" | "auditLog" | "businessExpense" | "companyActivity" | "school" | "schoolCreditWallet" | "schoolCreditTransaction" | "schoolInvitation" | "schoolMembership" | "jobOffer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2278,6 +2279,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    JobOffer: {
+      payload: Prisma.$JobOfferPayload<ExtArgs>
+      fields: Prisma.JobOfferFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.JobOfferFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.JobOfferFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload>
+        }
+        findFirst: {
+          args: Prisma.JobOfferFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.JobOfferFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload>
+        }
+        findMany: {
+          args: Prisma.JobOfferFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload>[]
+        }
+        create: {
+          args: Prisma.JobOfferCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload>
+        }
+        createMany: {
+          args: Prisma.JobOfferCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.JobOfferCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload>[]
+        }
+        delete: {
+          args: Prisma.JobOfferDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload>
+        }
+        update: {
+          args: Prisma.JobOfferUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload>
+        }
+        deleteMany: {
+          args: Prisma.JobOfferDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.JobOfferUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.JobOfferUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload>[]
+        }
+        upsert: {
+          args: Prisma.JobOfferUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOfferPayload>
+        }
+        aggregate: {
+          args: Prisma.JobOfferAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateJobOffer>
+        }
+        groupBy: {
+          args: Prisma.JobOfferGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobOfferGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.JobOfferCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobOfferCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2717,6 +2792,27 @@ export const SchoolMembershipScalarFieldEnum = {
 export type SchoolMembershipScalarFieldEnum = (typeof SchoolMembershipScalarFieldEnum)[keyof typeof SchoolMembershipScalarFieldEnum]
 
 
+export const JobOfferScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  company: 'company',
+  location: 'location',
+  type: 'type',
+  description: 'description',
+  requirements: 'requirements',
+  salary: 'salary',
+  applyMethod: 'applyMethod',
+  applyUrlOrMail: 'applyUrlOrMail',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  recruiterId: 'recruiterId'
+} as const
+
+export type JobOfferScalarFieldEnum = (typeof JobOfferScalarFieldEnum)[keyof typeof JobOfferScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3064,6 +3160,24 @@ export const SchoolMembershipOrderByRelevanceFieldEnum = {
 export type SchoolMembershipOrderByRelevanceFieldEnum = (typeof SchoolMembershipOrderByRelevanceFieldEnum)[keyof typeof SchoolMembershipOrderByRelevanceFieldEnum]
 
 
+export const JobOfferOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  company: 'company',
+  location: 'location',
+  type: 'type',
+  description: 'description',
+  requirements: 'requirements',
+  salary: 'salary',
+  applyMethod: 'applyMethod',
+  applyUrlOrMail: 'applyUrlOrMail',
+  status: 'status',
+  recruiterId: 'recruiterId'
+} as const
+
+export type JobOfferOrderByRelevanceFieldEnum = (typeof JobOfferOrderByRelevanceFieldEnum)[keyof typeof JobOfferOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -3351,6 +3465,7 @@ export type GlobalOmitConfig = {
   schoolCreditTransaction?: Prisma.SchoolCreditTransactionOmit
   schoolInvitation?: Prisma.SchoolInvitationOmit
   schoolMembership?: Prisma.SchoolMembershipOmit
+  jobOffer?: Prisma.JobOfferOmit
 }
 
 /* Types for Logging */

@@ -70,6 +70,35 @@ export default function DashboardPricingPage() {
         </div>
       </motion.div>
 
+      {/* Détail des Coûts */}
+      <div>
+        <h2 className="text-lg font-bold text-slate-900 mb-1">Combien coûte chaque action ?</h2>
+        <p className="text-sm text-slate-500 mb-6">Découvrez le coût exact de nos fonctionnalités propulsées par l'IA.</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: 'Création de CV', cost: 'Gratuit', color: 'bg-emerald-100 text-emerald-700' },
+            { label: 'Analyse de CV', cost: '2 cr.', color: 'bg-slate-100 text-slate-700' },
+            { label: 'Match CV vs Offre', cost: '2 cr.', color: 'bg-slate-100 text-slate-700' },
+            { label: 'Lettre de motivation', cost: '2 cr.', color: 'bg-slate-100 text-slate-700' },
+            { label: 'Bilan Compétences', cost: '2 cr.', color: 'bg-slate-100 text-slate-700' },
+            { label: 'Photo Pro', cost: '20 cr.', color: 'bg-purple-100 text-purple-700' },
+            { label: 'Détourage Magique', cost: '1 cr.', color: 'bg-blue-100 text-blue-700' },
+            { label: 'Amélioration', cost: '1 cr.', color: 'bg-slate-100 text-slate-700' },
+            { label: 'Correction', cost: '0.5 cr.', color: 'bg-slate-100 text-slate-700' },
+            { label: 'Traduction de CV', cost: '5 cr.', color: 'bg-orange-100 text-orange-700' },
+            { label: 'Entretien écrit', cost: '5 cr.', color: 'bg-pink-100 text-pink-700' },
+            { label: 'Entretien vocal', cost: '1 cr./mi', color: 'bg-rose-100 text-rose-700' },
+          ].map((item) => (
+            <div key={item.label} className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between items-start gap-2">
+              <span className="text-sm font-semibold text-slate-700">{item.label}</span>
+              <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${item.color}`}>
+                {item.cost}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* À la carte */}
       <AlaCarteSection onPurchase={(credits: number) => {
         const price = credits * APP_CONFIG.pricing.alaCarte.pricePerCredit;
