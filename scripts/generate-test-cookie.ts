@@ -36,6 +36,8 @@ async function main() {
 
   const actualSchoolId = role === 'SCHOOL_ADMIN' || args.includes('--with-school') ? schoolIdArg : undefined;
 
+  let finalUserId: string | undefined;
+
   // 1. Inserer l'utilisateur dans la base de données pour que les API ne renvoient pas 403
   console.log('Synchronisation de l\'utilisateur dans la base de données...');
   try {
@@ -65,12 +67,11 @@ async function main() {
       });
     }
 
-    await prisma.user.upsert({
-      where: { id: userIdArg },
+    const user = await prisma.user.upsert({
+      where: { email: emailArg },
       update: {
         role: role as any,
         schoolId: actualSchoolId,
-        email: emailArg,
       },
       create: {
         id: userIdArg,
@@ -80,13 +81,19 @@ async function main() {
         schoolId: actualSchoolId,
       }
     });
+    
+    // On utilise l'ID réel de la base de données (existant ou nouveau) pour le token
+    finalUserId = user.id;
     console.log('✅ Utilisateur synchronisé en base de données.');
   } catch (dbError) {
     console.error('⚠️ Attention: Impossible de créer l\'utilisateur en base de données. Les requêtes pourraient échouer avec 403/404.', dbError);
   }
 
+  // Si on a pas pu créer l'utilisateur (ex: erreur de connexion db), on garde l'ID généré aléatoirement
+  const finalUserIdToUse = typeof finalUserId !== 'undefined' ? finalUserId : userIdArg;
+
   const tokenPayload = {
-    sub: userIdArg,
+    sub: finalUserIdToUse,
     email: emailArg,
     role,
     schoolId: actualSchoolId,
