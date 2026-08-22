@@ -376,7 +376,7 @@ export default function CoverLetterEditorPage() {
 
                          <div className="grid grid-cols-2 gap-5">
                             <FloatingInput 
-                              label="Lieu (Fait à)"
+                              label="Lieu (Ville)"
                               placeholder="Ex: Paris"
                               value={currentCL.content.details.location || ''}
                               onChange={(val) => updateContent({ details: { ...currentCL.content.details, location: val }})}

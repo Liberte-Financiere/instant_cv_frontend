@@ -1,31 +1,15 @@
-2026-08-22 — Finalisation du Job Board et corrections UI
+2026-08-22 — Correction norme épistolaire Lettres de Motivation
 
 What changed:
-- Ajout du champ optionnel `expiresAt` pour définir une date limite de candidature.
-- Sécurisation des routes de gestion des offres (`/recruiter/jobs`) avec vérification stricte du rôle `RECRUITER` ou `ADMIN`.
-- Filtrage automatique côté serveur des offres expirées sur le Job Board public (`/api/jobs`).
-- Refonte visuelle de la page de détails d'une annonce (passage en mode Light) pour correspondre au design du Job Board public.
-- Correction d'un bug d'invisibilité du texte sur les champs de sélection du formulaire de création d'offre (dû à un conflit avec globals.css).
-- Restauration des dégradés "Vercel style" (bleu nuit) sur les bannières de la landing page.
+- Remplacement de la mention "Fait à [ville], le [date]" par "[Ville], le [date]" dans le rendu PDF/Aperçu des Lettres de Motivation.
+- Renommage du champ "Lieu (Fait à)" par "Lieu (Ville)" dans l'éditeur de Lettre de Motivation.
 
 Why:
-- Pour permettre aux recruteurs de fermer automatiquement les offres.
-- Pour empêcher les utilisateurs classiques (ou non connectés) d'accéder au dashboard recruteur.
-- Pour garantir une lisibilité parfaite des textes dans les menus déroulants en mode sombre (bypass de la règle CSS globale).
+- L'expression "Fait à" est réservée aux contrats et documents légaux. La norme française pour la correspondance classique (Lettre de Motivation) exige uniquement "Ville, le date".
 
 Files affected:
-- prisma/schema.prisma — Ajout de `expiresAt` dans `JobOffer`.
-- app/api/recruiter/jobs/route.ts — Validation du champ optionnel et gestion des permissions.
-- app/api/jobs/route.ts — Filtrage des annonces expirées (expiresAt > now()).
-- app/api/jobs/[id]/route.ts — Filtrage des annonces expirées sur la route de détail.
-- app/recruiter/jobs/create/page.tsx — Ajout du champ Date, ajout de `useEffect` pour la redirection sécurisée, et patch CSS (`!text-white`, `bg-slate-900`) pour corriger l'affichage.
-- app/recruiter/jobs/page.tsx — Affichage de la date d'expiration dans la liste des offres du recruteur.
-- app/jobs/page.tsx — Affichage de la date d'expiration sur le listing public.
-- app/jobs/[id]/page.tsx — Migration vers le Light mode et ajout du badge d'expiration.
-- components/landing/Features.tsx — Ajustement des bannières B2B en bleu nuit.
+- components/cover-letter/LetterPreview.tsx — Remplacement conditionnel pour gérer le format d'en-tête de date.
+- app/cover-letter/editor/[id]/page.tsx — Mise à jour du label du champ de saisie du lieu.
 
 Breaking changes:
-- La base de données a été modifiée. Le `prisma db push` a déjà été exécuté sur l'environnement local.
-
-Notes for review:
-- Le système filtre désormais automatiquement les offres échues du Job Board public. Si une offre semble "disparaître", vérifier sa date `expiresAt` depuis le portail recruteur.
+- None
