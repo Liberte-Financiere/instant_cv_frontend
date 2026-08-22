@@ -308,6 +308,7 @@ export function sanitizeCVData(data: any): any {
 }
 
 export function groupSkillsByCategory(skills: any[]): { category: string, items: any[] }[] {
+  if (!skills || skills.length === 0) return [];
   const hasCategories = skills.some(s => s.category && s.category.trim());
   if (!hasCategories) {
     return [{ category: '', items: skills }];

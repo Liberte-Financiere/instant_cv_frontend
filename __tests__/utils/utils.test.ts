@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatDate, generateId, sanitizeCVData } from '@/lib/utils';
+import { formatDate, generateId, sanitizeCVData, groupSkillsByCategory } from '@/lib/utils';
 
 /**
  * Tests for utility functions.
@@ -353,5 +353,49 @@ describe('sanitizeCVData', () => {
       expect(result.languages[0].level).toBe('Natif');
       expect(result.templateId).toBe('modern');
     });
+  });
+});
+
+// -- groupSkillsByCategory ----------------------------------------------------
+
+describe('groupSkillsByCategory', () => {
+  it('groups skills by their category property', () => {
+    const skills = [
+      { id: '1', name: 'React', category: 'Compétences Techniques' },
+      { id: '2', name: 'Communication', category: 'Compétences Transversales' },
+      { id: '3', name: 'Node.js', category: 'Compétences Techniques' },
+    ];
+    const grouped = groupSkillsByCategory(skills);
+    
+    expect(grouped).toHaveLength(2);
+    expect(grouped[0].category).toBe('Compétences Techniques');
+    expect(grouped[0].items).toHaveLength(2);
+    expect(grouped[0].items[0].name).toBe('React');
+    expect(grouped[0].items[1].name).toBe('Node.js');
+    
+    expect(grouped[1].category).toBe('Compétences Transversales');
+    expect(grouped[1].items).toHaveLength(1);
+    expect(grouped[1].items[0].name).toBe('Communication');
+  });
+
+  it('puts skills without category in an empty string category group', () => {
+    const skills = [
+      { id: '1', name: 'React' },
+      { id: '2', name: 'Communication', category: 'Compétences Transversales' },
+    ];
+    const grouped = groupSkillsByCategory(skills);
+    
+    expect(grouped).toHaveLength(2);
+    // Uncategorized items usually appear first due to the ordering logic if implemented,
+    // or we just check the groups exist.
+    const emptyCategoryGroup = grouped.find(g => g.category === '');
+    expect(emptyCategoryGroup).toBeDefined();
+    expect(emptyCategoryGroup!.items).toHaveLength(1);
+    expect(emptyCategoryGroup!.items[0].name).toBe('React');
+  });
+
+  it('handles empty arrays gracefully', () => {
+    const grouped = groupSkillsByCategory([]);
+    expect(grouped).toEqual([]);
   });
 });
