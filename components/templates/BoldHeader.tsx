@@ -4,6 +4,7 @@ import { CVDescription } from '../cv-sections/CVDescription';
 import Image from "next/image";
 import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
+import { groupSkillsByCategory } from '@/lib/utils';
 import { CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter } from '@/components/cv-sections';
 
 interface TemplateProps { cv: CV; }
@@ -97,20 +98,31 @@ export function BoldHeader({ cv }: TemplateProps) {
                 </section>
               ) : null;
 
-            case 'skills':
-              return skills.length > 0 ? (
-                <section key={sectionId}>
-                  <h2 className="text-sm font-black uppercase tracking-widest mb-3 flex items-center gap-2" style={{ color: accent }}>
-                    <span className="w-8 h-0.5" style={{ backgroundColor: accent }} />
+            case 'skills': {
+              if (skills.length === 0) return null;
+              const groupedSkills = groupSkillsByCategory(skills);
+              return (
+                <section key={sectionId} className="mb-8">
+                  <h2 className="text-xl font-black uppercase tracking-widest mb-4" style={{ color: accent }}>
                     {getSectionTitle('skills', cv.settings, lang)}
                   </h2>
-                  <div className="flex flex-wrap gap-2">
-                    {skills.map((s) => (
-                      <span key={s.id} className="px-4 py-2 text-xs font-semibold rounded-lg border-2" style={{ borderColor: accent, color: accent }}>{s.name}</span>
+                  <div className="space-y-4">
+                    {groupedSkills.map((group, gIdx) => (
+                      <div key={gIdx} className="space-y-2">
+                        {group.category && (
+                          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">{group.category}</h3>
+                        )}
+                        <div className="flex flex-wrap gap-2">
+                          {group.items.map((s) => (
+                            <span key={s.id} className="px-3 py-1 text-sm font-bold bg-slate-100 text-slate-800 rounded uppercase tracking-wider">{s.name}</span>
+                          ))}
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </section>
-              ) : null;
+              );
+            }
 
             case 'qualities':
               return qualities.length > 0 ? (

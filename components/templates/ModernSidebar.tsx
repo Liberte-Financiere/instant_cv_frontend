@@ -8,8 +8,8 @@ import {
   CVProjects, CVReferences, CVDivers, CVFooter, CVQualities 
 } from '@/components/cv-sections';
 import { getAccentColor } from '@/components/cv-sections/styles';
-
 import { getSectionTitle } from '@/constants/sections';
+import { groupSkillsByCategory } from '@/lib/utils';
 
 interface TemplateProps {
   cv: CV;
@@ -117,23 +117,35 @@ export function ModernSidebar({ cv }: TemplateProps) {
           {/* Sidebar sections in user-defined order */}
           {sidebarOrder.map((sectionId) => {
             switch (sectionId) {
-              case 'skills':
-                return skills.length > 0 ? (
+              case 'skills': {
+                if (skills.length === 0) return null;
+                const groupedSkills = groupSkillsByCategory(skills);
+                return (
                   <div key={sectionId}>
                     <h3 className="text-xs font-bold uppercase tracking-widest text-white/60 border-b border-white/20 pb-2 mb-4">{getSectionTitle('skills', cv.settings, lang)}</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {skills.map((skill, index) => (
-                        <span 
-                          key={skill.id || index} 
-                          className={`px-3 py-1.5 rounded text-xs font-medium ${tagBgClass} ${tagTextColorClass}`}
-                          style={{ backgroundColor: !isTagsTransparent ? tagsColor : undefined }}
-                        >
-                          {skill.name}
-                        </span>
+                    <div className="space-y-4">
+                      {groupedSkills.map((group, gIdx) => (
+                        <div key={gIdx} className="space-y-2">
+                          {group.category && (
+                            <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/40">{group.category}</h4>
+                          )}
+                          <div className="flex flex-wrap gap-2">
+                            {group.items.map((skill, index) => (
+                              <span 
+                                key={skill.id || index} 
+                                className={`px-3 py-1.5 rounded text-xs font-medium ${tagBgClass} ${tagTextColorClass}`}
+                                style={{ backgroundColor: !isTagsTransparent ? tagsColor : undefined }}
+                              >
+                                {skill.name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </div>
-                ) : null;
+                );
+              }
 
               case 'languages':
                 return languages.length > 0 ? (

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
 import { CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter } from '@/components/cv-sections';
+import { groupSkillsByCategory } from '@/lib/utils';
 
 interface TemplateProps { cv: CV; }
 
@@ -97,15 +98,27 @@ export function ClassicSerif({ cv }: TemplateProps) {
                 </section>
               ) : null;
 
-            case 'skills':
-              return skills.length > 0 ? (
+            case 'skills': {
+              if (skills.length === 0) return null;
+              const groupedSkills = groupSkillsByCategory(skills);
+              return (
                 <section key={sectionId} className="mb-6">
                   <h2 className="text-base font-bold uppercase tracking-[0.15em] text-center mb-4 pb-2 border-b" style={{ color: accent, borderColor: `${accent}40` }}>{getSectionTitle('skills', cv.settings, lang)}</h2>
-                  <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
-                    {skills.map((s) => <p key={s.id} className="text-sm text-center break-inside-avoid">• {s.name}</p>)}
+                  <div className="space-y-4">
+                    {groupedSkills.map((group, gIdx) => (
+                      <div key={gIdx} className="space-y-2">
+                        {group.category && (
+                          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-center text-slate-500">{group.category}</h3>
+                        )}
+                        <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+                          {group.items.map((s) => <p key={s.id} className="text-sm text-center break-inside-avoid">• {s.name}</p>)}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </section>
-              ) : null;
+              );
+            }
 
             case 'languages':
               return languages.length > 0 ? (

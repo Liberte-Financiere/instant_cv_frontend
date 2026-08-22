@@ -5,6 +5,7 @@ import Image from "next/image";
 import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
 import { CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter } from '@/components/cv-sections';
+import { groupSkillsByCategory } from '@/lib/utils';
 
 interface TemplateProps { cv: CV; }
 
@@ -93,17 +94,29 @@ export function Nordic({ cv }: TemplateProps) {
                 </section>
               ) : null;
 
-            case 'skills':
-              return skills.length > 0 ? (
+            case 'skills': {
+              if (skills.length === 0) return null;
+              const groupedSkills = groupSkillsByCategory(skills);
+              return (
                 <section key={sectionId} className="mb-6">
                   <h2 className="text-xs font-semibold uppercase tracking-[0.2em] mb-3" style={{ color: accent }}>{getSectionTitle('skills', cv.settings, lang)}</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {skills.map((s) => (
-                      <span key={s.id} className="px-3 py-1 text-xs rounded-full text-slate-600 bg-white border border-slate-200">{s.name}</span>
+                  <div className="space-y-4">
+                    {groupedSkills.map((group, gIdx) => (
+                      <div key={gIdx} className="space-y-2">
+                        {group.category && (
+                          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">{group.category}</h3>
+                        )}
+                        <div className="flex flex-wrap gap-2">
+                          {group.items.map((s) => (
+                            <span key={s.id} className="px-3 py-1 text-xs rounded-full text-slate-600 bg-white border border-slate-200">{s.name}</span>
+                          ))}
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </section>
-              ) : null;
+              );
+            }
 
             case 'languages':
               return languages.length > 0 ? (

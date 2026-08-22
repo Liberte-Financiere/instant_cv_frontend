@@ -35,6 +35,7 @@ export interface Skill {
   id: string;
   name: string;
   level: number; // 1-5
+  category?: string; // Sémantique pour le groupement
 }
 
 export interface Language {
