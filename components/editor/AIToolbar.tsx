@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sparkles, CheckCheck, RefreshCw, Loader2, ChevronDown } from 'lucide-react';
+import {CheckCheck, RefreshCw, Loader2, ChevronDown, Wand2} from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -86,7 +86,7 @@ export function AIToolbar({ text, onRefine, disabled }: AIToolbarProps) {
                     onClick={() => handleAction('rewrite', opt.value)}
                     className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-colors flex items-center gap-2"
                   >
-                     <Sparkles className="w-3 h-3 text-blue-400" />
+                     <Wand2 className="w-3 h-3 text-blue-400" />
                      {opt.label}
                   </button>
                 ))}

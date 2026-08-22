@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/lib/config';
-import { CheckCircle2, Globe, CreditCard, Sparkles, FileText, Lock, AlertTriangle, ShieldAlert, Mail } from 'lucide-react';
+import {CheckCircle2, Globe, CreditCard, FileText, Lock, AlertTriangle, ShieldAlert, Mail, Wand2} from 'lucide-react';
 
 export const metadata: Metadata = {
   title: `Conditions d'Utilisation | ${APP_CONFIG.name}`,
@@ -12,7 +12,7 @@ const SECTIONS = [
   { id: 'acceptation', title: '1. Acceptation des Conditions', icon: CheckCircle2, colorClass: 'text-primary bg-primary/5 border-primary/10' },
   { id: 'description', title: '2. Description du Service', icon: Globe, colorClass: 'text-indigo-600 bg-indigo-50 border-indigo-100' },
   { id: 'credits-paiements', title: '3. Crédits et Paiements', icon: CreditCard, colorClass: 'text-cyan-600 bg-cyan-50 border-cyan-100' },
-  { id: 'contenu-ia', title: '4. Contenu Généré par l\'IA', icon: Sparkles, colorClass: 'text-violet-600 bg-violet-50 border-violet-100' },
+  { id: 'contenu-ia', title: '4. Contenu Généré par l\'IA', icon: Wand2, colorClass: 'text-violet-600 bg-violet-50 border-violet-100' },
   { id: 'propriete', title: '5. Propriété Intellectuelle', icon: FileText, colorClass: 'text-purple-600 bg-purple-50 border-purple-100' },
   { id: 'confidentialite', title: '6. Confidentialité', icon: Lock, colorClass: 'text-emerald-600 bg-emerald-50 border-emerald-100' },
   { id: 'utilisation', title: '7. Utilisation Acceptable', icon: AlertTriangle, colorClass: 'text-amber-600 bg-amber-50 border-amber-100' },
@@ -138,7 +138,7 @@ export default function TermsPage() {
             <section id="contenu-ia" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
                 <span className="p-2 rounded-xl border bg-violet-50 border-violet-100 text-violet-600">
-                  <Sparkles className="w-5 h-5" />
+                  <Wand2 className="w-5 h-5" />
                 </span>
                 <h2 className="!my-0 text-slate-955">4. Contenu Généré par l&apos;Intelligence Artificielle</h2>
               </div>

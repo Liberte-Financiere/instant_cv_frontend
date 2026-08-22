@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, FileText, LayoutDashboard, LayoutList, LayoutTemplate, PenTool, Settings, LogOut, User, Sparkles, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap } from 'lucide-react';
+import {Menu, X, FileText, LayoutDashboard, LayoutList, LayoutTemplate, PenTool, Settings, LogOut, User, Target, Brain, MessageSquare, ShieldAlert, Mic, Zap, Wand2} from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { cn, clearAllLocalData } from '@/lib/utils';
@@ -15,10 +15,11 @@ const navigation = [
   { name: 'Mes CV', href: '/dashboard/list', icon: LayoutList },
   { name: 'Mes lettres', href: '/dashboard/cover-letters', icon: FileText },
   { name: 'Modèles', href: '/dashboard/templates', icon: LayoutTemplate },
-  { name: 'Acheter des Crédits', href: '/dashboard/pricing', icon: Sparkles },
+  { name: 'Acheter des Crédits', href: '/dashboard/pricing', icon: Wand2 },
 ];
 
 const aiNavigation = [
+  { name: 'Boîte à outils', href: '/dashboard/tools', icon: Wand2, b2cOnly: true },
   { name: 'Analyser mon CV', href: '/dashboard/ai/analyze', icon: Brain },
   { name: 'Matcher une offre', href: '/dashboard/ai/match', icon: Target },
   { name: "Simulateur d'entretien", href: '/dashboard/ai/interview', icon: Mic },
@@ -95,28 +96,59 @@ export function MobileHeader() {
 
               {/* Navigation */}
               <nav className="flex-1 p-4 space-y-6 overflow-y-auto">
+                {/* Dashboard Home */}
                 <div className="space-y-1">
-                {navigation.map((item) => {
-                  const isActive = pathname === item.href;
-                  const Icon = item.icon;
-                  
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setIsOpen(false)}
-                      className={cn(
-                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
-                        isActive 
-                          ? "bg-slate-800 text-white" 
-                          : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-                      )}
-                    >
-                      <Icon className={cn("w-5 h-5", isActive ? "text-blue-400" : "text-slate-500")} />
-                      <span>{item.name}</span>
-                    </Link>
-                  );
-                })}
+                  {(() => {
+                    const dashboardItem = navigation.find(n => n.name === 'Dashboard');
+                    if (!dashboardItem) return null;
+                    const isActive = pathname === dashboardItem.href;
+                    const Icon = dashboardItem.icon;
+                    return (
+                      <Link
+                        href={dashboardItem.href}
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                          isActive 
+                            ? "bg-slate-800 text-white" 
+                            : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                        )}
+                      >
+                        <Icon className={cn("w-5 h-5", isActive ? "text-blue-400" : "text-slate-500")} />
+                        <span>{dashboardItem.name}</span>
+                      </Link>
+                    );
+                  })()}
+                </div>
+
+                {/* Documents Section */}
+                <div className="mt-8">
+                  <div className="flex items-center gap-2 px-4 mb-2">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Mes Documents</span>
+                  </div>
+                  <div className="space-y-1">
+                  {navigation.filter(n => ['Mes CV', 'Mes lettres', 'Modèles'].includes(n.name)).map((item) => {
+                    const isActive = pathname === item.href;
+                    const Icon = item.icon;
+                    
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                          isActive 
+                            ? "bg-slate-800 text-white" 
+                            : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                        )}
+                      >
+                        <Icon className={cn("w-5 h-5", isActive ? "text-blue-400" : "text-slate-500")} />
+                        <span>{item.name}</span>
+                      </Link>
+                    );
+                  })}
+                  </div>
                 </div>
 
                 {/* Admin Section Mobile */}
@@ -167,11 +199,12 @@ export function MobileHeader() {
                 {/* AI Section Mobile */}
                 <div className="mt-8">
                   <div className="flex items-center gap-2 px-4 mb-2">
-                    <Sparkles className="w-4 h-4 text-blue-400" />
+                    <Wand2 className="w-4 h-4 text-blue-400" />
                     <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Outils IA</span>
                   </div>
                   <div className="space-y-1">
                     {aiNavigation.map((item) => {
+                      if (item.b2cOnly && session?.user?.role === 'RECRUITER') return null;
                       const isActive = pathname === item.href;
                       const Icon = item.icon;
                       
@@ -228,7 +261,16 @@ export function MobileHeader() {
               </nav>
 
               {/* User Profile */}
-              <div className="p-4 border-t border-slate-800">
+              <div className="p-4 border-t border-slate-800 space-y-4">
+                {/* Shiny Credits Button */}
+                <Link 
+                  href="/dashboard/pricing"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full relative flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02]"
+                >
+                  Acheter des Crédits
+                </Link>
+
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50">
                   {session?.user?.image ? (
                     <Image

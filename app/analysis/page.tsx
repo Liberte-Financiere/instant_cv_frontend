@@ -6,7 +6,7 @@ import { useCVStore } from "@/store/useCVStore";
 import { ScoreGauge } from "@/components/analysis/ScoreGauge";
 import { SectionAuditCard } from "@/components/analysis/SectionAuditCard";
 import { RecommendedJobs } from "@/components/analysis/RecommendedJobs";
-import { ArrowLeft, Sparkles, Download, Check } from "lucide-react";
+import {ArrowLeft, Download, Check, Wand2} from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -82,7 +82,7 @@ export default function AnalysisResultPage() {
         <div className="flex flex-col sm:flex-row justify-between items-center mb-10 bg-indigo-600 rounded-xl p-6 shadow-lg text-white">
           <div>
             <h2 className="text-lg font-bold flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-yellow-300" />
+              <Wand2 className="w-5 h-5 text-yellow-300" />
               Prêt à transformer ce profil ?
             </h2>
             <p className="text-indigo-100 text-sm mt-1">

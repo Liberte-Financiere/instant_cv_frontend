@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Target, ArrowLeft, Loader2, Sparkles } from 'lucide-react';
+import {Target, ArrowLeft, Loader2, Wand2} from 'lucide-react';
 import { useCVStore } from '@/store/useCVStore';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -210,7 +210,7 @@ export default function AIMatchPage() {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-5 h-5 relative z-10" />
+                    <Wand2 className="w-5 h-5 relative z-10" />
                     <span className="relative z-10">Analyser la compatibilité</span>
                   </>
                 )}

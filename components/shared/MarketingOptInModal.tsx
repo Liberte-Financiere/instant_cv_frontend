@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Mail, Loader2, Sparkles, X } from 'lucide-react';
+import {Mail, Loader2, X, Wand2} from 'lucide-react';
 import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
 
@@ -125,7 +125,7 @@ export function MarketingOptInModal() {
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  <Sparkles className="w-5 h-5" />
+                  <Wand2 className="w-5 h-5" />
                   Oui, je le veux !
                 </>
               )}

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Sparkles, Wand2, Loader2, Check, ArrowRight, AlignLeft } from 'lucide-react';
+import {Wand2, Loader2, Check, ArrowRight, AlignLeft} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface MagicButtonProps {
@@ -137,7 +137,7 @@ export function MagicButton({ section, currentText, onApply, className = '', com
         `}
         title="Assistant IA"
       >
-        <Sparkles className="w-4 h-4 text-indigo-500 fill-indigo-100" />
+        <Wand2 className="w-4 h-4 text-indigo-500 fill-indigo-100" />
         {!compact && <span className="text-xs font-bold font-sans">IA Magique</span>}
       </button>
 
@@ -207,7 +207,7 @@ export function MagicButton({ section, currentText, onApply, className = '', com
                     disabled={!currentText}
                   />
                   <OptionButton 
-                    icon={<Sparkles className="w-4 h-4 text-amber-500" />}
+                    icon={<Wand2 className="w-4 h-4 text-amber-500" />}
                     label="Rendre plus pro"
                     desc="Ton formel & impactant"
                     onClick={() => handleAIAction('improve')}

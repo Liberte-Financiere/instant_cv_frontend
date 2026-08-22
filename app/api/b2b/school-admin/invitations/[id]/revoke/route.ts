@@ -6,11 +6,20 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   try {
     const session = await auth();
     
-    if (!session || !session.user || session.user.role !== 'SCHOOL_ADMIN' || !session.user.schoolId) {
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true, schoolId: true }
+    });
+
+    if (!user || user.role !== 'SCHOOL_ADMIN' || !user.schoolId) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }
 
-    const schoolId = session.user.schoolId;
+    const schoolId = user.schoolId;
     const resolvedParams = await params;
     const invitationId = resolvedParams.id;
 

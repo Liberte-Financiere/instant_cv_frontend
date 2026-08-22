@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Plus, FileText, Download, Search, ArrowLeft, ArrowRight, Edit, Sparkles, Building2 } from 'lucide-react';
+import {Plus, FileText, Download, Search, ArrowLeft, ArrowRight, Edit, Building2, Wand2} from 'lucide-react';
 import Link from 'next/link';
 import { useCVStore } from '@/store/useCVStore';
 import { useState, useEffect } from 'react';
@@ -189,7 +189,7 @@ export default function DashboardPage() {
         <StatCard 
            title="Crédits IA" 
            value={creditsLoading ? '...' : creditsCount.toString()} 
-           icon={Sparkles} 
+           icon={Wand2} 
            color="amber"
            trend=""
            href="/dashboard/pricing"

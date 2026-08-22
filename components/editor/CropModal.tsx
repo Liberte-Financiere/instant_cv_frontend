@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
-import { X, Check, ZoomIn, ZoomOut, Sparkles, Loader2 } from 'lucide-react';
+import {X, Check, ZoomIn, ZoomOut, Loader2, Wand2} from 'lucide-react';
 import getCroppedImg from '@/lib/cropImage';
 import { toast } from 'sonner';
 
@@ -125,7 +125,7 @@ export function CropModal({ imageSrc: initialImageSrc, imageFile, onCropComplete
             {isRemovingBg ? (
               <><Loader2 className="w-5 h-5 animate-spin" /> Magie en cours...</>
             ) : (
-              <><Sparkles className="w-5 h-5" /> Enlever l'arrière plan (1 crédit)</>
+              <><Wand2 className="w-5 h-5" /> Enlever l'arrière plan (1 crédit)</>
             )}
           </button>
 

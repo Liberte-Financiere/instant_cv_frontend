@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Sparkles, X, Send, Loader2, Bot, User, AlertCircle, Trash2 } from 'lucide-react';
+import {X, Send, Loader2, Bot, User, AlertCircle, Trash2, Wand2} from 'lucide-react';
 import { ChatCandidateCard } from './ChatCandidateCard';
 import { ScoredCandidate } from '@/lib/talent-assistant';
 import { cn } from '@/lib/utils';
@@ -214,7 +214,7 @@ export function TalentChat({ isLocked = false }: { isLocked?: boolean }) {
         )}
         title="Assistant IA (Ctrl+J)"
       >
-        {isOpen ? <X className="w-6 h-6" /> : <Sparkles className="w-6 h-6" />}
+        {isOpen ? <X className="w-6 h-6" /> : <Wand2 className="w-6 h-6" />}
       </button>
 
       {/* Slide-in Chat Panel */}
@@ -227,7 +227,7 @@ export function TalentChat({ isLocked = false }: { isLocked?: boolean }) {
         {/* Header */}
         <div className="flex items-center gap-3 p-5 border-b border-slate-800 bg-slate-900/50">
           <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
-            <Sparkles className="w-5 h-5 text-primary" />
+            <Wand2 className="w-5 h-5 text-primary" />
           </div>
           <div>
             <h2 className="text-white font-bold text-lg">Jobsira Assistant</h2>
@@ -347,7 +347,7 @@ export function TalentChat({ isLocked = false }: { isLocked?: boolean }) {
         <div className="p-4 border-t border-slate-800 bg-slate-950">
           {isLocked ? (
             <div className="text-center p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-3">
-              <Sparkles className="w-6 h-6 text-primary mx-auto opacity-50" />
+              <Wand2 className="w-6 h-6 text-primary mx-auto opacity-50" />
               <p className="text-sm text-slate-300">
                 Connectez-vous avec un compte recruteur pour rechercher des candidats avec l'IA.
               </p>

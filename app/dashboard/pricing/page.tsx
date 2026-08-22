@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useCreditStore } from '@/store/useCreditStore';
 import { useSession } from 'next-auth/react';
-import { Sparkles, Check, Star, Zap, CreditCard, Gift, Minus, Plus } from 'lucide-react';
+import {Check, Star, Zap, CreditCard, Gift, Minus, Plus, Coins, Wand2} from 'lucide-react';
 import { motion } from 'framer-motion';
 import { APP_CONFIG } from '@/lib/config';
 import { PaymentModal } from '@/components/payment/PaymentModal';
@@ -35,7 +35,7 @@ export default function DashboardPricingPage() {
         </div>
         <div className="bg-white rounded-2xl px-5 py-3 border border-slate-200 shadow-sm flex items-center gap-3 shrink-0">
           <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-amber-600" />
+            <Coins className="w-5 h-5 text-amber-600" />
           </div>
           <div>
             <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Solde</p>
@@ -211,7 +211,7 @@ function AlaCarteSection({ onPurchase }: { onPurchase: (credits: number) => void
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-indigo-600" />
+              <Coins className="w-4 h-4 text-indigo-600" />
             </div>
             <h3 className="text-lg font-bold text-slate-900">Achat à la carte</h3>
           </div>

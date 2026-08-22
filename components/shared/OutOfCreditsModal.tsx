@@ -3,7 +3,7 @@
 import { useCreditStore } from '@/store/useCreditStore';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, Sparkles, X } from 'lucide-react';
+import {AlertCircle, X, Coins, Wand2} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function OutOfCreditsModal() {
@@ -53,7 +53,7 @@ export function OutOfCreditsModal() {
             <div className="flex flex-col gap-4 py-6">
               <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl flex items-center gap-3">
                  <div className="p-2 bg-blue-100 text-blue-600 rounded-lg shrink-0">
-                    <Sparkles className="w-5 h-5" />
+                    <Coins className="w-5 h-5" />
                  </div>
                  <div>
                     <p className="font-bold text-sm text-slate-900">Packs de crédits</p>
@@ -74,7 +74,7 @@ export function OutOfCreditsModal() {
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white gap-2 shadow-lg shadow-blue-500/25"
                 onClick={handleGoToPricing}
               >
-                <Sparkles className="w-4 h-4" />
+                <Coins className="w-4 h-4" />
                 Voir les tarifs
               </Button>
             </div>

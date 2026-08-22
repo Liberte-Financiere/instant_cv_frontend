@@ -23,6 +23,8 @@ export function DebugFillButton() {
             email: 'jean.dupont@example.com',
             phone: '+33 6 12 34 56 78',
             address: 'Paris, France',
+            nationality: 'Française',
+            dateOfBirth: '15/08/1990 (33 ans)',
             title: 'Développeur Fullstack Sénior',
             summary: 'Développeur passionné avec 12 ans d\'expérience dans la création d\'applications web performantes. Expert en React, Node.js et architecture cloud. Toujours à la recherche de nouveaux défis techniques.',
           },

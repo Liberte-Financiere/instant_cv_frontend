@@ -9,6 +9,8 @@ export const personalInfoSchema = z.object({
   photoUrl: z.string().optional(),
   title: z.string().optional(),
   summary: z.string().optional(),
+  nationality: z.string().optional(),
+  dateOfBirth: z.string().optional(),
 });
 
 export const experienceSchema = z.object({
@@ -101,6 +103,9 @@ export const settingsSchema = z.object({
   tagsColor: z.string().optional(),
   fontFamily: z.enum(['sans', 'serif', 'mono']).optional(),
   hideContact: z.boolean().optional(),
+  cvMode: z.enum(['professional', 'academic']).optional(),
+  language: z.enum(['fr', 'en', 'zh']).optional(),
+  sectionTitles: z.record(z.string()).optional(),
 });
 
 export const sectionIdSchema = z.enum([

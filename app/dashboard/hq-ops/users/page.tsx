@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ShieldAlert, Search, PlusCircle, CheckCircle2, History, Loader2, Sparkles, Ghost } from 'lucide-react';
+import {ShieldAlert, Search, PlusCircle, CheckCircle2, History, Loader2, Ghost, Wand2} from 'lucide-react';
 import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
 import { clearAllLocalData } from '@/lib/utils';
@@ -202,7 +202,7 @@ export default function SupportPanel() {
                         </td>
                         <td className="p-4">
                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 font-bold border border-blue-100">
-                             <Sparkles className="w-3.5 h-3.5" />
+                             <Wand2 className="w-3.5 h-3.5" />
                              {user.credits}
                            </span>
                         </td>

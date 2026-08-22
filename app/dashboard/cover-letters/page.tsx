@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { FileText, Plus, ArrowRight, Wand2, Search, Edit, Trash2, Loader2, Sparkles, Download } from 'lucide-react';
+import {FileText, Plus, ArrowRight, Wand2, Search, Edit, Trash2, Loader2, Download} from 'lucide-react';
 import Link from 'next/link';
 import { CoverLetter } from '@/types/cover-letter';
 import { CoverLetterService } from '@/services/coverLetterService';
@@ -650,7 +650,7 @@ export default function CoverLettersPage() {
                          onClick={handleAICreate}
                          className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-xl shadow-blue-500/20 transition-all active:scale-95 w-full md:w-auto justify-center"
                        >
-                         <Sparkles className="w-5 h-5" />
+                         <Wand2 className="w-5 h-5" />
                          Générer la lettre
                        </button>
                     </div>

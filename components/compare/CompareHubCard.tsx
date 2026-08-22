@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Competitor } from '@/data/compare';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import {ArrowRight, Wand2} from 'lucide-react';
 
 interface CompareHubCardProps {
   competitor: Competitor;
@@ -16,7 +16,7 @@ export function CompareHubCard({ competitor }: CompareHubCardProps) {
             {competitor.category}
           </span>
           <span className="flex items-center gap-1 text-[10px] text-primary font-bold">
-            <Sparkles className="w-3 h-3" /> Vs Jobsira
+            <Wand2 className="w-3 h-3" /> Vs Jobsira
           </span>
         </div>
         <h3 className="font-extrabold text-xl text-slate-900 mb-2 group-hover:text-primary transition-colors duration-200">

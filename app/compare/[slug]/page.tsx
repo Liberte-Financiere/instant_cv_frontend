@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { allCompetitors } from '@/data/compare';
 import { CompareTable } from '@/components/compare/CompareTable';
-import { ArrowLeft, CheckCircle, PlusCircle, UserCircle, Star, Sparkles, Send } from 'lucide-react';
+import {ArrowLeft, CheckCircle, PlusCircle, UserCircle, Star, Send, Wand2} from 'lucide-react';
 
 export function generateStaticParams() {
   return allCompetitors.map((c) => ({ slug: c.slug }));
@@ -65,7 +65,7 @@ export default async function CompetitorComparePage({ params }: Props) {
           <aside className="lg:sticky lg:top-8 space-y-6">
             <div className="bg-white/80 backdrop-blur-md border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
               <div>
-                <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider mb-4"><Sparkles className="w-4 h-4" /> Pourquoi choisir Jobsira ?</div>
+                <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider mb-4"><Wand2 className="w-4 h-4" /> Pourquoi choisir Jobsira ?</div>
                 <h3 className="font-extrabold text-lg text-slate-900 mb-3">Prêt à propulser votre carrière ?</h3>
                 <p className="text-xs text-slate-500 leading-relaxed mb-6">Bénéficiez de la puissance de l'intelligence artificielle couplée à des outils adaptés à la réalité du marché de l'emploi en Afrique francophone.</p>
                 <ul className="space-y-3 mb-8">
