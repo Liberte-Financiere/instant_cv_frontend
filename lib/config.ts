@@ -113,7 +113,7 @@ export const APP_CONFIG = {
       lite: 'gemini-3.1-flash-lite',
 
       /** Modèle Groq (très rapide) dédié à la reformulation et correction de texte en Français */
-      groqReformulation: 'llama-3.3-70b-versatile',
+      groqReformulation: 'openai/gpt-oss-120b',
 
       /** Modèle pour la traduction et les tâches complexes */
       pro: 'gemini-3.1-pro-preview',
