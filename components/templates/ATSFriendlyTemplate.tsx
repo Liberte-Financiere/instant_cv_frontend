@@ -123,13 +123,45 @@ export function ATSFriendlyTemplate({ cv }: TemplateProps) {
               </section>
             ) : null;
 
-          case 'skills':
-            return skills.length > 0 ? (
+          case 'skills': {
+            if (skills.length === 0) return null;
+            const hasCategories = skills.some(s => s.category?.trim());
+            
+            if (!hasCategories) {
+              return (
+                <section key={sectionId} className="mb-6">
+                  <h2 className={headingClass} style={headingStyle}>{getSectionTitle('skills', cv.settings, lang)}</h2>
+                  <p>{skills.map((s) => s.name).join(', ')}</p>
+                </section>
+              );
+            }
+            
+            const groups: Record<string, typeof skills> = {};
+            const uncategorized: typeof skills = [];
+            skills.forEach(skill => {
+              const cat = skill.category?.trim();
+              if (cat) {
+                if (!groups[cat]) groups[cat] = [];
+                groups[cat].push(skill);
+              } else {
+                uncategorized.push(skill);
+              }
+            });
+
+            return (
               <section key={sectionId} className="mb-6">
                 <h2 className={headingClass} style={headingStyle}>{getSectionTitle('skills', cv.settings, lang)}</h2>
-                <p>{skills.map((s) => s.name).join(', ')}</p>
+                <div className="space-y-1">
+                  {Object.entries(groups).map(([cat, items]) => (
+                    <p key={cat}><strong>{cat} :</strong> {items.map(s => s.name).join(', ')}</p>
+                  ))}
+                  {uncategorized.length > 0 && (
+                    <p>{uncategorized.map(s => s.name).join(', ')}</p>
+                  )}
+                </div>
               </section>
-            ) : null;
+            );
+          }
 
           case 'languages':
             return languages.length > 0 ? (

@@ -8,9 +8,8 @@ import {
   CVProjects, CVReferences, CVDivers, CVFooter, CVQualities 
 } from '@/components/cv-sections';
 import { getAccentColor } from '@/components/cv-sections/styles';
-
 import { getSectionTitle } from '@/constants/sections';
-
+import { groupSkillsByCategory } from '@/lib/utils';
 interface TemplateProps {
   cv: CV;
 }
@@ -87,26 +86,38 @@ export function MinimalistTemplate({ cv }: TemplateProps) {
               return <CVExperience key={sectionId} experiences={experiences} variant={variant} accentColor={accentColor} title={getSectionTitle('experience', cv.settings, lang)} lang={lang} />;
             case 'education':
               return <CVEducation key={sectionId} education={education} variant={variant} accentColor={accentColor} title={getSectionTitle('education', cv.settings, lang)} lang={lang} />;
-            case 'skills':
-              return skills.length > 0 ? (
+            case 'skills': {
+              if (skills.length === 0) return null;
+              const groupedSkills = groupSkillsByCategory(skills);
+              return (
                 <section key={sectionId}>
                   <h2 
                     className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b pb-2 mb-3"
                     style={{ borderColor: accentColor }}
                   >{getSectionTitle('skills', cv.settings, lang)}</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {skills.map((skill) => (
-                      <span 
-                        key={skill.id} 
-                        className="px-3 py-1 text-xs rounded-full"
-                        style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
-                      >
-                        {skill.name}
-                      </span>
+                  <div className="space-y-4">
+                    {groupedSkills.map((group, gIdx) => (
+                      <div key={gIdx} className="space-y-2">
+                        {group.category && (
+                          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">{group.category}</h3>
+                        )}
+                        <div className="flex flex-wrap gap-2">
+                          {group.items.map((skill) => (
+                            <span 
+                              key={skill.id} 
+                              className="px-3 py-1 text-xs rounded-full"
+                              style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
+                            >
+                              {skill.name}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </section>
-              ) : null;
+              );
+            }
             case 'qualities':
               return cv.qualities && cv.qualities.length > 0 ? (
                 <section key={sectionId}>

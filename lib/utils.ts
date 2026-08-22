@@ -304,7 +304,31 @@ export function sanitizeCVData(data: any): any {
   cleanData.divers = cleanData.divers || '';
   cleanData.createdAt = cleanData.createdAt || new Date();
   cleanData.updatedAt = cleanData.updatedAt || new Date();
-
   return cleanData;
 }
 
+export function groupSkillsByCategory(skills: any[]): { category: string, items: any[] }[] {
+  const hasCategories = skills.some(s => s.category && s.category.trim());
+  if (!hasCategories) {
+    return [{ category: '', items: skills }];
+  }
+  
+  const groups: Record<string, any[]> = {};
+  const uncategorized: any[] = [];
+  
+  skills.forEach(skill => {
+    const cat = skill.category?.trim();
+    if (cat) {
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(skill);
+    } else {
+      uncategorized.push(skill);
+    }
+  });
+  
+  const result = Object.entries(groups).map(([category, items]) => ({ category, items }));
+  if (uncategorized.length > 0) {
+    result.push({ category: '', items: uncategorized });
+  }
+  return result;
+}

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { CV, CVSectionId, DEFAULT_SECTION_ORDER } from '@/types/cv';
 import { getSectionTitle , getPresentLabel } from '@/constants/sections';
 import { CVCertifications, CVProjects, CVReferences, CVDivers, CVFooter } from '@/components/cv-sections';
+import { groupSkillsByCategory } from '@/lib/utils';
 
 interface TemplateProps { cv: CV; }
 
@@ -105,20 +106,32 @@ export function TimelinePro({ cv }: TemplateProps) {
               </section>
             ) : null;
 
-          case 'skills':
-            return skills.length > 0 ? (
+          case 'skills': {
+            if (skills.length === 0) return null;
+            const groupedSkills = groupSkillsByCategory(skills);
+            return (
               <section key={sectionId} className="mb-6">
                 <h2 className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: accent }}>{getSectionTitle('skills', cv.settings, lang)}</h2>
-                <div className="flex flex-wrap gap-x-8 gap-y-3">
-                  {skills.map((s) => (
-                    <div key={s.id} className="flex flex-col text-xs break-inside-avoid min-w-[120px]">
-                      <span className="font-medium text-slate-800 leading-snug">{s.name}</span>
-                      {s.level ? <span className="text-slate-500 whitespace-nowrap mt-0.5">{getSkillLabel(s.level, lang)}</span> : null}
+                <div className="space-y-4">
+                  {groupedSkills.map((group, gIdx) => (
+                    <div key={gIdx} className="space-y-2">
+                      {group.category && (
+                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{group.category}</h3>
+                      )}
+                      <div className="flex flex-wrap gap-x-8 gap-y-3">
+                        {group.items.map((s) => (
+                          <div key={s.id} className="flex flex-col text-xs break-inside-avoid min-w-[120px]">
+                            <span className="font-medium text-slate-800 leading-snug">{s.name}</span>
+                            {s.level ? <span className="text-slate-500 whitespace-nowrap mt-0.5">{getSkillLabel(s.level, lang)}</span> : null}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
               </section>
-            ) : null;
+            );
+          }
 
           case 'languages':
             return languages.length > 0 ? (
