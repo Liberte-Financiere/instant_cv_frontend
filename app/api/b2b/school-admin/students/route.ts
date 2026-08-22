@@ -37,6 +37,13 @@ export async function GET() {
           select: {
             amount: true,
           }
+        },
+        _count: {
+          select: {
+            cvs: true,
+            coverLetters: true,
+            interviewSessions: true
+          }
         }
       },
       orderBy: { createdAt: 'desc' }
@@ -54,7 +61,10 @@ export async function GET() {
         email: student.email,
         image: student.image,
         joinedAt: student.createdAt,
-        consumedCredits
+        consumedCredits,
+        cvCount: student._count.cvs,
+        coverLetterCount: student._count.coverLetters,
+        interviewCount: student._count.interviewSessions
       };
     });
 
