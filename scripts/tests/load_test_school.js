@@ -1,6 +1,8 @@
 import http from 'k6/http';
 import { check, sleep, group } from 'k6';
 import { Counter, Rate, Trend } from 'k6/metrics';
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.2/index.js";
 
 // Custom metrics
 const schoolAdminReqDuration = new Trend('school_admin_req_duration', true);
@@ -225,4 +227,11 @@ export function bulkInvitationScenario() {
 
     sleep(3);
   });
+}
+
+export function handleSummary(data) {
+  return {
+    "summary.html": htmlReport(data, { title: 'Jobsira B2B Load Test Report' }),
+    stdout: textSummary(data, { indent: ' ', enableColors: true }),
+  };
 }
