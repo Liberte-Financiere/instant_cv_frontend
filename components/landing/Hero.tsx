@@ -17,9 +17,11 @@ export function Hero() {
           
           {/* Left Content */}
           <div className="flex flex-col gap-6 text-center lg:text-left">
-
-
-            <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
+            <div className="inline-flex items-center justify-center lg:justify-start w-full lg:w-auto mx-auto lg:mx-0">
+               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-bold shadow-sm">
+                 ✅ Création et export PDF 100% gratuits
+               </span>
+            </div>            <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
               Votre succès mérite plus qu&apos;un <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-primary">simple PDF</span>
             </h1>
             
@@ -41,7 +43,7 @@ export function Hero() {
             
             <div className="flex items-center justify-center lg:justify-start mt-2">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-semibold shadow-sm">
-                🎁 <span className="text-white">15 crédits offerts</span> à l'inscription
+                🎁 <span className="text-white">15 crédits IA offerts</span> à l'inscription
               </span>
             </div>
 
