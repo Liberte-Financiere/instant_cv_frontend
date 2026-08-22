@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Building2, Users, FileText, Loader2, CreditCard, CheckCircle, AlertTriangle, Hourglass, PlusCircle, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
@@ -18,7 +17,6 @@ interface DashboardStats {
 }
 
 export default function SchoolAdminDashboard() {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const [data, setData] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,16 +24,8 @@ export default function SchoolAdminDashboard() {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/login');
-    } else if (status === 'authenticated') {
-      if (session.user.role !== 'SCHOOL_ADMIN') {
-        router.push('/dashboard');
-        return;
-      }
-      fetchStats();
-    }
-  }, [status, session, router]);
+    fetchStats();
+  }, []);
 
   const fetchStats = async () => {
     setLoading(true);
