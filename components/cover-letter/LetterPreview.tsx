@@ -38,7 +38,11 @@ export const LetterPreview: React.FC<LetterPreviewProps> = ({ coverLetter, class
 
       {/* Date & Location */}
       <p className="text-right text-sm mb-8 text-slate-600">
-         Fait à <span className="font-medium text-slate-900">{coverLetter.content.details.location || '...'}</span>, le {formatDate(coverLetter.content.details.date)}
+         {coverLetter.content.details.location ? (
+           <><span className="font-medium text-slate-900">{coverLetter.content.details.location}</span>, le {formatDate(coverLetter.content.details.date)}</>
+         ) : (
+           <>Le {formatDate(coverLetter.content.details.date)}</>
+         )}
       </p>
 
       {/* Subject */}
