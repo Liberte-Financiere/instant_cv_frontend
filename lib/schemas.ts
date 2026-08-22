@@ -105,7 +105,7 @@ export const settingsSchema = z.object({
   hideContact: z.boolean().optional(),
   cvMode: z.enum(['professional', 'academic']).optional(),
   language: z.enum(['fr', 'en', 'zh']).optional(),
-  sectionTitles: z.record(z.string()).optional(),
+  sectionTitles: z.record(z.string(), z.string()).optional(),
 });
 
 export const sectionIdSchema = z.enum([
