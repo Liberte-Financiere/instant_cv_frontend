@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GraduationCap, Briefcase, RefreshCw, ArrowRight, Search } from 'lucide-react';
+import { GraduationCap, Briefcase, RefreshCw, ArrowRight, Search, Building2 } from 'lucide-react';
 import Link from 'next/link';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { APP_CONFIG } from '@/lib/config';
@@ -107,6 +107,34 @@ export function TargetAudience() {
             <Link href="/recruiter" className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-5 py-2.5 lg:px-6 lg:py-3 rounded-full font-bold mt-8 w-fit backdrop-blur-md transition-all text-sm lg:text-base">
               En savoir plus <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
             </Link>
+          </motion.div>
+          
+          {/* Card 5: Écoles & Universités (B2B - Full Width) */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            className="md:col-span-2 lg:col-span-4 group relative rounded-[2rem] p-8 lg:p-12 flex flex-col md:flex-row items-center justify-between hover:-translate-y-1 transition-transform duration-300 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl border border-amber-500/20"
+          >
+            <div className="flex-1 mb-8 md:mb-0 md:pr-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 text-sm font-bold border border-amber-500/20 mb-6">
+                <Building2 className="w-4 h-4" /> B2B - Partenariat Académique
+              </div>
+              <h3 className="text-3xl lg:text-4xl font-bold mb-4">Écoles & Universités</h3>
+              <p className="text-slate-300 leading-relaxed text-lg max-w-2xl">
+                Boostez l'insertion professionnelle de vos étudiants. Offrez-leur un accès Premium via notre Espace École B2B. Pilotez les crédits, suivez les statistiques et préparez-les au marché du travail avec l'intelligence artificielle.
+              </p>
+            </div>
+            
+            <div className="flex-shrink-0 flex flex-col items-center md:items-end w-full md:w-auto">
+              <Link href="/auth" className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-900 px-8 py-4 rounded-full font-bold w-full md:w-auto shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all hover:scale-105">
+                Devenir École Partenaire <ArrowRight className="w-5 h-5" />
+              </Link>
+              <p className="text-slate-400 text-sm mt-4 text-center md:text-right">
+                Déploiement sous 48h
+              </p>
+            </div>
           </motion.div>
           
         </div>
