@@ -12,34 +12,70 @@ export default function PublicJobsPage() {
   const [query, setQuery] = useState('');
   const [type, setType] = useState('');
   const [location, setLocation] = useState('');
+  const [sector, setSector] = useState('');
+  const [sectorsList, setSectorsList] = useState<string[]>([]);
+  
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
-    fetchJobs();
+    fetchJobs(1);
+    fetchFilters();
   }, []);
 
-  const fetchJobs = async () => {
-    setLoading(true);
+  const fetchFilters = async () => {
+    try {
+      const res = await fetch('/api/jobs/filters');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.data && data.data.sectors) {
+          setSectorsList(data.data.sectors);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch filters', error);
+    }
+  };
+
+  const fetchJobs = async (pageNum = 1) => {
+    if (pageNum === 1) setLoading(true);
+    else setLoadingMore(true);
+    
     try {
       const params = new URLSearchParams();
       if (query) params.append('q', query);
       if (type) params.append('type', type);
       if (location) params.append('location', location);
+      if (sector) params.append('sector', sector);
+      params.append('page', pageNum.toString());
 
       const res = await fetch(`/api/jobs?${params.toString()}`);
       if (res.ok) {
-        const data = await res.json();
-        setJobs(data);
+        const result = await res.json();
+        if (pageNum === 1) {
+          setJobs(result.data || []);
+        } else {
+          setJobs(prev => [...prev, ...(result.data || [])]);
+        }
+        setHasMore(result.hasMore);
+        setPage(pageNum);
       }
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchJobs();
+    fetchJobs(1);
+  };
+
+  const loadMore = () => {
+    fetchJobs(page + 1);
   };
 
   return (
@@ -54,7 +90,7 @@ export default function PublicJobsPage() {
             Explorez des centaines d'opportunités professionnelles. Des startups aux grands groupes, votre prochaine aventure commence ici.
           </p>
 
-          <form onSubmit={handleSearch} className="mt-8 max-w-4xl mx-auto bg-white border border-slate-200 rounded-2xl p-2 flex flex-col md:flex-row gap-2 shadow-xl">
+          <form onSubmit={handleSearch} className="mt-8 max-w-5xl mx-auto bg-white border border-slate-200 rounded-2xl p-2 flex flex-col md:flex-row gap-2 shadow-xl">
             <div className="flex-1 flex items-center bg-slate-100 rounded-xl px-4 py-3 gap-3 border border-transparent focus-within:border-blue-500/50 focus-within:bg-white transition-colors">
               <Search className="w-5 h-5 text-slate-400" />
               <input 
@@ -78,14 +114,25 @@ export default function PublicJobsPage() {
             <select 
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="bg-slate-100 rounded-xl px-4 py-3 text-slate-900 border border-transparent focus:outline-none focus:border-blue-500/50 focus:bg-white transition-colors md:max-w-[200px]"
+              className="bg-slate-100 rounded-xl px-4 py-3 text-slate-900 border border-transparent focus:outline-none focus:border-blue-500/50 focus:bg-white transition-colors md:max-w-[160px]"
             >
               <option value="">Tous les types</option>
-              <option value="CDI">CDI</option>
-              <option value="CDD">CDD</option>
-              <option value="Stage">Stage</option>
-              <option value="Alternance">Alternance</option>
-              <option value="Freelance">Freelance</option>
+              <option value="JOB_LOCAL">Emploi Local</option>
+              <option value="JOB_INTERNATIONAL">Emploi International</option>
+              <option value="INTERNSHIP">Stage</option>
+              <option value="SCHOLARSHIP">Bourse d'études</option>
+              <option value="CALL_FOR_TENDERS">Appel d'offres</option>
+              <option value="OTHER">Autre</option>
+            </select>
+            <select 
+              value={sector}
+              onChange={(e) => setSector(e.target.value)}
+              className="bg-slate-100 rounded-xl px-4 py-3 text-slate-900 border border-transparent focus:outline-none focus:border-blue-500/50 focus:bg-white transition-colors md:max-w-[160px]"
+            >
+              <option value="">Tous secteurs</option>
+              {sectorsList.map(s => (
+                <option key={s} value={s}>{s.length > 20 ? s.substring(0, 20) + '...' : s}</option>
+              ))}
             </select>
             <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-3 px-8 h-auto font-bold shrink-0">
               Rechercher
@@ -97,8 +144,30 @@ export default function PublicJobsPage() {
       {/* Results */}
       <div className="max-w-5xl mx-auto px-4 md:px-8 mt-12">
         {loading ? (
-          <div className="flex items-center justify-center py-20 text-slate-500 gap-3">
-            <Loader2 className="w-6 h-6 animate-spin" /> Recherche en cours...
+          <div className="grid gap-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between animate-pulse">
+                <div className="space-y-4 w-full md:flex-1">
+                  {/* Title Skeleton */}
+                  <div className="h-6 bg-slate-200 rounded-lg w-3/4 md:w-1/2"></div>
+                  {/* Tags Skeleton */}
+                  <div className="flex flex-wrap gap-3">
+                    <div className="h-5 bg-slate-100 rounded-md w-24"></div>
+                    <div className="h-5 bg-slate-100 rounded-md w-32"></div>
+                    <div className="h-5 bg-slate-100 rounded-md w-20"></div>
+                  </div>
+                </div>
+                {/* Right side Skeleton */}
+                <div className="flex items-center gap-4 shrink-0 w-full md:w-auto mt-2 md:mt-0">
+                  <div className="text-right hidden md:block space-y-2">
+                    <div className="h-4 bg-slate-200 rounded-md w-28 ml-auto"></div>
+                    <div className="h-3 bg-slate-100 rounded-md w-20 ml-auto"></div>
+                  </div>
+                  {/* Circle Arrow Skeleton */}
+                  <div className="w-10 h-10 rounded-full bg-slate-100 shrink-0 ml-auto md:ml-0"></div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : jobs.length === 0 ? (
           <div className="text-center py-20 bg-white border border-slate-200 rounded-3xl shadow-sm">
@@ -112,7 +181,14 @@ export default function PublicJobsPage() {
               <Link key={job.id} href={`/jobs/${job.id}`}>
                 <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between hover:border-blue-500 hover:shadow-md transition-all cursor-pointer group">
                   <div className="space-y-3">
-                    <h2 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{job.title}</h2>
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{job.title}</h2>
+                      {job.source === 'NATIVE' && (
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-wider rounded-md">
+                          Nouveau
+                        </span>
+                      )}
+                    </div>
                     <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-500">
                       <span className="flex items-center gap-1.5 text-slate-700"><Briefcase className="w-4 h-4" /> {job.company}</span>
                       {job.location && <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" /> {job.location}</span>}
@@ -138,6 +214,18 @@ export default function PublicJobsPage() {
                 </div>
               </Link>
             ))}
+            
+            {hasMore && (
+              <div className="mt-8 flex justify-center">
+                <Button 
+                  onClick={loadMore} 
+                  disabled={loadingMore}
+                  className="bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 rounded-xl py-3 px-8 font-bold"
+                >
+                  {loadingMore ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Chargement...</> : "Charger plus d'offres"}
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>
