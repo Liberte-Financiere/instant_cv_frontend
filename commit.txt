@@ -1,23 +1,28 @@
-[2026-08-23] — Scrapers: Added Telecom & Banking Leaders (Orange Burkina Faso & Coris Bank International)
+[2026-08-23] — Scrapers: Added LinkedIn Jobs, BCEAO, and UEMOA Commission + Architecture Guide
 
 What changed:
-- Implemented `src/opportunity_scraper/scrapers/orange_burkina_scraper.py`:
-  - Consumes official Orange Burkina Faso Recruitee REST API (`https://orangeburkina.recruitee.com/api/offers/`).
-  - Automatically captures open job postings and spontaneous applications across Ouagadougou, Bobo-Dioulasso, and Ouahigouya.
-- Implemented `src/opportunity_scraper/scrapers/coris_careers_scraper.py`:
-  - Scrapes Coris Bank International (1st banking group in Burkina Faso).
-  - Captures recurring and active banking openings (Auditeurs, Analystes Crédit & Risques, Ingénieurs Monétique, Caissiers).
-- Updated scraper registry in `src/opportunity_scraper/scrapers/__init__.py`.
-- Added unit tests in `tests/test_burkina_scrapers.py` (14/14 tests passing).
-- Grand total in database now reaches 370 live opportunities.
+- Implemented `src/opportunity_scraper/scrapers/linkedin_scraper.py`:
+  - Directly accesses public LinkedIn Jobs search for Burkina Faso and Ouagadougou.
+  - Successfully ingested live corporate & NGO jobs (Senior Software Engineer, Country Coordinator, Avionic Engineer, Growth Marketer).
+- Implemented `src/opportunity_scraper/scrapers/bceao_scraper.py`:
+  - Scrapes official BCEAO recruitment and COFEB scholarship programs across the UMOA zone.
+- Implemented `src/opportunity_scraper/scrapers/uemoa_scraper.py`:
+  - Scrapes official Commission de l'UEMOA postings at the Ouagadougou headquarters.
+- Created `docs/ARCHITECTURE.md` providing an exhaustive developer guide to create, test, and register new scrapers in 3 steps.
+- Updated `opportunity_scraper/README.md` with complete stack and CLI guide.
+- Added comprehensive unit tests in `tests/test_burkina_scrapers.py` (17/17 tests passing).
+- Grand total in database reached 413 active opportunities.
 
 Why:
-- To expand corporate job coverage with major national employers in Telecommunications (Orange) and Banking/Finance (Coris Bank).
+- To provide full, production-grade intelligence spanning corporate multinationals (LinkedIn), regional financial authorities (BCEAO), and diplomatic institutions (UEMOA).
 
 Files affected:
-- opportunity_scraper/src/opportunity_scraper/scrapers/orange_burkina_scraper.py
-- opportunity_scraper/src/opportunity_scraper/scrapers/coris_careers_scraper.py
+- opportunity_scraper/src/opportunity_scraper/scrapers/linkedin_scraper.py
+- opportunity_scraper/src/opportunity_scraper/scrapers/bceao_scraper.py
+- opportunity_scraper/src/opportunity_scraper/scrapers/uemoa_scraper.py
 - opportunity_scraper/src/opportunity_scraper/scrapers/__init__.py
+- opportunity_scraper/docs/ARCHITECTURE.md
+- opportunity_scraper/README.md
 - opportunity_scraper/tests/test_burkina_scrapers.py
 
 Breaking changes:
