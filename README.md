@@ -98,10 +98,29 @@ components/
 ├── shared/            # Navbar, composants partagés
 └── ui/                # Composants réutilisables (SectionHeader, Pagination)
 lib/                   # Config, utils, schemas, rate-limit, pdf-export
+microservices/         # Microservices autonomes (jobs_api, bg_removal, cron_service, email_service)
+projet/                # Roadmap, spécifications des fonctionnalités et chantiers
 store/                 # Zustand stores (CV, CoverLetter, Credit)
 types/                 # Types TypeScript
 prisma/                # Schema et migrations
 ```
+
+---
+
+## 🧩 Architecture des Microservices
+
+JobSira s'appuie sur 4 microservices autonomes documentés dans [`microservices/README.md`](./microservices/README.md) :
+
+1. **`jobs_api`** (Go / Fiber) : API REST d'agrégation, recherche, filtrage et tracking des offres d'emploi (Port `8080`).
+2. **`bg_removal`** (Python / FastAPI) : Détourage d'arrière-plan de photo de profil par IA U2Net (Port `3001`).
+3. **`cron_service`** (Go) : Planificateur et scheduler périodique de tâches d'arrière-plan.
+4. **`email_service`** (Python / FastAPI) : Moteur de rendu Jinja2 et transport d'emails transactionnels Brevo (Port `3002`).
+
+Pour lancer tous les microservices en local ou en production :
+```bash
+docker-compose up -d --build
+```
+
 
 ---
 

@@ -1,28 +1,28 @@
-[2026-08-22] — Feature: Dynamic Skill Categorization for CV Templates
+[2026-08-23] — Analytics Tracking & Hybrid System Robustness
 
 What changed:
-- Added a `category` field to the `Skill` interface to support dynamic categorization.
-- Refactored `SkillsForm` in the CV editor to use a strict dropdown for categories (Compétences Techniques, Compétences Numériques, etc.), and implemented auto-selection for new items to speed up data entry.
-- Created a centralized utility function `groupSkillsByCategory` in `lib/utils.ts` to logically group skills.
-- Implemented category grouping in `CVSkills.tsx` and `ATSFriendlyTemplate.tsx`.
-- Refactored 6 popular CV templates (ModernSidebar, Nordic, BoldHeader, TimelinePro, ClassicSerif, MinimalistTemplate) to use the new grouping helper and display contextual subheadings natively.
-- Simplified the default section title for "Compétences" in the academic mode (in `constants/sections.ts`) since the categorisation is now dynamically handled inside the section itself.
+- Added click tracking capabilities for native (Prisma) jobs.
+- Refactored job ID prefix from "go-" to "ext-" to semantically differentiate scraped jobs from internal ones.
+- Added comprehensive unit test coverage (Vitest) for the Next.js API layer handling hybrid job data.
+- Added Go test coverage for the tracking handler in the jobs_api microservice.
+- Verified Next.js production build and overall test suite (301 tests passing).
 
 Why:
-- To allow students and professionals (such as UVBF students) to cleanly categorize their skills without introducing rigid structural changes to the database or state manager.
-- Ensures cross-template compatibility and respects the DRY principle.
+- To ensure full tracking of both internal and external job applications, which is essential for the recruiter analytics dashboard.
+- To prevent regressions when routing or processing hybrid IDs by enforcing strict test coverage.
+- To maintain clean architecture by replacing generic "go-" prefixes with semantic "ext-" identifiers.
 
 Files affected:
-- frontend/instant_cv/types/cv.ts — Added optional category property to Skill type
-- frontend/instant_cv/components/editor/forms/SkillsForm.tsx — Added category dropdown and sticky selection logic
-- frontend/instant_cv/lib/utils.ts — Created `groupSkillsByCategory` and updated `sanitizeCVData`
-- frontend/instant_cv/constants/sections.ts — Reverted academic title to generic "COMPÉTENCES"
-- frontend/instant_cv/components/cv-sections/CVSkills.tsx — Added conditional grouping logic
-- frontend/instant_cv/components/templates/*.tsx — Injected `groupSkillsByCategory` into ModernSidebar, Nordic, BoldHeader, TimelinePro, ClassicSerif, MinimalistTemplate, ATSFriendlyTemplate
+- app/jobs/[id]/page.tsx — Added onClick tracking for native apply buttons.
+- app/api/jobs/route.ts — Renamed "go-" prefix to "ext-".
+- app/api/jobs/[id]/route.ts — Renamed prefix, added tracking logic for Prisma.
+- __tests__/api/jobs/jobs-route.test.ts — New unit test for hybrid GET API.
+- __tests__/api/jobs/job-detail-route.test.ts — New unit test for native tracking API.
+- microservices/jobs_api/internal/handlers/tracking_test.go — New unit test for Go tracking.
+- microservices/jobs_api/go.mod — Updated via go mod tidy to add testify.
 
 Breaking changes:
-- None. Templates not yet updated will simply display skills in a flat list as they did before.
+- None. Any external systems relying on "go-" prefix (none expected) will now receive "ext-".
 
 Notes for review:
-- The tests are passing and the build is completely green.
-- There are about 14 remaining templates that have custom `skills.map` rendering which will be updated in a follow-up commit to also support grouped categorization.
+- The React Testing Library was avoided for UI tests to prevent unnecessary dependency pollution, focusing purely on API robustness as requested.

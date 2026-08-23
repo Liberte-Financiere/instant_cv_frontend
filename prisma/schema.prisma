@@ -552,6 +552,9 @@ model JobOffer {
 
   recruiterId    String
   recruiter      User     @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  
+  viewsCount     Int      @default(0)
+  clicksCount    Int      @default(0)
 
   @@index([recruiterId])
   @@index([status])

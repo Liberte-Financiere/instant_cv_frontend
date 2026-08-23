@@ -1,8 +1,9 @@
-import { PrismaClient } from '../node_modules/@prisma/client';
-
-const prisma = new PrismaClient();
+import * as dotenv from 'dotenv';
+dotenv.config();
+dotenv.config({ path: '.env.local' });
 
 async function main() {
+  const { prisma } = await import('../lib/prisma');
   console.log("🧹 Début du nettoyage des données de test...");
 
   try {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Building2, Users, LogIn, LogOut, Unlock, User, Briefcase } from 'lucide-react';
+import { Search, Building2, Users, LogIn, LogOut, Unlock, User, Briefcase, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useSession, signOut } from 'next-auth/react';
 import { TalentChat } from './TalentChat';
@@ -58,6 +58,15 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
                     <span className="flex items-center gap-2">
                       <Briefcase className="w-4 h-4" />
                       Mes Annonces
+                    </span>
+                  </Link>
+                  <Link
+                    href="/recruiter/analytics"
+                    className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                  >
+                    <span className="flex items-center gap-2">
+                      <BarChart3 className="w-4 h-4" />
+                      Analytics
                     </span>
                   </Link>
                 </>
