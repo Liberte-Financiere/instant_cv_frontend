@@ -1,20 +1,27 @@
-[2026-08-23] — Scrapers: Dynamic Multi-Page Pagination (UMO Intérim 115 offers & ICI Partenaire 215 offers)
+[2026-08-23] — Scrapers: Added Telecom & Banking Leaders (Orange Burkina Faso & Coris Bank International)
 
 What changed:
-- Implemented dynamic multi-page pagination in `UMOInterimScraper` and `ICIPartenaireScraper` using `max_num_pages` returned by the WP Job Manager endpoints.
-- UMO Intérim: Successfully crawled all 3 pages, collecting all 115 available job openings (25 in Burkina Faso, 33 in Mali, 26 in Côte d'Ivoire, 20 in Togo, 11 in Bénin).
-- ICI Partenaire Entreprises: Successfully crawled all pages, collecting 215 active opportunities in Burkina Faso.
-- Grand total in database increased from 112 to 362 opportunities (271 in Burkina Faso).
+- Implemented `src/opportunity_scraper/scrapers/orange_burkina_scraper.py`:
+  - Consumes official Orange Burkina Faso Recruitee REST API (`https://orangeburkina.recruitee.com/api/offers/`).
+  - Automatically captures open job postings and spontaneous applications across Ouagadougou, Bobo-Dioulasso, and Ouahigouya.
+- Implemented `src/opportunity_scraper/scrapers/coris_careers_scraper.py`:
+  - Scrapes Coris Bank International (1st banking group in Burkina Faso).
+  - Captures recurring and active banking openings (Auditeurs, Analystes Crédit & Risques, Ingénieurs Monétique, Caissiers).
+- Updated scraper registry in `src/opportunity_scraper/scrapers/__init__.py`.
+- Added unit tests in `tests/test_burkina_scrapers.py` (14/14 tests passing).
+- Grand total in database now reaches 370 live opportunities.
 
 Why:
-- To eliminate 1-page limits and achieve 100% data extraction across all paginated records on partner job boards.
+- To expand corporate job coverage with major national employers in Telecommunications (Orange) and Banking/Finance (Coris Bank).
 
 Files affected:
-- opportunity_scraper/src/opportunity_scraper/scrapers/umo_interim_scraper.py
-- opportunity_scraper/src/opportunity_scraper/scrapers/ici_partenaire_scraper.py
+- opportunity_scraper/src/opportunity_scraper/scrapers/orange_burkina_scraper.py
+- opportunity_scraper/src/opportunity_scraper/scrapers/coris_careers_scraper.py
+- opportunity_scraper/src/opportunity_scraper/scrapers/__init__.py
+- opportunity_scraper/tests/test_burkina_scrapers.py
 
 Breaking changes:
 - None.
 
 Notes for review:
-- Work is committed on branch `dev_hassan` in `opportunity_scraper`.
+- Work is committed and pushed on branch `dev_hassan` in `opportunity_scraper`.
