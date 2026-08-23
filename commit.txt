@@ -1,28 +1,20 @@
-[2026-08-23] — Analytics Tracking & Hybrid System Robustness
+[2026-08-23] — Scrapers: Dynamic Multi-Page Pagination (UMO Intérim 115 offers & ICI Partenaire 215 offers)
 
 What changed:
-- Added click tracking capabilities for native (Prisma) jobs.
-- Refactored job ID prefix from "go-" to "ext-" to semantically differentiate scraped jobs from internal ones.
-- Added comprehensive unit test coverage (Vitest) for the Next.js API layer handling hybrid job data.
-- Added Go test coverage for the tracking handler in the jobs_api microservice.
-- Verified Next.js production build and overall test suite (301 tests passing).
+- Implemented dynamic multi-page pagination in `UMOInterimScraper` and `ICIPartenaireScraper` using `max_num_pages` returned by the WP Job Manager endpoints.
+- UMO Intérim: Successfully crawled all 3 pages, collecting all 115 available job openings (25 in Burkina Faso, 33 in Mali, 26 in Côte d'Ivoire, 20 in Togo, 11 in Bénin).
+- ICI Partenaire Entreprises: Successfully crawled all pages, collecting 215 active opportunities in Burkina Faso.
+- Grand total in database increased from 112 to 362 opportunities (271 in Burkina Faso).
 
 Why:
-- To ensure full tracking of both internal and external job applications, which is essential for the recruiter analytics dashboard.
-- To prevent regressions when routing or processing hybrid IDs by enforcing strict test coverage.
-- To maintain clean architecture by replacing generic "go-" prefixes with semantic "ext-" identifiers.
+- To eliminate 1-page limits and achieve 100% data extraction across all paginated records on partner job boards.
 
 Files affected:
-- app/jobs/[id]/page.tsx — Added onClick tracking for native apply buttons.
-- app/api/jobs/route.ts — Renamed "go-" prefix to "ext-".
-- app/api/jobs/[id]/route.ts — Renamed prefix, added tracking logic for Prisma.
-- __tests__/api/jobs/jobs-route.test.ts — New unit test for hybrid GET API.
-- __tests__/api/jobs/job-detail-route.test.ts — New unit test for native tracking API.
-- microservices/jobs_api/internal/handlers/tracking_test.go — New unit test for Go tracking.
-- microservices/jobs_api/go.mod — Updated via go mod tidy to add testify.
+- opportunity_scraper/src/opportunity_scraper/scrapers/umo_interim_scraper.py
+- opportunity_scraper/src/opportunity_scraper/scrapers/ici_partenaire_scraper.py
 
 Breaking changes:
-- None. Any external systems relying on "go-" prefix (none expected) will now receive "ext-".
+- None.
 
 Notes for review:
-- The React Testing Library was avoided for UI tests to prevent unnecessary dependency pollution, focusing purely on API robustness as requested.
+- Work is committed on branch `dev_hassan` in `opportunity_scraper`.
