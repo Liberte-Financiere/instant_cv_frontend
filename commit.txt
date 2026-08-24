@@ -1,32 +1,32 @@
-[2026-08-23] — Scrapers: Added LinkedIn Jobs, BCEAO, and UEMOA Commission + Architecture Guide
+[2026-08-24] — Feature: Dynamic file requirements for candidate applications
 
 What changed:
-- Implemented `src/opportunity_scraper/scrapers/linkedin_scraper.py`:
-  - Directly accesses public LinkedIn Jobs search for Burkina Faso and Ouagadougou.
-  - Successfully ingested live corporate & NGO jobs (Senior Software Engineer, Country Coordinator, Avionic Engineer, Growth Marketer).
-- Implemented `src/opportunity_scraper/scrapers/bceao_scraper.py`:
-  - Scrapes official BCEAO recruitment and COFEB scholarship programs across the UMOA zone.
-- Implemented `src/opportunity_scraper/scrapers/uemoa_scraper.py`:
-  - Scrapes official Commission de l'UEMOA postings at the Ouagadougou headquarters.
-- Created `docs/ARCHITECTURE.md` providing an exhaustive developer guide to create, test, and register new scrapers in 3 steps.
-- Updated `opportunity_scraper/README.md` with complete stack and CLI guide.
-- Added comprehensive unit tests in `tests/test_burkina_scrapers.py` (17/17 tests passing).
-- Grand total in database reached 413 active opportunities.
+- Updated the ApplyPage (`app/jobs/[id]/apply/page.tsx`) to dynamically display file upload fields based on the `job.requestedFiles` array (CV, Cover Letter, Portfolio, Diploma).
+- Implemented parallel file uploading to Cloudinary via `Promise.all` in the application form.
+- Added strict backend validation in `app/api/jobs/[id]/apply/route.ts` to reject applications missing files requested by the recruiter.
+- Fixed a React reconciliation bug on the recruiter job creation wizard that caused ghost clicks (auto-submit) by adding `key` props to the navigation buttons.
+- Redesigned the Recruiter Analytics page (`app/recruiter/analytics/page.tsx`) with a "Clean SaaS" light theme and shimmer animations.
+- Added unit tests for the application API route (`__tests__/api/jobs/apply.test.ts`) to verify dynamic file validation logic.
 
 Why:
-- To provide full, production-grade intelligence spanning corporate multinationals (LinkedIn), regional financial authorities (BCEAO), and diplomatic institutions (UEMOA).
+- The recruiter needs the ability to define which files are mandatory for a specific job offer (e.g. asking for a Portfolio for a design job). 
+- The application form must adapt to these requirements and ensure the candidate cannot bypass them, both on the frontend and backend.
+- The analytics dashboard required a visual overhaul to match the professional, light-themed aesthetic of the rest of the application.
 
 Files affected:
-- opportunity_scraper/src/opportunity_scraper/scrapers/linkedin_scraper.py
-- opportunity_scraper/src/opportunity_scraper/scrapers/bceao_scraper.py
-- opportunity_scraper/src/opportunity_scraper/scrapers/uemoa_scraper.py
-- opportunity_scraper/src/opportunity_scraper/scrapers/__init__.py
-- opportunity_scraper/docs/ARCHITECTURE.md
-- opportunity_scraper/README.md
-- opportunity_scraper/tests/test_burkina_scrapers.py
+- prisma/schema.prisma — Added requestedFiles array to JobOffer and specific file URL fields to JobApplication.
+- app/api/recruiter/jobs/route.ts — Added requestedFiles validation when creating a job.
+- app/recruiter/jobs/create/page.tsx — Refactored to a 3-step wizard with file requirement selection and fixed ghost click bug.
+- app/recruiter/jobs/page.tsx — Added real-time search filtering.
+- app/recruiter/analytics/page.tsx — Redesigned the analytics dashboard.
+- app/api/jobs/[id]/apply/route.ts — Added backend validation for required files and fallback values for Prisma.
+- app/jobs/[id]/apply/page.tsx — Refactored to fetch job requirements and dynamically display upload components.
+- __tests__/api/jobs/apply.test.ts — Added unit tests for the backend application logic.
 
 Breaking changes:
-- None.
+- None
 
 Notes for review:
-- Work is committed and pushed on branch `dev_hassan` in `opportunity_scraper`.
+- The `npx prisma db push` was executed to update the database schema.
+- The `test-prisma.ts` scratch file was removed as it was causing TS compilation errors.
+- Tests and build (`npm run build`) passed successfully.

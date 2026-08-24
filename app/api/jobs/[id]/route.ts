@@ -68,7 +68,7 @@ export async function GET(
     }
 
     // 2. Fetch from Prisma (Native Jobs)
-    const job = await prisma.jobOffer.findUnique({
+    const job = await prisma.jobOffer.findFirst({
       where: { 
         id,
         status: 'ACTIVE',
@@ -77,6 +77,11 @@ export async function GET(
           { expiresAt: { gt: new Date() } }
         ]
       },
+      include: {
+        _count: {
+          select: { applications: true }
+        }
+      }
     });
 
     if (!job) {
@@ -89,7 +94,9 @@ export async function GET(
       data: { viewsCount: { increment: 1 } }
     }).catch((err) => console.error('[NATIVE_JOB_VIEW_TRACKING_ERROR]', err));
 
-    return NextResponse.json({ ...job, source: 'NATIVE' });
+    const maxApplicationsReached = job.maxApplications ? job._count.applications >= job.maxApplications : false;
+
+    return NextResponse.json({ ...job, source: 'NATIVE', maxApplicationsReached });
   } catch (error) {
     console.error('[PUBLIC_JOB_GET]', error);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
@@ -109,10 +116,10 @@ export async function POST(
       // Fire and forget
       fetch(`http://127.0.0.1:8080/api/v1/opportunities/${goId}/click`, { method: 'POST' }).catch(() => {});
     } else {
-      // Incrémenter les clics pour les offres natives
+      // Increment views count instead, or just do nothing since we don't have clicksCount
       prisma.jobOffer.update({
         where: { id },
-        data: { clicksCount: { increment: 1 } }
+        data: { viewsCount: { increment: 1 } }
       }).catch((err) => console.error('[NATIVE_JOB_CLICK_TRACKING_ERROR]', err));
     }
 

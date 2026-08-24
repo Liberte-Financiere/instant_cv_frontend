@@ -100,17 +100,17 @@ export default function RecruiterSearchPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-6xl mx-auto p-8">
       {/* Hero */}
       <div className="text-center space-y-4 pt-12 pb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-300 text-sm font-medium mb-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-blue-600 text-sm font-bold mb-4">
           <Users className="w-4 h-4" />
           Talent Pool
         </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
           Trouvez les meilleurs talents
         </h1>
-        <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto">
+        <p className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto">
           Recherchez parmi des profils vérifiés et qualifiés.
           Débloquez leurs coordonnées en un clic.
         </p>
@@ -121,7 +121,7 @@ export default function RecruiterSearchPage() {
         <SearchBar onSearch={handleSearch} isLoading={isLoading} />
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2 text-sm text-slate-400 hover:text-blue-300 transition-colors"
+          className="flex items-center gap-2 text-sm text-slate-500 font-medium hover:text-blue-600 transition-colors"
         >
           <SlidersHorizontal className="w-4 h-4" />
           {showFilters ? 'Masquer les filtres' : 'Filtres avances'}
@@ -130,7 +130,7 @@ export default function RecruiterSearchPage() {
 
       {/* Filters */}
       {showFilters && (
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-4">
           <SearchFilters
             filters={filters}
             onFilterChange={handleFilterChange}
@@ -143,20 +143,20 @@ export default function RecruiterSearchPage() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6 animate-pulse">
+            <div key={i} className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 animate-pulse">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-white/10" />
+                <div className="w-12 h-12 rounded-xl bg-slate-100" />
                 <div className="space-y-2 flex-1">
-                  <div className="h-4 bg-white/10 rounded w-3/4" />
-                  <div className="h-3 bg-white/10 rounded w-1/2" />
+                  <div className="h-4 bg-slate-100 rounded w-3/4" />
+                  <div className="h-3 bg-slate-100 rounded w-1/2" />
                 </div>
               </div>
               <div className="flex gap-2 mb-4">
-                <div className="h-6 bg-white/10 rounded-lg w-16" />
-                <div className="h-6 bg-white/10 rounded-lg w-20" />
-                <div className="h-6 bg-white/10 rounded-lg w-14" />
+                <div className="h-6 bg-slate-100 rounded-lg w-16" />
+                <div className="h-6 bg-slate-100 rounded-lg w-20" />
+                <div className="h-6 bg-slate-100 rounded-lg w-14" />
               </div>
-              <div className="h-3 bg-white/10 rounded w-2/3" />
+              <div className="h-3 bg-slate-100 rounded w-2/3" />
             </div>
           ))}
         </div>
@@ -165,8 +165,8 @@ export default function RecruiterSearchPage() {
           {/* Count */}
           {pagination && (
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-400">
-                <span className="text-white font-semibold">{pagination.total}</span>{' '}
+              <p className="text-sm text-slate-500">
+                <span className="text-slate-900 font-bold">{pagination.total}</span>{' '}
                 profil{pagination.total !== 1 ? 's' : ''} trouves
               </p>
             </div>
@@ -190,8 +190,8 @@ export default function RecruiterSearchPage() {
             </>
           ) : (
             <div className="text-center py-16">
-              <Search className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-slate-300 mb-2">
+              <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-slate-900 mb-2">
                 Aucun profil trouve
               </h3>
               <p className="text-slate-500 text-sm">
@@ -202,13 +202,13 @@ export default function RecruiterSearchPage() {
         </>
       ) : (
         <div className="text-center py-20">
-          <div className="w-24 h-24 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
-            <Search className="w-10 h-10 text-slate-500" />
+          <div className="w-24 h-24 rounded-3xl bg-white shadow-sm border border-slate-200 flex items-center justify-center mx-auto mb-6">
+            <Search className="w-10 h-10 text-slate-300" />
           </div>
-          <h3 className="text-xl font-bold text-white mb-3">
+          <h3 className="text-xl font-bold text-slate-900 mb-3">
             Lancez votre première recherche
           </h3>
-          <p className="text-slate-400 text-base max-w-md mx-auto leading-relaxed">
+          <p className="text-slate-500 text-base max-w-md mx-auto leading-relaxed">
             Utilisez la barre de recherche ci-dessus pour trouver des candidats
             par poste, compétence, secteur ou localisation.
           </p>

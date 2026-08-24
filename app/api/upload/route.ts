@@ -24,11 +24,16 @@ export async function POST(req: Request) {
       return new NextResponse("No file provided", { status: 400 });
     }
 
-    // Validate file type — only images allowed
-    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    // Validate file type — images and documents allowed
+    const ALLOWED_TYPES = [
+      'image/jpeg', 'image/png', 'image/webp', 'image/gif',
+      'application/pdf',
+      'application/msword', // .doc
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+    ];
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Type de fichier non autorisé. Formats acceptés : JPEG, PNG, WebP, GIF.' },
+        { error: 'Type de fichier non autorisé. Formats acceptés : JPEG, PNG, WebP, GIF, PDF, DOC, DOCX.' },
         { status: 400 }
       );
     }
@@ -48,7 +53,10 @@ export async function POST(req: Request) {
     // Upload to Cloudinary via stream or buffer
     const result = await new Promise<any>((resolve, reject) => {
       cloudinary.uploader.upload_stream(
-        { folder: 'jobsira-cv-photos' },
+        { 
+          folder: 'jobsira-cv-photos',
+          resource_type: 'auto' // Crucial pour les PDF et documents (évite l'erreur 401)
+        },
         (error, result) => {
           if (error) reject(error);
           else resolve(result);

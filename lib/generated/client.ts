@@ -171,3 +171,8 @@ export type SchoolMembership = Prisma.SchoolMembershipModel
  * 
  */
 export type JobOffer = Prisma.JobOfferModel
+/**
+ * Model JobApplication
+ * 
+ */
+export type JobApplication = Prisma.JobApplicationModel

@@ -141,6 +141,7 @@ model User {
   schoolCreditTransactions SchoolCreditTransaction[]
   schoolMemberships        SchoolMembership[]
   performedSchoolCredits   SchoolCreditTransaction[] @relation("PerformedBy")
+  jobApplications          JobApplication[]
 
   @@index([acceptsMarketing])
   @@index([referredById])
@@ -485,33 +486,33 @@ enum InvitationStatus {
 }
 
 model SchoolInvitation {
-  id               String           @id @default(cuid())
-  schoolId         String
-  school           School           @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
-  email            String?
-  firstName        String?
-  lastName         String?
-  codeHash         String           @unique
-  emailCode        String?          // Temporaire : effacé après l'envoi de l'email
+  email     String?
+  firstName String?
+  lastName  String?
+  codeHash  String  @unique
+  emailCode String? // Temporaire : effacé après l'envoi de l'email
 
-  status           InvitationStatus @default(PENDING)
+  status InvitationStatus @default(PENDING)
 
   // Suivi de l'envoi d'email
-  emailStatus      EmailStatus      @default(QUEUED)
-  emailAttempts    Int              @default(0)
-  emailError       String?          @db.Text
-  emailSentAt      DateTime?
+  emailStatus   EmailStatus @default(QUEUED)
+  emailAttempts Int         @default(0)
+  emailError    String?     @db.Text
+  emailSentAt   DateTime?
 
-  expiresAt        DateTime?
-  usedAt           DateTime?
-  revokedAt        DateTime?
+  expiresAt DateTime?
+  usedAt    DateTime?
+  revokedAt DateTime?
 
   acceptedByUserId String?
-  acceptedByUser   User?            @relation(fields: [acceptedByUserId], references: [id])
+  acceptedByUser   User?   @relation(fields: [acceptedByUserId], references: [id])
 
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([schoolId])
   @@index([status])
@@ -535,27 +536,66 @@ model SchoolMembership {
 }
 
 model JobOffer {
-  id             String   @id @default(cuid())
-  title          String
-  company        String
-  location       String?
-  type           String   // 'CDI', 'CDD', 'Stage', 'Alternance', 'Freelance'
-  description    String   @db.Text
-  requirements   String[]
-  salary         String?  
-  applyMethod    String   // 'URL' ou 'EMAIL'
-  applyUrlOrMail String
-  status         String   @default("ACTIVE") // 'ACTIVE', 'CLOSED'
-  expiresAt      DateTime? // Date limite de candidature
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id              String    @id @default(cuid())
+  title           String
+  company         String
+  location        String?
+  type            String // 'CDI', 'CDD', 'Stage', 'Alternance', 'Freelance'
+  description     String    @db.Text
+  requirements    String[]
+  salary          String?
+  applyMethod     String // 'URL' ou 'EMAIL'
+  applyUrlOrMail  String
+  status          String    @default("ACTIVE") // 'ACTIVE', 'CLOSED'
+  expiresAt       DateTime? // Date limite de candidature
+  maxApplications Int? // Limite de candidatures
+  requestedFiles  String[]  @default(["CV"]) // ex: ["CV", "COVER_LETTER", "PORTFOLIO", "DIPLOMA"]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  recruiterId    String
-  recruiter      User     @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
-  
-  viewsCount     Int      @default(0)
-  clicksCount    Int      @default(0)
+  recruiterId String
+  recruiter   User   @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+
+  viewsCount   Int              @default(0)
+  applications JobApplication[]
 
   @@index([recruiterId])
   @@index([status])
+}
+
+model JobApplication {
+  id         String   @id @default(cuid())
+  jobOfferId String
+  jobOffer   JobOffer @relation(fields: [jobOfferId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+
+  cvUrl          String  @db.Text
+  coverLetter    String? @db.Text
+  coverLetterUrl String? @db.Text
+  portfolioUrl   String? @db.Text
+  diplomaUrl     String? @db.Text
+
+  availability      String?
+  salaryExpectation String?
+  experienceYears   Int?
+  profileSummary    String? @db.Text
+
+  status     String  @default("NEW") // 'NEW', 'REVIEWING', 'RETAINED', 'REJECTED'
+  isRead     Boolean @default(false)
+  hasConsent Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([jobOfferId])
+  @@index([userId])
+  @@index([status])
+  @@index([isRead])
 }

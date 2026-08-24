@@ -97,54 +97,70 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 </Button>
               ) : (
                 <>
-                  {job.applicationEmail && (
-                    <a 
-                      href={`mailto:${job.applicationEmail}?subject=Candidature: ${job.title}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      onClick={() => {
-                        fetch(`/api/jobs/${resolvedParams.id}`, { method: 'POST' }).catch(() => {});
-                      }}
-                    >
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-6 px-8 rounded-xl text-lg shadow-[0_0_20px_rgba(37,99,235,0.3)]">
-                        <Send className="w-5 h-5 mr-2" /> Postuler par Email
+                  {job.applyMethod === 'NATIVE' ? (
+                    job.maxApplicationsReached ? (
+                      <Button disabled className="w-full bg-slate-100 text-slate-500 font-bold py-6 px-8 rounded-xl text-lg shadow-sm border border-slate-200 cursor-not-allowed">
+                        <AlertTriangle className="w-5 h-5 mr-2" /> Quota de candidatures atteint
                       </Button>
-                    </a>
-                  )}
-                  
-                  {job.applicationUrl && (
-                    <a 
-                      href={job.applicationUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      onClick={() => {
-                        fetch(`/api/jobs/${resolvedParams.id}`, { method: 'POST' }).catch(() => {});
-                      }}
-                    >
-                      <Button className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-6 px-8 rounded-xl text-lg shadow-sm border border-blue-200/50">
-                        <ExternalLink className="w-5 h-5 mr-2" /> Postuler sur le site
-                      </Button>
-                    </a>
-                  )}
+                    ) : (
+                      <Link href={`/jobs/${job.id}/apply`}>
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-6 px-8 rounded-xl text-lg shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+                          <Briefcase className="w-5 h-5 mr-2" /> Postuler maintenant
+                        </Button>
+                      </Link>
+                    )
+                  ) : (
+                    <>
+                      {job.applicationEmail && (
+                        <a 
+                          href={`mailto:${job.applicationEmail}?subject=Candidature: ${job.title}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          onClick={() => {
+                            fetch(`/api/jobs/${resolvedParams.id}`, { method: 'POST' }).catch(() => {});
+                          }}
+                        >
+                          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-6 px-8 rounded-xl text-lg shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+                            <Send className="w-5 h-5 mr-2" /> Postuler par Email
+                          </Button>
+                        </a>
+                      )}
+                      
+                      {job.applicationUrl && (
+                        <a 
+                          href={job.applicationUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          onClick={() => {
+                            fetch(`/api/jobs/${resolvedParams.id}`, { method: 'POST' }).catch(() => {});
+                          }}
+                        >
+                          <Button className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-6 px-8 rounded-xl text-lg shadow-sm border border-blue-200/50">
+                            <ExternalLink className="w-5 h-5 mr-2" /> Postuler sur le site
+                          </Button>
+                        </a>
+                      )}
 
-                  {/* Fallback pour les offres natives ou si aucun des deux n'est défini explicitement */}
-                  {!job.applicationEmail && !job.applicationUrl && (
-                    <a 
-                      href={applyHref} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      onClick={() => {
-                        fetch(`/api/jobs/${resolvedParams.id}`, { method: 'POST' }).catch(() => {});
-                      }}
-                    >
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-6 px-8 rounded-xl text-lg shadow-[0_0_20px_rgba(37,99,235,0.3)]">
-                        {isEmail ? (
-                          <><Send className="w-5 h-5 mr-2" /> Postuler par Email</>
-                        ) : (
-                          <><ExternalLink className="w-5 h-5 mr-2" /> Postuler sur le site</>
-                        )}
-                      </Button>
-                    </a>
+                      {/* Fallback pour les offres natives ou si aucun des deux n'est défini explicitement */}
+                      {!job.applicationEmail && !job.applicationUrl && (
+                        <a 
+                          href={applyHref} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          onClick={() => {
+                            fetch(`/api/jobs/${resolvedParams.id}`, { method: 'POST' }).catch(() => {});
+                          }}
+                        >
+                          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-6 px-8 rounded-xl text-lg shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+                            {isEmail ? (
+                              <><Send className="w-5 h-5 mr-2" /> Postuler par Email</>
+                            ) : (
+                              <><ExternalLink className="w-5 h-5 mr-2" /> Postuler sur le site</>
+                            )}
+                          </Button>
+                        </a>
+                      )}
+                    </>
                   )}
                 </>
               )}

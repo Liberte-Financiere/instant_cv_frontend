@@ -11,9 +11,19 @@ const jobOfferSchema = z.object({
   description: z.string().min(10, "La description doit faire au moins 10 caractères"),
   requirements: z.array(z.string()).default([]),
   salary: z.string().optional(),
-  applyMethod: z.enum(['URL', 'EMAIL']),
-  applyUrlOrMail: z.string().min(1, "Un lien ou un email est requis"),
+  applyMethod: z.enum(['URL', 'EMAIL', 'NATIVE']),
+  applyUrlOrMail: z.string().optional(),
   expiresAt: z.string().optional().transform(val => val ? new Date(val) : undefined),
+  maxApplications: z.number().int().positive().optional(),
+  requestedFiles: z.array(z.string()).default(['CV']),
+}).refine((data) => {
+  if (data.applyMethod !== 'NATIVE' && (!data.applyUrlOrMail || data.applyUrlOrMail.length < 1)) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Un lien ou un email est requis pour les candidatures non natives",
+  path: ["applyUrlOrMail"]
 });
 
 // GET: Lister les annonces publiées par le recruteur
@@ -36,9 +46,27 @@ export async function GET() {
     const jobs = await prisma.jobOffer.findMany({
       where: { recruiterId: session.user.id },
       orderBy: { createdAt: 'desc' },
+      include: {
+        _count: {
+          select: { applications: true }
+        },
+        applications: {
+          where: { isRead: false },
+          select: { id: true }
+        }
+      }
     });
 
-    return NextResponse.json(jobs);
+    const jobsWithCounts = jobs.map(job => {
+      const { applications, _count, ...rest } = job;
+      return {
+        ...rest,
+        totalApplications: _count.applications,
+        unreadApplications: applications.length,
+      };
+    });
+
+    return NextResponse.json(jobsWithCounts);
   } catch (error) {
     console.error('[RECRUITER_JOBS_GET]', error);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
@@ -72,6 +100,7 @@ export async function POST(req: Request) {
     const jobOffer = await prisma.jobOffer.create({
       data: {
         ...result.data,
+        applyUrlOrMail: result.data.applyMethod === 'NATIVE' ? '' : (result.data.applyUrlOrMail || ''),
         recruiterId: session.user.id,
         status: 'ACTIVE',
       },

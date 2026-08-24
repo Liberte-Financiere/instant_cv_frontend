@@ -2,7 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Building2, Users, LogIn, LogOut, Unlock, User, Briefcase, BarChart3 } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { 
+  Search, Building2, Users, LogIn, LogOut, 
+  Unlock, User, Briefcase, BarChart3, Menu, X 
+} from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useSession, signOut } from 'next-auth/react';
 import { TalentChat } from './TalentChat';
@@ -13,112 +17,133 @@ interface RecruiterLayoutProps {
 
 export function RecruiterLayout({ children }: RecruiterLayoutProps) {
   const { data: session } = useSession();
+  const pathname = usePathname();
   const isRecruiter = session?.user?.role === 'RECRUITER' || session?.user?.role === 'ADMIN';
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navLinks = [
+    { href: '/recruiter/dashboard', label: "Vue d'ensemble", icon: BarChart3, exact: true },
+    { href: '/recruiter', label: 'Recherche', icon: Users, exact: true },
+    { href: '/recruiter/unlocks', label: 'Mes Profils', icon: Unlock },
+    { href: '/recruiter/jobs', label: 'Mes Annonces', icon: Briefcase },
+    { href: '/recruiter/analytics', label: 'Statistiques', icon: BarChart3 },
+  ];
+
+  const SidebarContent = () => (
+    <>
+      <div className="p-6 shrink-0 flex items-center justify-between">
+        <Link href="/recruiter/dashboard" className="flex items-center gap-3 group">
+          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-shadow">
+            <Search className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <span className="text-lg font-bold text-slate-900 tracking-tight">Jobsira</span>
+            <span className="text-lg font-medium text-blue-600 ml-1">Talent</span>
+          </div>
+        </Link>
+        <button className="md:hidden" onClick={() => setMobileMenuOpen(false)}>
+          <X className="w-6 h-6 text-slate-400" />
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-4 py-2 space-y-1">
+        <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 px-2 mt-4">Menu Principal</div>
+        
+        {navLinks.map((link) => {
+          // Si l'utilisateur n'est pas recruteur, on ne montre que "Recherche"
+          if (!isRecruiter && link.href !== '/recruiter') return null;
+          
+          const Icon = link.icon;
+          const isActive = link.exact 
+            ? pathname === link.href 
+            : pathname.startsWith(link.href);
+          
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all font-medium text-sm ${
+                isActive
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
+              {link.label}
+            </Link>
+          );
+        })}
+      </div>
+
+      <div className="p-4 shrink-0 border-t border-slate-200 space-y-2">
+        {session ? (
+          <>
+            <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+              <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+                <User className="w-4 h-4 mr-3 text-slate-400" />
+                Espace Candidat
+              </Button>
+            </Link>
+            <Button 
+              variant="ghost" 
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="w-full justify-start text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+            >
+              <LogOut className="w-4 h-4 mr-3 text-rose-500" />
+              Déconnexion
+            </Button>
+          </>
+        ) : (
+          <Link href="/recruiter/register" onClick={() => setMobileMenuOpen(false)}>
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md">
+              <LogIn className="w-4 h-4 mr-2" />
+              Connexion
+            </Button>
+          </Link>
+        )}
+      </div>
+    </>
+  );
 
   return (
-    <div className="min-h-screen bg-bg-dark text-slate-100">
-      <header className="sticky top-0 z-50 border-b border-slate-800 bg-bg-dark/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/recruiter" className="flex items-center gap-3 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-shadow">
-                <Search className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <span className="text-lg font-bold text-white tracking-tight">Jobsira</span>
-                <span className="text-lg font-light text-primary ml-1">Talent</span>
-              </div>
-            </Link>
+    <div className="flex h-screen bg-slate-50 font-sans text-slate-900 overflow-hidden">
+      {/* Sidebar Desktop */}
+      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 z-20">
+        <SidebarContent />
+      </aside>
 
-            <nav className="hidden md:flex items-center gap-1">
-              <Link
-                href="/recruiter"
-                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-              >
-                <span className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  Rechercher
-                </span>
-              </Link>
-              {isRecruiter && (
-                <>
-                  <Link
-                    href="/recruiter/unlocks"
-                    className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                  >
-                    <span className="flex items-center gap-2">
-                      <Unlock className="w-4 h-4" />
-                      Mes Profils
-                    </span>
-                  </Link>
-                  <Link
-                    href="/recruiter/jobs"
-                    className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                  >
-                    <span className="flex items-center gap-2">
-                      <Briefcase className="w-4 h-4" />
-                      Mes Annonces
-                    </span>
-                  </Link>
-                  <Link
-                    href="/recruiter/analytics"
-                    className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                  >
-                    <span className="flex items-center gap-2">
-                      <BarChart3 className="w-4 h-4" />
-                      Analytics
-                    </span>
-                  </Link>
-                </>
-              )}
-            </nav>
-
-            <div className="flex items-center gap-3">
-              {session && (
-                <>
-                  <Link href="/dashboard">
-                    <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-white/5">
-                      <User className="w-4 h-4 mr-2" />
-                      Espace Candidat
-                    </Button>
-                  </Link>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => signOut({ callbackUrl: '/' })}
-                    className="text-slate-400 hover:text-red-400 hover:bg-red-500/10"
-                  >
-                    <LogOut className="w-4 h-4 md:mr-2" />
-                    <span className="hidden md:inline">Déconnexion</span>
-                  </Button>
-                </>
-              )}
-              {!isRecruiter && session && (
-                <Link href="/recruiter/register">
-                  <Button variant="glass" size="sm" className="border-primary/30 text-primary hover:text-white">
-                    <Building2 className="w-4 h-4 mr-2" />
-                    Devenir Recruteur
-                  </Button>
-                </Link>
-              )}
-              {!session && (
-                <Link href="/recruiter/register">
-                  <Button variant="glass" size="sm" className="border-primary/30 text-primary hover:text-white">
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Espace Recruteur
-                  </Button>
-                </Link>
-              )}
-            </div>
+      {/* Mobile Header & Overlay */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-30 flex items-center justify-between px-4">
+        <Link href="/recruiter" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+            <Search className="w-4 h-4 text-white" />
           </div>
-        </div>
-      </header>
+          <span className="font-bold text-slate-900">Jobsira Talent</span>
+        </Link>
+        <button onClick={() => setMobileMenuOpen(true)} className="p-2 -mr-2 text-slate-600">
+          <Menu className="w-6 h-6" />
+        </button>
+      </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
+      {/* Mobile Sidebar */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
+          <aside className="relative w-4/5 max-w-sm bg-white flex flex-col h-full shadow-2xl">
+            <SidebarContent />
+          </aside>
+        </div>
+      )}
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden pt-16 md:pt-0 relative">
+        <div className="flex-1 overflow-y-auto">
+          {children}
+        </div>
       </main>
       
-      {/* Assistant IA - Visible par tous, mais bloqué si non recruteur */}
+      {/* Assistant IA */}
       <TalentChat isLocked={!isRecruiter} />
     </div>
   );

@@ -20,8 +20,20 @@ export type JobOfferModel = runtime.Types.Result.DefaultSelection<Prisma.$JobOff
 
 export type AggregateJobOffer = {
   _count: JobOfferCountAggregateOutputType | null
+  _avg: JobOfferAvgAggregateOutputType | null
+  _sum: JobOfferSumAggregateOutputType | null
   _min: JobOfferMinAggregateOutputType | null
   _max: JobOfferMaxAggregateOutputType | null
+}
+
+export type JobOfferAvgAggregateOutputType = {
+  maxApplications: number | null
+  viewsCount: number | null
+}
+
+export type JobOfferSumAggregateOutputType = {
+  maxApplications: number | null
+  viewsCount: number | null
 }
 
 export type JobOfferMinAggregateOutputType = {
@@ -36,9 +48,11 @@ export type JobOfferMinAggregateOutputType = {
   applyUrlOrMail: string | null
   status: string | null
   expiresAt: Date | null
+  maxApplications: number | null
   createdAt: Date | null
   updatedAt: Date | null
   recruiterId: string | null
+  viewsCount: number | null
 }
 
 export type JobOfferMaxAggregateOutputType = {
@@ -53,9 +67,11 @@ export type JobOfferMaxAggregateOutputType = {
   applyUrlOrMail: string | null
   status: string | null
   expiresAt: Date | null
+  maxApplications: number | null
   createdAt: Date | null
   updatedAt: Date | null
   recruiterId: string | null
+  viewsCount: number | null
 }
 
 export type JobOfferCountAggregateOutputType = {
@@ -71,12 +87,25 @@ export type JobOfferCountAggregateOutputType = {
   applyUrlOrMail: number
   status: number
   expiresAt: number
+  maxApplications: number
+  requestedFiles: number
   createdAt: number
   updatedAt: number
   recruiterId: number
+  viewsCount: number
   _all: number
 }
 
+
+export type JobOfferAvgAggregateInputType = {
+  maxApplications?: true
+  viewsCount?: true
+}
+
+export type JobOfferSumAggregateInputType = {
+  maxApplications?: true
+  viewsCount?: true
+}
 
 export type JobOfferMinAggregateInputType = {
   id?: true
@@ -90,9 +119,11 @@ export type JobOfferMinAggregateInputType = {
   applyUrlOrMail?: true
   status?: true
   expiresAt?: true
+  maxApplications?: true
   createdAt?: true
   updatedAt?: true
   recruiterId?: true
+  viewsCount?: true
 }
 
 export type JobOfferMaxAggregateInputType = {
@@ -107,9 +138,11 @@ export type JobOfferMaxAggregateInputType = {
   applyUrlOrMail?: true
   status?: true
   expiresAt?: true
+  maxApplications?: true
   createdAt?: true
   updatedAt?: true
   recruiterId?: true
+  viewsCount?: true
 }
 
 export type JobOfferCountAggregateInputType = {
@@ -125,9 +158,12 @@ export type JobOfferCountAggregateInputType = {
   applyUrlOrMail?: true
   status?: true
   expiresAt?: true
+  maxApplications?: true
+  requestedFiles?: true
   createdAt?: true
   updatedAt?: true
   recruiterId?: true
+  viewsCount?: true
   _all?: true
 }
 
@@ -169,6 +205,18 @@ export type JobOfferAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inter
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: JobOfferAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: JobOfferSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: JobOfferMinAggregateInputType
@@ -199,6 +247,8 @@ export type JobOfferGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   _count?: JobOfferCountAggregateInputType | true
+  _avg?: JobOfferAvgAggregateInputType
+  _sum?: JobOfferSumAggregateInputType
   _min?: JobOfferMinAggregateInputType
   _max?: JobOfferMaxAggregateInputType
 }
@@ -216,10 +266,15 @@ export type JobOfferGroupByOutputType = {
   applyUrlOrMail: string
   status: string
   expiresAt: Date | null
+  maxApplications: number | null
+  requestedFiles: string[]
   createdAt: Date
   updatedAt: Date
   recruiterId: string
+  viewsCount: number
   _count: JobOfferCountAggregateOutputType | null
+  _avg: JobOfferAvgAggregateOutputType | null
+  _sum: JobOfferSumAggregateOutputType | null
   _min: JobOfferMinAggregateOutputType | null
   _max: JobOfferMaxAggregateOutputType | null
 }
@@ -255,10 +310,14 @@ export type JobOfferWhereInput = {
   applyUrlOrMail?: Prisma.StringFilter<"JobOffer"> | string
   status?: Prisma.StringFilter<"JobOffer"> | string
   expiresAt?: Prisma.DateTimeNullableFilter<"JobOffer"> | Date | string | null
+  maxApplications?: Prisma.IntNullableFilter<"JobOffer"> | number | null
+  requestedFiles?: Prisma.StringNullableListFilter<"JobOffer">
   createdAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   recruiterId?: Prisma.StringFilter<"JobOffer"> | string
+  viewsCount?: Prisma.IntFilter<"JobOffer"> | number
   recruiter?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  applications?: Prisma.JobApplicationListRelationFilter
 }
 
 export type JobOfferOrderByWithRelationInput = {
@@ -274,10 +333,14 @@ export type JobOfferOrderByWithRelationInput = {
   applyUrlOrMail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxApplications?: Prisma.SortOrderInput | Prisma.SortOrder
+  requestedFiles?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   recruiterId?: Prisma.SortOrder
+  viewsCount?: Prisma.SortOrder
   recruiter?: Prisma.UserOrderByWithRelationInput
+  applications?: Prisma.JobApplicationOrderByRelationAggregateInput
   _relevance?: Prisma.JobOfferOrderByRelevanceInput
 }
 
@@ -297,10 +360,14 @@ export type JobOfferWhereUniqueInput = Prisma.AtLeast<{
   applyUrlOrMail?: Prisma.StringFilter<"JobOffer"> | string
   status?: Prisma.StringFilter<"JobOffer"> | string
   expiresAt?: Prisma.DateTimeNullableFilter<"JobOffer"> | Date | string | null
+  maxApplications?: Prisma.IntNullableFilter<"JobOffer"> | number | null
+  requestedFiles?: Prisma.StringNullableListFilter<"JobOffer">
   createdAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   recruiterId?: Prisma.StringFilter<"JobOffer"> | string
+  viewsCount?: Prisma.IntFilter<"JobOffer"> | number
   recruiter?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  applications?: Prisma.JobApplicationListRelationFilter
 }, "id">
 
 export type JobOfferOrderByWithAggregationInput = {
@@ -316,12 +383,17 @@ export type JobOfferOrderByWithAggregationInput = {
   applyUrlOrMail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxApplications?: Prisma.SortOrderInput | Prisma.SortOrder
+  requestedFiles?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   recruiterId?: Prisma.SortOrder
+  viewsCount?: Prisma.SortOrder
   _count?: Prisma.JobOfferCountOrderByAggregateInput
+  _avg?: Prisma.JobOfferAvgOrderByAggregateInput
   _max?: Prisma.JobOfferMaxOrderByAggregateInput
   _min?: Prisma.JobOfferMinOrderByAggregateInput
+  _sum?: Prisma.JobOfferSumOrderByAggregateInput
 }
 
 export type JobOfferScalarWhereWithAggregatesInput = {
@@ -340,9 +412,12 @@ export type JobOfferScalarWhereWithAggregatesInput = {
   applyUrlOrMail?: Prisma.StringWithAggregatesFilter<"JobOffer"> | string
   status?: Prisma.StringWithAggregatesFilter<"JobOffer"> | string
   expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"JobOffer"> | Date | string | null
+  maxApplications?: Prisma.IntNullableWithAggregatesFilter<"JobOffer"> | number | null
+  requestedFiles?: Prisma.StringNullableListFilter<"JobOffer">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"JobOffer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"JobOffer"> | Date | string
   recruiterId?: Prisma.StringWithAggregatesFilter<"JobOffer"> | string
+  viewsCount?: Prisma.IntWithAggregatesFilter<"JobOffer"> | number
 }
 
 export type JobOfferCreateInput = {
@@ -358,9 +433,13 @@ export type JobOfferCreateInput = {
   applyUrlOrMail: string
   status?: string
   expiresAt?: Date | string | null
+  maxApplications?: number | null
+  requestedFiles?: Prisma.JobOfferCreaterequestedFilesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
+  viewsCount?: number
   recruiter: Prisma.UserCreateNestedOneWithoutJobOffersInput
+  applications?: Prisma.JobApplicationCreateNestedManyWithoutJobOfferInput
 }
 
 export type JobOfferUncheckedCreateInput = {
@@ -376,9 +455,13 @@ export type JobOfferUncheckedCreateInput = {
   applyUrlOrMail: string
   status?: string
   expiresAt?: Date | string | null
+  maxApplications?: number | null
+  requestedFiles?: Prisma.JobOfferCreaterequestedFilesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   recruiterId: string
+  viewsCount?: number
+  applications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutJobOfferInput
 }
 
 export type JobOfferUpdateInput = {
@@ -394,9 +477,13 @@ export type JobOfferUpdateInput = {
   applyUrlOrMail?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxApplications?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requestedFiles?: Prisma.JobOfferUpdaterequestedFilesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
   recruiter?: Prisma.UserUpdateOneRequiredWithoutJobOffersNestedInput
+  applications?: Prisma.JobApplicationUpdateManyWithoutJobOfferNestedInput
 }
 
 export type JobOfferUncheckedUpdateInput = {
@@ -412,9 +499,13 @@ export type JobOfferUncheckedUpdateInput = {
   applyUrlOrMail?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxApplications?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requestedFiles?: Prisma.JobOfferUpdaterequestedFilesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recruiterId?: Prisma.StringFieldUpdateOperationsInput | string
+  viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  applications?: Prisma.JobApplicationUncheckedUpdateManyWithoutJobOfferNestedInput
 }
 
 export type JobOfferCreateManyInput = {
@@ -430,9 +521,12 @@ export type JobOfferCreateManyInput = {
   applyUrlOrMail: string
   status?: string
   expiresAt?: Date | string | null
+  maxApplications?: number | null
+  requestedFiles?: Prisma.JobOfferCreaterequestedFilesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   recruiterId: string
+  viewsCount?: number
 }
 
 export type JobOfferUpdateManyMutationInput = {
@@ -448,8 +542,11 @@ export type JobOfferUpdateManyMutationInput = {
   applyUrlOrMail?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxApplications?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requestedFiles?: Prisma.JobOfferUpdaterequestedFilesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type JobOfferUncheckedUpdateManyInput = {
@@ -465,9 +562,12 @@ export type JobOfferUncheckedUpdateManyInput = {
   applyUrlOrMail?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxApplications?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requestedFiles?: Prisma.JobOfferUpdaterequestedFilesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recruiterId?: Prisma.StringFieldUpdateOperationsInput | string
+  viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type JobOfferListRelationFilter = {
@@ -499,9 +599,17 @@ export type JobOfferCountOrderByAggregateInput = {
   applyUrlOrMail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  maxApplications?: Prisma.SortOrder
+  requestedFiles?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   recruiterId?: Prisma.SortOrder
+  viewsCount?: Prisma.SortOrder
+}
+
+export type JobOfferAvgOrderByAggregateInput = {
+  maxApplications?: Prisma.SortOrder
+  viewsCount?: Prisma.SortOrder
 }
 
 export type JobOfferMaxOrderByAggregateInput = {
@@ -516,9 +624,11 @@ export type JobOfferMaxOrderByAggregateInput = {
   applyUrlOrMail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  maxApplications?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   recruiterId?: Prisma.SortOrder
+  viewsCount?: Prisma.SortOrder
 }
 
 export type JobOfferMinOrderByAggregateInput = {
@@ -533,9 +643,21 @@ export type JobOfferMinOrderByAggregateInput = {
   applyUrlOrMail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  maxApplications?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   recruiterId?: Prisma.SortOrder
+  viewsCount?: Prisma.SortOrder
+}
+
+export type JobOfferSumOrderByAggregateInput = {
+  maxApplications?: Prisma.SortOrder
+  viewsCount?: Prisma.SortOrder
+}
+
+export type JobOfferScalarRelationFilter = {
+  is?: Prisma.JobOfferWhereInput
+  isNot?: Prisma.JobOfferWhereInput
 }
 
 export type JobOfferCreateNestedManyWithoutRecruiterInput = {
@@ -584,9 +706,32 @@ export type JobOfferCreaterequirementsInput = {
   set: string[]
 }
 
+export type JobOfferCreaterequestedFilesInput = {
+  set: string[]
+}
+
 export type JobOfferUpdaterequirementsInput = {
   set?: string[]
   push?: string | string[]
+}
+
+export type JobOfferUpdaterequestedFilesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type JobOfferCreateNestedOneWithoutApplicationsInput = {
+  create?: Prisma.XOR<Prisma.JobOfferCreateWithoutApplicationsInput, Prisma.JobOfferUncheckedCreateWithoutApplicationsInput>
+  connectOrCreate?: Prisma.JobOfferCreateOrConnectWithoutApplicationsInput
+  connect?: Prisma.JobOfferWhereUniqueInput
+}
+
+export type JobOfferUpdateOneRequiredWithoutApplicationsNestedInput = {
+  create?: Prisma.XOR<Prisma.JobOfferCreateWithoutApplicationsInput, Prisma.JobOfferUncheckedCreateWithoutApplicationsInput>
+  connectOrCreate?: Prisma.JobOfferCreateOrConnectWithoutApplicationsInput
+  upsert?: Prisma.JobOfferUpsertWithoutApplicationsInput
+  connect?: Prisma.JobOfferWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.JobOfferUpdateToOneWithWhereWithoutApplicationsInput, Prisma.JobOfferUpdateWithoutApplicationsInput>, Prisma.JobOfferUncheckedUpdateWithoutApplicationsInput>
 }
 
 export type JobOfferCreateWithoutRecruiterInput = {
@@ -602,8 +747,12 @@ export type JobOfferCreateWithoutRecruiterInput = {
   applyUrlOrMail: string
   status?: string
   expiresAt?: Date | string | null
+  maxApplications?: number | null
+  requestedFiles?: Prisma.JobOfferCreaterequestedFilesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
+  viewsCount?: number
+  applications?: Prisma.JobApplicationCreateNestedManyWithoutJobOfferInput
 }
 
 export type JobOfferUncheckedCreateWithoutRecruiterInput = {
@@ -619,8 +768,12 @@ export type JobOfferUncheckedCreateWithoutRecruiterInput = {
   applyUrlOrMail: string
   status?: string
   expiresAt?: Date | string | null
+  maxApplications?: number | null
+  requestedFiles?: Prisma.JobOfferCreaterequestedFilesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
+  viewsCount?: number
+  applications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutJobOfferInput
 }
 
 export type JobOfferCreateOrConnectWithoutRecruiterInput = {
@@ -665,9 +818,112 @@ export type JobOfferScalarWhereInput = {
   applyUrlOrMail?: Prisma.StringFilter<"JobOffer"> | string
   status?: Prisma.StringFilter<"JobOffer"> | string
   expiresAt?: Prisma.DateTimeNullableFilter<"JobOffer"> | Date | string | null
+  maxApplications?: Prisma.IntNullableFilter<"JobOffer"> | number | null
+  requestedFiles?: Prisma.StringNullableListFilter<"JobOffer">
   createdAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   recruiterId?: Prisma.StringFilter<"JobOffer"> | string
+  viewsCount?: Prisma.IntFilter<"JobOffer"> | number
+}
+
+export type JobOfferCreateWithoutApplicationsInput = {
+  id?: string
+  title: string
+  company: string
+  location?: string | null
+  type: string
+  description: string
+  requirements?: Prisma.JobOfferCreaterequirementsInput | string[]
+  salary?: string | null
+  applyMethod: string
+  applyUrlOrMail: string
+  status?: string
+  expiresAt?: Date | string | null
+  maxApplications?: number | null
+  requestedFiles?: Prisma.JobOfferCreaterequestedFilesInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  viewsCount?: number
+  recruiter: Prisma.UserCreateNestedOneWithoutJobOffersInput
+}
+
+export type JobOfferUncheckedCreateWithoutApplicationsInput = {
+  id?: string
+  title: string
+  company: string
+  location?: string | null
+  type: string
+  description: string
+  requirements?: Prisma.JobOfferCreaterequirementsInput | string[]
+  salary?: string | null
+  applyMethod: string
+  applyUrlOrMail: string
+  status?: string
+  expiresAt?: Date | string | null
+  maxApplications?: number | null
+  requestedFiles?: Prisma.JobOfferCreaterequestedFilesInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  recruiterId: string
+  viewsCount?: number
+}
+
+export type JobOfferCreateOrConnectWithoutApplicationsInput = {
+  where: Prisma.JobOfferWhereUniqueInput
+  create: Prisma.XOR<Prisma.JobOfferCreateWithoutApplicationsInput, Prisma.JobOfferUncheckedCreateWithoutApplicationsInput>
+}
+
+export type JobOfferUpsertWithoutApplicationsInput = {
+  update: Prisma.XOR<Prisma.JobOfferUpdateWithoutApplicationsInput, Prisma.JobOfferUncheckedUpdateWithoutApplicationsInput>
+  create: Prisma.XOR<Prisma.JobOfferCreateWithoutApplicationsInput, Prisma.JobOfferUncheckedCreateWithoutApplicationsInput>
+  where?: Prisma.JobOfferWhereInput
+}
+
+export type JobOfferUpdateToOneWithWhereWithoutApplicationsInput = {
+  where?: Prisma.JobOfferWhereInput
+  data: Prisma.XOR<Prisma.JobOfferUpdateWithoutApplicationsInput, Prisma.JobOfferUncheckedUpdateWithoutApplicationsInput>
+}
+
+export type JobOfferUpdateWithoutApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  requirements?: Prisma.JobOfferUpdaterequirementsInput | string[]
+  salary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applyMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  applyUrlOrMail?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxApplications?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requestedFiles?: Prisma.JobOfferUpdaterequestedFilesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  recruiter?: Prisma.UserUpdateOneRequiredWithoutJobOffersNestedInput
+}
+
+export type JobOfferUncheckedUpdateWithoutApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  requirements?: Prisma.JobOfferUpdaterequirementsInput | string[]
+  salary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applyMethod?: Prisma.StringFieldUpdateOperationsInput | string
+  applyUrlOrMail?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxApplications?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requestedFiles?: Prisma.JobOfferUpdaterequestedFilesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recruiterId?: Prisma.StringFieldUpdateOperationsInput | string
+  viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type JobOfferCreateManyRecruiterInput = {
@@ -683,8 +939,11 @@ export type JobOfferCreateManyRecruiterInput = {
   applyUrlOrMail: string
   status?: string
   expiresAt?: Date | string | null
+  maxApplications?: number | null
+  requestedFiles?: Prisma.JobOfferCreaterequestedFilesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
+  viewsCount?: number
 }
 
 export type JobOfferUpdateWithoutRecruiterInput = {
@@ -700,8 +959,12 @@ export type JobOfferUpdateWithoutRecruiterInput = {
   applyUrlOrMail?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxApplications?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requestedFiles?: Prisma.JobOfferUpdaterequestedFilesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  applications?: Prisma.JobApplicationUpdateManyWithoutJobOfferNestedInput
 }
 
 export type JobOfferUncheckedUpdateWithoutRecruiterInput = {
@@ -717,8 +980,12 @@ export type JobOfferUncheckedUpdateWithoutRecruiterInput = {
   applyUrlOrMail?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxApplications?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requestedFiles?: Prisma.JobOfferUpdaterequestedFilesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  applications?: Prisma.JobApplicationUncheckedUpdateManyWithoutJobOfferNestedInput
 }
 
 export type JobOfferUncheckedUpdateManyWithoutRecruiterInput = {
@@ -734,10 +1001,42 @@ export type JobOfferUncheckedUpdateManyWithoutRecruiterInput = {
   applyUrlOrMail?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxApplications?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requestedFiles?: Prisma.JobOfferUpdaterequestedFilesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
+
+/**
+ * Count Type JobOfferCountOutputType
+ */
+
+export type JobOfferCountOutputType = {
+  applications: number
+}
+
+export type JobOfferCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  applications?: boolean | JobOfferCountOutputTypeCountApplicationsArgs
+}
+
+/**
+ * JobOfferCountOutputType without action
+ */
+export type JobOfferCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobOfferCountOutputType
+   */
+  select?: Prisma.JobOfferCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * JobOfferCountOutputType without action
+ */
+export type JobOfferCountOutputTypeCountApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JobApplicationWhereInput
+}
 
 
 export type JobOfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -753,10 +1052,15 @@ export type JobOfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   applyUrlOrMail?: boolean
   status?: boolean
   expiresAt?: boolean
+  maxApplications?: boolean
+  requestedFiles?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   recruiterId?: boolean
+  viewsCount?: boolean
   recruiter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  applications?: boolean | Prisma.JobOffer$applicationsArgs<ExtArgs>
+  _count?: boolean | Prisma.JobOfferCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["jobOffer"]>
 
 export type JobOfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -772,9 +1076,12 @@ export type JobOfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   applyUrlOrMail?: boolean
   status?: boolean
   expiresAt?: boolean
+  maxApplications?: boolean
+  requestedFiles?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   recruiterId?: boolean
+  viewsCount?: boolean
   recruiter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["jobOffer"]>
 
@@ -791,9 +1098,12 @@ export type JobOfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   applyUrlOrMail?: boolean
   status?: boolean
   expiresAt?: boolean
+  maxApplications?: boolean
+  requestedFiles?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   recruiterId?: boolean
+  viewsCount?: boolean
   recruiter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["jobOffer"]>
 
@@ -810,14 +1120,19 @@ export type JobOfferSelectScalar = {
   applyUrlOrMail?: boolean
   status?: boolean
   expiresAt?: boolean
+  maxApplications?: boolean
+  requestedFiles?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   recruiterId?: boolean
+  viewsCount?: boolean
 }
 
-export type JobOfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "company" | "location" | "type" | "description" | "requirements" | "salary" | "applyMethod" | "applyUrlOrMail" | "status" | "expiresAt" | "createdAt" | "updatedAt" | "recruiterId", ExtArgs["result"]["jobOffer"]>
+export type JobOfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "company" | "location" | "type" | "description" | "requirements" | "salary" | "applyMethod" | "applyUrlOrMail" | "status" | "expiresAt" | "maxApplications" | "requestedFiles" | "createdAt" | "updatedAt" | "recruiterId" | "viewsCount", ExtArgs["result"]["jobOffer"]>
 export type JobOfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   recruiter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  applications?: boolean | Prisma.JobOffer$applicationsArgs<ExtArgs>
+  _count?: boolean | Prisma.JobOfferCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type JobOfferIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   recruiter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -830,6 +1145,7 @@ export type $JobOfferPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "JobOffer"
   objects: {
     recruiter: Prisma.$UserPayload<ExtArgs>
+    applications: Prisma.$JobApplicationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -844,9 +1160,12 @@ export type $JobOfferPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     applyUrlOrMail: string
     status: string
     expiresAt: Date | null
+    maxApplications: number | null
+    requestedFiles: string[]
     createdAt: Date
     updatedAt: Date
     recruiterId: string
+    viewsCount: number
   }, ExtArgs["result"]["jobOffer"]>
   composites: {}
 }
@@ -1242,6 +1561,7 @@ readonly fields: JobOfferFieldRefs;
 export interface Prisma__JobOfferClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   recruiter<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  applications<T extends Prisma.JobOffer$applicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JobOffer$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1283,9 +1603,12 @@ export interface JobOfferFieldRefs {
   readonly applyUrlOrMail: Prisma.FieldRef<"JobOffer", 'String'>
   readonly status: Prisma.FieldRef<"JobOffer", 'String'>
   readonly expiresAt: Prisma.FieldRef<"JobOffer", 'DateTime'>
+  readonly maxApplications: Prisma.FieldRef<"JobOffer", 'Int'>
+  readonly requestedFiles: Prisma.FieldRef<"JobOffer", 'String[]'>
   readonly createdAt: Prisma.FieldRef<"JobOffer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"JobOffer", 'DateTime'>
   readonly recruiterId: Prisma.FieldRef<"JobOffer", 'String'>
+  readonly viewsCount: Prisma.FieldRef<"JobOffer", 'Int'>
 }
     
 
@@ -1684,6 +2007,30 @@ export type JobOfferDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many JobOffers to delete.
    */
   limit?: number
+}
+
+/**
+ * JobOffer.applications
+ */
+export type JobOffer$applicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobApplication
+   */
+  select?: Prisma.JobApplicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JobApplication
+   */
+  omit?: Prisma.JobApplicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobApplicationInclude<ExtArgs> | null
+  where?: Prisma.JobApplicationWhereInput
+  orderBy?: Prisma.JobApplicationOrderByWithRelationInput | Prisma.JobApplicationOrderByWithRelationInput[]
+  cursor?: Prisma.JobApplicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JobApplicationScalarFieldEnum | Prisma.JobApplicationScalarFieldEnum[]
 }
 
 /**

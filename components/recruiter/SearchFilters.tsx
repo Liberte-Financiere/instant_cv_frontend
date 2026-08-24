@@ -36,11 +36,11 @@ export function SearchFilters({ filters, onFilterChange, onClear }: SearchFilter
           <select
             value={filters.sector}
             onChange={(e) => onFilterChange('sector', e.target.value)}
-            className="h-12 pl-11 pr-8 bg-white/5 border border-white/10 rounded-xl text-base !text-white focus:outline-none focus:border-primary transition-colors appearance-none cursor-pointer hover:border-white/20 w-full sm:w-auto min-w-[200px]"
+            className="h-12 pl-11 pr-8 bg-slate-50 border border-slate-200 rounded-xl text-base text-slate-900 focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all appearance-none cursor-pointer hover:border-slate-300 w-full sm:w-auto min-w-[200px] shadow-sm font-medium"
           >
-            <option value="" className="bg-slate-800 text-white">Tous les secteurs</option>
+            <option value="" className="bg-white text-slate-900">Tous les secteurs</option>
             {SECTORS.map((s) => (
-              <option key={s} value={s} className="bg-slate-800 text-white">{s}</option>
+              <option key={s} value={s} className="bg-white text-slate-900">{s}</option>
             ))}
           </select>
         </div>
@@ -63,11 +63,11 @@ export function SearchFilters({ filters, onFilterChange, onClear }: SearchFilter
                 onFilterChange('maxExp', range.max);
               }
             }}
-            className="h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-base !text-white focus:outline-none focus:border-primary transition-colors appearance-none cursor-pointer hover:border-white/20 w-full sm:w-auto"
+            className="h-12 px-5 bg-slate-50 border border-slate-200 rounded-xl text-base text-slate-900 focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all appearance-none cursor-pointer hover:border-slate-300 w-full sm:w-auto shadow-sm font-medium"
           >
-            <option value="" className="bg-slate-800 text-white">Expérience</option>
+            <option value="" className="bg-white text-slate-900">Expérience</option>
             {EXP_RANGES.map((r) => (
-              <option key={`${r.min}-${r.max}`} value={`${r.min}-${r.max}`} className="bg-slate-800 text-white">
+              <option key={`${r.min}-${r.max}`} value={`${r.min}-${r.max}`} className="bg-white text-slate-900">
                 {r.label}
               </option>
             ))}
@@ -84,7 +84,7 @@ export function SearchFilters({ filters, onFilterChange, onClear }: SearchFilter
             value={filters.city}
             onChange={(e) => onFilterChange('city', e.target.value)}
             placeholder="Ville..."
-            className="h-12 pl-11 pr-4 w-full sm:w-44 bg-white/5 border border-white/10 rounded-xl text-base !text-white placeholder:text-slate-400 focus:outline-none focus:border-primary transition-colors hover:border-white/20"
+            className="h-12 pl-11 pr-4 w-full sm:w-44 bg-slate-50 border border-slate-200 rounded-xl text-base text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all hover:border-slate-300 shadow-sm font-medium"
           />
         </div>
 
@@ -98,7 +98,7 @@ export function SearchFilters({ filters, onFilterChange, onClear }: SearchFilter
             value={filters.skills}
             onChange={(e) => onFilterChange('skills', e.target.value)}
             placeholder="Compétences (React...)"
-            className="h-12 pl-11 pr-4 w-full sm:w-60 bg-white/5 border border-white/10 rounded-xl text-base !text-white placeholder:text-slate-400 focus:outline-none focus:border-primary transition-colors hover:border-white/20"
+            className="h-12 pl-11 pr-4 w-full sm:w-60 bg-slate-50 border border-slate-200 rounded-xl text-base text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all hover:border-slate-300 shadow-sm font-medium"
           />
         </div>
 
@@ -106,7 +106,7 @@ export function SearchFilters({ filters, onFilterChange, onClear }: SearchFilter
         {hasActiveFilters && (
           <button
             onClick={onClear}
-            className="h-12 px-5 flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 text-base font-bold rounded-xl hover:bg-red-500/20 transition-colors w-full sm:w-auto"
+            className="h-12 px-5 flex items-center gap-2 bg-rose-50 border border-rose-200 text-rose-600 text-base font-bold rounded-xl hover:bg-rose-100 transition-colors w-full sm:w-auto shadow-sm"
           >
             <X className="w-4 h-4" />
             Effacer

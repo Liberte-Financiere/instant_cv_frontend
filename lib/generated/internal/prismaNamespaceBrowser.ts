@@ -76,7 +76,8 @@ export const ModelName = {
   SchoolCreditTransaction: 'SchoolCreditTransaction',
   SchoolInvitation: 'SchoolInvitation',
   SchoolMembership: 'SchoolMembership',
-  JobOffer: 'JobOffer'
+  JobOffer: 'JobOffer',
+  JobApplication: 'JobApplication'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -508,12 +509,42 @@ export const JobOfferScalarFieldEnum = {
   applyUrlOrMail: 'applyUrlOrMail',
   status: 'status',
   expiresAt: 'expiresAt',
+  maxApplications: 'maxApplications',
+  requestedFiles: 'requestedFiles',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  recruiterId: 'recruiterId'
+  recruiterId: 'recruiterId',
+  viewsCount: 'viewsCount'
 } as const
 
 export type JobOfferScalarFieldEnum = (typeof JobOfferScalarFieldEnum)[keyof typeof JobOfferScalarFieldEnum]
+
+
+export const JobApplicationScalarFieldEnum = {
+  id: 'id',
+  jobOfferId: 'jobOfferId',
+  userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  cvUrl: 'cvUrl',
+  coverLetter: 'coverLetter',
+  coverLetterUrl: 'coverLetterUrl',
+  portfolioUrl: 'portfolioUrl',
+  diplomaUrl: 'diplomaUrl',
+  availability: 'availability',
+  salaryExpectation: 'salaryExpectation',
+  experienceYears: 'experienceYears',
+  profileSummary: 'profileSummary',
+  status: 'status',
+  isRead: 'isRead',
+  hasConsent: 'hasConsent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobApplicationScalarFieldEnum = (typeof JobApplicationScalarFieldEnum)[keyof typeof JobApplicationScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -875,8 +906,31 @@ export const JobOfferOrderByRelevanceFieldEnum = {
   applyMethod: 'applyMethod',
   applyUrlOrMail: 'applyUrlOrMail',
   status: 'status',
+  requestedFiles: 'requestedFiles',
   recruiterId: 'recruiterId'
 } as const
 
 export type JobOfferOrderByRelevanceFieldEnum = (typeof JobOfferOrderByRelevanceFieldEnum)[keyof typeof JobOfferOrderByRelevanceFieldEnum]
+
+
+export const JobApplicationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  jobOfferId: 'jobOfferId',
+  userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  cvUrl: 'cvUrl',
+  coverLetter: 'coverLetter',
+  coverLetterUrl: 'coverLetterUrl',
+  portfolioUrl: 'portfolioUrl',
+  diplomaUrl: 'diplomaUrl',
+  availability: 'availability',
+  salaryExpectation: 'salaryExpectation',
+  profileSummary: 'profileSummary',
+  status: 'status'
+} as const
+
+export type JobApplicationOrderByRelevanceFieldEnum = (typeof JobApplicationOrderByRelevanceFieldEnum)[keyof typeof JobApplicationOrderByRelevanceFieldEnum]
 
