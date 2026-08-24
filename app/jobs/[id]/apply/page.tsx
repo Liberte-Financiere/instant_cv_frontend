@@ -108,7 +108,13 @@ export default function ApplyPage({ params }: { params: Promise<{ id: string }> 
 
   const handleFileChange = (fileKey: string, e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFiles(prev => ({ ...prev, [fileKey]: e.target.files![0] }));
+      const file = e.target.files[0];
+      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+        alert("Seuls les fichiers PDF sont acceptés pour garantir un rendu parfait.");
+        e.target.value = ''; // Reset the input
+        return;
+      }
+      setFiles(prev => ({ ...prev, [fileKey]: file }));
     }
   };
 
@@ -307,7 +313,7 @@ export default function ApplyPage({ params }: { params: Promise<{ id: string }> 
                         <input 
                           required 
                           type="file" 
-                          accept=".pdf,.doc,.docx"
+                          accept=".pdf,application/pdf"
                           onChange={(e) => handleFileChange(fileKey, e)}
                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
                         />

@@ -18,6 +18,7 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
   const [filter, setFilter] = useState('ALL'); // ALL, NEW, REVIEWING, RETAINED, REJECTED
   
   const [selectedApp, setSelectedApp] = useState<any | null>(null);
+  const [activeDoc, setActiveDoc] = useState<'CV' | 'COVER_LETTER' | 'PORTFOLIO' | 'DIPLOMA'>('CV');
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -84,6 +85,7 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
 
   const handleSelectApp = (app: any) => {
     setSelectedApp(app);
+    setActiveDoc('CV'); // Reset document view to CV
     if (!app.isRead) {
       markAsRead(app.id);
     }
@@ -252,25 +254,74 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
                   </div>
                 )}
 
-                {/* CV Visualizer */}
-                <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden flex flex-col h-[600px]">
-                  <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-                    <h4 className="font-bold text-slate-900 flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-blue-600" /> Curriculum Vitae
-                    </h4>
-                    <a href={selectedApp.cvUrl} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="text-slate-600 border-slate-200 bg-white hover:bg-slate-50">
-                        <Download className="w-4 h-4 mr-2" /> Télécharger
-                      </Button>
-                    </a>
+                {/* Document Viewer */}
+                <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden flex flex-col h-[600px] mt-6">
+                  <div className="border-b border-slate-200 bg-slate-50 flex items-center px-4 pt-2 gap-4 overflow-x-auto scrollbar-hide">
+                    {selectedApp.cvUrl && (
+                      <button 
+                        onClick={() => setActiveDoc('CV')} 
+                        className={`px-4 py-3 text-sm font-bold border-b-2 transition-colors ${activeDoc === 'CV' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
+                      >
+                        CV
+                      </button>
+                    )}
+                    {selectedApp.coverLetterUrl && (
+                      <button 
+                        onClick={() => setActiveDoc('COVER_LETTER')} 
+                        className={`px-4 py-3 text-sm font-bold border-b-2 transition-colors ${activeDoc === 'COVER_LETTER' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
+                      >
+                        Lettre de motiv.
+                      </button>
+                    )}
+                    {selectedApp.portfolioUrl && (
+                      <button 
+                        onClick={() => setActiveDoc('PORTFOLIO')} 
+                        className={`px-4 py-3 text-sm font-bold border-b-2 transition-colors ${activeDoc === 'PORTFOLIO' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
+                      >
+                        Portfolio
+                      </button>
+                    )}
+                    {selectedApp.diplomaUrl && (
+                      <button 
+                        onClick={() => setActiveDoc('DIPLOMA')} 
+                        className={`px-4 py-3 text-sm font-bold border-b-2 transition-colors ${activeDoc === 'DIPLOMA' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
+                      >
+                        Diplôme
+                      </button>
+                    )}
                   </div>
-                  <div className="flex-1 bg-slate-100 relative">
-                    <iframe 
-                      src={selectedApp.cvUrl.endsWith('.pdf') ? `${selectedApp.cvUrl}#toolbar=0` : `https://docs.google.com/gview?url=${encodeURIComponent(selectedApp.cvUrl)}&embedded=true`} 
-                      className="w-full h-full border-none bg-white"
-                      title="CV"
-                    />
-                  </div>
+                  
+                  {/* Action Bar for Active Document */}
+                  {(() => {
+                    let docUrl = '';
+                    let docLabel = '';
+                    if (activeDoc === 'CV' && selectedApp.cvUrl) { docUrl = `/api/documents/${selectedApp.id}/cv`; docLabel = 'Curriculum Vitae'; }
+                    else if (activeDoc === 'COVER_LETTER' && selectedApp.coverLetterUrl) { docUrl = `/api/documents/${selectedApp.id}/cover-letter`; docLabel = 'Lettre de motivation'; }
+                    else if (activeDoc === 'PORTFOLIO' && selectedApp.portfolioUrl) { docUrl = `/api/documents/${selectedApp.id}/portfolio`; docLabel = 'Portfolio'; }
+                    else if (activeDoc === 'DIPLOMA' && selectedApp.diplomaUrl) { docUrl = `/api/documents/${selectedApp.id}/diploma`; docLabel = 'Diplôme'; }
+                    
+                    if (!docUrl) return <div className="flex-1 flex flex-col items-center justify-center text-slate-400 bg-slate-50"><FileText className="w-10 h-10 mb-2 opacity-50" /><p>Document non fourni</p></div>;
+
+                    // For the MVP, we just offer a clean download/open link instead of an iframe
+                    return (
+                      <div className="flex-1 flex flex-col items-center justify-center bg-slate-50 p-8">
+                        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center max-w-sm w-full">
+                          <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-100">
+                            <FileText className="w-8 h-8" />
+                          </div>
+                          <h4 className="text-lg font-bold text-slate-900 mb-2">{docLabel}</h4>
+                          <p className="text-slate-500 text-sm mb-6">
+                            Pour des raisons de sécurité et de confort de lecture, ce document s'ouvre dans un nouvel onglet.
+                          </p>
+                          <a href={docUrl} target="_blank" rel="noopener noreferrer" className="block">
+                            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 shadow-sm rounded-xl transition-all">
+                              <Download className="w-4 h-4 mr-2" /> Ouvrir le document
+                            </Button>
+                          </a>
+                        </div>
+                      </div>
+                    )
+                  })()}
                 </div>
 
               </div>

@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma';
 vi.mock('@/lib/prisma', () => ({
   prisma: {
     jobOffer: {
-      findUnique: vi.fn(),
+      findFirst: vi.fn(),
       update: vi.fn(),
     },
   },
@@ -28,7 +28,7 @@ describe('Job Detail API (/api/jobs/[id])', () => {
         status: 'ACTIVE'
       };
       
-      (prisma.jobOffer.findUnique as any).mockResolvedValue(mockNativeJob);
+      (prisma.jobOffer.findFirst as any).mockResolvedValue(mockNativeJob);
       (prisma.jobOffer.update as any).mockResolvedValue(mockNativeJob); // Mock increment
 
       const req = new Request('http://localhost:3000/api/jobs/cuid-123');
@@ -76,7 +76,7 @@ describe('Job Detail API (/api/jobs/[id])', () => {
   });
 
   describe('POST (Click Tracking)', () => {
-    it('devrait incrémenter les clics pour une offre native', async () => {
+    it('devrait incrémenter les vues (clicks n\'existant pas) pour une offre native', async () => {
       (prisma.jobOffer.update as any).mockResolvedValue({});
 
       const req = new Request('http://localhost:3000/api/jobs/cuid-123', { method: 'POST' });
@@ -88,7 +88,7 @@ describe('Job Detail API (/api/jobs/[id])', () => {
       
       expect(prisma.jobOffer.update).toHaveBeenCalledWith({
         where: { id: 'cuid-123' },
-        data: { clicksCount: { increment: 1 } }
+        data: { viewsCount: { increment: 1 } }
       });
     });
 

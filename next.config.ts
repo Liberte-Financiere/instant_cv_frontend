@@ -36,6 +36,12 @@ const nextConfig: NextConfig = {
         headers: [
           { key: 'Permissions-Policy', value: "camera=(), microphone=(self), geolocation=()" }
         ]
+      },
+      {
+        source: '/api/documents/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' }
+        ]
       }
     ];
   },

@@ -1,32 +1,20 @@
-[2026-08-24] — Feature: Dynamic file requirements for candidate applications
+[2026-08-24] — Refactor: Secure document access MVP & PDF enforcement
 
 What changed:
-- Updated the ApplyPage (`app/jobs/[id]/apply/page.tsx`) to dynamically display file upload fields based on the `job.requestedFiles` array (CV, Cover Letter, Portfolio, Diploma).
-- Implemented parallel file uploading to Cloudinary via `Promise.all` in the application form.
-- Added strict backend validation in `app/api/jobs/[id]/apply/route.ts` to reject applications missing files requested by the recruiter.
-- Fixed a React reconciliation bug on the recruiter job creation wizard that caused ghost clicks (auto-submit) by adding `key` props to the navigation buttons.
-- Redesigned the Recruiter Analytics page (`app/recruiter/analytics/page.tsx`) with a "Clean SaaS" light theme and shimmer animations.
-- Added unit tests for the application API route (`__tests__/api/jobs/apply.test.ts`) to verify dynamic file validation logic.
+- Enforced PDF-only uploads on the candidate application form (`app/jobs/[id]/apply/page.tsx`) using both HTML `accept` attributes and client-side JS validation.
+- Refactored the Document Viewer in the ATS (`app/recruiter/jobs/[id]/applications/page.tsx`). Removed the `iframe` implementation to comply with strict `X-Frame-Options: DENY` Nginx/Next.js security policies.
+- Replaced the iframe with a clean, centered UI card that opens documents in a new tab via the secure proxy route (`/api/documents/...`).
 
 Why:
-- The recruiter needs the ability to define which files are mandatory for a specific job offer (e.g. asking for a Portfolio for a design job). 
-- The application form must adapt to these requirements and ensure the candidate cannot bypass them, both on the frontend and backend.
-- The analytics dashboard required a visual overhaul to match the professional, light-themed aesthetic of the rest of the application.
+- Recruiters prefer PDFs to guarantee formatting consistency. Forcing PDF uploads reduces edge cases (like DOCX rendering issues).
+- The strict security headers set globally on the server (Nginx/Next) block iframe embedding (`X-Frame-Options: DENY`). Opening the secure proxy link in a new tab bypasses this restriction legally while maintaining access control, keeping the MVP simple and robust.
 
 Files affected:
-- prisma/schema.prisma — Added requestedFiles array to JobOffer and specific file URL fields to JobApplication.
-- app/api/recruiter/jobs/route.ts — Added requestedFiles validation when creating a job.
-- app/recruiter/jobs/create/page.tsx — Refactored to a 3-step wizard with file requirement selection and fixed ghost click bug.
-- app/recruiter/jobs/page.tsx — Added real-time search filtering.
-- app/recruiter/analytics/page.tsx — Redesigned the analytics dashboard.
-- app/api/jobs/[id]/apply/route.ts — Added backend validation for required files and fallback values for Prisma.
-- app/jobs/[id]/apply/page.tsx — Refactored to fetch job requirements and dynamically display upload components.
-- __tests__/api/jobs/apply.test.ts — Added unit tests for the backend application logic.
+- [MODIFY] app/jobs/[id]/apply/page.tsx — Added PDF validation.
+- [MODIFY] app/recruiter/jobs/[id]/applications/page.tsx — Replaced iframe with a clean download/open card.
 
 Breaking changes:
 - None
 
 Notes for review:
-- The `npx prisma db push` was executed to update the database schema.
-- The `test-prisma.ts` scratch file was removed as it was causing TS compilation errors.
-- Tests and build (`npm run build`) passed successfully.
+- The proxy still securely fetches files from Cloudinary and pipes them to the client.
