@@ -17,6 +17,12 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('ALL'); // ALL, NEW, REVIEWING, RETAINED, REJECTED
   
+  // Nouveaux filtres avancés
+  const [searchQuery, setSearchQuery] = useState('');
+  const [expFilter, setExpFilter] = useState('ALL');
+  const [dateFilter, setDateFilter] = useState('ALL');
+  const [showFilters, setShowFilters] = useState(false);
+  
   const [selectedApp, setSelectedApp] = useState<any | null>(null);
   const [activeDoc, setActiveDoc] = useState<'CV' | 'COVER_LETTER' | 'PORTFOLIO' | 'DIPLOMA'>('CV');
 
@@ -95,18 +101,68 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
     return <div className="p-8 text-center text-slate-400">Chargement des candidatures...</div>;
   }
 
-  const filteredApps = filter === 'ALL' ? applications : applications.filter(a => a.status === filter);
+  const filteredApps = applications.filter(app => {
+    // 1. Statut
+    if (filter !== 'ALL' && app.status !== filter) return false;
+    
+    // 2. Recherche textuelle
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const matchName = `${app.firstName} ${app.lastName}`.toLowerCase().includes(q);
+      const matchEmail = app.email?.toLowerCase().includes(q);
+      if (!matchName && !matchEmail) return false;
+    }
+    
+    // 3. Expérience
+    if (expFilter !== 'ALL') {
+      const exp = app.experienceYears || 0;
+      if (expFilter === 'JUNIOR' && exp > 2) return false;
+      if (expFilter === 'MED' && (exp < 3 || exp > 5)) return false;
+      if (expFilter === 'SENIOR' && exp <= 5) return false;
+    }
+    
+    // 4. Date de candidature
+    if (dateFilter !== 'ALL' && app.createdAt) {
+      const appDate = new Date(app.createdAt).getTime();
+      const now = new Date().getTime();
+      const diffHours = (now - appDate) / (1000 * 3600);
+      
+      if (dateFilter === 'TODAY' && diffHours > 24) return false;
+      if (dateFilter === 'WEEK' && diffHours > 24 * 7) return false;
+      if (dateFilter === 'MONTH' && diffHours > 24 * 30) return false;
+    }
+    
+    return true;
+  });
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setExpFilter('ALL');
+    setDateFilter('ALL');
+  };
 
   const formatPhoneForWA = (phone: string) => {
     return phone.replace(/\\D/g, ''); // enlever les espaces, +, etc.
   };
 
+  const formatTimeAgo = (dateString: string | Date) => {
+    const diffInSeconds = Math.floor((new Date().getTime() - new Date(dateString).getTime()) / 1000);
+    if (diffInSeconds < 60) return "À l'instant";
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return `Il y a ${diffInMinutes} min`;
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `Il y a ${diffInHours} h`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays === 1) return `Hier`;
+    return `Il y a ${diffInDays} jours`;
+  };
+
   const getStatusBadge = (status: string) => {
     switch(status) {
-      case 'NEW': return <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-[10px] font-bold">Nouveau</span>;
-      case 'REVIEWING': return <span className="bg-amber-500/20 text-amber-400 px-2 py-1 rounded text-[10px] font-bold">En cours</span>;
-      case 'RETAINED': return <span className="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-[10px] font-bold">Retenu</span>;
-      case 'REJECTED': return <span className="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-[10px] font-bold">Rejeté</span>;
+      case 'NEW': return <span className="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 rounded text-[10px] font-bold">Nouveau</span>;
+      case 'REVIEWING': return <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded text-[10px] font-bold">En cours</span>;
+      case 'RETAINED': return <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded text-[10px] font-bold">Retenu</span>;
+      case 'REJECTED': return <span className="bg-rose-50 text-rose-700 border border-rose-200 px-2 py-1 rounded text-[10px] font-bold">Rejeté</span>;
       default: return null;
     }
   };
@@ -121,6 +177,65 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
           </Link>
           <h1 className="text-xl font-bold text-slate-900 mb-4">Candidats ({applications.length})</h1>
           
+          {/* Barre de recherche et Toggle Filtres */}
+          <div className="flex items-center gap-2 mb-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Chercher par nom, email..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              />
+            </div>
+            <button 
+              onClick={() => setShowFilters(!showFilters)}
+              className={`p-2 rounded-lg border transition-colors ${showFilters || expFilter !== 'ALL' || dateFilter !== 'ALL' ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}
+              title="Filtres avancés"
+            >
+              <Filter className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Panneau de filtres avancés */}
+          {showFilters && (
+            <div className="mb-4 p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                <select 
+                  value={expFilter}
+                  onChange={(e) => setExpFilter(e.target.value)}
+                  className="text-xs p-2 rounded border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                >
+                  <option value="ALL">Expérience : Tous</option>
+                  <option value="JUNIOR">Junior (0-2 ans)</option>
+                  <option value="MED">Inter. (3-5 ans)</option>
+                  <option value="SENIOR">Senior (5+ ans)</option>
+                </select>
+                
+                <select 
+                  value={dateFilter}
+                  onChange={(e) => setDateFilter(e.target.value)}
+                  className="text-xs p-2 rounded border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                >
+                  <option value="ALL">Date : Toutes</option>
+                  <option value="TODAY">Aujourd'hui</option>
+                  <option value="WEEK">Cette semaine</option>
+                  <option value="MONTH">Ce mois</option>
+                </select>
+              </div>
+              
+              {(searchQuery || expFilter !== 'ALL' || dateFilter !== 'ALL') && (
+                <button 
+                  onClick={clearFilters}
+                  className="w-full text-xs text-slate-500 hover:text-slate-900 font-medium py-1"
+                >
+                  Réinitialiser les filtres avancés
+                </button>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {['ALL', 'NEW', 'REVIEWING', 'RETAINED', 'REJECTED'].map(f => (
               <button
@@ -136,8 +251,16 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
 
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
           {filteredApps.length === 0 ? (
-            <div className="text-center text-slate-500 mt-10 p-4 font-medium">
-              Aucune candidature trouvée pour ce filtre.
+            <div className="text-center mt-10 p-4">
+              <p className="text-slate-500 font-medium mb-3">Aucune candidature trouvée pour ces critères.</p>
+              {(searchQuery || expFilter !== 'ALL' || dateFilter !== 'ALL' || filter !== 'ALL') && (
+                <button 
+                  onClick={() => { clearFilters(); setFilter('ALL'); }}
+                  className="text-sm font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-lg"
+                >
+                  Effacer tous les filtres
+                </button>
+              )}
             </div>
           ) : (
             filteredApps.map(app => (
@@ -156,7 +279,7 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
                 <p className="text-xs text-slate-500 mb-2 truncate font-medium">{app.email}</p>
                 <div className="flex justify-between items-end">
                   <span className="text-[10px] text-slate-400 font-medium">
-                    Il y a {Math.floor((new Date().getTime() - new Date(app.createdAt).getTime()) / (1000 * 3600 * 24))} jours
+                    {formatTimeAgo(app.createdAt)}
                   </span>
                   {app.experienceYears !== null && (
                     <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
@@ -189,11 +312,11 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
                 <select 
                   value={selectedApp.status}
                   onChange={(e) => updateStatus(selectedApp.id, e.target.value)}
-                  className={`text-sm font-bold rounded-lg px-4 py-2 border-none outline-none focus:ring-2 focus:ring-blue-500/20 appearance-none cursor-pointer pr-8 shadow-sm ${
-                    selectedApp.status === 'NEW' ? 'bg-blue-600 text-white' : 
-                    selectedApp.status === 'REVIEWING' ? 'bg-amber-500 text-white' :
-                    selectedApp.status === 'RETAINED' ? 'bg-emerald-600 text-white' :
-                    'bg-rose-500 text-white'
+                  className={`text-sm font-bold rounded-lg px-4 py-2 border outline-none focus:ring-2 focus:ring-slate-500/20 appearance-none cursor-pointer pr-8 shadow-sm transition-colors ${
+                    selectedApp.status === 'NEW' ? 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100' : 
+                    selectedApp.status === 'REVIEWING' ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100' :
+                    selectedApp.status === 'RETAINED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100' :
+                    'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100'
                   }`}
                 >
                   <option value="NEW">Nouveau</option>

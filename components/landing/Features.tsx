@@ -24,6 +24,7 @@ export function Features() {
           <FeatureCard
             variant="indigo"
             className="md:col-span-2"
+            delay={0.1}
             title="Coach IA & Anti-Rejet ATS"
             icon={Radar}
             description={
@@ -61,6 +62,7 @@ export function Features() {
           {/* Card 2: CV Sur-Mesure (White) */}
           <FeatureCard
              className="md:col-span-1 border-slate-100"
+             delay={0.2}
              title="Ciblage de Poste"
              icon={Zap}
              description="Collez une offre d&apos;emploi, et l&apos;IA réécrit votre CV pour qu&apos;il matche parfaitement les mots-clés attendus."
@@ -76,6 +78,7 @@ export function Features() {
           {/* Card 3: Lettre de Motivation (White) */}
           <FeatureCard
             className="md:col-span-1 border-slate-100"
+            delay={0.3}
             title="Lettre de Motivation"
             icon={FileText}
             description="Ne perdez plus 2h à rédiger. L'IA génère une lettre persuasive et personnalisée."
@@ -89,6 +92,7 @@ export function Features() {
           {/* Card 4: Vitesse / Speed (White) */}
           <FeatureCard
             className="md:col-span-1 border-slate-100"
+            delay={0.4}
             title="Ultra Rapide"
             icon={Zap}
             description="Importez votre ancien CV ou LinkedIn. Le design est prêt en moins de 2 minutes."
@@ -104,6 +108,7 @@ export function Features() {
           {/* Card 5: Export HD (White - NEW) */}
           <FeatureCard
             className="md:col-span-1 border-slate-100"
+            delay={0.5}
             title="Export PDF HD"
             icon={Download}
             description="PDF vectoriel ultra-net, compatible ATS et lisible sur tous les appareils."
@@ -121,6 +126,7 @@ export function Features() {
           {/* Card 6: Offline / PWA */}
           <FeatureCard
             className="md:col-span-1 border-slate-100"
+            delay={0.6}
             title="Accès Hors-ligne"
             icon={WifiOff}
             description={`Installez ${APP_CONFIG.name} sur votre téléphone pour consulter vos CVs, lettres et historiques sans connexion.`}
@@ -138,6 +144,7 @@ export function Features() {
           {/* Card 6b: Simulation d'Entretien IA (md:col-span-2) */}
           <FeatureCard
             className="md:col-span-2 border-slate-100"
+            delay={0.7}
             title="Entretien IA"
             icon={Mic}
             description="Entraînez-vous avec notre recruteur IA interactif pour être prêt le jour J."
@@ -157,7 +164,13 @@ export function Features() {
           <B2BMarketplaceSection />
 
           {/* Card 7: Templates Premium (Full Width) */}
-          <div className="md:col-span-3 bg-white rounded-2xl p-8 shadow-lg border border-slate-100 flex flex-col md:flex-row items-center gap-8 hover:-translate-y-1 transition-transform">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="md:col-span-3 bg-white rounded-2xl p-8 shadow-lg border border-slate-100 flex flex-col md:flex-row items-center gap-8 hover:-translate-y-1 transition-transform"
+          >
             <div className="flex-1">
               <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-50 text-yellow-700 text-xs font-bold uppercase tracking-wider mb-4">
                 <Star className="w-3 h-3 fill-current" /> Premium
@@ -184,7 +197,7 @@ export function Features() {
                </div>
                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent pointer-events-none" />
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </div>

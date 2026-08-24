@@ -1,23 +1,24 @@
-2026-08-24 — Redesign B2B & Marketplace Sections into Interactive Tabs
+2026-08-24 — Add advanced recruiter filters and UI improvements
 
 What changed:
-- Extracted the B2B (Espace École, Espace Recruteurs) and Marketplace (Job Board) promo banners from the `Features` component into a dedicated, interactive `B2BMarketplaceSection` component.
-- Implemented a tabbed UI (Bento style) using `framer-motion` for smooth crossfades between the 3 sections.
-- Unified the color theme to a sleek Slate/Blue for all three tabs (removing the distinct purple/indigo colors).
-- Adjusted the layout of the active content to stack strictly vertically (`flex-col`) ensuring the text takes full width and never gets squished alongside the mockup on smaller desktop screens.
+- Added a full text search bar (by name and email) for applications.
+- Added advanced filtering by Experience (Junior, Med, Senior).
+- Added advanced filtering by Date (Today, This week, This month).
+- Hidden advanced filters behind a toggleable "Filters" button to keep UI clean.
+- Added intelligent empty states with "Clear all filters" actions.
+- Redesigned status badges on the application list to match the modern SaaS look (light background, dark text).
+- Updated time ago format on application cards to show "X min", "X h", "Hier", etc., instead of always truncating to 0 days.
 
 Why:
-- The previous design stacked 3 massive banners vertically, consuming too much vertical space and appearing repetitive.
-- The new tabbed interface offers a premium, modern SaaS feel (similar to Vercel/Stripe) and significantly improves user experience.
-- Unifying the colors maintains a consistent brand identity without jarring color shifts.
-- Layout adjustments ensure optimal typography readability across all screen sizes.
+- Recruiters need robust batch processing tools to quickly find specific candidate profiles.
+- The previous UI was cluttered or basic, with solid dark backgrounds for badges that occasionally rendered poorly on macOS/iOS selects.
+- Truncating time to "0 jours" for applications received less than 24h ago was confusing.
 
 Files affected:
-- components/landing/Features.tsx — Removed old stacked banners and imported the new section.
-- components/landing/B2BMarketplaceSection.tsx — [NEW] Implemented the interactive tabbed section.
+- app/recruiter/jobs/[id]/applications/page.tsx — implemented search, exp filter, date filter, status badge styling, and time formatter logic.
 
 Breaking changes:
 - None
 
 Notes for review:
-- The new component relies on `framer-motion`, which was already installed and used in the project.
+- The filtering is currently entirely client-side. This is fine for moderate loads but may require server-side pagination/filtering if a single job receives tens of thousands of applications.

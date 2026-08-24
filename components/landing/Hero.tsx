@@ -16,7 +16,13 @@ export function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           {/* Left Content */}
-          <div className="flex flex-col gap-6 text-center lg:text-left">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="flex flex-col gap-6 text-center lg:text-left"
+          >
             <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
               Votre succès mérite plus qu&apos;un <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-primary">simple PDF</span>
             </h1>
@@ -57,10 +63,17 @@ export function Hero() {
                 <Smartphone className="w-3 h-3" /> Installable sur mobile
               </span>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Mockup - Stacked CV Models */}
-          <CVStackMockup />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, x: 20 }}
+            whileInView={{ opacity: 1, scale: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
+          >
+            <CVStackMockup />
+          </motion.div>
 
         </div>
       </div>

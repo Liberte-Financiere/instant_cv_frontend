@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface FeatureCardProps {
   title: string;
@@ -10,6 +11,7 @@ interface FeatureCardProps {
   variant?: 'white' | 'indigo';
   className?: string;
   children?: React.ReactNode;
+  delay?: number;
 }
 
 export function FeatureCard({
@@ -18,12 +20,18 @@ export function FeatureCard({
   icon: Icon,
   variant = 'white',
   className,
-  children
+  children,
+  delay = 0
 }: FeatureCardProps) {
   const isDark = variant === 'indigo';
 
   return (
-    <div className={cn(
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay }}
+      className={cn(
       "rounded-2xl p-8 shadow-lg flex flex-col justify-between transition-transform duration-300 hover:-translate-y-1 overflow-hidden relative group min-h-[300px]",
       isDark ? "bg-indigo-900 text-white shadow-xl" : "bg-white border border-slate-100",
       className
@@ -55,6 +63,6 @@ export function FeatureCard({
 
         {children}
       </div>
-    </div>
+    </motion.div>
   );
 }

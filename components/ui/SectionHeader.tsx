@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface SectionHeaderProps {
   title: string;
@@ -16,7 +17,12 @@ export function SectionHeader({
   theme = 'light' 
 }: SectionHeaderProps) {
   return (
-    <div className={cn(
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className={cn(
       "mb-16",
       align === 'center' ? 'text-center' : 'text-left',
       className
@@ -36,6 +42,6 @@ export function SectionHeader({
           {description}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

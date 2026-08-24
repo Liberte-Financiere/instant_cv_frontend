@@ -9,6 +9,9 @@ import { Button } from '@/components/ui/Button';
 import { APP_CONFIG } from '@/lib/config';
 
 const navLinks = [
+  { href: '/jobs', label: 'Offres d\'emploi' },
+  { href: '/recruiter', label: 'Espace Recruteur' },
+  { href: '/dashboard/school-admin', label: 'Espace École' },
   { href: '#features', label: 'Fonctionnalités' },
   { href: '/compare', label: 'Comparer' },
   { href: '/help', label: 'Astuces & Infos' },
@@ -38,19 +41,19 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-4 xl:gap-8">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href}>
                 <Button
                   variant="ghost"
-                  className="text-slate-300 hover:text-white transition-colors font-medium text-sm hover:bg-white/5"
+                  className="text-slate-300 hover:text-white transition-colors font-medium text-sm hover:bg-white/5 whitespace-nowrap"
                 >
                   {link.label}
                 </Button>
               </Link>
             ))}
             <Link href="/auth">
-              <Button className="rounded-full shadow-lg shadow-blue-500/25">
+              <Button className="rounded-full shadow-lg shadow-blue-500/25 whitespace-nowrap">
                 Se connecter
               </Button>
             </Link>

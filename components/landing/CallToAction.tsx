@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { APP_CONFIG } from '@/lib/config';
 
 export function CallToAction() {
@@ -10,7 +11,13 @@ export function CallToAction() {
       {/* Decorative circle */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
       
-      <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 max-w-4xl mx-auto px-4 text-center"
+      >
         <h2 className="text-white text-4xl md:text-5xl font-bold tracking-tight mb-6">Prêt à transformer votre carrière ?</h2>
         <p className="text-slate-400 text-lg mb-10 max-w-2xl mx-auto">Ne laissez pas un mauvais CV vous fermer des portes. Rejoignez {APP_CONFIG.name} aujourd&apos;hui et prenez le contrôle de votre avenir professionnel.</p>
         
@@ -22,7 +29,7 @@ export function CallToAction() {
           </Link>
           <p className="text-slate-400 text-sm mt-4 sm:mt-0 font-medium">🎁 15 crédits offerts à l'inscription <span className="opacity-50 mx-1">•</span> Sans carte bancaire</p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

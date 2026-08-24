@@ -36,9 +36,9 @@ const tabs: Tab[] = [
     subtitle: 'Espace École (B2B)',
     description: "Offrez à vos étudiants un accès Premium illimité. Notre portail Admin vous permet de suivre l'évolution des cohortes en temps réel et de booster massivement leur taux d'insertion.",
     action: { label: "Découvrir l'Espace École", href: '/auth', variant: 'primary' },
-    colorClass: 'text-blue-400 bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20',
-    bgGradient: 'from-blue-950 via-slate-900 to-slate-900 border-blue-500/20',
-    glowColor: 'bg-blue-500/20',
+    colorClass: 'text-blue-600 bg-blue-50 border-blue-200 hover:bg-blue-100',
+    bgGradient: 'from-blue-50 via-white to-white border-slate-200',
+    glowColor: 'bg-blue-200/40',
     mockup: (
       <div className="w-full rounded-2xl bg-slate-900 border border-blue-500/20 p-5 space-y-4 shadow-[0_0_50px_rgba(37,99,235,0.1)] transform rotate-y-[-2deg] hover:rotate-0 transition-transform duration-500">
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -79,9 +79,9 @@ const tabs: Tab[] = [
     subtitle: 'Espace Recruteurs (B2B)',
     description: "Ne perdez plus de temps à chercher. Débloquez instantanément les coordonnées des profils pré-qualifiés qui matchent exactement avec vos besoins techniques.",
     action: { label: "Devenir Recruteur", href: '/recruiter/register', variant: 'secondary' },
-    colorClass: 'text-blue-400 bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20',
-    bgGradient: 'from-blue-950 via-slate-900 to-slate-900 border-blue-500/20',
-    glowColor: 'bg-blue-500/20',
+    colorClass: 'text-blue-600 bg-blue-50 border-blue-200 hover:bg-blue-100',
+    bgGradient: 'from-blue-50 via-white to-white border-slate-200',
+    glowColor: 'bg-blue-200/40',
     mockup: (
       <div className="w-full rounded-2xl bg-white/5 border border-white/10 p-5 space-y-5 backdrop-blur-md transform rotate-y-[5deg] rotate-x-[2deg] hover:rotate-0 transition-transform duration-500 shadow-2xl shadow-black/50">
         <div className="flex items-center justify-between border-b border-white/5 pb-4">
@@ -123,15 +123,15 @@ const tabs: Tab[] = [
   },
   {
     id: 'jobboard',
-    title: 'Job Board',
+    title: 'Espace Emploi',
     icon: <Briefcase className="w-5 h-5" />,
-    subtitle: "Place de Marché de l'Emploi",
+    subtitle: "Place de marché des talents",
     description: "Trouvez votre prochain défi ou recrutez des talents. Parcourez les offres d'emploi (CDI, CDD, Freelance) qui matchent parfaitement avec votre profil généré par l'IA.",
     action: { label: "Rechercher une offre", href: '/jobs', variant: 'primary' },
     secondaryAction: { label: "Publier une offre", href: '/recruiter/jobs/create' },
-    colorClass: 'text-blue-400 bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20',
-    bgGradient: 'from-blue-950 via-slate-900 to-slate-900 border-blue-500/20',
-    glowColor: 'bg-blue-500/20',
+    colorClass: 'text-blue-600 bg-blue-50 border-blue-200 hover:bg-blue-100',
+    bgGradient: 'from-blue-50 via-white to-white border-slate-200',
+    glowColor: 'bg-blue-200/40',
     mockup: (
       <div className="w-full rounded-2xl bg-slate-900 border border-blue-500/20 p-5 space-y-4 shadow-[0_0_50px_rgba(37,99,235,0.1)] transform rotate-y-[-2deg] rotate-x-[2deg] hover:rotate-0 transition-transform duration-500">
         <div className="flex items-center justify-between border-b border-white/5 pb-4">
@@ -166,12 +166,18 @@ export function B2BMarketplaceSection() {
   const activeData = tabs[activeTab];
 
   return (
-    <div className="md:col-span-3 mt-12 bg-[#0B0F19] rounded-3xl p-2 sm:p-6 shadow-2xl border border-white/5">
+    <motion.div 
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7 }}
+      className="md:col-span-3 mt-12 bg-white rounded-3xl p-2 sm:p-6 shadow-xl border border-slate-200"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 min-h-[500px]">
         
         {/* Left Side: Tabs Navigation */}
         <div className="lg:col-span-4 flex flex-col justify-center space-y-4">
-          <h2 className="text-2xl font-bold text-white mb-4 px-4">Nos Solutions Écosystème</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4 px-4">Nos Solutions Écosystème</h2>
           {tabs.map((tab, idx) => (
             <button
               key={tab.id}
@@ -180,12 +186,12 @@ export function B2BMarketplaceSection() {
                 "flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 border text-left",
                 activeTab === idx 
                   ? `${tab.colorClass} scale-105 shadow-lg` 
-                  : "border-transparent text-slate-400 hover:bg-white/5 hover:text-white"
+                  : "border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-900"
               )}
             >
               <div className={cn(
                 "p-3 rounded-xl transition-colors",
-                activeTab === idx ? "bg-white/10" : "bg-white/5"
+                activeTab === idx ? "bg-blue-100/50 text-blue-600" : "bg-slate-100 text-slate-500"
               )}>
                 {tab.icon}
               </div>
@@ -193,7 +199,7 @@ export function B2BMarketplaceSection() {
                 <div className="font-bold text-lg">{tab.title}</div>
                 <div className={cn(
                   "text-sm transition-colors",
-                  activeTab === idx ? "text-white/80" : "text-slate-500"
+                  activeTab === idx ? "text-blue-600/80" : "text-slate-500"
                 )}>
                   {tab.subtitle}
                 </div>
@@ -203,7 +209,7 @@ export function B2BMarketplaceSection() {
         </div>
 
         {/* Right Side: Active Content & Mockup */}
-        <div className="lg:col-span-8 relative rounded-3xl overflow-hidden border border-white/10 bg-slate-900 perspective-1000">
+        <div className="lg:col-span-8 relative rounded-3xl overflow-hidden border border-slate-200 bg-slate-50 perspective-1000">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeData.id}
@@ -225,23 +231,23 @@ export function B2BMarketplaceSection() {
                   {activeData.icon} {activeData.subtitle}
                 </div>
                 
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-tight">
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-950 tracking-tight leading-tight">
                   {activeData.id === 'ecole' && "Le partenaire carrière de vos étudiants"}
                   {activeData.id === 'recruteur' && "Accédez à notre vivier de talents cachés"}
                   {activeData.id === 'jobboard' && "Trouvez votre prochain défi ou recrutez"}
                 </h3>
                 
-                <p className="text-slate-300 text-base md:text-lg leading-relaxed font-light max-w-2xl">
+                <p className="text-slate-600 text-base md:text-lg leading-relaxed max-w-2xl">
                   {activeData.description}
                 </p>
 
                 <div className="flex flex-wrap gap-4 pt-4">
                   <Link href={activeData.action.href}>
                     <Button className={cn(
-                      "h-12 px-8 text-base font-bold rounded-full transition-all",
+                      "h-12 px-8 text-base font-bold rounded-full transition-all shadow-lg",
                       activeData.action.variant === 'primary'
-                        ? "bg-white text-slate-900 hover:bg-slate-200"
-                        : "bg-blue-600 text-white hover:bg-blue-700 shadow-[0_0_20px_rgba(37,99,235,0.3)]"
+                        ? "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/25"
+                        : "bg-blue-800 text-white hover:bg-blue-900 shadow-blue-800/25"
                     )}>
                       {activeData.action.label}
                       <ArrowRight className="w-5 h-5 ml-2" />
@@ -250,7 +256,7 @@ export function B2BMarketplaceSection() {
 
                   {activeData.secondaryAction && (
                     <Link href={activeData.secondaryAction.href}>
-                      <Button variant="outline" className="h-12 px-8 text-base font-semibold rounded-full border-white/20 text-white hover:bg-white/10">
+                      <Button variant="outline" className="h-12 px-8 text-base font-semibold rounded-full border-slate-300 text-slate-700 hover:bg-slate-100">
                         {activeData.secondaryAction.label}
                       </Button>
                     </Link>
@@ -269,6 +275,6 @@ export function B2BMarketplaceSection() {
           </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
