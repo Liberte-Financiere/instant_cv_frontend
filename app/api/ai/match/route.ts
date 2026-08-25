@@ -161,6 +161,11 @@ export async function POST(req: Request) {
       userId: session?.user?.id
     });
 
+    if (session?.user?.id) {
+      const { refundCredits } = await import('@/lib/credits');
+      await refundCredits(session.user.id, 'AI_MATCH', 'Remboursement suite à un échec technique du matching IA');
+    }
+
     if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
       return NextResponse.json({ error: 'Quota IA dépassé. Réessayez dans une minute.' }, { status: 429 });
     }

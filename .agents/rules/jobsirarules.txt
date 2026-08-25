@@ -1,0 +1,1108 @@
+# Guide de Bonnes Pratiques d'Ingénierie
+
+## Jobsira — Code, Performance, PostgreSQL, Prisma et Transactions
+
+## 1. Objectif
+
+Toute modification de code doit être pensée selon quatre critères :
+
+1. **Correctness** — le code doit produire le bon résultat.
+2. **Performance** — le code doit utiliser raisonnablement CPU, RAM, DB et réseau.
+3. **Scalabilité** — le coût d'une opération ne doit pas exploser lorsque le nombre d'utilisateurs ou de données augmente.
+4. **Concurrence et intégrité** — les opérations critiques doivent rester correctes lorsque plusieurs requêtes arrivent simultanément.
+
+Ne jamais considérer qu'un code est "bon" simplement parce qu'il fonctionne avec quelques centaines d'enregistrements.
+
+Toujours se demander :
+
+> Que se passe-t-il avec 10 000, 100 000 ou 1 000 000 d'enregistrements ?
+
+---
+
+# 2. Principe fondamental : déplacer le travail au bon endroit
+
+Chaque traitement doit être exécuté à l'endroit où il est le plus efficace.
+
+### PostgreSQL doit faire :
+
+* `COUNT`
+* `SUM`
+* `AVG`
+* `MIN`
+* `MAX`
+* `GROUP BY`
+* filtrage
+* tri
+* jointures
+* pagination
+* recherche indexée
+
+### Node.js doit faire :
+
+* orchestration
+* logique métier
+* validation
+* transformation légère
+* communication entre services
+
+### Le navigateur doit faire :
+
+* présentation
+* interactions utilisateur
+* calculs UI légers
+
+Ne jamais récupérer des milliers ou millions de lignes depuis PostgreSQL simplement pour effectuer un `reduce()`, `filter()` ou `sort()` que PostgreSQL pourrait effectuer.
+
+### Mauvais
+
+```typescript
+const transactions = await prisma.transaction.findMany(...);
+
+const total = transactions.reduce(
+  (sum, transaction) => sum + transaction.amount,
+  0
+);
+```
+
+### Préférer
+
+```typescript
+const result = await prisma.transaction.aggregate({
+  _sum: {
+    amount: true,
+  },
+});
+```
+
+---
+
+# 3. Règle RAM : ne jamais charger inutilement des collections massives
+
+Éviter les requêtes qui récupèrent :
+
+* toutes les transactions d'un utilisateur ;
+* toutes les invitations d'une école ;
+* toutes les candidatures d'une plateforme ;
+* tous les logs ;
+* toutes les activités historiques.
+
+Un `findMany()` sans pagination doit être considéré comme suspect lorsqu'il porte sur une table potentiellement volumineuse.
+
+Avant d'utiliser `findMany()`, se demander :
+
+> Combien de lignes cette requête peut-elle retourner dans le pire cas ?
+
+Si la réponse peut être "des milliers" ou "des millions", revoir l'approche.
+
+---
+
+# 4. Pagination obligatoire sur les collections volumineuses
+
+Toute API retournant une collection potentiellement importante doit utiliser une pagination.
+
+Exemple :
+
+```text
+GET /students?page=1&limit=50
+```
+
+Limiter la taille maximale :
+
+```text
+limit <= 100
+```
+
+Ne jamais faire confiance directement à une valeur envoyée par le client.
+
+### Exemple
+
+```typescript
+const limit = Math.min(
+  Math.max(Number(searchParams.get("limit")) || 50, 1),
+  100
+);
+```
+
+Pour les très grandes tables ou les systèmes à très forte charge, préférer la **cursor pagination** à l'offset pagination.
+
+---
+
+# 5. Toujours utiliser un ordre déterministe
+
+Une pagination doit avoir un ordre stable.
+
+Exemple :
+
+```typescript
+orderBy: {
+  createdAt: "desc",
+}
+```
+
+Si nécessaire, ajouter un second champ unique :
+
+```typescript
+orderBy: [
+  { createdAt: "desc" },
+  { id: "desc" },
+]
+```
+
+Éviter les paginations sans `ORDER BY` lorsque la cohérence des pages est importante.
+
+---
+
+# 6. Sélectionner uniquement les colonnes nécessaires
+
+Ne jamais récupérer inutilement toutes les colonnes.
+
+### Mauvais
+
+```typescript
+const users = await prisma.user.findMany();
+```
+
+### Préférer
+
+```typescript
+const users = await prisma.user.findMany({
+  select: {
+    id: true,
+    email: true,
+    firstName: true,
+  },
+});
+```
+
+Moins de colonnes signifie :
+
+* moins de lecture DB ;
+* moins de RAM ;
+* moins de sérialisation ;
+* moins de trafic réseau ;
+* réponses API plus petites.
+
+---
+
+# 7. Attention aux relations Prisma
+
+Les relations Prisma peuvent devenir extrêmement coûteuses.
+
+Être particulièrement prudent avec :
+
+```typescript
+include: {
+  transactions: true
+}
+```
+
+ou :
+
+```typescript
+select: {
+  transactions: {
+    select: {
+      amount: true
+    }
+  }
+}
+```
+
+Avant d'inclure une relation, déterminer son cardinality.
+
+Exemple :
+
+```text
+User
+ └── 100 000 transactions
+```
+
+Un simple `include` peut transformer une requête apparemment banale en opération très coûteuse.
+
+Lorsque seul un agrégat est nécessaire, utiliser :
+
+* `aggregate`
+* `groupBy`
+* `count`
+
+au lieu de charger les relations.
+
+---
+
+# 8. Optimiser le réseau
+
+La performance ne concerne pas uniquement la DB.
+
+Une requête peut être rapide côté PostgreSQL mais lente globalement si elle retourne énormément de données.
+
+Toujours considérer :
+
+```text
+PostgreSQL
+    ↓
+Node.js
+    ↓
+HTTP
+    ↓
+Navigateur
+```
+
+Réduire la taille des payloads avec :
+
+* pagination ;
+* `select` ;
+* agrégation ;
+* filtrage ;
+* compression HTTP si appropriée ;
+* endpoints spécialisés.
+
+Éviter de retourner des données que le frontend n'utilise pas.
+
+---
+
+# 9. N+1 Query : interdit
+
+Éviter :
+
+```typescript
+const students = await prisma.user.findMany();
+
+for (const student of students) {
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      userId: student.id,
+    },
+  });
+}
+```
+
+Cela produit :
+
+```text
+1 requête
++
+N requêtes
+```
+
+Pour 5 000 étudiants :
+
+```text
+5 001 requêtes
+```
+
+Préférer :
+
+* `groupBy`
+* `join`
+* requête batchée
+* `in`
+* agrégation SQL
+
+---
+
+# 10. Batch processing
+
+Lorsqu'un traitement doit manipuler beaucoup d'éléments, travailler par lots.
+
+Exemple :
+
+```typescript
+const BATCH_SIZE = 500;
+```
+
+Puis :
+
+```typescript
+for (let i = 0; i < items.length; i += BATCH_SIZE) {
+  const batch = items.slice(i, i + BATCH_SIZE);
+
+  // traitement
+}
+```
+
+Utiliser le batching pour :
+
+* imports CSV ;
+* emails ;
+* traitements massifs ;
+* synchronisations ;
+* migrations ;
+* opérations DB volumineuses.
+
+Éviter les énormes `IN (...)` contenant des dizaines de milliers de valeurs.
+
+---
+
+# 11. Index PostgreSQL
+
+Un index doit être basé sur les requêtes réellement exécutées.
+
+Avant d'ajouter un index :
+
+1. identifier la requête ;
+2. identifier les colonnes utilisées dans `WHERE` ;
+3. identifier les colonnes utilisées pour `JOIN` ;
+4. identifier les colonnes utilisées pour `ORDER BY` ;
+5. vérifier les indexes existants ;
+6. utiliser `EXPLAIN ANALYZE`.
+
+Exemple :
+
+```prisma
+@@index([schoolId, userId])
+```
+
+peut être pertinent pour :
+
+```sql
+WHERE schoolId = ?
+AND userId = ?
+```
+
+Pour :
+
+```sql
+WHERE schoolId = ?
+AND email IN (...)
+```
+
+un index :
+
+```prisma
+@@index([schoolId, email])
+```
+
+peut être pertinent.
+
+Mais ne jamais ajouter des indexes aveuglément.
+
+Les indexes ont aussi un coût :
+
+* espace disque ;
+* écritures plus lentes ;
+* maintenance ;
+* coût lors des `INSERT` / `UPDATE` / `DELETE`.
+
+---
+
+# 12. Index composite : respecter l'ordre
+
+L'ordre des colonnes dans un index composite est important.
+
+Par exemple :
+
+```prisma
+@@index([schoolId, email])
+```
+
+est particulièrement adapté aux recherches commençant par `schoolId`.
+
+Ne pas considérer :
+
+```text
+[schoolId, email]
+```
+
+comme équivalent à :
+
+```text
+[email, schoolId]
+```
+
+Toujours partir des requêtes réelles.
+
+---
+
+# 13. Transactions DB : quand les utiliser
+
+Utiliser une transaction lorsqu'une opération métier nécessite plusieurs modifications qui doivent réussir ou échouer ensemble.
+
+Exemple :
+
+```text
+Créer invitation
++
+Créer audit log
++
+Débiter crédit
+```
+
+Si une étape échoue, l'ensemble doit être annulé.
+
+```typescript
+await prisma.$transaction(async (tx) => {
+  // opération 1
+  // opération 2
+  // opération 3
+});
+```
+
+---
+
+# 14. Ne pas mettre n'importe quoi dans une transaction
+
+Une transaction doit rester courte.
+
+Éviter à l'intérieur :
+
+* appels HTTP externes ;
+* appels OpenAI/Gemini ;
+* envoi d'emails ;
+* appels à Brevo ;
+* attente utilisateur ;
+* traitement lourd ;
+* fichiers volumineux.
+
+### Mauvais
+
+```typescript
+await prisma.$transaction(async (tx) => {
+  await tx.user.update(...);
+
+  await fetch("https://external-service.com");
+
+  await tx.invitation.create(...);
+});
+```
+
+Cela garde une transaction DB ouverte pendant une opération réseau externe.
+
+### Préférer
+
+```text
+DB transaction
+      ↓
+commit
+      ↓
+job async
+      ↓
+appel externe
+```
+
+---
+
+# 15. Transactions et concurrence
+
+Toujours réfléchir au comportement lorsque deux requêtes arrivent simultanément.
+
+Exemple dangereux :
+
+```typescript
+const invitation = await prisma.schoolInvitation.findFirst({
+  where: {
+    schoolId,
+    email,
+  },
+});
+
+if (!invitation) {
+  await prisma.schoolInvitation.create(...);
+}
+```
+
+Deux requêtes peuvent faire :
+
+```text
+Request A → vérifie → rien
+Request B → vérifie → rien
+
+Request A → INSERT
+Request B → INSERT
+```
+
+Solution :
+
+### Protection applicative
+
+*
+
+### contrainte DB
+
+Exemple :
+
+```prisma
+@@unique([schoolId, email])
+```
+
+La base de données doit être la dernière ligne de défense.
+
+---
+
+# 16. La DB est l'autorité finale pour l'intégrité
+
+Ne jamais compter uniquement sur :
+
+```typescript
+if (...)
+```
+
+pour garantir une règle métier critique.
+
+Les règles importantes doivent être renforcées par PostgreSQL lorsque c'est possible :
+
+* `UNIQUE`
+* `NOT NULL`
+* `FOREIGN KEY`
+* `CHECK`
+* contraintes appropriées
+
+L'application peut prévenir l'erreur.
+
+La DB doit empêcher l'incohérence.
+
+---
+
+# 17. Idempotence
+
+Toute opération pouvant être répétée doit être pensée pour être idempotente lorsque c'est pertinent.
+
+Exemple :
+
+```text
+POST /school/invitations/bulk
+```
+
+Si le client envoie deux fois la même requête à cause d'un timeout réseau, le système ne doit pas créer deux fois les mêmes invitations.
+
+Solutions possibles :
+
+* clé d'idempotence ;
+* contrainte unique ;
+* `upsert` ;
+* `createMany + skipDuplicates`.
+
+---
+
+# 18. Ledger financier / crédits : extrêmement important
+
+Pour les crédits Jobsira, privilégier un système de ledger traçable.
+
+Éviter de considérer uniquement :
+
+```text
+totalCredits
+creditsUsed
+```
+
+comme source de vérité.
+
+Préférer :
+
+```text
+CreditTransaction
+-----------------
+id
+userId
+schoolId
+amount
+type
+reference
+createdAt
+```
+
+Exemple :
+
+```text
++100 crédits  → SCHOOL_ALLOCATION
+-5 crédits    → AI_INTERVIEW
+-2 crédits    → CV_ANALYSIS
++20 crédits   → SCHOOL_TOPUP
+```
+
+Le solde peut être calculé à partir du ledger ou maintenu comme cache contrôlé.
+
+Chaque mouvement doit être traçable.
+
+---
+
+# 19. Débit de crédits : opération atomique
+
+Une consommation de crédits ne doit jamais être :
+
+```text
+1. vérifier le solde
+2. attendre
+3. débiter
+```
+
+sans protection contre la concurrence.
+
+Sinon :
+
+```text
+Solde = 10
+
+Request A → voit 10
+Request B → voit 10
+
+A consomme 8
+B consomme 8
+
+Résultat incorrect
+```
+
+Le contrôle et le débit doivent être conçus comme une opération atomique.
+
+Utiliser une transaction et/ou une stratégie adaptée de verrouillage/condition DB.
+
+---
+
+# 20. School credits vs Personal credits
+
+Pour le système B2B/B2C :
+
+```text
+School credits disponibles ?
+        │
+       oui
+        ↓
+utiliser School credits
+        │
+       non
+        ↓
+utiliser Personal credits
+```
+
+Cette décision et le débit correspondant doivent être traités atomiquement.
+
+Ne jamais :
+
+```text
+check school credits
+↓
+appel externe
+↓
+check personal credits
+↓
+débit
+```
+
+avec des fenêtres de concurrence entre les étapes.
+
+---
+
+# 21. Isolation des transactions
+
+Ne pas augmenter le niveau d'isolation par défaut sans raison.
+
+Utiliser le niveau d'isolation nécessaire au problème réel.
+
+Si une opération critique souffre d'un problème de concurrence :
+
+1. identifier précisément la race condition ;
+2. déterminer la ressource concurrente ;
+3. choisir entre :
+
+   * contrainte unique ;
+   * transaction ;
+   * update conditionnel ;
+   * verrouillage ;
+   * isolation appropriée.
+
+Ne pas résoudre toutes les races avec des transactions longues ou des locks excessifs.
+
+---
+
+# 22. Éviter les transactions géantes
+
+Mauvais :
+
+```text
+Transaction
+ ├── 5 000 étudiants
+ ├── 5 000 invitations
+ ├── 5 000 logs
+ ├── appels externes
+ └── traitement IA
+```
+
+Une transaction longue :
+
+* garde des ressources DB ;
+* augmente les risques de contention ;
+* peut augmenter les locks ;
+* augmente le temps de rollback ;
+* réduit la capacité de la base à traiter d'autres requêtes.
+
+Préférer des batches lorsque le traitement massif ne nécessite pas une atomicité globale.
+
+---
+
+# 23. `createMany` pour les insertions massives
+
+Pour les imports :
+
+```typescript
+await prisma.model.createMany({
+  data: batch,
+  skipDuplicates: true,
+});
+```
+
+est généralement préférable à :
+
+```typescript
+for (const item of items) {
+  await prisma.model.create(...);
+}
+```
+
+qui peut générer des centaines ou milliers de requêtes.
+
+---
+
+# 24. Attention au `Promise.all`
+
+Ne jamais faire aveuglément :
+
+```typescript
+await Promise.all(
+  items.map(item => prisma.model.create(...))
+);
+```
+
+sur plusieurs milliers d'éléments.
+
+Cela peut créer une avalanche de requêtes simultanées.
+
+Préférer :
+
+* `createMany`
+* batching
+* concurrence limitée.
+
+---
+
+# 25. Cache
+
+Utiliser un cache uniquement lorsque cela apporte un réel bénéfice.
+
+Cacher les données :
+
+* fréquemment lues ;
+* rarement modifiées ;
+* coûteuses à calculer.
+
+Toujours réfléchir à l'invalidation.
+
+Un cache incohérent peut être pire qu'une requête légèrement plus lente.
+
+Ne jamais utiliser un cache pour contourner une mauvaise requête SQL avant d'avoir corrigé la requête.
+
+---
+
+# 26. Appels externes et architecture asynchrone
+
+Les opérations lentes ou externes doivent être sorties du chemin critique lorsque possible.
+
+Exemple :
+
+```text
+Utilisateur
+    ↓
+API
+    ↓
+DB transaction
+    ↓
+Commit
+    ↓
+Job Queue
+    ↓
+Worker
+    ↓
+Brevo / IA / autre service
+```
+
+Ne pas garder une requête HTTP ouverte inutilement pendant :
+
+* génération IA ;
+* envoi de centaines d'emails ;
+* génération de fichiers lourds ;
+* synchronisation externe.
+
+---
+
+# 27. Logs
+
+Ne jamais logger inutilement de gros objets.
+
+Mauvais :
+
+```typescript
+console.log("students", students);
+```
+
+sur 5 000 étudiants.
+
+Préférer :
+
+```typescript
+console.log({
+  schoolId,
+  count: students.length,
+});
+```
+
+Les logs doivent être :
+
+* utiles ;
+* structurés ;
+* suffisamment légers ;
+* dépourvus de données sensibles.
+
+---
+
+# 28. Validation des entrées
+
+Toute donnée provenant du client doit être validée.
+
+Ne jamais supposer que :
+
+```text
+page
+limit
+email
+schoolId
+userId
+amount
+```
+
+sont valides parce que le frontend les contrôle.
+
+Le backend doit être l'autorité.
+
+---
+
+# 29. Ne jamais faire confiance au `schoolId` envoyé par le client
+
+Pour les endpoints School Admin, le `schoolId` doit provenir du contexte authentifié lorsque possible.
+
+Mauvais :
+
+```typescript
+const schoolId = body.schoolId;
+```
+
+si l'utilisateur peut manipuler cette valeur.
+
+Préférer :
+
+```text
+Session
+ ↓
+Authenticated User
+ ↓
+User.schoolId
+ ↓
+Authorization
+ ↓
+DB query
+```
+
+Un admin d'une école ne doit jamais pouvoir modifier ou consulter les données d'une autre école simplement en changeant un `schoolId`.
+
+---
+
+# 30. Multi-tenancy : toujours filtrer par tenant
+
+Toute requête B2B doit vérifier le tenant concerné.
+
+Exemple :
+
+```typescript
+where: {
+  schoolId,
+  ...
+}
+```
+
+Ne jamais récupérer une ressource uniquement avec :
+
+```typescript
+where: {
+  id,
+}
+```
+
+si cette ressource appartient à une école.
+
+Préférer :
+
+```typescript
+where: {
+  id,
+  schoolId,
+}
+```
+
+Cela fournit une deuxième couche de protection contre les fuites inter-tenant.
+
+---
+
+# 31. Performance : mesurer avant de conclure
+
+Ne jamais écrire :
+
+> "Cette requête est instantanée."
+
+sans benchmark.
+
+Ne jamais garantir :
+
+> "<100 ms"
+
+sans mesure réelle.
+
+Utiliser lorsque pertinent :
+
+```sql
+EXPLAIN ANALYZE
+```
+
+Mesurer :
+
+* temps DB ;
+* temps API ;
+* taille du payload ;
+* consommation mémoire ;
+* nombre de requêtes ;
+* CPU ;
+* temps réseau.
+
+---
+
+# 32. Toujours analyser le pire cas
+
+Pour chaque nouvelle fonctionnalité B2B, considérer au minimum :
+
+```text
+1 utilisateur
+100 utilisateurs
+1 000 utilisateurs
+5 000 étudiants
+10 000 étudiants
+100 000 transactions
+1 000 000 transactions
+```
+
+La question essentielle est :
+
+> Est-ce que le coût augmente linéairement avec les données ?
+
+Une croissance linéaire peut être acceptable pour certains traitements.
+
+Une multiplication involontaire du nombre de requêtes ou des données chargées doit être corrigée.
+
+---
+
+# 33. Checklist obligatoire avant de valider du code
+
+Avant de considérer une modification comme terminée, vérifier :
+
+### Code
+
+* [ ] Les données inutiles ne sont pas récupérées.
+* [ ] Aucun N+1 query.
+* [ ] Aucun `findMany()` massif inutile.
+* [ ] Les relations Prisma sont utilisées avec prudence.
+* [ ] Les entrées utilisateur sont validées.
+* [ ] Les erreurs sont correctement gérées.
+
+### Database
+
+* [ ] Les requêtes sont adaptées au volume attendu.
+* [ ] Les indexes nécessaires existent.
+* [ ] Aucun index inutile n'est ajouté.
+* [ ] Les contraintes DB pertinentes existent.
+* [ ] `EXPLAIN ANALYZE` est utilisé pour les requêtes critiques.
+
+### RAM
+
+* [ ] Aucun énorme tableau n'est chargé inutilement.
+* [ ] Les imports sont batchés.
+* [ ] Les collections sont paginées.
+* [ ] Les gros fichiers sont traités en streaming lorsque nécessaire.
+
+### Réseau
+
+* [ ] Les réponses API ne contiennent pas de données inutiles.
+* [ ] La pagination limite les payloads.
+* [ ] Les appels externes ne sont pas effectués inutilement dans le chemin critique.
+
+### Transactions
+
+* [ ] Les opérations multi-étapes nécessitant l'atomicité utilisent une transaction.
+* [ ] Les transactions restent courtes.
+* [ ] Aucun appel HTTP externe n'est effectué dans une transaction.
+* [ ] Les race conditions sont prises en compte.
+* [ ] Les contraintes DB protègent les invariants importants.
+* [ ] Les opérations critiques sont idempotentes lorsque nécessaire.
+
+### Scalabilité
+
+* [ ] Le comportement avec 5 000+ étudiants a été considéré.
+* [ ] Le comportement avec des centaines de milliers de transactions a été considéré.
+* [ ] Le nombre de requêtes DB est maîtrisé.
+* [ ] La taille mémoire est maîtrisée.
+* [ ] La taille des réponses HTTP est maîtrisée.
+
+---
+
+# 34. Règle finale pour l'IA
+
+Avant chaque modification importante, analyser systématiquement :
+
+```text
+                ┌───────────────┐
+                │ Fonctionnalité│
+                └───────┬───────┘
+                        │
+          ┌─────────────┼─────────────┐
+          ▼             ▼             ▼
+        DB/RAM        Réseau       Concurrence
+          │             │             │
+          ▼             ▼             ▼
+      Scalabilité    Payload       Transactions
+          │             │             │
+          └─────────────┼─────────────┘
+                        ▼
+                 Intégrité métier
+```
+
+Ne jamais optimiser uniquement le code applicatif.
+
+Toujours analyser la chaîne complète :
+
+```text
+Client
+  ↓
+HTTP
+  ↓
+Next.js API
+  ↓
+Node.js
+  ↓
+Prisma
+  ↓
+PostgreSQL
+  ↓
+Indexes / Transactions / Locks
+```
+
+L'objectif n'est pas seulement d'avoir du code qui fonctionne.
+
+L'objectif est d'avoir du code qui reste :
+
+**correct + sécurisé + performant + observable + scalable + résistant à la concurrence.**
+
+Lorsqu'une optimisation est proposée, expliquer systématiquement :
+
+1. quel problème elle résout ;
+2. quelle ressource elle économise ;
+3. son impact sur PostgreSQL ;
+4. son impact sur la RAM Node.js ;
+5. son impact sur le réseau ;
+6. son comportement sous forte charge ;
+7. les éventuels nouveaux risques introduits.
+
+Ne jamais appliquer une optimisation importante sans vérifier qu'elle correspond réellement au schéma DB, aux contraintes métier et aux requêtes existantes.

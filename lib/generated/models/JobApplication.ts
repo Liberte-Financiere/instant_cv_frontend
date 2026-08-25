@@ -51,6 +51,7 @@ export type JobApplicationMinAggregateOutputType = {
   salaryExpectation: string | null
   experienceYears: number | null
   profileSummary: string | null
+  notes: string | null
   status: string | null
   isRead: boolean | null
   hasConsent: boolean | null
@@ -75,6 +76,7 @@ export type JobApplicationMaxAggregateOutputType = {
   salaryExpectation: string | null
   experienceYears: number | null
   profileSummary: string | null
+  notes: string | null
   status: string | null
   isRead: boolean | null
   hasConsent: boolean | null
@@ -99,6 +101,7 @@ export type JobApplicationCountAggregateOutputType = {
   salaryExpectation: number
   experienceYears: number
   profileSummary: number
+  notes: number
   status: number
   isRead: number
   hasConsent: number
@@ -133,6 +136,7 @@ export type JobApplicationMinAggregateInputType = {
   salaryExpectation?: true
   experienceYears?: true
   profileSummary?: true
+  notes?: true
   status?: true
   isRead?: true
   hasConsent?: true
@@ -157,6 +161,7 @@ export type JobApplicationMaxAggregateInputType = {
   salaryExpectation?: true
   experienceYears?: true
   profileSummary?: true
+  notes?: true
   status?: true
   isRead?: true
   hasConsent?: true
@@ -181,6 +186,7 @@ export type JobApplicationCountAggregateInputType = {
   salaryExpectation?: true
   experienceYears?: true
   profileSummary?: true
+  notes?: true
   status?: true
   isRead?: true
   hasConsent?: true
@@ -292,6 +298,7 @@ export type JobApplicationGroupByOutputType = {
   salaryExpectation: string | null
   experienceYears: number | null
   profileSummary: string | null
+  notes: string | null
   status: string
   isRead: boolean
   hasConsent: boolean
@@ -339,6 +346,7 @@ export type JobApplicationWhereInput = {
   salaryExpectation?: Prisma.StringNullableFilter<"JobApplication"> | string | null
   experienceYears?: Prisma.IntNullableFilter<"JobApplication"> | number | null
   profileSummary?: Prisma.StringNullableFilter<"JobApplication"> | string | null
+  notes?: Prisma.StringNullableFilter<"JobApplication"> | string | null
   status?: Prisma.StringFilter<"JobApplication"> | string
   isRead?: Prisma.BoolFilter<"JobApplication"> | boolean
   hasConsent?: Prisma.BoolFilter<"JobApplication"> | boolean
@@ -365,6 +373,7 @@ export type JobApplicationOrderByWithRelationInput = {
   salaryExpectation?: Prisma.SortOrderInput | Prisma.SortOrder
   experienceYears?: Prisma.SortOrderInput | Prisma.SortOrder
   profileSummary?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   isRead?: Prisma.SortOrder
   hasConsent?: Prisma.SortOrder
@@ -395,6 +404,7 @@ export type JobApplicationWhereUniqueInput = Prisma.AtLeast<{
   salaryExpectation?: Prisma.StringNullableFilter<"JobApplication"> | string | null
   experienceYears?: Prisma.IntNullableFilter<"JobApplication"> | number | null
   profileSummary?: Prisma.StringNullableFilter<"JobApplication"> | string | null
+  notes?: Prisma.StringNullableFilter<"JobApplication"> | string | null
   status?: Prisma.StringFilter<"JobApplication"> | string
   isRead?: Prisma.BoolFilter<"JobApplication"> | boolean
   hasConsent?: Prisma.BoolFilter<"JobApplication"> | boolean
@@ -421,6 +431,7 @@ export type JobApplicationOrderByWithAggregationInput = {
   salaryExpectation?: Prisma.SortOrderInput | Prisma.SortOrder
   experienceYears?: Prisma.SortOrderInput | Prisma.SortOrder
   profileSummary?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   isRead?: Prisma.SortOrder
   hasConsent?: Prisma.SortOrder
@@ -453,6 +464,7 @@ export type JobApplicationScalarWhereWithAggregatesInput = {
   salaryExpectation?: Prisma.StringNullableWithAggregatesFilter<"JobApplication"> | string | null
   experienceYears?: Prisma.IntNullableWithAggregatesFilter<"JobApplication"> | number | null
   profileSummary?: Prisma.StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+  notes?: Prisma.StringNullableWithAggregatesFilter<"JobApplication"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"JobApplication"> | string
   isRead?: Prisma.BoolWithAggregatesFilter<"JobApplication"> | boolean
   hasConsent?: Prisma.BoolWithAggregatesFilter<"JobApplication"> | boolean
@@ -475,6 +487,7 @@ export type JobApplicationCreateInput = {
   salaryExpectation?: string | null
   experienceYears?: number | null
   profileSummary?: string | null
+  notes?: string | null
   status?: string
   isRead?: boolean
   hasConsent?: boolean
@@ -501,6 +514,7 @@ export type JobApplicationUncheckedCreateInput = {
   salaryExpectation?: string | null
   experienceYears?: number | null
   profileSummary?: string | null
+  notes?: string | null
   status?: string
   isRead?: boolean
   hasConsent?: boolean
@@ -523,6 +537,7 @@ export type JobApplicationUpdateInput = {
   salaryExpectation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profileSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -549,6 +564,7 @@ export type JobApplicationUncheckedUpdateInput = {
   salaryExpectation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profileSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -573,6 +589,7 @@ export type JobApplicationCreateManyInput = {
   salaryExpectation?: string | null
   experienceYears?: number | null
   profileSummary?: string | null
+  notes?: string | null
   status?: string
   isRead?: boolean
   hasConsent?: boolean
@@ -595,6 +612,7 @@ export type JobApplicationUpdateManyMutationInput = {
   salaryExpectation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profileSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -619,6 +637,7 @@ export type JobApplicationUncheckedUpdateManyInput = {
   salaryExpectation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profileSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -659,6 +678,7 @@ export type JobApplicationCountOrderByAggregateInput = {
   salaryExpectation?: Prisma.SortOrder
   experienceYears?: Prisma.SortOrder
   profileSummary?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isRead?: Prisma.SortOrder
   hasConsent?: Prisma.SortOrder
@@ -687,6 +707,7 @@ export type JobApplicationMaxOrderByAggregateInput = {
   salaryExpectation?: Prisma.SortOrder
   experienceYears?: Prisma.SortOrder
   profileSummary?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isRead?: Prisma.SortOrder
   hasConsent?: Prisma.SortOrder
@@ -711,6 +732,7 @@ export type JobApplicationMinOrderByAggregateInput = {
   salaryExpectation?: Prisma.SortOrder
   experienceYears?: Prisma.SortOrder
   profileSummary?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isRead?: Prisma.SortOrder
   hasConsent?: Prisma.SortOrder
@@ -821,6 +843,7 @@ export type JobApplicationCreateWithoutUserInput = {
   salaryExpectation?: string | null
   experienceYears?: number | null
   profileSummary?: string | null
+  notes?: string | null
   status?: string
   isRead?: boolean
   hasConsent?: boolean
@@ -845,6 +868,7 @@ export type JobApplicationUncheckedCreateWithoutUserInput = {
   salaryExpectation?: string | null
   experienceYears?: number | null
   profileSummary?: string | null
+  notes?: string | null
   status?: string
   isRead?: boolean
   hasConsent?: boolean
@@ -898,6 +922,7 @@ export type JobApplicationScalarWhereInput = {
   salaryExpectation?: Prisma.StringNullableFilter<"JobApplication"> | string | null
   experienceYears?: Prisma.IntNullableFilter<"JobApplication"> | number | null
   profileSummary?: Prisma.StringNullableFilter<"JobApplication"> | string | null
+  notes?: Prisma.StringNullableFilter<"JobApplication"> | string | null
   status?: Prisma.StringFilter<"JobApplication"> | string
   isRead?: Prisma.BoolFilter<"JobApplication"> | boolean
   hasConsent?: Prisma.BoolFilter<"JobApplication"> | boolean
@@ -920,6 +945,7 @@ export type JobApplicationCreateWithoutJobOfferInput = {
   salaryExpectation?: string | null
   experienceYears?: number | null
   profileSummary?: string | null
+  notes?: string | null
   status?: string
   isRead?: boolean
   hasConsent?: boolean
@@ -944,6 +970,7 @@ export type JobApplicationUncheckedCreateWithoutJobOfferInput = {
   salaryExpectation?: string | null
   experienceYears?: number | null
   profileSummary?: string | null
+  notes?: string | null
   status?: string
   isRead?: boolean
   hasConsent?: boolean
@@ -993,6 +1020,7 @@ export type JobApplicationCreateManyUserInput = {
   salaryExpectation?: string | null
   experienceYears?: number | null
   profileSummary?: string | null
+  notes?: string | null
   status?: string
   isRead?: boolean
   hasConsent?: boolean
@@ -1015,6 +1043,7 @@ export type JobApplicationUpdateWithoutUserInput = {
   salaryExpectation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profileSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1039,6 +1068,7 @@ export type JobApplicationUncheckedUpdateWithoutUserInput = {
   salaryExpectation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profileSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1062,6 +1092,7 @@ export type JobApplicationUncheckedUpdateManyWithoutUserInput = {
   salaryExpectation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profileSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1085,6 +1116,7 @@ export type JobApplicationCreateManyJobOfferInput = {
   salaryExpectation?: string | null
   experienceYears?: number | null
   profileSummary?: string | null
+  notes?: string | null
   status?: string
   isRead?: boolean
   hasConsent?: boolean
@@ -1107,6 +1139,7 @@ export type JobApplicationUpdateWithoutJobOfferInput = {
   salaryExpectation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profileSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1131,6 +1164,7 @@ export type JobApplicationUncheckedUpdateWithoutJobOfferInput = {
   salaryExpectation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profileSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1154,6 +1188,7 @@ export type JobApplicationUncheckedUpdateManyWithoutJobOfferInput = {
   salaryExpectation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profileSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1180,6 +1215,7 @@ export type JobApplicationSelect<ExtArgs extends runtime.Types.Extensions.Intern
   salaryExpectation?: boolean
   experienceYears?: boolean
   profileSummary?: boolean
+  notes?: boolean
   status?: boolean
   isRead?: boolean
   hasConsent?: boolean
@@ -1206,6 +1242,7 @@ export type JobApplicationSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   salaryExpectation?: boolean
   experienceYears?: boolean
   profileSummary?: boolean
+  notes?: boolean
   status?: boolean
   isRead?: boolean
   hasConsent?: boolean
@@ -1232,6 +1269,7 @@ export type JobApplicationSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   salaryExpectation?: boolean
   experienceYears?: boolean
   profileSummary?: boolean
+  notes?: boolean
   status?: boolean
   isRead?: boolean
   hasConsent?: boolean
@@ -1258,6 +1296,7 @@ export type JobApplicationSelectScalar = {
   salaryExpectation?: boolean
   experienceYears?: boolean
   profileSummary?: boolean
+  notes?: boolean
   status?: boolean
   isRead?: boolean
   hasConsent?: boolean
@@ -1265,7 +1304,7 @@ export type JobApplicationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type JobApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "jobOfferId" | "userId" | "firstName" | "lastName" | "email" | "phone" | "cvUrl" | "coverLetter" | "coverLetterUrl" | "portfolioUrl" | "diplomaUrl" | "availability" | "salaryExpectation" | "experienceYears" | "profileSummary" | "status" | "isRead" | "hasConsent" | "createdAt" | "updatedAt", ExtArgs["result"]["jobApplication"]>
+export type JobApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "jobOfferId" | "userId" | "firstName" | "lastName" | "email" | "phone" | "cvUrl" | "coverLetter" | "coverLetterUrl" | "portfolioUrl" | "diplomaUrl" | "availability" | "salaryExpectation" | "experienceYears" | "profileSummary" | "notes" | "status" | "isRead" | "hasConsent" | "createdAt" | "updatedAt", ExtArgs["result"]["jobApplication"]>
 export type JobApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   jobOffer?: boolean | Prisma.JobOfferDefaultArgs<ExtArgs>
   user?: boolean | Prisma.JobApplication$userArgs<ExtArgs>
@@ -1302,6 +1341,7 @@ export type $JobApplicationPayload<ExtArgs extends runtime.Types.Extensions.Inte
     salaryExpectation: string | null
     experienceYears: number | null
     profileSummary: string | null
+    notes: string | null
     status: string
     isRead: boolean
     hasConsent: boolean
@@ -1748,6 +1788,7 @@ export interface JobApplicationFieldRefs {
   readonly salaryExpectation: Prisma.FieldRef<"JobApplication", 'String'>
   readonly experienceYears: Prisma.FieldRef<"JobApplication", 'Int'>
   readonly profileSummary: Prisma.FieldRef<"JobApplication", 'String'>
+  readonly notes: Prisma.FieldRef<"JobApplication", 'String'>
   readonly status: Prisma.FieldRef<"JobApplication", 'String'>
   readonly isRead: Prisma.FieldRef<"JobApplication", 'Boolean'>
   readonly hasConsent: Prisma.FieldRef<"JobApplication", 'Boolean'>

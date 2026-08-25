@@ -157,7 +157,7 @@ microservices/bg_removal/
 * **Pré-chargement U2Net :** Initialise le modèle de segmentation d'image dès le démarrage (`new_session("u2net")`).
 * **Protection Decompression Bomb :** Limite Pillow à 25 millions de pixels maximum.
 * **Sécurité Taille :** Rejette immédiatement les images supérieures à 10 Mo.
-* **Limitation de Concurrence :** Utilise un `asyncio.Semaphore(4)` pour éviter d'épuiser les ressources CPU du serveur lors de requêtes simultanées.
+* **Limitation de Concurrence :** Utilise un `asyncio.Semaphore(4)` et 2 workers Uvicorn pour préserver la RAM du serveur VPS tout en assurant le parallélisme.
 * **Endpoint `POST /remove-bg` :** Traite l'image de manière asynchrone et renvoie le flux binaire PNG transparent.
 
 ---

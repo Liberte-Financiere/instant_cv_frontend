@@ -111,9 +111,13 @@ export async function GET(req: Request) {
         const vectorString = `[${vector.join(',')}]`;
 
         // Récupérer les 100 profils les plus sémantiquement proches (distance cosine < 0.55)
-        const results = await prisma.$queryRawUnsafe<Array<{id: string, distance: number}>>(
-          `SELECT "id", ("embedding" <=> '${vectorString}'::vector) as distance FROM "CandidateProfile" WHERE "isActive" = true ORDER BY distance ASC LIMIT 100`
-        );
+        const results = await prisma.$queryRaw<Array<{id: string, distance: number}>>`
+          SELECT "id", ("embedding" <=> ${vectorString}::vector) as distance 
+          FROM "CandidateProfile" 
+          WHERE "isActive" = true 
+          ORDER BY distance ASC 
+          LIMIT 100
+        `;
         
         closestIds = results.filter(r => r.distance < 0.45).map(r => r.id);
       } catch (err) {

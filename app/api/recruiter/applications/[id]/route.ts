@@ -6,6 +6,7 @@ import { z } from 'zod';
 const updateApplicationSchema = z.object({
   status: z.enum(['NEW', 'REVIEWING', 'RETAINED', 'REJECTED']).optional(),
   isRead: z.boolean().optional(),
+  notes: z.string().optional(),
 });
 
 export async function PATCH(

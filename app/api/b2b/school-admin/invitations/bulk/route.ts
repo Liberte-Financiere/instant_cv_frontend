@@ -60,14 +60,35 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Rate limit exceeded. Try again later.' }, { status: 429 });
     }
 
-    // Fetch existing invitations to prevent duplicates
+    // 1. Extraire et nettoyer les emails du CSV
+    const incomingEmails = students
+      .map((s: any) => (s.email || '').trim().toLowerCase())
+      .filter((e: string) => e && e.includes('@'));
+
+    // 2. Ne chercher que ces emails dans la base (Évite de charger 10 000 anciens emails en RAM)
+    // On ne bloque l'import QUE si l'invitation est PENDING, ou si elle est ACCEPTED et que l'élève est toujours dans l'école.
     const existingInvitations = await prisma.schoolInvitation.findMany({
       where: {
         schoolId: user.schoolId,
+        email: { in: incomingEmails },
+        status: { in: ['PENDING', 'ACCEPTED'] }
       },
-      select: { email: true }
+      include: {
+        acceptedByUser: { select: { schoolId: true } }
+      }
     });
-    const existingEmails = new Set(existingInvitations.map(inv => inv.email?.toLowerCase()));
+    
+    const activeEmails = new Set(
+      existingInvitations
+        .filter(inv => {
+          if (inv.status === 'PENDING') return true;
+          // Si ACCEPTED, on bloque uniquement si l'utilisateur est toujours rattaché à l'école.
+          // S'il a été expulsé (schoolId !== user.schoolId), on permet la ré-invitation.
+          if (inv.status === 'ACCEPTED' && inv.acceptedByUser?.schoolId === user.schoolId) return true;
+          return false;
+        })
+        .map(inv => inv.email?.toLowerCase())
+    );
 
     const invitationsToCreate = [];
     const csvRows = ['email,nom,prenom,code'];
@@ -77,7 +98,7 @@ export async function POST(req: Request) {
     let ignoredCount = 0;
 
     for (const student of students) {
-        const email = (student.email || '').trim();
+        const email = (student.email || '').trim().toLowerCase();
         const nom = (student.nom || '').trim();
         const prenom = (student.prenom || '').trim();
 
@@ -86,9 +107,9 @@ export async function POST(req: Request) {
              continue; 
         }
 
-        if (existingEmails.has(email.toLowerCase())) {
+        if (activeEmails.has(email)) {
              ignoredCount++;
-             continue; // Already invited
+             continue; // Déjà invité ou actuellement dans l'école
         }
 
         const rawCode = generateRandomCode();
@@ -108,15 +129,14 @@ export async function POST(req: Request) {
 
         // Add to return CSV (plaintext code!)
         csvRows.push(`"${email}","${nom}","${prenom}","${rawCode}"`);
-        existingEmails.add(email.toLowerCase()); // prevent duplicates in the same file
+        activeEmails.add(email); // prevent duplicates in the same file
         createdCount++;
     }
 
     if (invitationsToCreate.length > 0) {
-        // Enregistrer en DB
+        // Enregistrer en DB (sans skipDuplicates puisque l'on autorise l'historique multiple)
         await prisma.schoolInvitation.createMany({
-            data: invitationsToCreate as any,
-            skipDuplicates: true
+            data: invitationsToCreate as any
         });
     }
 

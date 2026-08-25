@@ -8,6 +8,7 @@ import { logAIUsage } from '@/lib/ai/logger';
 
 export async function POST(req: Request) {
   let session: any;
+  let creditAction: any = 'AI_REWRITE'; // Default fallback
   try {
     session = await auth();
     if (!session?.user?.id) return new NextResponse("Unauthorized", { status: 401 });
@@ -22,7 +23,6 @@ export async function POST(req: Request) {
 
     // Determine cost and label based on action
     const { checkAndConsumeCredits } = await import('@/lib/credits');
-    let creditAction: any = 'AI_REWRITE';
     let label = 'Reformulation de texte (IA)';
     
     if (action === 'correct') {
@@ -91,6 +91,11 @@ export async function POST(req: Request) {
       errorMessage: error?.message || 'Erreur inconnue',
       userId: session?.user?.id
     });
+
+    if (session?.user?.id) {
+      const { refundCredits } = await import('@/lib/credits');
+      await refundCredits(session.user.id, creditAction, 'Remboursement suite à un échec technique de la reformulation');
+    }
 
     return NextResponse.json({ error: error.message || 'Erreur lors du traitement IA.' }, { status: 500 });
   }

@@ -16,35 +16,26 @@ export async function GET(request: Request) {
 
     const userId = session.user.id;
 
-    // 1. Offres actives
-    const activeJobs = await prisma.jobOffer.count({
-      where: {
-        recruiterId: userId,
-        status: 'ACTIVE',
-      },
-    });
-
-    // 2. Total des candidatures
-    const totalApplications = await prisma.jobApplication.count({
-      where: {
-        jobOffer: {
-          recruiterId: userId,
-        },
-      },
-    });
-
-    // 3. Profils débloqués
-    const unlockedProfiles = await prisma.profileUnlock.count({
-      where: {
-        unlockerUserId: userId,
-      },
-    });
-
-    // 4. Crédits restants
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { recruiterCredits: true },
-    });
+    // Execute all queries in parallel to drastically reduce network latency
+    const [activeJobs, totalApplications, unlockedProfiles, user] = await Promise.all([
+      // 1. Offres actives
+      prisma.jobOffer.count({
+        where: { recruiterId: userId, status: 'ACTIVE' },
+      }),
+      // 2. Total des candidatures
+      prisma.jobApplication.count({
+        where: { jobOffer: { recruiterId: userId } },
+      }),
+      // 3. Profils débloqués
+      prisma.profileUnlock.count({
+        where: { unlockerUserId: userId },
+      }),
+      // 4. Crédits restants
+      prisma.user.findUnique({
+        where: { id: userId },
+        select: { recruiterCredits: true },
+      })
+    ]);
 
     return NextResponse.json({
       activeJobs,

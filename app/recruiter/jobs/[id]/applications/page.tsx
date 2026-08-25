@@ -24,7 +24,9 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
   const [showFilters, setShowFilters] = useState(false);
   
   const [selectedApp, setSelectedApp] = useState<any | null>(null);
-  const [activeDoc, setActiveDoc] = useState<'CV' | 'COVER_LETTER' | 'PORTFOLIO' | 'DIPLOMA'>('CV');
+  const [activeDoc, setActiveDoc] = useState<'CV' | 'COVER_LETTER' | 'PORTFOLIO' | 'DIPLOMA' | 'NOTES'>('CV');
+  
+  const [noteSavedStatus, setNoteSavedStatus] = useState<'idle'|'saving'|'saved'>('idle');
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -64,11 +66,28 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
       });
       // Update local state
       setApplications(prev => prev.map(a => a.id === appId ? { ...a, isRead: true } : a));
-      if (selectedApp?.id === appId) {
-        setSelectedApp({ ...selectedApp, isRead: true });
-      }
+      setSelectedApp((prev: any) => prev?.id === appId ? { ...prev, isRead: true } : prev);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const updateNotes = async (appId: string, notes: string) => {
+    setNoteSavedStatus('saving');
+    try {
+      await fetch(`/api/recruiter/applications/${appId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes }),
+      });
+      // Update local state
+      setApplications(prev => prev.map(a => a.id === appId ? { ...a, notes } : a));
+      setSelectedApp((prev: any) => prev?.id === appId ? { ...prev, notes } : prev);
+      setNoteSavedStatus('saved');
+      setTimeout(() => setNoteSavedStatus('idle'), 3000);
+    } catch (error) {
+      console.error(error);
+      setNoteSavedStatus('idle');
     }
   };
 
@@ -412,10 +431,42 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
                         Diplôme
                       </button>
                     )}
+                    <button 
+                      onClick={() => setActiveDoc('NOTES')} 
+                      className={`px-4 py-3 text-sm font-bold border-b-2 transition-colors ${activeDoc === 'NOTES' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
+                    >
+                      Notes
+                    </button>
                   </div>
                   
                   {/* Action Bar for Active Document */}
                   {(() => {
+                    if (activeDoc === 'NOTES') {
+                      return (
+                        <div className="flex-1 flex flex-col bg-white p-6">
+                          <div className="flex justify-between items-center mb-4">
+                            <h4 className="text-lg font-bold text-slate-900">Notes Internes</h4>
+                            <span className={`text-xs font-bold transition-opacity duration-300 ${noteSavedStatus === 'saved' ? 'text-emerald-600 opacity-100' : noteSavedStatus === 'saving' ? 'text-slate-400 opacity-100' : 'opacity-0'}`}>
+                              {noteSavedStatus === 'saved' ? '✓ Enregistré' : 'Enregistrement...'}
+                            </span>
+                          </div>
+                          <textarea 
+                            className="flex-1 w-full p-4 border border-slate-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50 text-slate-700 placeholder-slate-400"
+                            placeholder="Écrivez vos notes privées ici (forces, faiblesses, points d'attention). Elles seront sauvegardées automatiquement..."
+                            defaultValue={selectedApp.notes || ''}
+                            onBlur={(e) => {
+                              if (e.target.value !== (selectedApp.notes || '')) {
+                                updateNotes(selectedApp.id, e.target.value);
+                              }
+                            }}
+                          ></textarea>
+                          <p className="text-[10px] text-slate-400 mt-3 flex items-center gap-1">
+                            Ces notes sont privées et ne seront jamais visibles par le candidat. Sauvegarde automatique.
+                          </p>
+                        </div>
+                      );
+                    }
+
                     let docUrl = '';
                     let docLabel = '';
                     if (activeDoc === 'CV' && selectedApp.cvUrl) { docUrl = `/api/documents/${selectedApp.id}/cv`; docLabel = 'Curriculum Vitae'; }

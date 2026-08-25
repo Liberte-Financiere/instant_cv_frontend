@@ -43,26 +43,41 @@ export async function GET() {
       return NextResponse.json({ error: 'Accès réservé aux recruteurs' }, { status: 403 });
     }
 
+    // Fetch jobs and ONLY the total applications count (no arrays of unread applications)
     const jobs = await prisma.jobOffer.findMany({
       where: { recruiterId: session.user.id },
       orderBy: { createdAt: 'desc' },
       include: {
         _count: {
           select: { applications: true }
-        },
-        applications: {
-          where: { isRead: false },
-          select: { id: true }
         }
       }
     });
 
+    if (jobs.length === 0) {
+      return NextResponse.json([]);
+    }
+
+    // Fetch unread applications count grouped by jobOfferId in a single efficient query
+    const jobIds = jobs.map(j => j.id);
+    const unreadCounts = await prisma.jobApplication.groupBy({
+      by: ['jobOfferId'],
+      where: {
+        jobOfferId: { in: jobIds },
+        isRead: false
+      },
+      _count: { _all: true }
+    });
+
+    // Create a fast lookup map: { "job_123": 5 }
+    const unreadMap = new Map(unreadCounts.map(u => [u.jobOfferId, u._count._all]));
+
     const jobsWithCounts = jobs.map(job => {
-      const { applications, _count, ...rest } = job;
+      const { _count, ...rest } = job;
       return {
         ...rest,
         totalApplications: _count.applications,
-        unreadApplications: applications.length,
+        unreadApplications: unreadMap.get(job.id) || 0,
       };
     });
 

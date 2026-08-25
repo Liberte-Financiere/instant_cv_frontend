@@ -99,6 +99,11 @@ export async function POST(req: Request) {
       userId: session?.user?.id
     });
     
+    if (session?.user?.id) {
+      const { refundCredits } = await import('@/lib/credits');
+      await refundCredits(session.user.id, 'AI_GENERATE_LETTER', 'Remboursement suite à un échec technique de génération de lettre');
+    }
+
     if (error.status === 429 || error.message?.includes('429') || error.message?.includes('usage limit')) {
         return NextResponse.json({ error: 'Quota API dépassé (429). Réessayez plus tard.' }, { status: 429 });
     }

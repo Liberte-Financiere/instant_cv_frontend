@@ -14,6 +14,7 @@ vi.mock('ai', () => ({
 // Mock credits check
 vi.mock('@/lib/credits', () => ({
   checkAndConsumeCredits: vi.fn().mockResolvedValue(true),
+  refundCredits: vi.fn().mockResolvedValue(true),
 }));
 
 // Mock Next.js NextResponse

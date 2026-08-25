@@ -44,7 +44,7 @@ export default function PrivacyPage() {
             Politique de Confidentialité
           </h1>
           <p className="text-lg md:text-xl text-slate-500">
-            Dernière mise à jour : 12 Juillet 2026
+            Dernière mise à jour : 25 Août 2026
           </p>
         </div>
 
@@ -81,11 +81,19 @@ export default function PrivacyPage() {
                 <span className="p-2 rounded-xl border bg-primary/5 border-primary/10 text-primary">
                   <Info className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0 text-slate-955">1. Introduction</h2>
+                <h2 className="!my-0 text-slate-950">1. Introduction & Bases Légales</h2>
               </div>
               <p>
-                Chez {APP_CONFIG.name}, nous construisons l&apos;avenir du recrutement en mettant la confidentialité au centre de notre architecture. Cette politique explique en toute transparence comment nous collectons, utilisons, protégeons et partageons vos informations personnelles lorsque vous utilisez notre plateforme.
+                Chez {APP_CONFIG.name}, nous construisons une plateforme de recrutement et de valorisation professionnelle moderne en plaçant la protection de votre vie privée et la conformité au Règlement Général sur la Protection des Données (RGPD / GDPR) au cœur de nos priorités.
               </p>
+              <p>
+                Nous traitons vos données personnelles uniquement sur les bases légales reconnues :
+              </p>
+              <ul>
+                <li><strong>Exécution du contrat (Art. 6.1.b RGPD) :</strong> Fourniture des outils de création de CV, rédaction de lettres de motivation, optimisation IA et gestion des comptes.</li>
+                <li><strong>Consentement explicite (Art. 6.1.a RGPD) :</strong> Publication éventuelle de profil candidat dans la CVthèque recruteurs ou traitement de photos de profil.</li>
+                <li><strong>Intérêt légitime & Sécurité (Art. 6.1.f RGPD) :</strong> Prévention des fraudes, sécurisation des serveurs et limitation des abus de requêtes (rate limiting).</li>
+              </ul>
             </section>
 
             <hr className="my-12 border-slate-100" />
@@ -95,16 +103,17 @@ export default function PrivacyPage() {
                 <span className="p-2 rounded-xl border bg-indigo-50 border-indigo-100 text-indigo-600">
                   <Database className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0 text-slate-955">2. Données collectées</h2>
+                <h2 className="!my-0 text-slate-950">2. Données collectées</h2>
               </div>
               <p>
-                Afin de vous fournir nos services d&apos;aide à la candidature propulsés par l&apos;Intelligence Artificielle, nous traitons un ensemble précis de données :
+                Dans le cadre de l&apos;utilisation de {APP_CONFIG.name}, nous collectons exclusivement les données strictement nécessaires au fonctionnement des services :
               </p>
               <ul>
-                <li><strong>Données de compte :</strong> Nom, adresse e-mail, identifiants. <em>(Utilisées strictement pour vous identifier et sécuriser votre accès, elles ne sont jamais transmises à l&apos;IA)</em>.</li>
-                <li><strong>Données professionnelles :</strong> Expériences, parcours académique, compétences, localisation, loisirs (ces données constituent le cœur de vos documents).</li>
-                <li><strong>Données techniques :</strong> Adresse IP, type d&apos;appareil, métriques d&apos;utilisation essentielles.</li>
-                <li><strong>Données de paiement :</strong> Gérées intégralement et exclusivement par nos prestataires certifiés (dont les solutions Mobile Money). Aucune information de carte bancaire ou de code secret n&apos;est conservée sur nos serveurs.</li>
+                <li><strong>Données d&apos;authentification :</strong> Nom, prénom, adresse e-mail et photo de profil transmis via Google OAuth.</li>
+                <li><strong>Données de candidature & CV :</strong> Formations, expériences professionnelles, compétences, langues, loisirs et coordonnées saisies dans l&apos;éditeur.</li>
+                <li><strong>Photos & Médias :</strong> Photos de profil téléversées pour intégration sur les CVs (traitement de détourage local et stockage cloud sécurisé).</li>
+                <li><strong>Portails B2B Écoles & Recruteurs :</strong> Dans le cadre des partenariats écoles, adresses e-mails d&apos;invitation et état de complétion des documents des étudiants. Côté recruteurs, profils de candidats anonymisés présentés uniquement après consentement.</li>
+                <li><strong>Données de transaction :</strong> Historique et soldes de crédits. Les paiements par Mobile Money sont traités directement par notre passerelle certifiée (LigdiCash) ; aucune coordonnée bancaire sensible ou code PIN ne transite sur nos serveurs.</li>
               </ul>
             </section>
 
@@ -115,16 +124,14 @@ export default function PrivacyPage() {
                 <span className="p-2 rounded-xl border bg-cyan-50 border-cyan-100 text-cyan-600">
                   <Wand2 className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0 text-slate-955">3. IA et Anonymisation</h2>
+                <h2 className="!my-0 text-slate-950">3. IA et Anonymisation</h2>
               </div>
               <p>
-                L&apos;innovation de {APP_CONFIG.name} repose sur l&apos;exploitation de l&apos;IA (LLM). 
-                Cependant, la puissance technologique ne doit jamais compromettre votre vie privée. 
-                Lorsque vous utilisez nos outils (traduction, reformulation, génération de lettres, entretiens), vos données sont envoyées de manière sécurisée et éphémère à nos fournisseurs d&apos;Intelligence Artificielle.
+                L&apos;IA de {APP_CONFIG.name} intervient pour la reformulation, la traduction, l&apos;analyse de CV et l&apos;assistance à la rédaction.
               </p>
-              <h4 className="text-slate-800 font-semibold mt-6 mb-2">Processus d&apos;Anonymisation Strict</h4>
+              <h4 className="text-slate-800 font-semibold mt-6 mb-2">Principe de Minimisation & Anonymisation Préalable</h4>
               <p>
-                Nous appliquons un principe de minimisation des données (Data Minimization). <strong>Votre nom, votre e-mail et votre numéro de téléphone ne sont jamais transmis à l&apos;Intelligence Artificielle.</strong> Le contenu génératif est isolé de votre contexte personnel identifiant. 
+                Avant tout traitement impliquant l&apos;utilisation de nos modèles d&apos;IA, vos informations directement identifiantes (nom, prénom, e-mail, numéro de téléphone) sont systématiquement expurgées ou anonymisées. Les modèles d&apos;IA ne traitent que le contexte textuel brut strictement nécessaire à l&apos;analyse et vos données ne sont jamais utilisées pour l&apos;entraînement de modèles.
               </p>
             </section>
 
@@ -135,18 +142,21 @@ export default function PrivacyPage() {
                 <span className="p-2 rounded-xl border bg-violet-50 border-violet-100 text-violet-600">
                   <Share2 className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0 text-slate-955">4. Partage et Stockage des Données</h2>
+                <h2 className="!my-0 text-slate-950">4. Sous-traitants & Stockage des Données</h2>
               </div>
               <p>
-                <strong>La vente de données ne fait pas partie de notre modèle économique.</strong> Nous ne vendons, ne louons, ni ne commercialisons vos CV.
+                <strong>Nous ne commercialisons et ne vendons jamais vos données personnelles à des tiers publicitaires.</strong>
               </p>
               <p>
-                Vos informations sont hébergées sur des infrastructures cloud sécurisées de premier plan. Nous ne partageons des informations qu&apos;avec :
+                Pour opérer la plateforme, nous faisons appel à des prestataires techniques rigoureusement sélectionnés :
               </p>
               <ul>
-                <li>Nos fournisseurs de services IA (textes stricts anonymisés uniquement, pour une durée de traitement éphémère).</li>
-                <li>Nos partenaires d&apos;infrastructure technique (hébergement, bases de données).</li>
-                <li>Les autorités compétentes, exclusivement si une procédure légale contraignante nous y oblige.</li>
+                <li><strong>Hébergement & Base de données :</strong> Serveurs sécurisés avec base de données chiffrée.</li>
+                <li><strong>Traitement IA :</strong> Modules d&apos;intelligence artificielle sécurisés (traitement éphémère de texte anonymisé, sans conservation).</li>
+                <li><strong>Hébergement média :</strong> Stockage cloud sécurisé pour les photos de profil.</li>
+                <li><strong>Passerelle de paiement :</strong> Solutions certifiées de paiement électronique et Mobile Money.</li>
+                <li><strong>Emails transactionnels :</strong> Service d&apos;expédition d&apos;e-mails sécurisé (invitations et notifications).</li>
+                <li><strong>Surveillance applicative :</strong> Diagnostic et monitoring technique d&apos;erreurs sans données personnelles.</li>
               </ul>
             </section>
 
@@ -157,10 +167,14 @@ export default function PrivacyPage() {
                 <span className="p-2 rounded-xl border bg-emerald-50 border-emerald-100 text-emerald-600">
                   <ShieldCheck className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0 text-slate-955">5. Sécurité</h2>
+                <h2 className="!my-0 text-slate-950">5. Sécurité & Durée de Conservation</h2>
               </div>
               <p>
-                Nous implémentons des standards de sécurité rigoureux pour protéger vos données contre les accès non autorisés, l&apos;altération ou la destruction. Cela inclut le chiffrement des données en transit (TLS/HTTPS), le stockage chiffré au repos, et des contrôles d&apos;accès stricts à nos systèmes.
+                Nous appliquons des mesures de sécurité conformes à l&apos;état de l&apos;art : chiffrement des communications en transit (HTTPS / TLS 1.3), hachage des données sensibles, isolation des microservices et contrôle d&apos;accès par jeton de session.
+              </p>
+              <h4 className="text-slate-800 font-semibold mt-6 mb-2">Durée de conservation</h4>
+              <p>
+                Vos CVs, lettres et données de profil sont conservés tant que votre compte reste actif. En cas d&apos;inactivité prolongée ou sur simple demande de votre part, l&apos;ensemble de vos données associées est intégralement purgé de nos bases de données.
               </p>
             </section>
 
@@ -171,15 +185,18 @@ export default function PrivacyPage() {
                 <span className="p-2 rounded-xl border bg-amber-50 border-amber-100 text-amber-600">
                   <Fingerprint className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0 text-slate-955">6. Vos Droits</h2>
+                <h2 className="!my-0 text-slate-950">6. Vos Droits (RGPD / GDPR)</h2>
               </div>
               <p>
-                Vous restez maître de vos données à tout moment. Vous disposez des droits suivants concernant vos informations personnelles :
+                Conformément à la réglementation sur la protection des données personnelles, vous bénéficiez des droits suivants :
               </p>
               <ul>
-                <li><strong>Accès et Portabilité :</strong> Exportez vos CV au format PDF à la demande.</li>
-                <li><strong>Rectification :</strong> Mettez à jour vos informations directement depuis votre tableau de bord.</li>
-                <li><strong>Droit à l&apos;effacement :</strong> Vous pouvez requérir la suppression complète et irréversible de votre compte et de toutes vos données.</li>
+                <li><strong>Droit d&apos;accès (Art. 15 RGPD) :</strong> Obtenir la confirmation que vos données sont traitées et en obtenir une copie.</li>
+                <li><strong>Droit de rectification (Art. 16 RGPD) :</strong> Corriger directement vos informations inexactes ou incomplètes depuis votre éditeur de CV.</li>
+                <li><strong>Droit à l&apos;effacement (Art. 17 RGPD) :</strong> Demander la suppression totale et définitive de votre compte et de vos documents.</li>
+                <li><strong>Droit à la limitation du traitement (Art. 18 RGPD) :</strong> Geler temporairement l&apos;utilisation de certaines données.</li>
+                <li><strong>Droit à la portabilité (Art. 20 RGPD) :</strong> Télécharger vos documents au format PDF ou exporter vos données.</li>
+                <li><strong>Droit d&apos;opposition (Art. 21 RGPD) :</strong> Vous opposer à tout moment au traitement de vos données (ex : désactivation du profil recruteur).</li>
               </ul>
             </section>
 
@@ -190,13 +207,13 @@ export default function PrivacyPage() {
                 <span className="p-2 rounded-xl border bg-rose-50 border-rose-100 text-rose-600">
                   <Mail className="w-5 h-5" />
                 </span>
-                <h2 className="!my-0 text-slate-955">7. Contact</h2>
+                <h2 className="!my-0 text-slate-950">7. Délégué à la Protection des Données & Contact</h2>
               </div>
               <p>
-                La confiance se construit par le dialogue. Pour toute question relative à cette politique de confidentialité ou à vos données personnelles, notre équipe est à votre disposition.
+                Pour exercer l&apos;un de vos droits ou pour toute question relative à la gestion de vos données personnelles, vous pouvez contacter notre équipe directement à l&apos;adresse suivante :
               </p>
               <p className="mt-6 text-xl font-medium">
-                <a href="mailto:contact@jobsira.com" className="text-slate-900 hover:text-primary transition-colors">contact@jobsira.com</a>
+                <a href={`mailto:${APP_CONFIG.email}`} className="text-slate-900 hover:text-primary transition-colors">{APP_CONFIG.email}</a>
               </p>
             </section>
           </article>

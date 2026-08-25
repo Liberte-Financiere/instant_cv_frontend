@@ -208,6 +208,11 @@ export async function POST(req: Request) {
       userId: session?.user?.id
     });
 
+    if (session?.user?.id) {
+      const { refundCredits } = await import('@/lib/credits');
+      await refundCredits(session.user.id, 'AI_ANALYZE', 'Remboursement suite à un échec technique de l\'analyse magique');
+    }
+
     if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
         return NextResponse.json({ 
             error: 'Le quota de l\'IA est dépassé. Veuillez réessayer dans une minute.', 

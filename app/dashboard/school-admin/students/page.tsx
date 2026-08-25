@@ -21,13 +21,17 @@ export default function SchoolAdminStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({ total: 0, page: 1, limit: 50, totalPages: 1 });
 
   const fetchStudents = async () => {
+    setLoading(true);
     try {
-      const res = await fetch('/api/b2b/school-admin/students');
+      const res = await fetch(`/api/b2b/school-admin/students?page=${page}&limit=50`);
       if (!res.ok) throw new Error('Erreur de chargement des étudiants');
       const json = await res.json();
       setStudents(json.students || []);
+      if (json.pagination) setPagination(json.pagination);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -37,7 +41,7 @@ export default function SchoolAdminStudentsPage() {
 
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [page]);
 
   const [confirmModal, setConfirmModal] = useState<{ isOpen: boolean; id: string; name: string | null }>({ isOpen: false, id: '', name: null });
 
@@ -158,6 +162,31 @@ export default function SchoolAdminStudentsPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+        
+        {/* Pagination Controls */}
+        {!loading && pagination.totalPages > 1 && (
+          <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+            <p className="text-sm text-slate-500">
+              Page {pagination.page} sur {pagination.totalPages} ({pagination.total} étudiants)
+            </p>
+            <div className="flex gap-2">
+              <button
+                disabled={pagination.page <= 1}
+                onClick={() => setPage(p => p - 1)}
+                className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Précédent
+              </button>
+              <button
+                disabled={pagination.page >= pagination.totalPages}
+                onClick={() => setPage(p => p + 1)}
+                className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Suivant
+              </button>
+            </div>
           </div>
         )}
       </div>

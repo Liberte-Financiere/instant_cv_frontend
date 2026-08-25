@@ -2908,6 +2908,7 @@ export const JobApplicationScalarFieldEnum = {
   salaryExpectation: 'salaryExpectation',
   experienceYears: 'experienceYears',
   profileSummary: 'profileSummary',
+  notes: 'notes',
   status: 'status',
   isRead: 'isRead',
   hasConsent: 'hasConsent',
@@ -3300,6 +3301,7 @@ export const JobApplicationOrderByRelevanceFieldEnum = {
   availability: 'availability',
   salaryExpectation: 'salaryExpectation',
   profileSummary: 'profileSummary',
+  notes: 'notes',
   status: 'status'
 } as const
 

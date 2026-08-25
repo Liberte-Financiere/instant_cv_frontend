@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const session = await auth();
     
@@ -10,65 +10,94 @@ export async function GET() {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
+    const adminUser = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: { role: true, schoolId: true }
     });
 
-    if (!user || user.role !== 'SCHOOL_ADMIN' || !user.schoolId) {
+    if (!adminUser || adminUser.role !== 'SCHOOL_ADMIN' || !adminUser.schoolId) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }
 
-    const schoolId = user.schoolId;
+    const schoolId = adminUser.schoolId;
 
-    const students = await prisma.user.findMany({
-      where: { 
-        schoolId,
-        role: { not: 'SCHOOL_ADMIN' }
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
-        createdAt: true,
-        // Calculate consumed credits on the fly or fetch transactions if needed
-        schoolCreditTransactions: {
-          select: {
-            amount: true,
+    const url = new URL(req.url);
+    const page = parseInt(url.searchParams.get('page') || '1');
+    const limit = parseInt(url.searchParams.get('limit') || '50');
+    const skip = (page - 1) * limit;
+
+    const whereClause = {
+      schoolId,
+      role: { not: 'SCHOOL_ADMIN' as const }
+    };
+
+    const [total, students] = await Promise.all([
+      prisma.user.count({ where: whereClause }),
+      prisma.user.findMany({
+        where: whereClause,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+          createdAt: true,
+          _count: {
+            select: {
+              cvs: true,
+              coverLetters: true,
+              interviewSessions: true
+            }
           }
         },
-        _count: {
-          select: {
-            cvs: true,
-            coverLetters: true,
-            interviewSessions: true
-          }
-        }
-      },
-      orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit
+      })
+    ]);
+
+    // Fast calculation: Only load grouped sums for the students in this page
+    const studentIds = students.map(s => s.id);
+    let aggregations: any[] = [];
+    
+    if (studentIds.length > 0) {
+      aggregations = await (prisma.schoolCreditTransaction as any).groupBy({
+        by: ['userId'],
+        where: {
+          schoolId,
+          userId: { in: studentIds },
+          amount: { lt: 0 } // Only negative amounts are considered consumption
+        },
+        _sum: { amount: true }
+      });
+    }
+
+    const consumptionMap = new Map(
+      aggregations
+        .filter(agg => agg.userId) // Ensure userId is not null
+        .map(agg => [agg.userId as string, Math.abs(agg._sum.amount?.toNumber() || 0)])
+    );
+
+    const studentsWithConsumption = students.map(student => ({
+      id: student.id,
+      name: student.name,
+      email: student.email,
+      image: student.image,
+      joinedAt: student.createdAt,
+      consumedCredits: consumptionMap.get(student.id) || 0,
+      cvCount: student._count.cvs,
+      coverLetterCount: student._count.coverLetters,
+      interviewCount: student._count.interviewSessions
+    }));
+
+    return NextResponse.json({
+      students: studentsWithConsumption,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
     });
-
-    const studentsWithConsumption = students.map(student => {
-      const consumedCredits = student.schoolCreditTransactions.reduce((acc, tx) => {
-        // Only count negative amounts as consumption
-        return acc + (tx.amount.toNumber() < 0 ? Math.abs(tx.amount.toNumber()) : 0);
-      }, 0);
-
-      return {
-        id: student.id,
-        name: student.name,
-        email: student.email,
-        image: student.image,
-        joinedAt: student.createdAt,
-        consumedCredits,
-        cvCount: student._count.cvs,
-        coverLetterCount: student._count.coverLetters,
-        interviewCount: student._count.interviewSessions
-      };
-    });
-
-    return NextResponse.json({ students: studentsWithConsumption });
 
   } catch (error) {
     console.error('[SCHOOL_ADMIN_STUDENTS_GET]', error);

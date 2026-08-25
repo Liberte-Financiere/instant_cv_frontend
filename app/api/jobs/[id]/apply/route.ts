@@ -117,6 +117,12 @@ export async function POST(
     return NextResponse.json(application, { status: 201 });
   } catch (error) {
     console.error('[APPLY_POST]', error);
+    
+    // Check for Prisma Unique Constraint Violation (P2002)
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
+      return NextResponse.json({ error: 'Vous avez déjà postulé à cette offre avec cette adresse email.' }, { status: 400 });
+    }
+
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }

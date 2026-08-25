@@ -1,24 +1,17 @@
-2026-08-24 — Add advanced recruiter filters and UI improvements
+[2026-08-25] — Privacy Policy Proprietary Phrasing Refinement
 
 What changed:
-- Added a full text search bar (by name and email) for applications.
-- Added advanced filtering by Experience (Junior, Med, Senior).
-- Added advanced filtering by Date (Today, This week, This month).
-- Hidden advanced filters behind a toggleable "Filters" button to keep UI clean.
-- Added intelligent empty states with "Clear all filters" actions.
-- Redesigned status badges on the application list to match the modern SaaS look (light background, dark text).
-- Updated time ago format on application cards to show "X min", "X h", "Hier", etc., instead of always truncating to 0 days.
+- Updated Section 3 and Section 4 of `app/privacy/page.tsx` with proprietary phrasing ("Avant tout traitement impliquant l'utilisation de nos modèles d'IA...").
+- Replaced external vendor references with internal module phrasing ("Modules d'intelligence artificielle sécurisés").
 
 Why:
-- Recruiters need robust batch processing tools to quickly find specific candidate profiles.
-- The previous UI was cluttered or basic, with solid dark backgrounds for badges that occasionally rendered poorly on macOS/iOS selects.
-- Truncating time to "0 jours" for applications received less than 24h ago was confusing.
+- Protect proprietary positioning while maintaining clear GDPR compliance.
 
 Files affected:
-- app/recruiter/jobs/[id]/applications/page.tsx — implemented search, exp filter, date filter, status badge styling, and time formatter logic.
+- app/privacy/page.tsx — Refined phrasing
 
 Breaking changes:
 - None
 
 Notes for review:
-- The filtering is currently entirely client-side. This is fine for moderate loads but may require server-side pagination/filtering if a single job receives tens of thousands of applications.
+- Validated.

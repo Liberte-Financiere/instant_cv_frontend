@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   let session: any;
+  let creditAction: any = 'AI_OPTIMIZE'; // Default fallback
   try {
     session = await auth();
     if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -23,7 +24,6 @@ export async function POST(req: Request) {
 
     // Determine cost and label based on type
     const { checkAndConsumeCredits } = await import('@/lib/credits');
-    let creditAction: any = 'AI_OPTIMIZE';
     let label = 'Amélioration / Optimisation CV (IA)';
     
     if (type === 'fix') {
@@ -106,6 +106,11 @@ export async function POST(req: Request) {
       userMessage = "L'IA est très sollicitée pour le moment. Réessayez dans quelques secondes ! 🚦";
     } else if (errorMessage.includes('apikey') || errorMessage.includes('403')) {
       userMessage = "Problème de configuration (Clé API invalide).";
+    }
+
+    if (session?.user?.id) {
+      const { refundCredits } = await import('@/lib/credits');
+      await refundCredits(session.user.id, creditAction, 'Remboursement suite à un échec technique de l\'optimisation IA');
     }
 
     return NextResponse.json({ 

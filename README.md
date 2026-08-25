@@ -34,11 +34,12 @@
 - **Partage par lien** — Page publique `/cv/[id]` et `/cover-letter/[id]`
 - **Smart Pagination** — Gestion intelligente des sauts de page
 
-### 💎 Système de Crédits
+### 💎 Système de Crédits & Résilience Financière
 - **15 crédits gratuits** à l'inscription (Freemium)
 - **Coûts réduits** : Matching (2 cr.), Création (2 cr.), Traduction (5 cr.)
 - **Packs payants** — Standard (35 cr.), Premium (80 cr.), Pro (250 cr.)
-- **Paiement via WhatsApp** — Wave, Orange Money, etc.
+- **Paiements automatisés** — Passerelle **LigdiCash** (Orange Money, Moov, Wave) et recharge directe
+- **Ledger Inviolable** — Transactions atomiques sous PostgreSQL et **remboursement automatique (`refundCredits`)** en cas d'erreur ou timeout IA
 - **Crédits sans expiration** — Valables à vie
 
 ### 🎁 Programme de Parrainage
@@ -48,8 +49,14 @@
 
 ### 🏢 Portail B2B / Recruteurs
 - **Base de candidats anonymisée** — Recherche de talents via IA
-- **Système de déblocage** — Dévoiler les coordonnées (Email, Tel) via crédits
+- **Système de déblocage** — Dévoiler les coordonnées (Email, Tel) via crédits recruteur
 - **Talent Assistant** — IA conversationnelle pour requêter la base de données
+
+### 🎓 Portail B2B / Établissements & Universités (School Admin)
+- **Gestion de cohortes d'étudiants** — Import massif via fichier CSV et gestion d'invitations
+- **Allocation de crédits école** — Distribution et suivi de la consommation de crédits par étudiant
+- **Suivi d'insertion & complétion** — Dashboard temps réel sur l'état d'avancement des CVs de la promotion
+- **Pagination & Agrégation SQL haute performance** — Traitement instantané de promotions volumineuses
 
 ### 📱 Progressive Web App (PWA)
 - **Installable** sur mobile et desktop
