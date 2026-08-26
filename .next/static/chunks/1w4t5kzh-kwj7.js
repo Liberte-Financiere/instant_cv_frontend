@@ -1,0 +1,4 @@
+;!function(){try { var e="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof global?global:"undefined"!=typeof window?window:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&((e._debugIds|| (e._debugIds={}))[n]="8a430140-04c8-5af4-ceb1-23af4d9ea9b0")}catch(e){}}();
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,611428,t=>{"use strict";let e=(0,t.i(768834).create)((t,e)=>({credits:0,isLoading:!0,isOutOfCreditsModalOpen:!1,fetchCredits:async()=>{try{t({isLoading:!0});let e=await fetch("/api/user/credits");if(e.ok){let i=await e.json();t({credits:i.credits,isLoading:!1})}}catch(e){console.error("Failed to fetch credits:",e),t({isLoading:!1})}},deductCredits:i=>{t({credits:Math.max(0,e().credits-i)})},setOutOfCreditsModalOpen:e=>{t({isOutOfCreditsModalOpen:e})}}));t.s(["useCreditStore",0,e])}]);
+
+//# debugId=8a430140-04c8-5af4-ceb1-23af4d9ea9b0

@@ -1,0 +1,605 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../lib/generated"
+  previewFeatures = ["fullTextSearchPostgres", "postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [vector]
+}
+
+// Auth Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model AnalysisHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String // 'analysis' | 'match'
+  title     String
+  score     Float
+  data      Json // Full result data
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model AILog {
+  id               String   @id @default(cuid())
+  userId           String?
+  user             User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  type             String // ex: 'chat', 'search', 'embedding', 'analysis', 'cover-letter'
+  model            String // ex: 'gemini-3.5-flash', 'gemini-embedding-001'
+  status           String   @default("success") // "success" | "error" | "timeout"
+  promptTokens     Int      @default(0)
+  completionTokens Int      @default(0)
+  totalTokens      Int      @default(0)
+  latencyMs        Int      @default(0)
+  errorMessage     String?  @db.Text
+  createdAt        DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([model])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum Role {
+  USER
+  ADMIN
+  RECRUITER
+  SCHOOL_ADMIN
+}
+
+model User {
+  id               String    @id @default(cuid())
+  name             String?
+  email            String?   @unique
+  emailVerified    DateTime?
+  image            String?
+  role             Role      @default(USER)
+  credits          Float     @default(15) // Utilisation de Float pour supporter les retraits de 0.5
+  isBanned         Boolean   @default(false)
+  acceptsMarketing Boolean   @default(false) // Opt-in pour les newsletters et alertes
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  lastLogin        DateTime? // Date de la dernière vraie authentification (login)
+  lastActivity     DateTime? // Date du dernier ping d'activité applicative
+
+  // Professional Infos
+  phone    String?
+  jobTitle String?
+  sector   String?
+
+  // Referral System
+  referralCode  String?   @unique // Unique 8-char code for sharing
+  referredById  String? // ID of the user who referred this user
+  referredBy    User?     @relation("Referrals", fields: [referredById], references: [id])
+  referredUsers User[]    @relation("Referrals") // Users this user has referred
+  referralCount Int       @default(0) // Count of successful referrals
+  premiumUntil  DateTime? // Premium access expiry date (reward)
+
+  // Recruiter-specific fields (populated when role = RECRUITER)
+  companyName      String?
+  recruiterCredits Int     @default(0)
+  freeUnlocksUsed  Int     @default(0) // Max 3 free unlocks
+
+  accounts            Account[]
+  sessions            Session[]
+  cvs                 CV[]
+  coverLetters        CoverLetter[]
+  analyses            AnalysisHistory[]
+  creditTransactions  CreditTransaction[]
+  feedbacks           PlatformFeedback[]
+  paymentTransactions PaymentTransaction[]
+  interviewSessions   InterviewSession[]
+  candidateProfiles   CandidateProfile[]
+  profileUnlocks      ProfileUnlock[]
+  aiLogs              AILog[]
+  jobOffers           JobOffer[]
+
+  // Relations B2B
+  schoolId                 String?
+  school                   School?                   @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  acceptedInvitations      SchoolInvitation[]
+  schoolCreditTransactions SchoolCreditTransaction[]
+  schoolMemberships        SchoolMembership[]
+  performedSchoolCredits   SchoolCreditTransaction[] @relation("PerformedBy")
+  jobApplications          JobApplication[]
+
+  @@index([acceptsMarketing])
+  @@index([referredById])
+  @@index([lastLogin])
+  @@index([lastActivity])
+  @@index([schoolId])
+}
+
+model PlatformFeedback {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int? // Optional 1-5 star rating
+  content   String   @db.Text
+  isVisible Boolean  @default(false) // Admin approval for public display
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model PaymentTransaction {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packId         String // "standard" | "premium" | "pro"
+  amount         Int // Montant en FCFA
+  credits        Int // Crédits à ajouter
+  phone          String // Numéro du client (format international)
+  status         String   @default("pending") // pending | completed | failed
+  ligdicashToken String? // Token retourné par LigdiCash
+  transactionId  String? // ID transaction LigdiCash
+  operatorName   String? // "ORANGE BURKINA", etc.
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId])
+  @@index([ligdicashToken])
+}
+
+model CV {
+  id           String   @id @default(cuid())
+  title        String
+  content      Json
+  isPublic     Boolean  @default(false)
+  isSearchable Boolean  @default(false)
+  views        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  candidateProfile CandidateProfile?
+
+  @@index([userId])
+  @@index([isSearchable])
+}
+
+model CoverLetter {
+  id        String   @id @default(cuid())
+  title     String
+  content   Json // Stores the full cover letter data structure
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model CreditTransaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount      Float // Montant de la transaction (négatif pour retrait, positif pour ajout)
+  type        String // e.g., 'USAGE', 'PURCHASE', 'BONUS_REFERRAL', 'SIGNUP'
+  description String // e.g., 'Génération Lettre Motivation IA'
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model AdminTask {
+  id          String    @id @default(cuid())
+  title       String
+  description String?   @db.Text
+  status      String    @default("todo")
+  priority    String    @default("medium")
+  assignee    String?
+  dueDate     DateTime?
+  tags        String[]  @default([])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model InterviewSession {
+  id              String             @id @default(cuid())
+  userId          String
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobTitle        String
+  jobContext      String?            @db.Text
+  cvSummary       String             @db.Text
+  status          String             @default("active")
+  format          String             @default("text")
+  voicePreference String?
+  totalScore      Int?
+  summary         String?            @db.Text
+  questionCount   Int                @default(0)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  messages        InterviewMessage[]
+
+  @@index([userId])
+}
+
+model InterviewMessage {
+  id         String           @id @default(cuid())
+  sessionId  String
+  session    InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role       String
+  content    String           @db.Text
+  score      Int?
+  audioUrl   String?
+  transcript String?          @db.Text
+  createdAt  DateTime         @default(now())
+
+  @@index([sessionId])
+}
+
+// Recruiter Portal Models
+
+model CandidateProfile {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cvId   String @unique
+  cv     CV     @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  anonymousName   String
+  title           String
+  summary         String?  @db.Text
+  sector          String?
+  skills          String[]
+  experienceYears Int      @default(0)
+  locationCity    String?
+  locationCountry String?
+  completionScore Int      @default(0)
+  lastCvUpdate    DateTime
+  anonymousData   Json?    @db.JsonB
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  embedding Unsupported("vector(3072)")?
+
+  unlocks ProfileUnlock[]
+
+  @@index([sector])
+  @@index([experienceYears])
+  @@index([completionScore])
+  @@index([userId])
+  @@index([isActive])
+  @@index([locationCity])
+  @@index([lastCvUpdate])
+  @@index([isActive, completionScore, lastCvUpdate])
+}
+
+model ProfileUnlock {
+  id                 String           @id @default(cuid())
+  unlockerUserId     String
+  unlockerUser       User             @relation(fields: [unlockerUserId], references: [id], onDelete: Cascade)
+  candidateProfileId String
+  candidateProfile   CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
+  creditsCost        Int              @default(0)
+  createdAt          DateTime         @default(now())
+
+  @@unique([unlockerUserId, candidateProfileId])
+  @@index([unlockerUserId])
+  @@index([candidateProfileId])
+}
+
+// Admin / HQ Ops Models
+
+model MarketingCampaign {
+  id             String   @id @default(cuid())
+  name           String // Internal name
+  subject        String // Email subject
+  preheader      String? // Preheader text
+  content        String   @db.Text // The HTML or plaintext content
+  type           String   @default("Newsletter") // "Newsletter", "Annonce", "Transactionnel", "Promotion"
+  status         String   @default("draft") // "draft", "scheduled", "sent"
+  templateId     String?
+  targetAudience String   @default("all") // "all", "segment"
+  externalEmails String[] @default([]) // Custom emails added
+
+  scheduledAt DateTime?
+  sentAt      DateTime?
+
+  // Basic stats caching
+  recipientsCount Int    @default(0)
+  openRate        Float?
+  clickRate       Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  sessionId String?
+  adminId   String
+  targetId  String
+  action    String
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([adminId])
+  @@index([sessionId])
+}
+
+model BusinessExpense {
+  id        String    @id @default(cuid())
+  name      String
+  category  String // SERVER, SUBSCRIPTION, DOMAIN, API, OTHER
+  amount    Float
+  currency  String    @default("FCFA") // FCFA, EUR, USD
+  frequency String // MONTHLY, YEARLY, ONE_TIME
+  isActive  Boolean   @default(true)
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+  notes     String?   @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([category])
+  @@index([isActive])
+}
+
+// Activity Tracker for HQ Ops
+model CompanyActivity {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  type        String   @default("feature") // feature, bug, meeting, marketing, devops
+  author      String   @default("System")
+  createdAt   DateTime @default(now())
+
+  @@index([type])
+  @@index([createdAt])
+}
+
+// ==========================================
+// JOBSIRA EDUCATION (B2B)
+// ==========================================
+
+model School {
+  id           String  @id @default(cuid())
+  name         String
+  slug         String  @unique
+  logoUrl      String?
+  contactEmail String?
+  isActive     Boolean @default(true)
+
+  creditWallet SchoolCreditWallet?
+  users        User[]
+  invitations  SchoolInvitation[]
+  transactions SchoolCreditTransaction[]
+  memberships  SchoolMembership[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SchoolCreditWallet {
+  id       String @id @default(cuid())
+  schoolId String @unique
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  balance     Decimal @default(0)
+  totalBought Decimal @default(0)
+  totalUsed   Decimal @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum SchoolCreditTransactionType {
+  PURCHASE
+  CONSUMPTION
+  REFUND
+  ADJUSTMENT
+  EXPIRATION
+  REVERSAL
+}
+
+model SchoolCreditTransaction {
+  id String @id @default(cuid())
+
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id])
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  performedByUserId String?
+  performedBy       User?   @relation("PerformedBy", fields: [performedByUserId], references: [id])
+
+  amount        Decimal
+  type          SchoolCreditTransactionType
+  balanceBefore Decimal
+  balanceAfter  Decimal
+
+  idempotencyKey String? @unique
+  reference      String?
+  actionType     String?
+  referenceId    String?
+  description    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([schoolId])
+  @@index([schoolId, userId]) // Optimise le groupBy des consommations par étudiant
+  @@index([userId])
+  @@index([performedByUserId])
+  @@index([type])
+}
+
+enum EmailStatus {
+  QUEUED
+  SENDING
+  SENT
+  FAILED
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
+
+model SchoolInvitation {
+  id       String @id @default(cuid())
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  email     String?
+  firstName String?
+  lastName  String?
+  codeHash  String  @unique
+  emailCode String? // Temporaire : effacé après l'envoi de l'email
+
+  status InvitationStatus @default(PENDING)
+
+  // Suivi de l'envoi d'email
+  emailStatus   EmailStatus @default(QUEUED)
+  emailAttempts Int         @default(0)
+  emailError    String?     @db.Text
+  emailSentAt   DateTime?
+
+  expiresAt DateTime?
+  usedAt    DateTime?
+  revokedAt DateTime?
+
+  acceptedByUserId String?
+  acceptedByUser   User?   @relation(fields: [acceptedByUserId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // @@unique([schoolId, email]) a été retiré pour permettre la ré-invitation d'un élève révoqué/expulsé.
+  @@index([schoolId])
+  @@index([status])
+  @@index([emailStatus])
+}
+
+model SchoolMembership {
+  id       String @id @default(cuid())
+  userId   String
+  schoolId String
+  role     String @default("SCHOOL_ADMIN")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, schoolId])
+  @@index([schoolId])
+}
+
+model JobOffer {
+  id              String    @id @default(cuid())
+  title           String
+  company         String
+  location        String?
+  type            String // 'CDI', 'CDD', 'Stage', 'Alternance', 'Freelance'
+  description     String    @db.Text
+  requirements    String[]
+  salary          String?
+  applyMethod     String // 'URL' ou 'EMAIL'
+  applyUrlOrMail  String
+  status          String    @default("ACTIVE") // 'ACTIVE', 'CLOSED'
+  expiresAt       DateTime? // Date limite de candidature
+  maxApplications Int? // Limite de candidatures
+  requestedFiles  String[]  @default(["CV"]) // ex: ["CV", "COVER_LETTER", "PORTFOLIO", "DIPLOMA"]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  recruiterId String
+  recruiter   User   @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+
+  viewsCount   Int              @default(0)
+  applications JobApplication[]
+
+  @@index([recruiterId, createdAt(sort: Desc)])
+  @@index([status, createdAt(sort: Desc)])
+}
+
+model JobApplication {
+  id         String   @id @default(cuid())
+  jobOfferId String
+  jobOffer   JobOffer @relation(fields: [jobOfferId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+
+  cvUrl          String  @db.Text
+  coverLetter    String? @db.Text
+  coverLetterUrl String? @db.Text
+  portfolioUrl   String? @db.Text
+  diplomaUrl     String? @db.Text
+
+  availability      String?
+  salaryExpectation String?
+  experienceYears   Int?
+  profileSummary    String? @db.Text
+  notes             String? @db.Text
+  
+  status     String  @default("NEW") // 'NEW', 'REVIEWING', 'RETAINED', 'REJECTED'
+  isRead     Boolean @default(false)
+  hasConsent Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([jobOfferId, createdAt(sort: Desc)])
+  @@index([jobOfferId, isRead]) // Optimise le comptage des non-lus
+  @@unique([jobOfferId, email]) // Empêche les doublons de candidatures (Race Condition)
+  @@index([userId])
+  @@index([status])
+}
