@@ -115,6 +115,8 @@ export const APP_CONFIG = {
       /** Modèle Groq (très rapide) dédié à la reformulation et correction de texte en Français */
       groqReformulation: 'openai/gpt-oss-120b',
 
+      groqJobReformulation: 'openai/gpt-oss-120b',
+
       /** Modèle pour la traduction et les tâches complexes */
       pro: 'gemini-3.1-pro-preview',
 

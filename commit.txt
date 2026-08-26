@@ -1,30 +1,26 @@
-[2026-08-26] — FEAT: Job Offer Edit & Quota Management
+[2026-08-26] — FEAT: Smart Auto-fill (IA Groq) & 4-Step Job Wizard
 
 What changed:
-- Extracted job creation form into a reusable `JobForm` component.
-- Implemented `/recruiter/jobs/[id]/edit` page with pre-filled data.
-- Updated `PATCH /api/recruiter/jobs/[id]` to fully support all schema fields including `NATIVE` apply method, `expiresAt`, `maxApplications`, and `requestedFiles`.
-- Transformed `null` values for `applyUrlOrMail` into empty strings to prevent Prisma validation errors.
-- Enhanced recruiter jobs dashboard (`app/recruiter/jobs/page.tsx`) with a segmented control UI for actions (View, Edit, Toggle, Delete).
-- Implemented auto-close logic in `POST /api/jobs/[id]/apply`: jobs automatically transition to `CLOSED` status once the `maxApplications` quota is reached.
-- Added comprehensive Vitest unit tests for the job edit API route, verifying authentication, authorization, and Zod validation.
+- Refactored `JobForm.tsx` from a 3-step to a 4-step wizard.
+- Introduced the "Smart Auto-fill" feature in Step 1 for external job postings (URL/EMAIL).
+- Implemented file upload for PDFs, delegating text extraction to the existing `POST /api/utils/parse-pdf` route.
+- Created `POST /api/recruiter/jobs/parse` to process raw job descriptions via the official `@ai-sdk/groq` provider.
+- Used Zod schema with `generateObject` to strictly extract `title`, `company`, `location`, `type`, `salary`, `applyUrlOrMail`, `requirements`, and `description`.
+- Tuned the AI prompt to ensure contextual information (timelines, specific application steps, conditions) is appended to the `description` field rather than discarded.
+- Integrated auto-progression in the UI: once AI parsing succeeds, the form auto-advances to Step 2 with fields magically pre-filled.
 
 Why:
-- Recruiters needed the ability to fix typos or adjust requirements on published job offers.
-- Centralizing the form logic (DRY) simplifies future maintenance for both creation and editing flows.
-- Automatically closing jobs upon reaching the applicant quota prevents misleading UI states and ensures no rogue applications can bypass the limit.
+- Recruiters posting external jobs often copy-paste from WhatsApp or LinkedIn. Filling fields manually is tedious.
+- Groq's high-speed inference allows for near-instant JSON extraction, drastically reducing the friction of publishing a job offer.
+- Relying on the official Groq SDK avoids compatibility issues with OpenRouter aliases, ensuring stable parsing.
 
 Files affected:
-- components/jobs/JobForm.tsx — [NEW] Reusable form for job creation and editing.
-- app/recruiter/jobs/create/page.tsx — Refactored to consume `JobForm`.
-- app/recruiter/jobs/[id]/edit/page.tsx — [NEW] Page for editing an existing job offer.
-- app/api/recruiter/jobs/[id]/route.ts — Extended PATCH schema to support all fields and fix Prisma `null` string error.
-- app/recruiter/jobs/page.tsx — Updated action buttons to premium segmented UI.
-- app/api/jobs/[id]/apply/route.ts — Added logic to set job status to `CLOSED` when quota is hit.
-- __tests__/api/jobs/edit.test.ts — [NEW] Unit tests for the edit route.
+- components/jobs/JobForm.tsx — [MODIFY] Refactored into a 4-step wizard with the new AI text/PDF upload zone.
+- app/api/recruiter/jobs/parse/route.ts — [NEW] Groq-powered API route for JSON extraction.
 
 Breaking changes:
-- None. Backwards compatibility maintained for existing jobs.
+- None.
 
 Notes for review:
-- The UI gracefully locks the `applyMethod` field during editing if applications have already been submitted, preventing broken application routing.
+- The AI parsing is highly dependent on the model configured in `APP_CONFIG.ai.models.groqJobReformulation`. Ensure this maps to a valid Groq model string (e.g., `llama-3.1-70b-versatile`) in production.
+- If the AI fails or the raw text is unparseable, the UI gracefully falls back, allowing manual entry.
