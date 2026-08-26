@@ -99,6 +99,14 @@ export async function POST(
       },
     });
 
+    // Auto-désactivation de l'offre si le quota est atteint
+    if (jobOffer.maxApplications && jobOffer._count.applications + 1 >= jobOffer.maxApplications) {
+      await prisma.jobOffer.update({
+        where: { id },
+        data: { status: 'CLOSED' }
+      });
+    }
+
     // Send confirmation email asynchronously (no await or ignoring result so it doesn't block response)
     sendEmailViaService({
       recipient: { email: application.email, name: application.firstName },

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Plus, Briefcase, MapPin, Calendar, ExternalLink, Eye, Search } from 'lucide-react';
+import { Plus, Briefcase, MapPin, Calendar, ExternalLink, Eye, Search, Edit, Power, PowerOff, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export default function RecruiterJobsPage() {
@@ -159,18 +159,18 @@ export default function RecruiterJobsPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-3 shrink-0">
                 {job.applyMethod === 'NATIVE' && (
                   <Link href={`/recruiter/jobs/${job.id}/applications`}>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white relative rounded-lg px-4 shadow-sm h-10">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white relative rounded-xl px-5 shadow-sm h-10 font-bold transition-all hover:shadow-md hover:-translate-y-0.5">
                       Candidats
                       {job.totalApplications > 0 && (
-                        <span className="ml-2 bg-blue-800/40 px-2 py-0.5 rounded-md text-xs font-medium" title={job.maxApplications ? `Quota : ${job.maxApplications}` : undefined}>
+                        <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-md text-xs font-bold" title={job.maxApplications ? `Quota : ${job.maxApplications}` : undefined}>
                           {job.totalApplications}{job.maxApplications ? ` / ${job.maxApplications}` : ''}
                         </span>
                       )}
                       {job.unreadApplications > 0 && (
-                        <span className="absolute -top-2 -right-2 w-5 h-5 bg-rose-500 border-2 border-white text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse shadow-sm">
+                        <span className="absolute -top-2 -right-2 w-5 h-5 bg-rose-500 border-2 border-white text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
                           {job.unreadApplications}
                         </span>
                       )}
@@ -178,22 +178,53 @@ export default function RecruiterJobsPage() {
                   </Link>
                 )}
                 
-                <Link href={`/jobs/${job.id}`} target="_blank">
-                   <Button variant="ghost" className="h-10 w-10 p-0 text-slate-400 hover:text-slate-900 hover:bg-slate-100" title="Voir l'annonce">
-                     <ExternalLink className="w-4 h-4" />
-                   </Button>
-                </Link>
-                <Button 
-                  variant="outline" 
-                  onClick={() => toggleStatus(job.id, job.status)}
-                  className="h-10 text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900 font-medium"
-                >
-                  {job.status === 'ACTIVE' ? 'Désactiver' : 'Activer'}
-                </Button>
+                {/* Secondary Actions Group (Segmented Style) */}
+                <div className="hidden sm:flex items-center bg-slate-50 border border-slate-200 rounded-xl p-1 shadow-sm">
+                  <Link href={`/jobs/${job.id}`} target="_blank">
+                    <Button variant="ghost" className="h-8 px-3 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg text-sm font-medium transition-colors" title="Voir l'annonce">
+                      <ExternalLink className="w-4 h-4 mr-2" /> Voir
+                    </Button>
+                  </Link>
+                  
+                  <div className="w-px h-4 bg-slate-200 mx-1"></div>
+                  
+                  <Link href={`/recruiter/jobs/${job.id}/edit`}>
+                    <Button variant="ghost" className="h-8 px-3 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg text-sm font-medium transition-colors" title="Modifier">
+                      Éditer
+                    </Button>
+                  </Link>
+                  
+                  <div className="w-px h-4 bg-slate-200 mx-1"></div>
+                  
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => toggleStatus(job.id, job.status)}
+                    className={`h-8 px-3 text-sm font-medium rounded-lg transition-colors ${
+                      job.status === 'ACTIVE' 
+                        ? 'text-slate-500 hover:text-amber-600 hover:bg-amber-50' 
+                        : 'text-slate-500 hover:text-emerald-600 hover:bg-emerald-50'
+                    }`}
+                  >
+                    {job.status === 'ACTIVE' ? 'Désactiver' : 'Activer'}
+                  </Button>
+                </div>
+
+                {/* Mobile Secondary Actions (Icons only) */}
+                <div className="flex sm:hidden items-center bg-slate-50 border border-slate-200 rounded-xl p-1 shadow-sm">
+                  <Link href={`/jobs/${job.id}`} target="_blank">
+                    <Button variant="ghost" className="h-8 w-8 p-0 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg"><ExternalLink className="w-4 h-4" /></Button>
+                  </Link>
+                  <Link href={`/recruiter/jobs/${job.id}/edit`}>
+                    <Button variant="ghost" className="h-8 w-8 p-0 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg">E</Button>
+                  </Link>
+                </div>
+
+                {/* Delete Button */}
                 <Button 
                   variant="ghost" 
                   onClick={() => deleteJob(job.id)}
-                  className="h-10 text-rose-500 hover:text-rose-600 hover:bg-rose-50 font-medium px-4"
+                  className="h-10 px-3 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors font-medium ml-1"
+                  title="Supprimer"
                 >
                   Supprimer
                 </Button>

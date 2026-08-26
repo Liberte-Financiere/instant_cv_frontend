@@ -142,29 +142,27 @@ export default function PublicJobsPage() {
       </div>
 
       {/* Results */}
-      <div className="max-w-5xl mx-auto px-4 md:px-8 mt-12">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12">
         {loading ? (
-          <div className="grid gap-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between animate-pulse">
-                <div className="space-y-4 w-full md:flex-1">
-                  {/* Title Skeleton */}
-                  <div className="h-6 bg-slate-200 rounded-lg w-3/4 md:w-1/2"></div>
-                  {/* Tags Skeleton */}
-                  <div className="flex flex-wrap gap-3">
-                    <div className="h-5 bg-slate-100 rounded-md w-24"></div>
-                    <div className="h-5 bg-slate-100 rounded-md w-32"></div>
-                    <div className="h-5 bg-slate-100 rounded-md w-20"></div>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4 animate-pulse h-full">
+                <div className="flex justify-between items-start gap-4">
+                  <div className="h-6 bg-slate-200 rounded-lg w-3/4"></div>
                 </div>
-                {/* Right side Skeleton */}
-                <div className="flex items-center gap-4 shrink-0 w-full md:w-auto mt-2 md:mt-0">
-                  <div className="text-right hidden md:block space-y-2">
-                    <div className="h-4 bg-slate-200 rounded-md w-28 ml-auto"></div>
-                    <div className="h-3 bg-slate-100 rounded-md w-20 ml-auto"></div>
+                
+                <div className="flex flex-wrap gap-3 flex-1 mt-2">
+                  <div className="h-5 bg-slate-100 rounded-md w-24"></div>
+                  <div className="h-5 bg-slate-100 rounded-md w-32"></div>
+                  <div className="h-5 bg-slate-100 rounded-md w-20"></div>
+                </div>
+                
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                  <div className="space-y-2">
+                    <div className="h-4 bg-slate-200 rounded-md w-28"></div>
+                    <div className="h-3 bg-slate-100 rounded-md w-40"></div>
                   </div>
-                  {/* Circle Arrow Skeleton */}
-                  <div className="w-10 h-10 rounded-full bg-slate-100 shrink-0 ml-auto md:ml-0"></div>
+                  <div className="w-10 h-10 rounded-full bg-slate-100 shrink-0"></div>
                 </div>
               </div>
             ))}
@@ -176,38 +174,40 @@ export default function PublicJobsPage() {
             <p className="text-slate-500">Essayez de modifier vos critères de recherche.</p>
           </div>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {jobs.map((job) => (
               <Link key={job.id} href={`/jobs/${job.id}`}>
-                <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between hover:border-blue-500 hover:shadow-md transition-all cursor-pointer group">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{job.title}</h2>
-                      {job.source === 'NATIVE' && (
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-wider rounded-md">
-                          Nouveau
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-500">
-                      <span className="flex items-center gap-1.5 text-slate-700"><Briefcase className="w-4 h-4" /> {job.company}</span>
-                      {job.location && <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" /> {job.location}</span>}
-                      <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded-md text-xs">{job.type}</span>
-                    </div>
+                <div className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer group h-full">
+                  <div className="flex justify-between items-start gap-4">
+                    <h2 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">{job.title}</h2>
+                    {job.source === 'NATIVE' && (
+                      <span className="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0">
+                        Nouveau
+                      </span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-4 shrink-0">
-                    <div className="text-right hidden md:block">
+                  
+                  <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-slate-500 flex-1">
+                    <span className="flex items-center gap-1.5 text-slate-700"><Briefcase className="w-4 h-4" /> {job.company}</span>
+                    {job.location && <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" /> {job.location}</span>}
+                    <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded-md text-xs">{job.type}</span>
+                  </div>
+                  
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                    <div>
                       <p className="text-sm font-semibold text-slate-700">{job.salary || 'Salaire non spécifié'}</p>
-                      <p className="text-xs text-slate-500 mt-1">
-                        Il y a {Math.floor((Date.now() - new Date(job.createdAt).getTime()) / (1000 * 3600 * 24))} jours
-                      </p>
-                      {job.expiresAt && (
-                        <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-wider">
-                          Expire le {new Date(job.expiresAt).toLocaleDateString()}
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs text-slate-500">
+                          Il y a {Math.floor((Date.now() - new Date(job.createdAt).getTime()) / (1000 * 3600 * 24))} jours
                         </p>
-                      )}
+                        {job.expiresAt && (
+                          <p className="text-[10px] font-bold text-rose-500 uppercase tracking-wider">
+                            • Expire le {new Date(job.expiresAt).toLocaleDateString()}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-600 transition-colors shrink-0">
                       <ChevronRight className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors" />
                     </div>
                   </div>

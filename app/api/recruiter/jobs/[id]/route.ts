@@ -11,8 +11,11 @@ const jobOfferUpdateSchema = z.object({
   description: z.string().min(10).optional(),
   requirements: z.array(z.string()).optional(),
   salary: z.string().optional(),
-  applyMethod: z.enum(['URL', 'EMAIL']).optional(),
-  applyUrlOrMail: z.string().min(1).optional(),
+  applyMethod: z.enum(['URL', 'EMAIL', 'NATIVE']).optional(),
+  applyUrlOrMail: z.string().nullable().optional().transform(v => v === null ? '' : v),
+  maxApplications: z.number().nullable().optional(),
+  expiresAt: z.string().nullable().optional(),
+  requestedFiles: z.array(z.string()).optional(),
   status: z.enum(['ACTIVE', 'CLOSED']).optional(),
 });
 

@@ -1,19 +1,30 @@
-[2026-08-26] — Fix Recruiter Registration UI Visibility
+[2026-08-26] — FEAT: Job Offer Edit & Quota Management
 
 What changed:
-- Updated Tailwind CSS classes in `app/recruiter/register/page.tsx` from dark-mode specific colors to light-mode colors.
-- Replaced `text-white` with `text-slate-900`.
-- Replaced `bg-white/5` with `bg-white` and added `border-slate-200`.
-- Ensured input text is visible by changing `!text-white` to `!text-slate-900`.
+- Extracted job creation form into a reusable `JobForm` component.
+- Implemented `/recruiter/jobs/[id]/edit` page with pre-filled data.
+- Updated `PATCH /api/recruiter/jobs/[id]` to fully support all schema fields including `NATIVE` apply method, `expiresAt`, `maxApplications`, and `requestedFiles`.
+- Transformed `null` values for `applyUrlOrMail` into empty strings to prevent Prisma validation errors.
+- Enhanced recruiter jobs dashboard (`app/recruiter/jobs/page.tsx`) with a segmented control UI for actions (View, Edit, Toggle, Delete).
+- Implemented auto-close logic in `POST /api/jobs/[id]/apply`: jobs automatically transition to `CLOSED` status once the `maxApplications` quota is reached.
+- Added comprehensive Vitest unit tests for the job edit API route, verifying authentication, authorization, and Zod validation.
 
 Why:
-- The recruiter registration page was unreadable on a light background, as it was using hardcoded dark mode colors. The text and input fields were invisible.
+- Recruiters needed the ability to fix typos or adjust requirements on published job offers.
+- Centralizing the form logic (DRY) simplifies future maintenance for both creation and editing flows.
+- Automatically closing jobs upon reaching the applicant quota prevents misleading UI states and ensures no rogue applications can bypass the limit.
 
 Files affected:
-- app/recruiter/register/page.tsx — Updated Tailwind classes for light mode visibility
+- components/jobs/JobForm.tsx — [NEW] Reusable form for job creation and editing.
+- app/recruiter/jobs/create/page.tsx — Refactored to consume `JobForm`.
+- app/recruiter/jobs/[id]/edit/page.tsx — [NEW] Page for editing an existing job offer.
+- app/api/recruiter/jobs/[id]/route.ts — Extended PATCH schema to support all fields and fix Prisma `null` string error.
+- app/recruiter/jobs/page.tsx — Updated action buttons to premium segmented UI.
+- app/api/jobs/[id]/apply/route.ts — Added logic to set job status to `CLOSED` when quota is hit.
+- __tests__/api/jobs/edit.test.ts — [NEW] Unit tests for the edit route.
 
 Breaking changes:
-- None
+- None. Backwards compatibility maintained for existing jobs.
 
 Notes for review:
-- Tested on local dev server to ensure texts and form inputs are clearly visible on light background.
+- The UI gracefully locks the `applyMethod` field during editing if applications have already been submitted, preventing broken application routing.
