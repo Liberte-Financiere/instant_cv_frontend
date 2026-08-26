@@ -1,17 +1,19 @@
-[2026-08-25] — Privacy Policy Proprietary Phrasing Refinement
+[2026-08-26] — Fix Recruiter Registration UI Visibility
 
 What changed:
-- Updated Section 3 and Section 4 of `app/privacy/page.tsx` with proprietary phrasing ("Avant tout traitement impliquant l'utilisation de nos modèles d'IA...").
-- Replaced external vendor references with internal module phrasing ("Modules d'intelligence artificielle sécurisés").
+- Updated Tailwind CSS classes in `app/recruiter/register/page.tsx` from dark-mode specific colors to light-mode colors.
+- Replaced `text-white` with `text-slate-900`.
+- Replaced `bg-white/5` with `bg-white` and added `border-slate-200`.
+- Ensured input text is visible by changing `!text-white` to `!text-slate-900`.
 
 Why:
-- Protect proprietary positioning while maintaining clear GDPR compliance.
+- The recruiter registration page was unreadable on a light background, as it was using hardcoded dark mode colors. The text and input fields were invisible.
 
 Files affected:
-- app/privacy/page.tsx — Refined phrasing
+- app/recruiter/register/page.tsx — Updated Tailwind classes for light mode visibility
 
 Breaking changes:
 - None
 
 Notes for review:
-- Validated.
+- Tested on local dev server to ensure texts and form inputs are clearly visible on light background.
