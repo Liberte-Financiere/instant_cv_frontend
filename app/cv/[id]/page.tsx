@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { Download, Printer, Home } from 'lucide-react';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/lib/config';
+import type { CV } from '@/types/cv';
 
 // Dynamic imports for ALL templates
 const ModernSidebar = dynamic(() => import('@/components/templates/ModernSidebar').then(m => m.ModernSidebar));
@@ -16,18 +17,12 @@ const TechStack = dynamic(() => import('@/components/templates/TechStack').then(
 const MinimalistTemplate = dynamic(() => import('@/components/templates/MinimalistTemplate').then(m => m.MinimalistTemplate));
 const ATSFriendlyTemplate = dynamic(() => import('@/components/templates/ATSFriendlyTemplate').then(m => m.ATSFriendlyTemplate));
 const ATSGlacier = dynamic(() => import('@/components/templates/ATSGlacier').then(m => m.ATSGlacier));
-const ATSIron = dynamic(() => import('@/components/templates/ATSIron').then(m => m.ATSIron));
 const ElegantPhoto = dynamic(() => import('@/components/templates/ElegantPhoto').then(m => m.ElegantPhoto));
-const CorporateBlue = dynamic(() => import('@/components/templates/CorporateBlue').then(m => m.CorporateBlue));
-const CleanGrid = dynamic(() => import('@/components/templates/CleanGrid').then(m => m.CleanGrid));
 const Swiss = dynamic(() => import('@/components/templates/Swiss').then(m => m.Swiss));
-const GradientHeader = dynamic(() => import('@/components/templates/GradientHeader').then(m => m.GradientHeader));
 const TimelinePro = dynamic(() => import('@/components/templates/TimelinePro').then(m => m.TimelinePro));
 const CompactSingle = dynamic(() => import('@/components/templates/CompactSingle').then(m => m.CompactSingle));
 const BoldHeader = dynamic(() => import('@/components/templates/BoldHeader').then(m => m.BoldHeader));
 const TwoTone = dynamic(() => import('@/components/templates/TwoTone').then(m => m.TwoTone));
-const Infographic = dynamic(() => import('@/components/templates/Infographic').then(m => m.Infographic));
-const ClassicSerif = dynamic(() => import('@/components/templates/ClassicSerif').then(m => m.ClassicSerif));
 const Nordic = dynamic(() => import('@/components/templates/Nordic').then(m => m.Nordic));
 const PastelModern = dynamic(() => import('@/components/templates/PastelModern').then(m => m.PastelModern));
 const BlueprintPremium = dynamic(() => import('@/components/templates/BlueprintPremium').then(m => m.BlueprintPremium));
@@ -42,7 +37,7 @@ export default function PublicCVPage({ params }: PageProps) {
   const { id } = use(params);
   const { currentCV, fetchCV } = useCVStore();
   const [isLoading, setIsLoading] = useState(true);
-  const [serverCV, setServerCV] = useState<any>(null);
+  const [serverCV, setServerCV] = useState<CV | null>(null);
   const [loadError, setLoadError] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -145,7 +140,7 @@ export default function PublicCVPage({ params }: PageProps) {
   if (!activeCV) return null;
 
   const renderTemplate = () => {
-    switch (activeCV.templateId) {
+    switch (activeCV.templateId as string) {
       case 'modern': return <ModernSidebar cv={activeCV} />;
       case 'professional': return <ProfessionalClean cv={activeCV} />;
       case 'executive': return <ExecutiveCorporate cv={activeCV} />;
@@ -154,18 +149,12 @@ export default function PublicCVPage({ params }: PageProps) {
       case 'minimalist': return <MinimalistTemplate cv={activeCV} />;
       case 'ats': return <ATSFriendlyTemplate cv={activeCV} />;
       case 'ats-glacier': return <ATSGlacier cv={activeCV} />;
-      case 'ats-iron': return <ATSIron cv={activeCV} />;
       case 'elegant-photo': return <ElegantPhoto cv={activeCV} />;
-      case 'corporate-blue': return <CorporateBlue cv={activeCV} />;
-      case 'clean-grid': return <CleanGrid cv={activeCV} />;
       case 'swiss': return <Swiss cv={activeCV} />;
-      case 'gradient': return <GradientHeader cv={activeCV} />;
       case 'timeline': return <TimelinePro cv={activeCV} />;
       case 'compact': return <CompactSingle cv={activeCV} />;
       case 'bold-header': return <BoldHeader cv={activeCV} />;
       case 'two-tone': return <TwoTone cv={activeCV} />;
-      case 'infographic': return <Infographic cv={activeCV} />;
-      case 'classic-serif': return <ClassicSerif cv={activeCV} />;
       case 'nordic': return <Nordic cv={activeCV} />;
       case 'pastel': return <PastelModern cv={activeCV} />;
       case 'blueprint-premium': return <BlueprintPremium cv={activeCV} />;

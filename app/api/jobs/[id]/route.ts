@@ -116,10 +116,10 @@ export async function POST(
       // Fire and forget
       fetch(`http://127.0.0.1:8080/api/v1/opportunities/${goId}/click`, { method: 'POST' }).catch(() => {});
     } else {
-      // Increment views count instead, or just do nothing since we don't have clicksCount
+      // Incrémenter les clics pour les offres natives en arrière-plan
       prisma.jobOffer.update({
         where: { id },
-        data: { viewsCount: { increment: 1 } }
+        data: { clicksCount: { increment: 1 } }
       }).catch((err) => console.error('[NATIVE_JOB_CLICK_TRACKING_ERROR]', err));
     }
 

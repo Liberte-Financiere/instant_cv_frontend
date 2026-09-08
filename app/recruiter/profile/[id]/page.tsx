@@ -35,6 +35,8 @@ interface ProfileDetail {
   locationCountry: string | null;
   completionScore: number;
   lastCvUpdate: string;
+  isUnlocked?: boolean;
+  contactInfo?: ContactInfo | null;
   experiences: {
     position: string;
     company: string;
@@ -89,6 +91,9 @@ export default function CandidateProfilePage() {
         if (!res.ok) throw new Error('Profil introuvable');
         const data = await res.json();
         setProfile(data);
+        if (data.contactInfo) {
+          setContactInfo(data.contactInfo);
+        }
       } catch {
         router.push('/recruiter');
       } finally {
@@ -214,6 +219,12 @@ export default function CandidateProfilePage() {
                     <Phone className="w-4 h-4 text-slate-500" />
                     {contactInfo.phone}
                   </a>
+                )}
+                {contactInfo.address && (
+                  <div className="flex items-center gap-2 text-sm text-slate-300">
+                    <MapPin className="w-4 h-4 text-slate-500 shrink-0" />
+                    <span>{contactInfo.address}</span>
+                  </div>
                 )}
               </div>
             ) : (

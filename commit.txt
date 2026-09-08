@@ -1,26 +1,56 @@
-[2026-08-26] — FEAT: Smart Auto-fill (IA Groq) & 4-Step Job Wizard
+[2026-09-08] — FEAT: Manual Recruiter Verification, Portal Lockout & Recruiter Experience Optimization
 
 What changed:
-- Refactored `JobForm.tsx` from a 3-step to a 4-step wizard.
-- Introduced the "Smart Auto-fill" feature in Step 1 for external job postings (URL/EMAIL).
-- Implemented file upload for PDFs, delegating text extraction to the existing `POST /api/utils/parse-pdf` route.
-- Created `POST /api/recruiter/jobs/parse` to process raw job descriptions via the official `@ai-sdk/groq` provider.
-- Used Zod schema with `generateObject` to strictly extract `title`, `company`, `location`, `type`, `salary`, `applyUrlOrMail`, `requirements`, and `description`.
-- Tuned the AI prompt to ensure contextual information (timelines, specific application steps, conditions) is appended to the `description` field rather than discarded.
-- Integrated auto-progression in the UI: once AI parsing succeeds, the form auto-advances to Step 2 with fields magically pre-filled.
+- prisma/schema.prisma: Ajout des colonnes clicksCount sur JobOffer et des champs entreprise/recruiterStatus sur User (companyWebsite, companyPhone, companyTaxId, companySector, companyCity, companyCountry, companySize, recruiterStatus @default("NONE"), recruiterRejectionReason, recruiterVerifiedAt) avec index dédié.
+- lib/generated: Synchronisation PostgreSQL non-destructive via npx prisma db push et regénération des modèles Prisma client.
+- types/next-auth.d.ts & auth.config.ts: Intégration et synchronisation de recruiterStatus dans les tokens JWT et sessions NextAuth, avec support du trigger update.
+- app/api/recruiter/register/route.ts: Refonte avec validation Zod stricte des coordonnées d'entreprise, statut initial PENDING, rôle USER maintenu et zéro déblocage gratuit accordé avant approbation.
+- app/api/recruiter/status/route.ts: Nouvel endpoint de vérification en temps réel du statut recruteur directement depuis PostgreSQL.
+- components/recruiter/RecruiterLayout.tsx: Verrouillage hermétique de l'accès au portail recruteur pour tout compte non approuvé, avec redirections automatiques et layout minimaliste pour l'onboarding.
+- app/recruiter/register/page.tsx, app/recruiter/pending/page.tsx, app/recruiter/rejected/page.tsx: Interfaces utilisateur dédiées pour chaque étape du cycle de vie (inscription détaillée avec RCCM optionnel, page d'attente avec actualisation en direct, page de rejet avec affichage du motif et ré-envoi pré-rempli).
+- app/api/recruiter/jobs/route.ts & app/api/recruiter/profiles/[id]/unlock/route.ts: Défense en profondeur vérifiant recruiterStatus === 'APPROVED' directement en base PostgreSQL (403 Forbidden si non validé).
+- app/api/admin/recruiters/route.ts & app/dashboard/hq-ops/recruiters/page.tsx: Interface de modération HQ Ops et endpoint d'administration complet avec filtrage par statut, approbation (octroi rôle RECRUITER + 3 déblocages gratuits), rejet avec motif personnalisé, traçabilité AuditLog et notifications par email transactionnel.
+- components/dashboard/HqSidebar.tsx: Ajout du lien de navigation 'Validation Recruteurs' dans HQ Ops.
+- app/api/recruiter/jobs/[id]/applications/route.ts & app/recruiter/jobs/[id]/applications/page.tsx: Pagination serveur bornée (limit 100 max) et délégation intégrale du filtrage et du tri à PostgreSQL.
+- app/api/recruiter/analytics/route.ts & app/recruiter/analytics/page.tsx: Remplacement du traitement client par un endpoint SQL d'agrégation léger (< 1 Ko).
+- app/api/recruiter/search/route.ts & lib/talent-assistant.ts: Requêtes sémantiques optimisées pour index HNSW pgvector halfvec(3072).
+- __tests__: Création et mise à jour de suites de tests unitaires dédiées (register, admin recruiters, unlock, applications, analytics, templates), portant la couverture à 31 fichiers et 374/374 tests passés à 100%.
 
 Why:
-- Recruiters posting external jobs often copy-paste from WhatsApp or LinkedIn. Filling fields manually is tedious.
-- Groq's high-speed inference allows for near-instant JSON extraction, drastically reducing the friction of publishing a job offer.
-- Relying on the official Groq SDK avoids compatibility issues with OpenRouter aliases, ensuring stable parsing.
+- Protéger les candidats et la plateforme en éliminant l'inscription libre de recruteurs sans validation d'entreprise.
+- Garantir qu'aucun déblocage gratuit ni accès aux profils candidats ne soit possible avant approbation formelle par un administrateur.
+- Améliorer les performances globales du portail recruteur (pagination serveur SQL, indexation vectorielle pgvector, agrégation SQL).
+- Fournir un parcours clair, réactif et guidé pour les recruteurs avec notifications par email à chaque étape.
 
 Files affected:
-- components/jobs/JobForm.tsx — [MODIFY] Refactored into a 4-step wizard with the new AI text/PDF upload zone.
-- app/api/recruiter/jobs/parse/route.ts — [NEW] Groq-powered API route for JSON extraction.
+- prisma/schema.prisma — Définition des champs clicksCount et recruiterStatus.
+- prisma.config.ts — Chargement prioritaire de .env.local.
+- types/next-auth.d.ts — Typage étendu NextAuth.
+- auth.config.ts — Gestion de recruiterStatus dans jwt et session.
+- components/recruiter/RecruiterLayout.tsx — Gardien d'accès centralisé au portail.
+- app/recruiter/register/page.tsx — Page d'inscription recruteur refondue.
+- app/recruiter/pending/page.tsx — Page d'attente de validation avec session sync.
+- app/recruiter/rejected/page.tsx — Page d'affichage du motif de rejet et re-soumission.
+- app/api/recruiter/register/route.ts — Inscription avec validation d'entreprise.
+- app/api/recruiter/status/route.ts — Consultation temps réel du statut recruteur.
+- app/api/admin/recruiters/route.ts — API de modération administrative et emails.
+- app/dashboard/hq-ops/recruiters/page.tsx — Interface d'administration HQ Ops.
+- components/dashboard/HqSidebar.tsx — Entrée de menu 'Validation Recruteurs'.
+- app/api/recruiter/jobs/route.ts — Protection de publication et consultation d'offres.
+- app/api/recruiter/profiles/[id]/unlock/route.ts — Protection directe en base sur les déblocages.
+- app/api/recruiter/jobs/[id]/applications/route.ts — Pagination serveur PostgreSQL.
+- app/recruiter/jobs/[id]/applications/page.tsx — Interface paginée des candidatures.
+- app/api/recruiter/analytics/route.ts — Agrégation analytique SQL dédiée.
+- app/recruiter/analytics/page.tsx — Consommation du endpoint analytique SQL.
+- app/api/jobs/[id]/route.ts & app/jobs/[id]/page.tsx — Tracking de clics sur les offres.
+- app/api/recruiter/search/route.ts & lib/talent-assistant.ts — Requêtes optimisées pgvector.
+- __tests__/* — Suites de tests unitaires associées.
+- commit.txt — Documentation complète du commit.
 
 Breaking changes:
-- None.
+- None. Les comptes recruteurs existants ont été migrés vers APPROVED.
 
 Notes for review:
-- The AI parsing is highly dependent on the model configured in `APP_CONFIG.ai.models.groqJobReformulation`. Ensure this maps to a valid Groq model string (e.g., `llama-3.1-70b-versatile`) in production.
-- If the AI fails or the raw text is unparseable, the UI gracefully falls back, allowing manual entry.
+- npx tsc --noEmit validé avec 0 erreur.
+- Suite complète vitest validée à 100% (31/31 fichiers, 374/374 tests passés avec succès).
+- Intégrité de la base de données PostgreSQL préservée.

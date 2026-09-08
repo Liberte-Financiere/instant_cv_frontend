@@ -62,6 +62,16 @@ export type UserMinAggregateOutputType = {
   referralCount: number | null
   premiumUntil: Date | null
   companyName: string | null
+  companyWebsite: string | null
+  companyPhone: string | null
+  companyTaxId: string | null
+  companySector: string | null
+  companyCity: string | null
+  companyCountry: string | null
+  companySize: string | null
+  recruiterStatus: string | null
+  recruiterRejectionReason: string | null
+  recruiterVerifiedAt: Date | null
   recruiterCredits: number | null
   freeUnlocksUsed: number | null
   schoolId: string | null
@@ -89,6 +99,16 @@ export type UserMaxAggregateOutputType = {
   referralCount: number | null
   premiumUntil: Date | null
   companyName: string | null
+  companyWebsite: string | null
+  companyPhone: string | null
+  companyTaxId: string | null
+  companySector: string | null
+  companyCity: string | null
+  companyCountry: string | null
+  companySize: string | null
+  recruiterStatus: string | null
+  recruiterRejectionReason: string | null
+  recruiterVerifiedAt: Date | null
   recruiterCredits: number | null
   freeUnlocksUsed: number | null
   schoolId: string | null
@@ -116,6 +136,16 @@ export type UserCountAggregateOutputType = {
   referralCount: number
   premiumUntil: number
   companyName: number
+  companyWebsite: number
+  companyPhone: number
+  companyTaxId: number
+  companySector: number
+  companyCity: number
+  companyCountry: number
+  companySize: number
+  recruiterStatus: number
+  recruiterRejectionReason: number
+  recruiterVerifiedAt: number
   recruiterCredits: number
   freeUnlocksUsed: number
   schoolId: number
@@ -159,6 +189,16 @@ export type UserMinAggregateInputType = {
   referralCount?: true
   premiumUntil?: true
   companyName?: true
+  companyWebsite?: true
+  companyPhone?: true
+  companyTaxId?: true
+  companySector?: true
+  companyCity?: true
+  companyCountry?: true
+  companySize?: true
+  recruiterStatus?: true
+  recruiterRejectionReason?: true
+  recruiterVerifiedAt?: true
   recruiterCredits?: true
   freeUnlocksUsed?: true
   schoolId?: true
@@ -186,6 +226,16 @@ export type UserMaxAggregateInputType = {
   referralCount?: true
   premiumUntil?: true
   companyName?: true
+  companyWebsite?: true
+  companyPhone?: true
+  companyTaxId?: true
+  companySector?: true
+  companyCity?: true
+  companyCountry?: true
+  companySize?: true
+  recruiterStatus?: true
+  recruiterRejectionReason?: true
+  recruiterVerifiedAt?: true
   recruiterCredits?: true
   freeUnlocksUsed?: true
   schoolId?: true
@@ -213,6 +263,16 @@ export type UserCountAggregateInputType = {
   referralCount?: true
   premiumUntil?: true
   companyName?: true
+  companyWebsite?: true
+  companyPhone?: true
+  companyTaxId?: true
+  companySector?: true
+  companyCity?: true
+  companyCountry?: true
+  companySize?: true
+  recruiterStatus?: true
+  recruiterRejectionReason?: true
+  recruiterVerifiedAt?: true
   recruiterCredits?: true
   freeUnlocksUsed?: true
   schoolId?: true
@@ -327,6 +387,16 @@ export type UserGroupByOutputType = {
   referralCount: number
   premiumUntil: Date | null
   companyName: string | null
+  companyWebsite: string | null
+  companyPhone: string | null
+  companyTaxId: string | null
+  companySector: string | null
+  companyCity: string | null
+  companyCountry: string | null
+  companySize: string | null
+  recruiterStatus: string
+  recruiterRejectionReason: string | null
+  recruiterVerifiedAt: Date | null
   recruiterCredits: number
   freeUnlocksUsed: number
   schoolId: string | null
@@ -377,6 +447,16 @@ export type UserWhereInput = {
   referralCount?: Prisma.IntFilter<"User"> | number
   premiumUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   companyName?: Prisma.StringNullableFilter<"User"> | string | null
+  companyWebsite?: Prisma.StringNullableFilter<"User"> | string | null
+  companyPhone?: Prisma.StringNullableFilter<"User"> | string | null
+  companyTaxId?: Prisma.StringNullableFilter<"User"> | string | null
+  companySector?: Prisma.StringNullableFilter<"User"> | string | null
+  companyCity?: Prisma.StringNullableFilter<"User"> | string | null
+  companyCountry?: Prisma.StringNullableFilter<"User"> | string | null
+  companySize?: Prisma.StringNullableFilter<"User"> | string | null
+  recruiterStatus?: Prisma.StringFilter<"User"> | string
+  recruiterRejectionReason?: Prisma.StringNullableFilter<"User"> | string | null
+  recruiterVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   recruiterCredits?: Prisma.IntFilter<"User"> | number
   freeUnlocksUsed?: Prisma.IntFilter<"User"> | number
   schoolId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -425,6 +505,16 @@ export type UserOrderByWithRelationInput = {
   referralCount?: Prisma.SortOrder
   premiumUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   companyName?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyWebsite?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyTaxId?: Prisma.SortOrderInput | Prisma.SortOrder
+  companySector?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyCity?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyCountry?: Prisma.SortOrderInput | Prisma.SortOrder
+  companySize?: Prisma.SortOrderInput | Prisma.SortOrder
+  recruiterStatus?: Prisma.SortOrder
+  recruiterRejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  recruiterVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   recruiterCredits?: Prisma.SortOrder
   freeUnlocksUsed?: Prisma.SortOrder
   schoolId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -477,6 +567,16 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   referralCount?: Prisma.IntFilter<"User"> | number
   premiumUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   companyName?: Prisma.StringNullableFilter<"User"> | string | null
+  companyWebsite?: Prisma.StringNullableFilter<"User"> | string | null
+  companyPhone?: Prisma.StringNullableFilter<"User"> | string | null
+  companyTaxId?: Prisma.StringNullableFilter<"User"> | string | null
+  companySector?: Prisma.StringNullableFilter<"User"> | string | null
+  companyCity?: Prisma.StringNullableFilter<"User"> | string | null
+  companyCountry?: Prisma.StringNullableFilter<"User"> | string | null
+  companySize?: Prisma.StringNullableFilter<"User"> | string | null
+  recruiterStatus?: Prisma.StringFilter<"User"> | string
+  recruiterRejectionReason?: Prisma.StringNullableFilter<"User"> | string | null
+  recruiterVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   recruiterCredits?: Prisma.IntFilter<"User"> | number
   freeUnlocksUsed?: Prisma.IntFilter<"User"> | number
   schoolId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -525,6 +625,16 @@ export type UserOrderByWithAggregationInput = {
   referralCount?: Prisma.SortOrder
   premiumUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   companyName?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyWebsite?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyTaxId?: Prisma.SortOrderInput | Prisma.SortOrder
+  companySector?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyCity?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyCountry?: Prisma.SortOrderInput | Prisma.SortOrder
+  companySize?: Prisma.SortOrderInput | Prisma.SortOrder
+  recruiterStatus?: Prisma.SortOrder
+  recruiterRejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  recruiterVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   recruiterCredits?: Prisma.SortOrder
   freeUnlocksUsed?: Prisma.SortOrder
   schoolId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -560,6 +670,16 @@ export type UserScalarWhereWithAggregatesInput = {
   referralCount?: Prisma.IntWithAggregatesFilter<"User"> | number
   premiumUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   companyName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  companyWebsite?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  companyPhone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  companyTaxId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  companySector?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  companyCity?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  companyCountry?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  companySize?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  recruiterStatus?: Prisma.StringWithAggregatesFilter<"User"> | string
+  recruiterRejectionReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  recruiterVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   recruiterCredits?: Prisma.IntWithAggregatesFilter<"User"> | number
   freeUnlocksUsed?: Prisma.IntWithAggregatesFilter<"User"> | number
   schoolId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -586,6 +706,16 @@ export type UserCreateInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -633,6 +763,16 @@ export type UserUncheckedCreateInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -678,6 +818,16 @@ export type UserUpdateInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -725,6 +875,16 @@ export type UserUncheckedUpdateInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -771,6 +931,16 @@ export type UserCreateManyInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -797,6 +967,16 @@ export type UserUpdateManyMutationInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -823,6 +1003,16 @@ export type UserUncheckedUpdateManyInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -876,6 +1066,16 @@ export type UserCountOrderByAggregateInput = {
   referralCount?: Prisma.SortOrder
   premiumUntil?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
+  companyWebsite?: Prisma.SortOrder
+  companyPhone?: Prisma.SortOrder
+  companyTaxId?: Prisma.SortOrder
+  companySector?: Prisma.SortOrder
+  companyCity?: Prisma.SortOrder
+  companyCountry?: Prisma.SortOrder
+  companySize?: Prisma.SortOrder
+  recruiterStatus?: Prisma.SortOrder
+  recruiterRejectionReason?: Prisma.SortOrder
+  recruiterVerifiedAt?: Prisma.SortOrder
   recruiterCredits?: Prisma.SortOrder
   freeUnlocksUsed?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
@@ -910,6 +1110,16 @@ export type UserMaxOrderByAggregateInput = {
   referralCount?: Prisma.SortOrder
   premiumUntil?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
+  companyWebsite?: Prisma.SortOrder
+  companyPhone?: Prisma.SortOrder
+  companyTaxId?: Prisma.SortOrder
+  companySector?: Prisma.SortOrder
+  companyCity?: Prisma.SortOrder
+  companyCountry?: Prisma.SortOrder
+  companySize?: Prisma.SortOrder
+  recruiterStatus?: Prisma.SortOrder
+  recruiterRejectionReason?: Prisma.SortOrder
+  recruiterVerifiedAt?: Prisma.SortOrder
   recruiterCredits?: Prisma.SortOrder
   freeUnlocksUsed?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
@@ -937,6 +1147,16 @@ export type UserMinOrderByAggregateInput = {
   referralCount?: Prisma.SortOrder
   premiumUntil?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
+  companyWebsite?: Prisma.SortOrder
+  companyPhone?: Prisma.SortOrder
+  companyTaxId?: Prisma.SortOrder
+  companySector?: Prisma.SortOrder
+  companyCity?: Prisma.SortOrder
+  companyCountry?: Prisma.SortOrder
+  companySize?: Prisma.SortOrder
+  recruiterStatus?: Prisma.SortOrder
+  recruiterRejectionReason?: Prisma.SortOrder
+  recruiterVerifiedAt?: Prisma.SortOrder
   recruiterCredits?: Prisma.SortOrder
   freeUnlocksUsed?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
@@ -1346,6 +1566,16 @@ export type UserCreateWithoutAccountsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -1392,6 +1622,16 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -1452,6 +1692,16 @@ export type UserUpdateWithoutAccountsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -1498,6 +1748,16 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1542,6 +1802,16 @@ export type UserCreateWithoutSessionsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -1588,6 +1858,16 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -1648,6 +1928,16 @@ export type UserUpdateWithoutSessionsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -1694,6 +1984,16 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1738,6 +2038,16 @@ export type UserCreateWithoutAnalysesInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -1784,6 +2094,16 @@ export type UserUncheckedCreateWithoutAnalysesInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -1844,6 +2164,16 @@ export type UserUpdateWithoutAnalysesInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -1890,6 +2220,16 @@ export type UserUncheckedUpdateWithoutAnalysesInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1934,6 +2274,16 @@ export type UserCreateWithoutAiLogsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -1980,6 +2330,16 @@ export type UserUncheckedCreateWithoutAiLogsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -2040,6 +2400,16 @@ export type UserUpdateWithoutAiLogsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -2086,6 +2456,16 @@ export type UserUncheckedUpdateWithoutAiLogsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2130,6 +2510,16 @@ export type UserCreateWithoutReferredUsersInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -2176,6 +2566,16 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -2225,6 +2625,16 @@ export type UserCreateWithoutReferredByInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByInput
@@ -2270,6 +2680,16 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -2336,6 +2756,16 @@ export type UserUpdateWithoutReferredUsersInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -2382,6 +2812,16 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2446,6 +2886,16 @@ export type UserScalarWhereInput = {
   referralCount?: Prisma.IntFilter<"User"> | number
   premiumUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   companyName?: Prisma.StringNullableFilter<"User"> | string | null
+  companyWebsite?: Prisma.StringNullableFilter<"User"> | string | null
+  companyPhone?: Prisma.StringNullableFilter<"User"> | string | null
+  companyTaxId?: Prisma.StringNullableFilter<"User"> | string | null
+  companySector?: Prisma.StringNullableFilter<"User"> | string | null
+  companyCity?: Prisma.StringNullableFilter<"User"> | string | null
+  companyCountry?: Prisma.StringNullableFilter<"User"> | string | null
+  companySize?: Prisma.StringNullableFilter<"User"> | string | null
+  recruiterStatus?: Prisma.StringFilter<"User"> | string
+  recruiterRejectionReason?: Prisma.StringNullableFilter<"User"> | string | null
+  recruiterVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   recruiterCredits?: Prisma.IntFilter<"User"> | number
   freeUnlocksUsed?: Prisma.IntFilter<"User"> | number
   schoolId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -2472,6 +2922,16 @@ export type UserCreateWithoutFeedbacksInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -2518,6 +2978,16 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -2578,6 +3048,16 @@ export type UserUpdateWithoutFeedbacksInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -2624,6 +3104,16 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2668,6 +3158,16 @@ export type UserCreateWithoutPaymentTransactionsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -2714,6 +3214,16 @@ export type UserUncheckedCreateWithoutPaymentTransactionsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -2774,6 +3284,16 @@ export type UserUpdateWithoutPaymentTransactionsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -2820,6 +3340,16 @@ export type UserUncheckedUpdateWithoutPaymentTransactionsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2864,6 +3394,16 @@ export type UserCreateWithoutCvsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -2910,6 +3450,16 @@ export type UserUncheckedCreateWithoutCvsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -2970,6 +3520,16 @@ export type UserUpdateWithoutCvsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -3016,6 +3576,16 @@ export type UserUncheckedUpdateWithoutCvsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3060,6 +3630,16 @@ export type UserCreateWithoutCoverLettersInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -3106,6 +3686,16 @@ export type UserUncheckedCreateWithoutCoverLettersInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -3166,6 +3756,16 @@ export type UserUpdateWithoutCoverLettersInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -3212,6 +3812,16 @@ export type UserUncheckedUpdateWithoutCoverLettersInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3256,6 +3866,16 @@ export type UserCreateWithoutCreditTransactionsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -3302,6 +3922,16 @@ export type UserUncheckedCreateWithoutCreditTransactionsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -3362,6 +3992,16 @@ export type UserUpdateWithoutCreditTransactionsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -3408,6 +4048,16 @@ export type UserUncheckedUpdateWithoutCreditTransactionsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3452,6 +4102,16 @@ export type UserCreateWithoutInterviewSessionsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -3498,6 +4158,16 @@ export type UserUncheckedCreateWithoutInterviewSessionsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -3558,6 +4228,16 @@ export type UserUpdateWithoutInterviewSessionsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -3604,6 +4284,16 @@ export type UserUncheckedUpdateWithoutInterviewSessionsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3648,6 +4338,16 @@ export type UserCreateWithoutCandidateProfilesInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -3694,6 +4394,16 @@ export type UserUncheckedCreateWithoutCandidateProfilesInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -3754,6 +4464,16 @@ export type UserUpdateWithoutCandidateProfilesInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -3800,6 +4520,16 @@ export type UserUncheckedUpdateWithoutCandidateProfilesInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3844,6 +4574,16 @@ export type UserCreateWithoutProfileUnlocksInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -3890,6 +4630,16 @@ export type UserUncheckedCreateWithoutProfileUnlocksInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -3950,6 +4700,16 @@ export type UserUpdateWithoutProfileUnlocksInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -3996,6 +4756,16 @@ export type UserUncheckedUpdateWithoutProfileUnlocksInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4040,6 +4810,16 @@ export type UserCreateWithoutSchoolInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -4086,6 +4866,16 @@ export type UserUncheckedCreateWithoutSchoolInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByInput
@@ -4156,6 +4946,16 @@ export type UserCreateWithoutSchoolCreditTransactionsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -4202,6 +5002,16 @@ export type UserUncheckedCreateWithoutSchoolCreditTransactionsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -4251,6 +5061,16 @@ export type UserCreateWithoutPerformedSchoolCreditsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -4297,6 +5117,16 @@ export type UserUncheckedCreateWithoutPerformedSchoolCreditsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -4357,6 +5187,16 @@ export type UserUpdateWithoutSchoolCreditTransactionsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -4403,6 +5243,16 @@ export type UserUncheckedUpdateWithoutSchoolCreditTransactionsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4458,6 +5308,16 @@ export type UserUpdateWithoutPerformedSchoolCreditsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -4504,6 +5364,16 @@ export type UserUncheckedUpdateWithoutPerformedSchoolCreditsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4548,6 +5418,16 @@ export type UserCreateWithoutAcceptedInvitationsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -4594,6 +5474,16 @@ export type UserUncheckedCreateWithoutAcceptedInvitationsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -4654,6 +5544,16 @@ export type UserUpdateWithoutAcceptedInvitationsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -4700,6 +5600,16 @@ export type UserUncheckedUpdateWithoutAcceptedInvitationsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4744,6 +5654,16 @@ export type UserCreateWithoutSchoolMembershipsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -4790,6 +5710,16 @@ export type UserUncheckedCreateWithoutSchoolMembershipsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -4850,6 +5780,16 @@ export type UserUpdateWithoutSchoolMembershipsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -4896,6 +5836,16 @@ export type UserUncheckedUpdateWithoutSchoolMembershipsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4940,6 +5890,16 @@ export type UserCreateWithoutJobOffersInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -4986,6 +5946,16 @@ export type UserUncheckedCreateWithoutJobOffersInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -5046,6 +6016,16 @@ export type UserUpdateWithoutJobOffersInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -5092,6 +6072,16 @@ export type UserUncheckedUpdateWithoutJobOffersInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5136,6 +6126,16 @@ export type UserCreateWithoutJobApplicationsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   referredBy?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
@@ -5182,6 +6182,16 @@ export type UserUncheckedCreateWithoutJobApplicationsInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -5242,6 +6252,16 @@ export type UserUpdateWithoutJobApplicationsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -5288,6 +6308,16 @@ export type UserUncheckedUpdateWithoutJobApplicationsInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5332,6 +6362,16 @@ export type UserCreateManyReferredByInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
   schoolId?: string | null
@@ -5358,6 +6398,16 @@ export type UserUpdateWithoutReferredByInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByNestedInput
@@ -5403,6 +6453,16 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5448,6 +6508,16 @@ export type UserUncheckedUpdateManyWithoutReferredByInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   schoolId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5475,6 +6545,16 @@ export type UserCreateManySchoolInput = {
   referralCount?: number
   premiumUntil?: Date | string | null
   companyName?: string | null
+  companyWebsite?: string | null
+  companyPhone?: string | null
+  companyTaxId?: string | null
+  companySector?: string | null
+  companyCity?: string | null
+  companyCountry?: string | null
+  companySize?: string | null
+  recruiterStatus?: string
+  recruiterRejectionReason?: string | null
+  recruiterVerifiedAt?: Date | string | null
   recruiterCredits?: number
   freeUnlocksUsed?: number
 }
@@ -5500,6 +6580,16 @@ export type UserUpdateWithoutSchoolInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredBy?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
@@ -5546,6 +6636,16 @@ export type UserUncheckedUpdateWithoutSchoolInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByNestedInput
@@ -5591,6 +6691,16 @@ export type UserUncheckedUpdateManyWithoutSchoolInput = {
   referralCount?: Prisma.IntFieldUpdateOperationsInput | number
   premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyTaxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySector?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  recruiterRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recruiterVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   recruiterCredits?: Prisma.IntFieldUpdateOperationsInput | number
   freeUnlocksUsed?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -5810,6 +6920,16 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   referralCount?: boolean
   premiumUntil?: boolean
   companyName?: boolean
+  companyWebsite?: boolean
+  companyPhone?: boolean
+  companyTaxId?: boolean
+  companySector?: boolean
+  companyCity?: boolean
+  companyCountry?: boolean
+  companySize?: boolean
+  recruiterStatus?: boolean
+  recruiterRejectionReason?: boolean
+  recruiterVerifiedAt?: boolean
   recruiterCredits?: boolean
   freeUnlocksUsed?: boolean
   schoolId?: boolean
@@ -5859,6 +6979,16 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   referralCount?: boolean
   premiumUntil?: boolean
   companyName?: boolean
+  companyWebsite?: boolean
+  companyPhone?: boolean
+  companyTaxId?: boolean
+  companySector?: boolean
+  companyCity?: boolean
+  companyCountry?: boolean
+  companySize?: boolean
+  recruiterStatus?: boolean
+  recruiterRejectionReason?: boolean
+  recruiterVerifiedAt?: boolean
   recruiterCredits?: boolean
   freeUnlocksUsed?: boolean
   schoolId?: boolean
@@ -5888,6 +7018,16 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   referralCount?: boolean
   premiumUntil?: boolean
   companyName?: boolean
+  companyWebsite?: boolean
+  companyPhone?: boolean
+  companyTaxId?: boolean
+  companySector?: boolean
+  companyCity?: boolean
+  companyCountry?: boolean
+  companySize?: boolean
+  recruiterStatus?: boolean
+  recruiterRejectionReason?: boolean
+  recruiterVerifiedAt?: boolean
   recruiterCredits?: boolean
   freeUnlocksUsed?: boolean
   schoolId?: boolean
@@ -5917,12 +7057,22 @@ export type UserSelectScalar = {
   referralCount?: boolean
   premiumUntil?: boolean
   companyName?: boolean
+  companyWebsite?: boolean
+  companyPhone?: boolean
+  companyTaxId?: boolean
+  companySector?: boolean
+  companyCity?: boolean
+  companyCountry?: boolean
+  companySize?: boolean
+  recruiterStatus?: boolean
+  recruiterRejectionReason?: boolean
+  recruiterVerifiedAt?: boolean
   recruiterCredits?: boolean
   freeUnlocksUsed?: boolean
   schoolId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "credits" | "isBanned" | "acceptsMarketing" | "createdAt" | "updatedAt" | "lastLogin" | "lastActivity" | "phone" | "jobTitle" | "sector" | "referralCode" | "referredById" | "referralCount" | "premiumUntil" | "companyName" | "recruiterCredits" | "freeUnlocksUsed" | "schoolId", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "credits" | "isBanned" | "acceptsMarketing" | "createdAt" | "updatedAt" | "lastLogin" | "lastActivity" | "phone" | "jobTitle" | "sector" | "referralCode" | "referredById" | "referralCount" | "premiumUntil" | "companyName" | "companyWebsite" | "companyPhone" | "companyTaxId" | "companySector" | "companyCity" | "companyCountry" | "companySize" | "recruiterStatus" | "recruiterRejectionReason" | "recruiterVerifiedAt" | "recruiterCredits" | "freeUnlocksUsed" | "schoolId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   referredBy?: boolean | Prisma.User$referredByArgs<ExtArgs>
   referredUsers?: boolean | Prisma.User$referredUsersArgs<ExtArgs>
@@ -6003,6 +7153,16 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     referralCount: number
     premiumUntil: Date | null
     companyName: string | null
+    companyWebsite: string | null
+    companyPhone: string | null
+    companyTaxId: string | null
+    companySector: string | null
+    companyCity: string | null
+    companyCountry: string | null
+    companySize: string | null
+    recruiterStatus: string
+    recruiterRejectionReason: string | null
+    recruiterVerifiedAt: Date | null
     recruiterCredits: number
     freeUnlocksUsed: number
     schoolId: string | null
@@ -6471,6 +7631,16 @@ export interface UserFieldRefs {
   readonly referralCount: Prisma.FieldRef<"User", 'Int'>
   readonly premiumUntil: Prisma.FieldRef<"User", 'DateTime'>
   readonly companyName: Prisma.FieldRef<"User", 'String'>
+  readonly companyWebsite: Prisma.FieldRef<"User", 'String'>
+  readonly companyPhone: Prisma.FieldRef<"User", 'String'>
+  readonly companyTaxId: Prisma.FieldRef<"User", 'String'>
+  readonly companySector: Prisma.FieldRef<"User", 'String'>
+  readonly companyCity: Prisma.FieldRef<"User", 'String'>
+  readonly companyCountry: Prisma.FieldRef<"User", 'String'>
+  readonly companySize: Prisma.FieldRef<"User", 'String'>
+  readonly recruiterStatus: Prisma.FieldRef<"User", 'String'>
+  readonly recruiterRejectionReason: Prisma.FieldRef<"User", 'String'>
+  readonly recruiterVerifiedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly recruiterCredits: Prisma.FieldRef<"User", 'Int'>
   readonly freeUnlocksUsed: Prisma.FieldRef<"User", 'Int'>
   readonly schoolId: Prisma.FieldRef<"User", 'String'>

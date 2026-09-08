@@ -295,9 +295,13 @@ async function searchCandidatesInternal(
       const vector = await generateEmbedding(params.query);
       const vectorString = `[${vector.join(',')}]`;
 
-      // Récupérer les profils sémantiquement proches
+      // Récupérer les profils sémantiquement proches avec l'index HNSW
       const results = await prisma.$queryRaw<Array<{id: string, distance: number}>>`
-        SELECT "id", ("embedding" <=> ${vectorString}::vector) as distance FROM "CandidateProfile" WHERE "isActive" = true ORDER BY distance ASC LIMIT 50
+        SELECT "id", (("embedding"::halfvec(3072) <=> ${vectorString}::halfvec(3072))) as distance 
+        FROM "CandidateProfile" 
+        WHERE "isActive" = true AND "embedding" IS NOT NULL 
+        ORDER BY distance ASC 
+        LIMIT 50
       `;
       
       closestIds = results.filter(r => r.distance < 0.45).map(r => r.id);

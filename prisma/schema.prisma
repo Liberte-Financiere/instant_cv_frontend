@@ -115,10 +115,20 @@ model User {
   referralCount Int       @default(0) // Count of successful referrals
   premiumUntil  DateTime? // Premium access expiry date (reward)
 
-  // Recruiter-specific fields (populated when role = RECRUITER)
-  companyName      String?
-  recruiterCredits Int     @default(0)
-  freeUnlocksUsed  Int     @default(0) // Max 3 free unlocks
+  // Recruiter-specific & verification fields
+  companyName              String?
+  companyWebsite           String?
+  companyPhone             String?
+  companyTaxId             String?   // RCCM / IFU (optionnel)
+  companySector            String?
+  companyCity              String?
+  companyCountry           String?
+  companySize              String?   // '1-10', '11-50', '51-200', '200+'
+  recruiterStatus          String    @default("NONE") // 'NONE' | 'PENDING' | 'APPROVED' | 'REJECTED'
+  recruiterRejectionReason String?
+  recruiterVerifiedAt      DateTime?
+  recruiterCredits         Int       @default(0)
+  freeUnlocksUsed          Int       @default(0) // Max 3 free unlocks (activés à l'approbation)
 
   accounts            Account[]
   sessions            Session[]
@@ -148,6 +158,7 @@ model User {
   @@index([lastLogin])
   @@index([lastActivity])
   @@index([schoolId])
+  @@index([recruiterStatus])
 }
 
 model PlatformFeedback {
@@ -559,6 +570,7 @@ model JobOffer {
   recruiter   User   @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
 
   viewsCount   Int              @default(0)
+  clicksCount  Int              @default(0)
   applications JobApplication[]
 
   @@index([recruiterId, createdAt(sort: Desc)])

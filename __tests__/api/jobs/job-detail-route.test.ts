@@ -73,10 +73,36 @@ describe('Job Detail API (/api/jobs/[id])', () => {
       expect(global.fetch).toHaveBeenNthCalledWith(1, 'http://127.0.0.1:8080/api/v1/opportunities/555', expect.any(Object));
       expect(global.fetch).toHaveBeenNthCalledWith(2, 'http://127.0.0.1:8080/api/v1/opportunities/555/view', { method: 'POST' });
     });
+
+    it('devrait retourner 404 si l\'offre native est introuvable ou fermée', async () => {
+      (prisma.jobOffer.findFirst as any).mockResolvedValue(null);
+
+      const req = new Request('http://localhost:3000/api/jobs/not-found-id');
+      const response = await GET(req, { params: Promise.resolve({ id: 'not-found-id' }) });
+      const json = await response.json();
+
+      expect(response.status).toBe(404);
+      expect(json.error).toBe('Offre introuvable ou fermée');
+      expect(prisma.jobOffer.update).not.toHaveBeenCalled();
+    });
+
+    it('devrait relayer l\'erreur HTTP lorsque le microservice Go ne trouve pas l\'offre', async () => {
+      (global.fetch as any).mockResolvedValue({
+        ok: false,
+        status: 404,
+      });
+
+      const req = new Request('http://localhost:3000/api/jobs/ext-999');
+      const response = await GET(req, { params: Promise.resolve({ id: 'ext-999' }) });
+      const json = await response.json();
+
+      expect(response.status).toBe(404);
+      expect(json.error).toBe('Offre introuvable');
+    });
   });
 
   describe('POST (Click Tracking)', () => {
-    it('devrait incrémenter les vues (clicks n\'existant pas) pour une offre native', async () => {
+    it('devrait incrémenter clicksCount pour une offre native', async () => {
       (prisma.jobOffer.update as any).mockResolvedValue({});
 
       const req = new Request('http://localhost:3000/api/jobs/cuid-123', { method: 'POST' });
@@ -88,8 +114,26 @@ describe('Job Detail API (/api/jobs/[id])', () => {
       
       expect(prisma.jobOffer.update).toHaveBeenCalledWith({
         where: { id: 'cuid-123' },
-        data: { viewsCount: { increment: 1 } }
+        data: { clicksCount: { increment: 1 } }
       });
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
+    it('devrait retourner 200 même si l\'incrémentation en arrière-plan échoue pour une offre native', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      (prisma.jobOffer.update as any).mockRejectedValue(new Error('Database error'));
+
+      const req = new Request('http://localhost:3000/api/jobs/cuid-123', { method: 'POST' });
+      const response = await POST(req, { params: Promise.resolve({ id: 'cuid-123' }) });
+      const json = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(json.success).toBe(true);
+      expect(prisma.jobOffer.update).toHaveBeenCalledWith({
+        where: { id: 'cuid-123' },
+        data: { clicksCount: { increment: 1 } }
+      });
+      consoleSpy.mockRestore();
     });
 
     it('devrait appeler l\'API Go pour traquer les clics d\'une offre scrappée', async () => {
@@ -105,6 +149,15 @@ describe('Job Detail API (/api/jobs/[id])', () => {
       expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:8080/api/v1/opportunities/555/click', { method: 'POST' });
       // Prisma shouldn't be touched for scraped jobs
       expect(prisma.jobOffer.update).not.toHaveBeenCalled();
+    });
+
+    it('devrait renvoyer une erreur 500 en cas d\'erreur inattendue', async () => {
+      const req = new Request('http://localhost:3000/api/jobs/cuid-123', { method: 'POST' });
+      const response = await POST(req, { params: Promise.reject(new Error('Internal unexpected error')) });
+      const json = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(json.error).toBe('Erreur serveur');
     });
   });
 });

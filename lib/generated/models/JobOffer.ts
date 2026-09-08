@@ -29,11 +29,13 @@ export type AggregateJobOffer = {
 export type JobOfferAvgAggregateOutputType = {
   maxApplications: number | null
   viewsCount: number | null
+  clicksCount: number | null
 }
 
 export type JobOfferSumAggregateOutputType = {
   maxApplications: number | null
   viewsCount: number | null
+  clicksCount: number | null
 }
 
 export type JobOfferMinAggregateOutputType = {
@@ -53,6 +55,7 @@ export type JobOfferMinAggregateOutputType = {
   updatedAt: Date | null
   recruiterId: string | null
   viewsCount: number | null
+  clicksCount: number | null
 }
 
 export type JobOfferMaxAggregateOutputType = {
@@ -72,6 +75,7 @@ export type JobOfferMaxAggregateOutputType = {
   updatedAt: Date | null
   recruiterId: string | null
   viewsCount: number | null
+  clicksCount: number | null
 }
 
 export type JobOfferCountAggregateOutputType = {
@@ -93,6 +97,7 @@ export type JobOfferCountAggregateOutputType = {
   updatedAt: number
   recruiterId: number
   viewsCount: number
+  clicksCount: number
   _all: number
 }
 
@@ -100,11 +105,13 @@ export type JobOfferCountAggregateOutputType = {
 export type JobOfferAvgAggregateInputType = {
   maxApplications?: true
   viewsCount?: true
+  clicksCount?: true
 }
 
 export type JobOfferSumAggregateInputType = {
   maxApplications?: true
   viewsCount?: true
+  clicksCount?: true
 }
 
 export type JobOfferMinAggregateInputType = {
@@ -124,6 +131,7 @@ export type JobOfferMinAggregateInputType = {
   updatedAt?: true
   recruiterId?: true
   viewsCount?: true
+  clicksCount?: true
 }
 
 export type JobOfferMaxAggregateInputType = {
@@ -143,6 +151,7 @@ export type JobOfferMaxAggregateInputType = {
   updatedAt?: true
   recruiterId?: true
   viewsCount?: true
+  clicksCount?: true
 }
 
 export type JobOfferCountAggregateInputType = {
@@ -164,6 +173,7 @@ export type JobOfferCountAggregateInputType = {
   updatedAt?: true
   recruiterId?: true
   viewsCount?: true
+  clicksCount?: true
   _all?: true
 }
 
@@ -272,6 +282,7 @@ export type JobOfferGroupByOutputType = {
   updatedAt: Date
   recruiterId: string
   viewsCount: number
+  clicksCount: number
   _count: JobOfferCountAggregateOutputType | null
   _avg: JobOfferAvgAggregateOutputType | null
   _sum: JobOfferSumAggregateOutputType | null
@@ -316,6 +327,7 @@ export type JobOfferWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   recruiterId?: Prisma.StringFilter<"JobOffer"> | string
   viewsCount?: Prisma.IntFilter<"JobOffer"> | number
+  clicksCount?: Prisma.IntFilter<"JobOffer"> | number
   recruiter?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   applications?: Prisma.JobApplicationListRelationFilter
 }
@@ -339,6 +351,7 @@ export type JobOfferOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   recruiterId?: Prisma.SortOrder
   viewsCount?: Prisma.SortOrder
+  clicksCount?: Prisma.SortOrder
   recruiter?: Prisma.UserOrderByWithRelationInput
   applications?: Prisma.JobApplicationOrderByRelationAggregateInput
   _relevance?: Prisma.JobOfferOrderByRelevanceInput
@@ -366,6 +379,7 @@ export type JobOfferWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   recruiterId?: Prisma.StringFilter<"JobOffer"> | string
   viewsCount?: Prisma.IntFilter<"JobOffer"> | number
+  clicksCount?: Prisma.IntFilter<"JobOffer"> | number
   recruiter?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   applications?: Prisma.JobApplicationListRelationFilter
 }, "id">
@@ -389,6 +403,7 @@ export type JobOfferOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   recruiterId?: Prisma.SortOrder
   viewsCount?: Prisma.SortOrder
+  clicksCount?: Prisma.SortOrder
   _count?: Prisma.JobOfferCountOrderByAggregateInput
   _avg?: Prisma.JobOfferAvgOrderByAggregateInput
   _max?: Prisma.JobOfferMaxOrderByAggregateInput
@@ -418,6 +433,7 @@ export type JobOfferScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"JobOffer"> | Date | string
   recruiterId?: Prisma.StringWithAggregatesFilter<"JobOffer"> | string
   viewsCount?: Prisma.IntWithAggregatesFilter<"JobOffer"> | number
+  clicksCount?: Prisma.IntWithAggregatesFilter<"JobOffer"> | number
 }
 
 export type JobOfferCreateInput = {
@@ -438,6 +454,7 @@ export type JobOfferCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   viewsCount?: number
+  clicksCount?: number
   recruiter: Prisma.UserCreateNestedOneWithoutJobOffersInput
   applications?: Prisma.JobApplicationCreateNestedManyWithoutJobOfferInput
 }
@@ -461,6 +478,7 @@ export type JobOfferUncheckedCreateInput = {
   updatedAt?: Date | string
   recruiterId: string
   viewsCount?: number
+  clicksCount?: number
   applications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutJobOfferInput
 }
 
@@ -482,6 +500,7 @@ export type JobOfferUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  clicksCount?: Prisma.IntFieldUpdateOperationsInput | number
   recruiter?: Prisma.UserUpdateOneRequiredWithoutJobOffersNestedInput
   applications?: Prisma.JobApplicationUpdateManyWithoutJobOfferNestedInput
 }
@@ -505,6 +524,7 @@ export type JobOfferUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recruiterId?: Prisma.StringFieldUpdateOperationsInput | string
   viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  clicksCount?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.JobApplicationUncheckedUpdateManyWithoutJobOfferNestedInput
 }
 
@@ -527,6 +547,7 @@ export type JobOfferCreateManyInput = {
   updatedAt?: Date | string
   recruiterId: string
   viewsCount?: number
+  clicksCount?: number
 }
 
 export type JobOfferUpdateManyMutationInput = {
@@ -547,6 +568,7 @@ export type JobOfferUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  clicksCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type JobOfferUncheckedUpdateManyInput = {
@@ -568,6 +590,7 @@ export type JobOfferUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recruiterId?: Prisma.StringFieldUpdateOperationsInput | string
   viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  clicksCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type JobOfferListRelationFilter = {
@@ -605,11 +628,13 @@ export type JobOfferCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   recruiterId?: Prisma.SortOrder
   viewsCount?: Prisma.SortOrder
+  clicksCount?: Prisma.SortOrder
 }
 
 export type JobOfferAvgOrderByAggregateInput = {
   maxApplications?: Prisma.SortOrder
   viewsCount?: Prisma.SortOrder
+  clicksCount?: Prisma.SortOrder
 }
 
 export type JobOfferMaxOrderByAggregateInput = {
@@ -629,6 +654,7 @@ export type JobOfferMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   recruiterId?: Prisma.SortOrder
   viewsCount?: Prisma.SortOrder
+  clicksCount?: Prisma.SortOrder
 }
 
 export type JobOfferMinOrderByAggregateInput = {
@@ -648,11 +674,13 @@ export type JobOfferMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   recruiterId?: Prisma.SortOrder
   viewsCount?: Prisma.SortOrder
+  clicksCount?: Prisma.SortOrder
 }
 
 export type JobOfferSumOrderByAggregateInput = {
   maxApplications?: Prisma.SortOrder
   viewsCount?: Prisma.SortOrder
+  clicksCount?: Prisma.SortOrder
 }
 
 export type JobOfferScalarRelationFilter = {
@@ -752,6 +780,7 @@ export type JobOfferCreateWithoutRecruiterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   viewsCount?: number
+  clicksCount?: number
   applications?: Prisma.JobApplicationCreateNestedManyWithoutJobOfferInput
 }
 
@@ -773,6 +802,7 @@ export type JobOfferUncheckedCreateWithoutRecruiterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   viewsCount?: number
+  clicksCount?: number
   applications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutJobOfferInput
 }
 
@@ -824,6 +854,7 @@ export type JobOfferScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   recruiterId?: Prisma.StringFilter<"JobOffer"> | string
   viewsCount?: Prisma.IntFilter<"JobOffer"> | number
+  clicksCount?: Prisma.IntFilter<"JobOffer"> | number
 }
 
 export type JobOfferCreateWithoutApplicationsInput = {
@@ -844,6 +875,7 @@ export type JobOfferCreateWithoutApplicationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   viewsCount?: number
+  clicksCount?: number
   recruiter: Prisma.UserCreateNestedOneWithoutJobOffersInput
 }
 
@@ -866,6 +898,7 @@ export type JobOfferUncheckedCreateWithoutApplicationsInput = {
   updatedAt?: Date | string
   recruiterId: string
   viewsCount?: number
+  clicksCount?: number
 }
 
 export type JobOfferCreateOrConnectWithoutApplicationsInput = {
@@ -902,6 +935,7 @@ export type JobOfferUpdateWithoutApplicationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  clicksCount?: Prisma.IntFieldUpdateOperationsInput | number
   recruiter?: Prisma.UserUpdateOneRequiredWithoutJobOffersNestedInput
 }
 
@@ -924,6 +958,7 @@ export type JobOfferUncheckedUpdateWithoutApplicationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recruiterId?: Prisma.StringFieldUpdateOperationsInput | string
   viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  clicksCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type JobOfferCreateManyRecruiterInput = {
@@ -944,6 +979,7 @@ export type JobOfferCreateManyRecruiterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   viewsCount?: number
+  clicksCount?: number
 }
 
 export type JobOfferUpdateWithoutRecruiterInput = {
@@ -964,6 +1000,7 @@ export type JobOfferUpdateWithoutRecruiterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  clicksCount?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.JobApplicationUpdateManyWithoutJobOfferNestedInput
 }
 
@@ -985,6 +1022,7 @@ export type JobOfferUncheckedUpdateWithoutRecruiterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  clicksCount?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.JobApplicationUncheckedUpdateManyWithoutJobOfferNestedInput
 }
 
@@ -1006,6 +1044,7 @@ export type JobOfferUncheckedUpdateManyWithoutRecruiterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   viewsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  clicksCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -1058,6 +1097,7 @@ export type JobOfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   updatedAt?: boolean
   recruiterId?: boolean
   viewsCount?: boolean
+  clicksCount?: boolean
   recruiter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   applications?: boolean | Prisma.JobOffer$applicationsArgs<ExtArgs>
   _count?: boolean | Prisma.JobOfferCountOutputTypeDefaultArgs<ExtArgs>
@@ -1082,6 +1122,7 @@ export type JobOfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   updatedAt?: boolean
   recruiterId?: boolean
   viewsCount?: boolean
+  clicksCount?: boolean
   recruiter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["jobOffer"]>
 
@@ -1104,6 +1145,7 @@ export type JobOfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   updatedAt?: boolean
   recruiterId?: boolean
   viewsCount?: boolean
+  clicksCount?: boolean
   recruiter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["jobOffer"]>
 
@@ -1126,9 +1168,10 @@ export type JobOfferSelectScalar = {
   updatedAt?: boolean
   recruiterId?: boolean
   viewsCount?: boolean
+  clicksCount?: boolean
 }
 
-export type JobOfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "company" | "location" | "type" | "description" | "requirements" | "salary" | "applyMethod" | "applyUrlOrMail" | "status" | "expiresAt" | "maxApplications" | "requestedFiles" | "createdAt" | "updatedAt" | "recruiterId" | "viewsCount", ExtArgs["result"]["jobOffer"]>
+export type JobOfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "company" | "location" | "type" | "description" | "requirements" | "salary" | "applyMethod" | "applyUrlOrMail" | "status" | "expiresAt" | "maxApplications" | "requestedFiles" | "createdAt" | "updatedAt" | "recruiterId" | "viewsCount" | "clicksCount", ExtArgs["result"]["jobOffer"]>
 export type JobOfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   recruiter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   applications?: boolean | Prisma.JobOffer$applicationsArgs<ExtArgs>
@@ -1166,6 +1209,7 @@ export type $JobOfferPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     updatedAt: Date
     recruiterId: string
     viewsCount: number
+    clicksCount: number
   }, ExtArgs["result"]["jobOffer"]>
   composites: {}
 }
@@ -1609,6 +1653,7 @@ export interface JobOfferFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"JobOffer", 'DateTime'>
   readonly recruiterId: Prisma.FieldRef<"JobOffer", 'String'>
   readonly viewsCount: Prisma.FieldRef<"JobOffer", 'Int'>
+  readonly clicksCount: Prisma.FieldRef<"JobOffer", 'Int'>
 }
     
 

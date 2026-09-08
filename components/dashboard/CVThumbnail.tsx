@@ -13,16 +13,10 @@ const TechStack = dynamic(() => import('@/components/templates/TechStack').then(
 const MinimalistTemplate = dynamic(() => import('@/components/templates/MinimalistTemplate').then(mod => mod.MinimalistTemplate));
 const ATSFriendlyTemplate = dynamic(() => import('@/components/templates/ATSFriendlyTemplate').then(mod => mod.ATSFriendlyTemplate));
 const ATSGlacier = dynamic(() => import('@/components/templates/ATSGlacier').then(mod => mod.ATSGlacier));
-const ATSIron = dynamic(() => import('@/components/templates/ATSIron').then(mod => mod.ATSIron));
 const ElegantPhoto = dynamic(() => import('@/components/templates/ElegantPhoto').then(mod => mod.ElegantPhoto));
-const CorporateBlue = dynamic(() => import('@/components/templates/CorporateBlue').then(mod => mod.CorporateBlue));
-const CleanGrid = dynamic(() => import('@/components/templates/CleanGrid').then(mod => mod.CleanGrid));
 const Swiss = dynamic(() => import('@/components/templates/Swiss').then(mod => mod.Swiss));
-const GradientHeader = dynamic(() => import('@/components/templates/GradientHeader').then(mod => mod.GradientHeader));
 const TimelinePro = dynamic(() => import('@/components/templates/TimelinePro').then(mod => mod.TimelinePro));
 const BoldHeader = dynamic(() => import('@/components/templates/BoldHeader').then(mod => mod.BoldHeader));
-const ClassicSerif = dynamic(() => import('@/components/templates/ClassicSerif').then(mod => mod.ClassicSerif));
-const Infographic = dynamic(() => import('@/components/templates/Infographic').then(mod => mod.Infographic));
 const PastelModern = dynamic(() => import('@/components/templates/PastelModern').then(mod => mod.PastelModern));
 const BlueprintPremium = dynamic(() => import('@/components/templates/BlueprintPremium').then(mod => mod.BlueprintPremium));
 
@@ -42,16 +36,10 @@ export const CVThumbnail = memo(function CVThumbnail({ cv, scale = 0.15 }: CVThu
       case 'minimalist': return <MinimalistTemplate cv={cv} />;
       case 'ats': return <ATSFriendlyTemplate cv={cv} />;
       case 'ats-glacier': return <ATSGlacier cv={cv} />;
-      case 'ats-iron': return <ATSIron cv={cv} />;
       case 'elegant-photo': return <ElegantPhoto cv={cv} />;
-      case 'corporate-blue': return <CorporateBlue cv={cv} />;
-      case 'clean-grid': return <CleanGrid cv={cv} />;
       case 'swiss': return <Swiss cv={cv} />;
-      case 'gradient': return <GradientHeader cv={cv} />;
       case 'timeline': return <TimelinePro cv={cv} />;
       case 'bold-header': return <BoldHeader cv={cv} />;
-      case 'classic-serif': return <ClassicSerif cv={cv} />;
-      case 'infographic': return <Infographic cv={cv} />;
       case 'pastel': return <PastelModern cv={cv} />;
       case 'blueprint-premium': return <BlueprintPremium cv={cv} />;
       default: return <ModernSidebar cv={cv} />;

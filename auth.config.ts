@@ -64,6 +64,12 @@ export const authConfig = {
       if (user) {
          token.role = user.role;
          token.schoolId = user.schoolId;
+         token.recruiterStatus = (user as any).recruiterStatus || 'NONE';
+      }
+
+      if (trigger === "update" && session?.recruiterStatus) {
+         token.recruiterStatus = session.recruiterStatus;
+         if (session.role) token.role = session.role;
       }
 
       // Automatic silent restore if impersonation expired
@@ -166,6 +172,7 @@ export const authConfig = {
       } else if (session.user && token?.sub) {
         session.user.id = token.sub
         session.user.role = token.role as import('@/types/next-auth').AppRole;
+        session.user.recruiterStatus = (token.recruiterStatus as string) || 'NONE';
         if (token.schoolId !== undefined) session.user.schoolId = token.schoolId as string | null;
         if (token.email) session.user.email = token.email as string;
         if (token.name) session.user.name = token.name as string;

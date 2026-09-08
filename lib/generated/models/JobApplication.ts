@@ -386,6 +386,7 @@ export type JobApplicationOrderByWithRelationInput = {
 
 export type JobApplicationWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  jobOfferId_email?: Prisma.JobApplicationJobOfferIdEmailCompoundUniqueInput
   AND?: Prisma.JobApplicationWhereInput | Prisma.JobApplicationWhereInput[]
   OR?: Prisma.JobApplicationWhereInput[]
   NOT?: Prisma.JobApplicationWhereInput | Prisma.JobApplicationWhereInput[]
@@ -412,7 +413,7 @@ export type JobApplicationWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"JobApplication"> | Date | string
   jobOffer?: Prisma.XOR<Prisma.JobOfferScalarRelationFilter, Prisma.JobOfferWhereInput>
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id">
+}, "id" | "jobOfferId_email">
 
 export type JobApplicationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -659,6 +660,11 @@ export type JobApplicationOrderByRelevanceInput = {
   fields: Prisma.JobApplicationOrderByRelevanceFieldEnum | Prisma.JobApplicationOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
+}
+
+export type JobApplicationJobOfferIdEmailCompoundUniqueInput = {
+  jobOfferId: string
+  email: string
 }
 
 export type JobApplicationCountOrderByAggregateInput = {

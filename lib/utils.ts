@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { clear } from 'idb-keyval';
+import { TEMPLATE_IDS } from '@/lib/templates';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -120,9 +121,8 @@ export function sanitizeCVData(data: any): any {
     });
   }
 
-  // Choix du template (modern par défaut)
-  const validTemplates = ['modern', 'professional', 'executive', 'creative', 'tech'];
-  if (!cleanData.templateId || !validTemplates.includes(cleanData.templateId)) {
+  // Choix du template (modern par défaut si absent ou déprécié)
+  if (!cleanData.templateId || !TEMPLATE_IDS.includes(cleanData.templateId)) {
     cleanData.templateId = 'modern';
   }
 

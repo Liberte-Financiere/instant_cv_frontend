@@ -110,11 +110,12 @@ export async function GET(req: Request) {
         const vector = await generateEmbedding(query);
         const vectorString = `[${vector.join(',')}]`;
 
-        // Récupérer les 100 profils les plus sémantiquement proches (distance cosine < 0.55)
+        // Récupérer les 100 profils les plus sémantiquement proches (distance cosine < 0.45)
+        // Utilise l'index HNSW candidate_profile_embedding_hnsw_idx via halfvec(3072)
         const results = await prisma.$queryRaw<Array<{id: string, distance: number}>>`
-          SELECT "id", ("embedding" <=> ${vectorString}::vector) as distance 
+          SELECT "id", (("embedding"::halfvec(3072) <=> ${vectorString}::halfvec(3072))) as distance 
           FROM "CandidateProfile" 
-          WHERE "isActive" = true 
+          WHERE "isActive" = true AND "embedding" IS NOT NULL
           ORDER BY distance ASC 
           LIMIT 100
         `;

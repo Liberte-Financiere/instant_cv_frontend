@@ -36,11 +36,11 @@ export async function GET() {
 
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { role: true },
+      select: { role: true, recruiterStatus: true },
     });
 
-    if (user?.role !== 'RECRUITER' && user?.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Accès réservé aux recruteurs' }, { status: 403 });
+    if (user?.role !== 'ADMIN' && (user?.role !== 'RECRUITER' || user?.recruiterStatus !== 'APPROVED')) {
+      return NextResponse.json({ error: 'Accès réservé aux recruteurs validés' }, { status: 403 });
     }
 
     // Fetch jobs and ONLY the total applications count (no arrays of unread applications)
@@ -98,11 +98,11 @@ export async function POST(req: Request) {
 
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { role: true },
+      select: { role: true, recruiterStatus: true },
     });
 
-    if (user?.role !== 'RECRUITER' && user?.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Accès réservé aux recruteurs' }, { status: 403 });
+    if (user?.role !== 'ADMIN' && (user?.role !== 'RECRUITER' || user?.recruiterStatus !== 'APPROVED')) {
+      return NextResponse.json({ error: 'Accès réservé aux recruteurs validés' }, { status: 403 });
     }
 
     const json = await req.json();

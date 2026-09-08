@@ -30,10 +30,18 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    // Verify recruiter role
-    if (session.user.role !== 'RECRUITER' && session.user.role !== 'ADMIN') {
+    // Verify recruiter role & approval status directly from database
+    const currentUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true, recruiterStatus: true },
+    });
+
+    if (
+      currentUser?.role !== 'ADMIN' &&
+      (currentUser?.role !== 'RECRUITER' || currentUser?.recruiterStatus !== 'APPROVED')
+    ) {
       return NextResponse.json(
-        { error: 'Accès réservé aux recruteurs. Inscrivez-vous en tant que recruteur.' },
+        { error: 'Accès réservé aux recruteurs validés. Votre compte doit être approuvé par un administrateur.' },
         { status: 403 }
       );
     }

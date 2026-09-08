@@ -34,28 +34,13 @@ const ATSFriendlyTemplate = dynamic(() => import('@/components/templates/ATSFrie
 const ElegantPhoto = dynamic(() => import('@/components/templates/ElegantPhoto').then(mod => mod.ElegantPhoto), {
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
-const CorporateBlue = dynamic(() => import('@/components/templates/CorporateBlue').then(mod => mod.CorporateBlue), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
-const CleanGrid = dynamic(() => import('@/components/templates/CleanGrid').then(mod => mod.CleanGrid), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
 const Swiss = dynamic(() => import('@/components/templates/Swiss').then(mod => mod.Swiss), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
-const GradientHeader = dynamic(() => import('@/components/templates/GradientHeader').then(mod => mod.GradientHeader), {
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
 const TimelinePro = dynamic(() => import('@/components/templates/TimelinePro').then(mod => mod.TimelinePro), {
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
 const BoldHeader = dynamic(() => import('@/components/templates/BoldHeader').then(mod => mod.BoldHeader), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
-const ClassicSerif = dynamic(() => import('@/components/templates/ClassicSerif').then(mod => mod.ClassicSerif), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
-const Infographic = dynamic(() => import('@/components/templates/Infographic').then(mod => mod.Infographic), {
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
 const PastelModern = dynamic(() => import('@/components/templates/PastelModern').then(mod => mod.PastelModern), {
@@ -65,9 +50,6 @@ const BlueprintPremium = dynamic(() => import('@/components/templates/BlueprintP
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
 const ATSGlacier = dynamic(() => import('@/components/templates/ATSGlacier').then(mod => mod.ATSGlacier), {
-  loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
-});
-const ATSIron = dynamic(() => import('@/components/templates/ATSIron').then(mod => mod.ATSIron), {
   loading: () => <div className="min-h-[297mm] flex items-center justify-center bg-white"><Loader2 className="animate-spin text-slate-300" /></div>
 });
 
@@ -125,30 +107,18 @@ export function CVPreview({ data, hideToolbar }: CVPreviewProps) {
         return <ATSFriendlyTemplate cv={debouncedCV} />;
       case 'elegant-photo':
         return <ElegantPhoto cv={debouncedCV} />;
-      case 'corporate-blue':
-        return <CorporateBlue cv={debouncedCV} />;
-      case 'clean-grid':
-        return <CleanGrid cv={debouncedCV} />;
       case 'swiss':
         return <Swiss cv={debouncedCV} />;
-      case 'gradient':
-        return <GradientHeader cv={debouncedCV} />;
       case 'timeline':
         return <TimelinePro cv={debouncedCV} />;
       case 'bold-header':
         return <BoldHeader cv={debouncedCV} />;
-      case 'classic-serif':
-        return <ClassicSerif cv={debouncedCV} />;
-      case 'infographic':
-        return <Infographic cv={debouncedCV} />;
       case 'pastel':
         return <PastelModern cv={debouncedCV} />;
       case 'blueprint-premium':
         return <BlueprintPremium cv={debouncedCV} />;
       case 'ats-glacier':
         return <ATSGlacier cv={debouncedCV} />;
-      case 'ats-iron':
-        return <ATSIron cv={debouncedCV} />;
       default:
         return <ModernSidebar cv={debouncedCV} />;
     }
@@ -189,9 +159,10 @@ export function CVPreview({ data, hideToolbar }: CVPreviewProps) {
       URL.revokeObjectURL(url);
       
       toast.success('PDF téléchargé !', { id: toastId });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Export PDF failed:', error);
-      toast.error(error.message || 'Erreur lors de la génération du PDF.', { id: toastId });
+      const message = error instanceof Error ? error.message : 'Erreur lors de la génération du PDF.';
+      toast.error(message, { id: toastId });
     } finally {
       setIsExporting(false);
     }

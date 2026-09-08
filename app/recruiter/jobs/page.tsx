@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Plus, Briefcase, MapPin, Calendar, ExternalLink, Eye, Search, Edit, Power, PowerOff, Trash2 } from 'lucide-react';
+import { Plus, Briefcase, MapPin, Calendar, ExternalLink, Eye, MousePointerClick, Search, Edit, Power, PowerOff, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export default function RecruiterJobsPage() {
@@ -154,6 +154,9 @@ export default function RecruiterJobsPage() {
                   <div className="flex items-center gap-3 ml-2 border-l border-slate-200 pl-4">
                     <span className="flex items-center gap-1.5 text-slate-600 font-medium" title="Vues de l'annonce">
                       <Eye className="w-4 h-4 text-slate-400" /> {job.viewsCount || 0}
+                    </span>
+                    <span className="flex items-center gap-1.5 text-slate-600 font-medium" title="Clics sur l'annonce">
+                      <MousePointerClick className="w-4 h-4 text-slate-400" /> {job.clicksCount || 0}
                     </span>
                   </div>
                 </div>

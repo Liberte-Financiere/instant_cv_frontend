@@ -19,14 +19,28 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
   
   // Nouveaux filtres avancés
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [expFilter, setExpFilter] = useState('ALL');
   const [dateFilter, setDateFilter] = useState('ALL');
   const [showFilters, setShowFilters] = useState(false);
+
+  // Pagination
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0, totalPages: 1 });
   
   const [selectedApp, setSelectedApp] = useState<any | null>(null);
   const [activeDoc, setActiveDoc] = useState<'CV' | 'COVER_LETTER' | 'PORTFOLIO' | 'DIPLOMA' | 'NOTES'>('CV');
   
   const [noteSavedStatus, setNoteSavedStatus] = useState<'idle'|'saving'|'saved'>('idle');
+
+  // Debounce search query to prevent spamming queries
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -36,17 +50,32 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
       if (!isRecruiter) {
         router.push('/dashboard');
       } else {
-        fetchApplications();
+        fetchApplications(page);
       }
     }
-  }, [status, session, router]);
+  }, [status, session, router, jobId, page, filter, expFilter, dateFilter, debouncedSearch]);
 
-  const fetchApplications = async () => {
+  const fetchApplications = async (targetPage = page) => {
+    setLoading(true);
     try {
-      const res = await fetch(`/api/recruiter/jobs/${jobId}/applications`);
+      const params = new URLSearchParams();
+      params.set('page', targetPage.toString());
+      params.set('limit', '20');
+      if (filter !== 'ALL') params.set('status', filter);
+      if (debouncedSearch.trim()) params.set('q', debouncedSearch.trim());
+      if (expFilter !== 'ALL') params.set('exp', expFilter);
+      if (dateFilter !== 'ALL') params.set('date', dateFilter);
+
+      const res = await fetch(`/api/recruiter/jobs/${jobId}/applications?${params.toString()}`);
       if (res.ok) {
         const data = await res.json();
-        setApplications(data);
+        if (Array.isArray(data)) {
+          setApplications(data);
+          setPagination({ page: 1, limit: data.length, total: data.length, totalPages: 1 });
+        } else {
+          setApplications(data.applications || []);
+          setPagination(data.pagination || { page: 1, limit: 20, total: 0, totalPages: 1 });
+        }
       } else {
         router.push('/recruiter/jobs');
       }
@@ -156,12 +185,30 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
 
   const clearFilters = () => {
     setSearchQuery('');
+    setDebouncedSearch('');
     setExpFilter('ALL');
     setDateFilter('ALL');
+    setFilter('ALL');
+    setPage(1);
+  };
+
+  const handleFilterChange = (f: string) => {
+    setFilter(f);
+    setPage(1);
+  };
+
+  const handleExpChange = (e: string) => {
+    setExpFilter(e);
+    setPage(1);
+  };
+
+  const handleDateChange = (d: string) => {
+    setDateFilter(d);
+    setPage(1);
   };
 
   const formatPhoneForWA = (phone: string) => {
-    return phone.replace(/\\D/g, ''); // enlever les espaces, +, etc.
+    return phone.replace(/\D/g, ''); // enlever les espaces, +, etc.
   };
 
   const formatTimeAgo = (dateString: string | Date) => {
@@ -194,7 +241,7 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
           <Link href="/recruiter/jobs" className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 mb-6 transition-colors text-sm font-medium">
             <ArrowLeft className="w-4 h-4" /> Retour aux annonces
           </Link>
-          <h1 className="text-xl font-bold text-slate-900 mb-4">Candidats ({applications.length})</h1>
+          <h1 className="text-xl font-bold text-slate-900 mb-4">Candidats ({pagination.total})</h1>
           
           {/* Barre de recherche et Toggle Filtres */}
           <div className="flex items-center gap-2 mb-4">
@@ -223,7 +270,7 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
               <div className="grid grid-cols-2 gap-2">
                 <select 
                   value={expFilter}
-                  onChange={(e) => setExpFilter(e.target.value)}
+                  onChange={(e) => handleExpChange(e.target.value)}
                   className="text-xs p-2 rounded border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="ALL">Expérience : Tous</option>
@@ -234,7 +281,7 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
                 
                 <select 
                   value={dateFilter}
-                  onChange={(e) => setDateFilter(e.target.value)}
+                  onChange={(e) => handleDateChange(e.target.value)}
                   className="text-xs p-2 rounded border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="ALL">Date : Toutes</option>
@@ -259,7 +306,7 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
             {['ALL', 'NEW', 'REVIEWING', 'RETAINED', 'REJECTED'].map(f => (
               <button
                 key={f}
-                onClick={() => setFilter(f)}
+                onClick={() => handleFilterChange(f)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all border ${filter === f ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-900'}`}
               >
                 {f === 'ALL' ? 'Tous' : f === 'NEW' ? 'Nouveaux' : f === 'REVIEWING' ? 'En cours' : f === 'RETAINED' ? 'Retenus' : 'Rejetés'}
@@ -269,12 +316,12 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
-          {filteredApps.length === 0 ? (
+          {applications.length === 0 ? (
             <div className="text-center mt-10 p-4">
               <p className="text-slate-500 font-medium mb-3">Aucune candidature trouvée pour ces critères.</p>
               {(searchQuery || expFilter !== 'ALL' || dateFilter !== 'ALL' || filter !== 'ALL') && (
                 <button 
-                  onClick={() => { clearFilters(); setFilter('ALL'); }}
+                  onClick={clearFilters}
                   className="text-sm font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-lg"
                 >
                   Effacer tous les filtres
@@ -282,7 +329,7 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
               )}
             </div>
           ) : (
-            filteredApps.map(app => (
+            applications.map(app => (
               <div 
                 key={app.id} 
                 onClick={() => handleSelectApp(app)}
@@ -310,6 +357,29 @@ export default function ApplicationsATSPage({ params }: { params: Promise<{ id: 
             ))
           )}
         </div>
+
+        {/* Pagination controls */}
+        {pagination.totalPages > 1 && (
+          <div className="p-3 border-t border-slate-200 bg-white flex items-center justify-between text-xs text-slate-600 shrink-0">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page <= 1 || loading}
+              className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors"
+            >
+              Précédent
+            </button>
+            <span className="font-semibold text-slate-700">
+              Page {pagination.page} / {pagination.totalPages}
+            </span>
+            <button
+              onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
+              disabled={page >= pagination.totalPages || loading}
+              className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors"
+            >
+              Suivant
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Right panel: Details */}

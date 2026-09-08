@@ -7,8 +7,24 @@ import { BarChart3, Eye, MousePointerClick, Briefcase, TrendingUp, Users } from 
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 
+interface AnalyticsData {
+  totalJobs: number;
+  activeJobs: number;
+  totalViews: number;
+  totalClicks: number;
+  totalApplications: number;
+  conversionRate: number;
+  topJobs: {
+    id: string;
+    title: string;
+    viewsCount: number;
+    clicksCount: number;
+    status: string;
+  }[];
+}
+
 export default function RecruiterAnalyticsPage() {
-  const [jobs, setJobs] = useState<any[]>([]);
+  const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -21,17 +37,17 @@ export default function RecruiterAnalyticsPage() {
       if (!isRecruiter) {
         router.push('/dashboard');
       } else {
-        fetchJobs();
+        fetchAnalytics();
       }
     }
   }, [status, session, router]);
 
-  const fetchJobs = async () => {
+  const fetchAnalytics = async () => {
     try {
-      const res = await fetch('/api/recruiter/jobs');
+      const res = await fetch('/api/recruiter/analytics');
       if (res.ok) {
-        const data = await res.json();
-        setJobs(data);
+        const json = await res.json();
+        setData(json);
       }
     } catch (error) {
       console.error(error);
@@ -49,14 +65,12 @@ export default function RecruiterAnalyticsPage() {
     );
   }
 
-  const totalJobs = jobs.length;
-  const activeJobs = jobs.filter(j => j.status === 'ACTIVE').length;
-  const totalViews = jobs.reduce((sum, job) => sum + (job.viewsCount || 0), 0);
-  const totalClicks = jobs.reduce((sum, job) => sum + (job.clicksCount || 0), 0);
-  const totalApplications = jobs.reduce((sum, job) => sum + (job.totalApplications || 0), 0);
-  
-  // Top performing jobs by views
-  const topJobs = [...jobs].sort((a, b) => (b.viewsCount || 0) - (a.viewsCount || 0)).slice(0, 5);
+  const totalJobs = data?.totalJobs || 0;
+  const activeJobs = data?.activeJobs || 0;
+  const totalViews = data?.totalViews || 0;
+  const totalClicks = data?.totalClicks || 0;
+  const totalApplications = data?.totalApplications || 0;
+  const topJobs = data?.topJobs || [];
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 p-8">

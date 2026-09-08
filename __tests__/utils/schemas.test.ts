@@ -1,20 +1,16 @@
 import { describe, it, expect } from 'vitest';
-import { z } from 'zod';
 import {
   personalInfoSchema,
   experienceSchema,
   educationSchema,
   skillSchema,
   languageSchema,
-  hobbySchema,
-  certificationSchema,
-  projectSchema,
-  qualitySchema,
   referenceSchema,
   socialLinkSchema,
   footerSchema,
   settingsSchema,
   coverLetterContentSchema,
+  templateIdSchema,
 } from '@/lib/schemas';
 
 /**
@@ -265,5 +261,29 @@ describe('coverLetterContentSchema', () => {
       details: { date: '', location: '', subject: '', salutation: '', body: '', closing: '' },
     };
     expect(coverLetterContentSchema.safeParse(data).success).toBe(false);
+  });
+});
+
+// -- templateIdSchema -------------------------------------------------------
+
+describe('templateIdSchema', () => {
+  it('accepts active valid template ids', () => {
+    expect(templateIdSchema.safeParse('modern').success).toBe(true);
+    expect(templateIdSchema.safeParse('professional').success).toBe(true);
+    expect(templateIdSchema.safeParse('executive').success).toBe(true);
+  });
+
+  it('rejects removed templates ats-iron, infographic, classic-serif, gradient, clean-grid, and corporate-blue', () => {
+    expect(templateIdSchema.safeParse('ats-iron').success).toBe(false);
+    expect(templateIdSchema.safeParse('infographic').success).toBe(false);
+    expect(templateIdSchema.safeParse('classic-serif').success).toBe(false);
+    expect(templateIdSchema.safeParse('gradient').success).toBe(false);
+    expect(templateIdSchema.safeParse('clean-grid').success).toBe(false);
+    expect(templateIdSchema.safeParse('corporate-blue').success).toBe(false);
+  });
+
+  it('rejects unknown template id', () => {
+    const result = templateIdSchema.safeParse('unknown-template-xyz');
+    expect(result.success).toBe(false);
   });
 });

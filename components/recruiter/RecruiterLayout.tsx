@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   Search, Building2, Users, LogIn, LogOut, 
-  Unlock, User, Briefcase, BarChart3, Menu, X 
+  Unlock, User, Briefcase, BarChart3, Menu, X, ArrowLeft, Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useSession, signOut } from 'next-auth/react';
@@ -16,10 +16,94 @@ interface RecruiterLayoutProps {
 }
 
 export function RecruiterLayout({ children }: RecruiterLayoutProps) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const pathname = usePathname();
-  const isRecruiter = session?.user?.role === 'RECRUITER' || session?.user?.role === 'ADMIN';
+  const router = useRouter();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const isOnboardingPage = 
+    pathname === '/recruiter/register' || 
+    pathname === '/recruiter/pending' || 
+    pathname === '/recruiter/rejected';
+
+  const isApprovedRecruiter = 
+    session?.user?.role === 'ADMIN' || 
+    (session?.user?.role === 'RECRUITER' && session?.user?.recruiterStatus === 'APPROVED');
+
+  useEffect(() => {
+    if (status === 'loading') return;
+
+    // Gatekeeper: Protected recruiter pages
+    if (!isOnboardingPage) {
+      if (status === 'unauthenticated') {
+        router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+        return;
+      }
+
+      if (!isApprovedRecruiter) {
+        const recruiterStatus = session?.user?.recruiterStatus;
+        if (recruiterStatus === 'PENDING') {
+          router.push('/recruiter/pending');
+        } else if (recruiterStatus === 'REJECTED') {
+          router.push('/recruiter/rejected');
+        } else {
+          router.push('/recruiter/register');
+        }
+      }
+    }
+  }, [status, isApprovedRecruiter, isOnboardingPage, pathname, router, session]);
+
+  // Dedicated clean minimalist layout for onboarding (register / pending / rejected)
+  if (isOnboardingPage) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900">
+        <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-30">
+          <Link href="/dashboard" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm">
+              <Search className="w-4 h-4 text-white" />
+            </div>
+            <div className="flex items-center">
+              <span className="font-extrabold text-slate-900 text-lg">Jobsira</span>
+              <span className="font-semibold text-blue-600 text-lg ml-1">Talent</span>
+            </div>
+          </Link>
+
+          <div className="flex items-center gap-3">
+            <Link href="/dashboard">
+              <Button variant="ghost" className="text-slate-600 hover:text-slate-900 text-sm">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Espace Candidat
+              </Button>
+            </Link>
+            {session && (
+              <Button 
+                variant="ghost" 
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 text-sm"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Déconnexion
+              </Button>
+            )}
+          </div>
+        </header>
+
+        <main className="flex-1 pb-16">
+          {children}
+        </main>
+      </div>
+    );
+  }
+
+  // Waiting for gatekeeper redirect if unauthorized
+  if (status === 'loading' || !isApprovedRecruiter) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-slate-50">
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+      </div>
+    );
+  }
 
   const navLinks = [
     { href: '/recruiter/dashboard', label: "Vue d'ensemble", icon: BarChart3, exact: true },
@@ -50,9 +134,6 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
         <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 px-2 mt-4">Menu Principal</div>
         
         {navLinks.map((link) => {
-          // Si l'utilisateur n'est pas recruteur, on ne montre que "Recherche"
-          if (!isRecruiter && link.href !== '/recruiter') return null;
-          
           const Icon = link.icon;
           const isActive = link.exact 
             ? pathname === link.href 
@@ -95,7 +176,7 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
             </Button>
           </>
         ) : (
-          <Link href="/recruiter/register" onClick={() => setMobileMenuOpen(false)}>
+          <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
             <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md">
               <LogIn className="w-4 h-4 mr-2" />
               Connexion
@@ -115,7 +196,7 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
 
       {/* Mobile Header & Overlay */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-30 flex items-center justify-between px-4">
-        <Link href="/recruiter" className="flex items-center gap-2">
+        <Link href="/recruiter/dashboard" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
             <Search className="w-4 h-4 text-white" />
           </div>
@@ -144,7 +225,7 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
       </main>
       
       {/* Assistant IA */}
-      <TalentChat isLocked={!isRecruiter} />
+      <TalentChat isLocked={!isApprovedRecruiter} />
     </div>
   );
 }

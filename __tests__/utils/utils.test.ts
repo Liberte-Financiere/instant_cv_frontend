@@ -131,6 +131,36 @@ describe('sanitizeCVData', () => {
       expect(result.templateId).toBe('modern');
     });
 
+    it('falls back to modern template for removed template ats-iron', () => {
+      const result = sanitizeCVData({ templateId: 'ats-iron' });
+      expect(result.templateId).toBe('modern');
+    });
+
+    it('falls back to modern template for removed template infographic', () => {
+      const result = sanitizeCVData({ templateId: 'infographic' });
+      expect(result.templateId).toBe('modern');
+    });
+
+    it('falls back to modern template for removed template classic-serif', () => {
+      const result = sanitizeCVData({ templateId: 'classic-serif' });
+      expect(result.templateId).toBe('modern');
+    });
+
+    it('falls back to modern template for removed template gradient', () => {
+      const result = sanitizeCVData({ templateId: 'gradient' });
+      expect(result.templateId).toBe('modern');
+    });
+
+    it('falls back to modern template for removed template clean-grid', () => {
+      const result = sanitizeCVData({ templateId: 'clean-grid' });
+      expect(result.templateId).toBe('modern');
+    });
+
+    it('falls back to modern template for removed template corporate-blue', () => {
+      const result = sanitizeCVData({ templateId: 'corporate-blue' });
+      expect(result.templateId).toBe('modern');
+    });
+
     it('preserves valid templateId', () => {
       const result = sanitizeCVData({ templateId: 'professional' });
       expect(result.templateId).toBe('professional');

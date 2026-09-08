@@ -104,7 +104,12 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                         <AlertTriangle className="w-5 h-5 mr-2" /> Quota de candidatures atteint
                       </Button>
                     ) : (
-                      <Link href={`/jobs/${job.id}/apply`}>
+                      <Link 
+                        href={`/jobs/${job.id}/apply`}
+                        onClick={() => {
+                          fetch(`/api/jobs/${resolvedParams.id}`, { method: 'POST' }).catch(() => {});
+                        }}
+                      >
                         <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-6 px-8 rounded-xl text-lg shadow-[0_0_20px_rgba(37,99,235,0.3)]">
                           <Briefcase className="w-5 h-5 mr-2" /> Postuler maintenant
                         </Button>

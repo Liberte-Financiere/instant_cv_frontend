@@ -186,6 +186,16 @@ export const UserScalarFieldEnum = {
   referralCount: 'referralCount',
   premiumUntil: 'premiumUntil',
   companyName: 'companyName',
+  companyWebsite: 'companyWebsite',
+  companyPhone: 'companyPhone',
+  companyTaxId: 'companyTaxId',
+  companySector: 'companySector',
+  companyCity: 'companyCity',
+  companyCountry: 'companyCountry',
+  companySize: 'companySize',
+  recruiterStatus: 'recruiterStatus',
+  recruiterRejectionReason: 'recruiterRejectionReason',
+  recruiterVerifiedAt: 'recruiterVerifiedAt',
   recruiterCredits: 'recruiterCredits',
   freeUnlocksUsed: 'freeUnlocksUsed',
   schoolId: 'schoolId'
@@ -514,7 +524,8 @@ export const JobOfferScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   recruiterId: 'recruiterId',
-  viewsCount: 'viewsCount'
+  viewsCount: 'viewsCount',
+  clicksCount: 'clicksCount'
 } as const
 
 export type JobOfferScalarFieldEnum = (typeof JobOfferScalarFieldEnum)[keyof typeof JobOfferScalarFieldEnum]
@@ -663,6 +674,15 @@ export const UserOrderByRelevanceFieldEnum = {
   referralCode: 'referralCode',
   referredById: 'referredById',
   companyName: 'companyName',
+  companyWebsite: 'companyWebsite',
+  companyPhone: 'companyPhone',
+  companyTaxId: 'companyTaxId',
+  companySector: 'companySector',
+  companyCity: 'companyCity',
+  companyCountry: 'companyCountry',
+  companySize: 'companySize',
+  recruiterStatus: 'recruiterStatus',
+  recruiterRejectionReason: 'recruiterRejectionReason',
   schoolId: 'schoolId'
 } as const
 
