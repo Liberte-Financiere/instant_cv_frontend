@@ -7,7 +7,7 @@ import { Building2, Gift, Shield, Loader2, CheckCircle2, Phone, Globe, MapPin, F
 import { Button } from '@/components/ui/Button';
 
 export default function RecruiterRegisterPage() {
-  const { data: session, status, update } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -84,12 +84,6 @@ export default function RecruiterRegisterPage() {
         setError(data.error || "Erreur lors de l'enregistrement du dossier");
         return;
       }
-
-      // Update session silently if supported
-      if (update) {
-        await update({ recruiterStatus: 'PENDING' });
-      }
-
       router.push('/recruiter/pending');
     } catch {
       setError('Erreur de connexion. Veuillez réessayer.');

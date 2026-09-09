@@ -1,19 +1,36 @@
 # Faille Critique : Escalade de Privilèges via NextAuth (Mass Assignment)
 
+**Statut :** CORRIGÉ & VALIDÉ  
+**Date de résolution définitive :** 09 Septembre 2026  
 **Fichiers concernés :** 
-1. `auth.config.ts` (Backend - Le faille)
-2. `app/recruiter/register/page.tsx` (Frontend - L'origine du besoin)
+1. `auth.config.ts` (Backend - Suppression de l'assignation non sécurisée)
+2. `app/recruiter/pending/page.tsx` & `app/recruiter/rejected/page.tsx` (Frontend - Reconnexion requise pour actualiser la session)
+3. `__tests__/auth/auth.config.test.ts` (Test de non-régression automatisé)
+
+---
 
 ### Description de la vulnérabilité
-Dans la configuration de NextAuth (`auth.config.ts`), la fonction de callback `jwt` est conçue pour gérer les mises à jour de session (`trigger === "update"`). 
-Le code actuel fait directement confiance aux données envoyées par le client (`session.role`) et les écrit dans le jeton JWT sécurisé (`token.role = session.role`).
+Dans la configuration de NextAuth (`auth.config.ts`), la fonction de callback `jwt` est conçue pour gérer les événements de mise à jour (`trigger === "update"`). 
+Le code faisait confiance aux données envoyées par le client (`session.role`, `session.recruiterStatus`) et les écrivait directement dans le jeton JWT sécurisé (`token.role = session.role`).
 
-**L'origine du problème :** Dans le composant `register/page.tsx`, lorsqu'un utilisateur devient recruteur, le frontend force la mise à jour du cookie en appelant `await update({ role: 'RECRUITER' })`. Pour que cela fonctionne, le développeur a autorisé le backend à accepter aveuglément le rôle fourni dans le payload.
+**L'Exploitation :** Puisque le corps de la requête vers `/api/auth/session` provient du navigateur, un utilisateur standard pouvait envoyer un payload `{ recruiterStatus: 'NONE', role: 'ADMIN' }`. NextAuth écrasait le rôle du token par `ADMIN`, accordant les pleins pouvoirs administratifs sur le système sans vérification préalable.
 
-**L'Exploitation :** Puisque la variable `session` provient du navigateur, un utilisateur malveillant peut ouvrir sa console et injecter n'importe quel rôle (comme `ADMIN`). Le serveur signera le nouveau JWT et lui donnera les pleins pouvoirs.
+---
 
-### Preuve de Concept (POC)
-Depuis un compte standard, envoyer la requête POST suivante depuis la console du navigateur ou Burp Suite vers `/api/auth/session` :
+### Historique des Interventions
+
+1. **17 Août 2026** : Première identification et suppression de `token.role = session.role`.
+2. **08 Septembre 2026** : Régression réintroduite par mégarde lors de l'implémentation de la vérification recruteur (`if (trigger === "update" && session?.recruiterStatus) { if (session.role) token.role = session.role; }`).
+3. **09 Septembre 2026 (Résolution Définitive)** : 
+   - Suppression intégrale et définitive de l'acceptation de `role` ou `recruiterStatus` dans `jwt()`.
+   - Adoption du principe Zero-Trust : le client n'a aucun pouvoir d'élévation ou de modification de statut de session.
+   - Forçage d'une reconnexion propre (`signOut`) lors de l'approbation d'un recruteur pour que la base de données PostgreSQL soit la seule source de vérité lors de la réémission du JWT.
+   - Test de non-régression automatisé dans `__tests__/auth/auth.config.test.ts`.
+
+---
+
+### Preuve de Concept (POC Bloqué)
+Depuis un compte standard :
 
 ```http
 POST /api/auth/session HTTP/1.1
@@ -21,46 +38,31 @@ Host: jobsira.com
 Content-Type: application/json
 
 {
-  "csrfToken": "VOTRE_CSRF_TOKEN_ACTUEL",
   "data": {
+    "recruiterStatus": "NONE",
     "role": "ADMIN"
   }
 }
 ```
 
-**Résultat :** Le serveur renvoie un nouveau cookie de session valide avec le rôle `ADMIN`.
+**Résultat actuel (Sécurisé) :** Le payload est totalement ignoré. Le token conserve strictement son rôle initial (`USER`) et son statut attribué en base (`NONE`).
 
-### Correctifs Recommandés
+---
 
-**1. Côté Frontend (`app/recruiter/register/page.tsx` ligne 47) :**
-Ne pas envoyer de données dans l'update. Dire simplement à NextAuth de rafraîchir.
-```tsx
-// AVANT : await update({ role: 'RECRUITER' });
-// APRÈS :
-await update();
-```
+### Architecture Finale Appliquée
 
-**2. Côté Backend (`auth.config.ts` Ligne 148) :**
-Ne jamais faire confiance au client. Interroger la base de données.
+**Dans `auth.config.ts` :**
+Le callback `jwt` ne contient plus aucune logique de mise à jour pour `role` ou `recruiterStatus` :
 ```typescript
-// AVANT (Vulnérable) :
-if (trigger === "update" && session?.role && !session?.impersonationToken && !session?.stopImpersonation) {
-    token.role = session.role;
-}
+// Seules les actions cryptographiquement signées par le serveur (ex: impersonation JWT) sont autorisées.
+// Aucun attribut de privilège n'est accepté directement depuis le payload client.
+```
 
-// APRÈS (Sécurisé) :
-if (trigger === "update" && !session?.impersonationToken && !session?.stopImpersonation) {
-    const { prisma } = require("@/lib/prisma"); 
-    try {
-        const dbUser = await prisma.user.findUnique({
-            where: { id: token.sub as string },
-            select: { role: true }
-        });
-        if (dbUser) {
-            token.role = dbUser.role; // Seule la DB fait autorité
-        }
-    } catch (e) {
-        console.error("Erreur lors de l'update de session", e);
-    }
+**Dans les interfaces recruteur (`app/recruiter/pending/page.tsx`) :**
+```typescript
+if (json.status === 'APPROVED' || json.role === 'RECRUITER') {
+  // Reconnexion forcée pour réémettre un token officiel depuis la DB
+  await signOut({ callbackUrl: '/login?callbackUrl=/recruiter&message=recruiter_approved' });
 }
 ```
+

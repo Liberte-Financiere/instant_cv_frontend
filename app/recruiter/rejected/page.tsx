@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { XCircle, Edit3, MessageSquare, ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 
 export default function RecruiterRejectedPage() {
-  const { data: session, status: authStatus, update } = useSession();
+  const { data: session, status: authStatus } = useSession();
   const router = useRouter();
   const [reason, setReason] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -21,19 +21,11 @@ export default function RecruiterRejectedPage() {
         .then(res => res.json())
         .then(async (data) => {
           if (data.status === 'APPROVED' || data.role === 'RECRUITER') {
-            if (update) {
-              await update({ recruiterStatus: 'APPROVED', role: 'RECRUITER' });
-            }
-            router.push('/recruiter');
+            await signOut({ callbackUrl: '/login?callbackUrl=/recruiter&message=recruiter_approved' });
+            return;
           } else if (data.status === 'PENDING') {
-            if (update) {
-              await update({ recruiterStatus: 'PENDING', role: 'USER' });
-            }
             router.push('/recruiter/pending');
           } else if (data.status === 'NONE') {
-            if (update) {
-              await update({ recruiterStatus: 'NONE', role: 'USER' });
-            }
             router.push('/recruiter/register');
           } else {
             setReason(data.rejectionReason);

@@ -67,10 +67,6 @@ export const authConfig = {
          token.recruiterStatus = (user as any).recruiterStatus || 'NONE';
       }
 
-      if (trigger === "update" && session?.recruiterStatus) {
-         token.recruiterStatus = session.recruiterStatus;
-         if (session.role) token.role = session.role;
-      }
 
       // Automatic silent restore if impersonation expired
       if (token.impersonationExpiresAt && Date.now() > (token.impersonationExpiresAt as number)) {

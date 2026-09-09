@@ -1,56 +1,33 @@
-[2026-09-08] — FEAT: Manual Recruiter Verification, Portal Lockout & Recruiter Experience Optimization
+[2026-09-09] — FIX(SECURITY): Eliminate NextAuth Privilege Escalation & PDF Generation SSRF
 
 What changed:
-- prisma/schema.prisma: Ajout des colonnes clicksCount sur JobOffer et des champs entreprise/recruiterStatus sur User (companyWebsite, companyPhone, companyTaxId, companySector, companyCity, companyCountry, companySize, recruiterStatus @default("NONE"), recruiterRejectionReason, recruiterVerifiedAt) avec index dédié.
-- lib/generated: Synchronisation PostgreSQL non-destructive via npx prisma db push et regénération des modèles Prisma client.
-- types/next-auth.d.ts & auth.config.ts: Intégration et synchronisation de recruiterStatus dans les tokens JWT et sessions NextAuth, avec support du trigger update.
-- app/api/recruiter/register/route.ts: Refonte avec validation Zod stricte des coordonnées d'entreprise, statut initial PENDING, rôle USER maintenu et zéro déblocage gratuit accordé avant approbation.
-- app/api/recruiter/status/route.ts: Nouvel endpoint de vérification en temps réel du statut recruteur directement depuis PostgreSQL.
-- components/recruiter/RecruiterLayout.tsx: Verrouillage hermétique de l'accès au portail recruteur pour tout compte non approuvé, avec redirections automatiques et layout minimaliste pour l'onboarding.
-- app/recruiter/register/page.tsx, app/recruiter/pending/page.tsx, app/recruiter/rejected/page.tsx: Interfaces utilisateur dédiées pour chaque étape du cycle de vie (inscription détaillée avec RCCM optionnel, page d'attente avec actualisation en direct, page de rejet avec affichage du motif et ré-envoi pré-rempli).
-- app/api/recruiter/jobs/route.ts & app/api/recruiter/profiles/[id]/unlock/route.ts: Défense en profondeur vérifiant recruiterStatus === 'APPROVED' directement en base PostgreSQL (403 Forbidden si non validé).
-- app/api/admin/recruiters/route.ts & app/dashboard/hq-ops/recruiters/page.tsx: Interface de modération HQ Ops et endpoint d'administration complet avec filtrage par statut, approbation (octroi rôle RECRUITER + 3 déblocages gratuits), rejet avec motif personnalisé, traçabilité AuditLog et notifications par email transactionnel.
-- components/dashboard/HqSidebar.tsx: Ajout du lien de navigation 'Validation Recruteurs' dans HQ Ops.
-- app/api/recruiter/jobs/[id]/applications/route.ts & app/recruiter/jobs/[id]/applications/page.tsx: Pagination serveur bornée (limit 100 max) et délégation intégrale du filtrage et du tri à PostgreSQL.
-- app/api/recruiter/analytics/route.ts & app/recruiter/analytics/page.tsx: Remplacement du traitement client par un endpoint SQL d'agrégation léger (< 1 Ko).
-- app/api/recruiter/search/route.ts & lib/talent-assistant.ts: Requêtes sémantiques optimisées pour index HNSW pgvector halfvec(3072).
-- __tests__: Création et mise à jour de suites de tests unitaires dédiées (register, admin recruiters, unlock, applications, analytics, templates), portant la couverture à 31 fichiers et 374/374 tests passés à 100%.
+- auth.config.ts: Suppression intégrale du bloc conditionnel vulnérable `if (trigger === "update" && session?.recruiterStatus)` qui réassignait `token.role = session.role` et `token.recruiterStatus = session.recruiterStatus`. Le callback JWT n'accepte plus aucune modification de rôle ou de statut initiée depuis le client.
+- app/recruiter/pending/page.tsx: Remplacement des appels `update(...)` par `signOut({ callbackUrl: '/login?callbackUrl=/recruiter&message=recruiter_approved' })` dès que l'approbation est détectée en base, forçant une régénération cryptographique du token JWT depuis PostgreSQL au login.
+- app/recruiter/register/page.tsx: Suppression de l'appel `update({ recruiterStatus: 'PENDING' })` superflu.
+- app/recruiter/rejected/page.tsx: Nettoyage des appels `update(...)` et application de `signOut` avec redirection appropriée lors d'une approbation éventuelle.
+- __tests__/auth/auth.config.test.ts: Ajout de tests de non-régression validant que l'initialisation du token au login charge correctement les attributs depuis la base et que toute tentative d'élévation arbitraire de rôle vers ADMIN ou de statut vers APPROVED via le trigger update est strictement ignorée.
+- app/api/pdf/generate/route.ts: Élimination de la faille SSRF par suppression de la lecture de `req.headers.get('host')`. L'origine Puppeteer est désormais strictement verrouillée sur les variables d'environnement serveur (`NEXTAUTH_URL` ou `NEXT_PUBLIC_APP_URL` ou `localhost:3000`), avec encodage de l'identifiant cible via `encodeURIComponent(id)`.
+- faille/ssrf.md & faille/auth_privilege_escalation.md: Documentation de sécurité mise à jour avec statut CORRIGÉ & VALIDÉ (09/09/2026).
 
 Why:
-- Protéger les candidats et la plateforme en éliminant l'inscription libre de recruteurs sans validation d'entreprise.
-- Garantir qu'aucun déblocage gratuit ni accès aux profils candidats ne soit possible avant approbation formelle par un administrateur.
-- Améliorer les performances globales du portail recruteur (pagination serveur SQL, indexation vectorielle pgvector, agrégation SQL).
-- Fournir un parcours clair, réactif et guidé pour les recruteurs avec notifications par email à chaque étape.
+- Protéger la plateforme contre l'élévation de privilèges (CWE-269 / Mass Assignment) permettant à un compte utilisateur standard de s'octroyer le rôle ADMIN en injectant un payload forgé vers /api/auth/session.
+- Éliminer le risque de SSRF et de fuite de la clé secrète interne (INTERNAL_API_KEY) via manipulation de l'en-tête Host dans la génération PDF Puppeteer.
+- Établir une architecture Zero-Trust stricte où seules les variables d'environnement serveur et la base de données PostgreSQL font autorité.
 
 Files affected:
-- prisma/schema.prisma — Définition des champs clicksCount et recruiterStatus.
-- prisma.config.ts — Chargement prioritaire de .env.local.
-- types/next-auth.d.ts — Typage étendu NextAuth.
-- auth.config.ts — Gestion de recruiterStatus dans jwt et session.
-- components/recruiter/RecruiterLayout.tsx — Gardien d'accès centralisé au portail.
-- app/recruiter/register/page.tsx — Page d'inscription recruteur refondue.
-- app/recruiter/pending/page.tsx — Page d'attente de validation avec session sync.
-- app/recruiter/rejected/page.tsx — Page d'affichage du motif de rejet et re-soumission.
-- app/api/recruiter/register/route.ts — Inscription avec validation d'entreprise.
-- app/api/recruiter/status/route.ts — Consultation temps réel du statut recruteur.
-- app/api/admin/recruiters/route.ts — API de modération administrative et emails.
-- app/dashboard/hq-ops/recruiters/page.tsx — Interface d'administration HQ Ops.
-- components/dashboard/HqSidebar.tsx — Entrée de menu 'Validation Recruteurs'.
-- app/api/recruiter/jobs/route.ts — Protection de publication et consultation d'offres.
-- app/api/recruiter/profiles/[id]/unlock/route.ts — Protection directe en base sur les déblocages.
-- app/api/recruiter/jobs/[id]/applications/route.ts — Pagination serveur PostgreSQL.
-- app/recruiter/jobs/[id]/applications/page.tsx — Interface paginée des candidatures.
-- app/api/recruiter/analytics/route.ts — Agrégation analytique SQL dédiée.
-- app/recruiter/analytics/page.tsx — Consommation du endpoint analytique SQL.
-- app/api/jobs/[id]/route.ts & app/jobs/[id]/page.tsx — Tracking de clics sur les offres.
-- app/api/recruiter/search/route.ts & lib/talent-assistant.ts — Requêtes optimisées pgvector.
-- __tests__/* — Suites de tests unitaires associées.
-- commit.txt — Documentation complète du commit.
+- auth.config.ts — Suppression de la logique d'assignation de rôle/statut non vérifiée.
+- app/recruiter/pending/page.tsx — Remplacement de update() par signOut() sécurisé vers le login.
+- app/recruiter/register/page.tsx — Suppression de l'appel update() résiduel.
+- app/recruiter/rejected/page.tsx — Suppression des appels update() résiduels.
+- app/api/pdf/generate/route.ts — Sécurisation de l'URL Puppeteer (anti-SSRF / anti-Host injection).
+- __tests__/auth/auth.config.test.ts — Tests automatisés de non-régression anti-privilege escalation.
+- faille/auth_privilege_escalation.md — Statut CORRIGÉ & VALIDÉ (09/09/2026).
+- faille/ssrf.md — Statut CORRIGÉ & VALIDÉ (09/09/2026).
+- commit.txt — Documentation factuelle du commit.
 
 Breaking changes:
-- None. Les comptes recruteurs existants ont été migrés vers APPROVED.
+- None. Les recruteurs approuvés se reconnectent pour charger leur nouveau rôle (démarche déjà documentée dans l'email transactionnel d'approbation).
 
 Notes for review:
 - npx tsc --noEmit validé avec 0 erreur.
-- Suite complète vitest validée à 100% (31/31 fichiers, 374/374 tests passés avec succès).
-- Intégrité de la base de données PostgreSQL préservée.
+- npm test validé à 100% (31 fichiers de test, 376/376 tests passés avec succès).

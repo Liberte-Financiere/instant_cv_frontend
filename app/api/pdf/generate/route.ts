@@ -19,19 +19,19 @@ export async function POST(req: Request) {
     const pagePath = type === 'cover-letter' ? 'cover-letter' : 'cv';
     const docLabel = type === 'cover-letter' ? 'Lettre' : 'CV';
 
-    // Determine base URL dynamically based on environment
-    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
-    let host = req.headers.get('host') || process.env.NEXT_PUBLIC_APP_URL || 'localhost:3000';
-    
-    // Fix host parsing to remove protocol if accidentally injected via env variables
-    if (host.startsWith('http')) {
-      host = new URL(host).host;
+    // Sécurité: Ne jamais faire confiance au header 'Host' du client pour éviter les attaques SSRF.
+    // L'URL de base est strictement dérivée des variables d'environnement du serveur.
+    const isDev = process.env.NODE_ENV === 'development';
+    const rawAppUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || (isDev ? 'http://localhost:3000' : 'https://jobsira.com');
+    let baseUrl: string;
+    try {
+      baseUrl = new URL(rawAppUrl.startsWith('http') ? rawAppUrl : `https://${rawAppUrl}`).origin;
+    } catch {
+      baseUrl = isDev ? 'http://localhost:3000' : 'https://jobsira.com';
     }
 
-    const baseUrl = `${protocol}://${host}`;
-    
     // Construct the target URL. Add headless=true to skip window.print()
-    const targetUrl = `${baseUrl}/${pagePath}/${id}?print=true&headless=true`;
+    const targetUrl = `${baseUrl}/${pagePath}/${encodeURIComponent(id)}?print=true&headless=true`;
 
     // Define real Google Chrome paths based on the OS for both dev and prod
     let chromeExecutablePath = '';

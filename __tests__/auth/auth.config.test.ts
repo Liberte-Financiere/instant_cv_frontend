@@ -134,6 +134,48 @@ describe('Auth Config - Impersonation Callbacks', () => {
       expect(resultToken.role).toBe('ADMIN');
       expect(resultToken.originalUser).toBeUndefined();
     });
+
+    it('should initialize role, schoolId, and recruiterStatus on initial sign-in', async () => {
+      const initialToken = { sub: 'user-new' };
+      const user = {
+        id: 'user-new',
+        role: 'USER',
+        schoolId: 'school-1',
+        recruiterStatus: 'PENDING',
+      };
+
+      const resultToken = await jwtCallback({
+        token: initialToken,
+        user,
+      });
+
+      expect(resultToken.role).toBe('USER');
+      expect(resultToken.schoolId).toBe('school-1');
+      expect(resultToken.recruiterStatus).toBe('PENDING');
+    });
+
+    it('should ignore client attempts to elevate role to ADMIN via trigger update', async () => {
+      const initialToken = {
+        sub: 'user-attacker',
+        role: 'USER',
+        recruiterStatus: 'NONE',
+      };
+
+      const maliciousUpdate = {
+        role: 'ADMIN',
+        recruiterStatus: 'APPROVED',
+      };
+
+      const resultToken = await jwtCallback({
+        token: { ...initialToken },
+        trigger: 'update',
+        session: maliciousUpdate,
+      });
+
+      // Role and recruiterStatus MUST NOT be updated from untrusted client payload
+      expect(resultToken.role).toBe('USER');
+      expect(resultToken.recruiterStatus).toBe('NONE');
+    });
   });
 
   describe('Session Callback', () => {
