@@ -27,8 +27,7 @@ export const authConfig = {
          '/analysis', 
          '/signature',
          '/cv',
-         '/recruiter/unlocks',
-         '/recruiter/register',
+         '/recruiter',
       ]
       
       const isProtected = protectedPaths.some(path => pathname.startsWith(path))

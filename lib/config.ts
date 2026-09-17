@@ -98,8 +98,14 @@ export const APP_CONFIG = {
   ],
 
   // ─── Infrastructure ───────────────────────────────
-  /** Cloudinary upload folder */
+  /** Cloudinary upload folder (default / legacy) */
   uploadFolder: 'jobsira-cv-photos',
+
+  /** Cloudinary upload folders by context */
+  uploadFolders: {
+    cvPhotos: 'jobsira-cv-photos',
+    companyDocuments: 'jobsira-company-documents',
+  },
 
   /** PWA cache prefix */
   cachePrefix: 'jobsira',

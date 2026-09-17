@@ -29,6 +29,8 @@ export async function GET() {
         companyWebsite: true,
         companyTaxId: true,
         companySize: true,
+        companyDescription: true,
+        companyDocumentUrl: true,
         freeUnlocksUsed: true,
         recruiterCredits: true,
       },
@@ -53,6 +55,8 @@ export async function GET() {
         website: user.companyWebsite,
         taxId: user.companyTaxId,
         size: user.companySize,
+        description: user.companyDescription,
+        documentUrl: user.companyDocumentUrl,
       },
     });
   } catch (error) {

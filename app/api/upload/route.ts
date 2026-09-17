@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import cloudinary from '@/lib/cloudinary';
+import { uploadBufferToCloudinary } from '@/lib/cloudinary';
 import { auth } from '@/auth';
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
+import { APP_CONFIG } from '@/lib/config';
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -47,22 +48,17 @@ export async function POST(req: Request) {
       );
     }
 
+    const requestedFolder = formData.get('folder') as string | null;
+    const allowedFolders: string[] = Object.values(APP_CONFIG.uploadFolders);
+    const targetFolder = requestedFolder && allowedFolders.includes(requestedFolder)
+      ? requestedFolder
+      : APP_CONFIG.uploadFolders.cvPhotos;
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Upload to Cloudinary via stream or buffer
-    const result = await new Promise<any>((resolve, reject) => {
-      cloudinary.uploader.upload_stream(
-        { 
-          folder: 'jobsira-cv-photos',
-          resource_type: 'auto' // Crucial pour les PDF et documents (évite l'erreur 401)
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      ).end(buffer);
-    });
+    // Upload to Cloudinary via helper
+    const result = await uploadBufferToCloudinary(buffer, targetFolder, 'auto');
 
     return NextResponse.json({ url: result.secure_url });
   } catch (error) {

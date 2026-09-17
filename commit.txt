@@ -1,33 +1,41 @@
-[2026-09-09] — FIX(SECURITY): Eliminate NextAuth Privilege Escalation & PDF Generation SSRF
+[2026-09-17] — FEAT: Recruiter Registration 3-Step Wizard with Server-Side Document Upload & HQ Ops Review
 
 What changed:
-- auth.config.ts: Suppression intégrale du bloc conditionnel vulnérable `if (trigger === "update" && session?.recruiterStatus)` qui réassignait `token.role = session.role` et `token.recruiterStatus = session.recruiterStatus`. Le callback JWT n'accepte plus aucune modification de rôle ou de statut initiée depuis le client.
-- app/recruiter/pending/page.tsx: Remplacement des appels `update(...)` par `signOut({ callbackUrl: '/login?callbackUrl=/recruiter&message=recruiter_approved' })` dès que l'approbation est détectée en base, forçant une régénération cryptographique du token JWT depuis PostgreSQL au login.
-- app/recruiter/register/page.tsx: Suppression de l'appel `update({ recruiterStatus: 'PENDING' })` superflu.
-- app/recruiter/rejected/page.tsx: Nettoyage des appels `update(...)` et application de `signOut` avec redirection appropriée lors d'une approbation éventuelle.
-- __tests__/auth/auth.config.test.ts: Ajout de tests de non-régression validant que l'initialisation du token au login charge correctement les attributs depuis la base et que toute tentative d'élévation arbitraire de rôle vers ADMIN ou de statut vers APPROVED via le trigger update est strictement ignorée.
-- app/api/pdf/generate/route.ts: Élimination de la faille SSRF par suppression de la lecture de `req.headers.get('host')`. L'origine Puppeteer est désormais strictement verrouillée sur les variables d'environnement serveur (`NEXTAUTH_URL` ou `NEXT_PUBLIC_APP_URL` ou `localhost:3000`), avec encodage de l'identifiant cible via `encodeURIComponent(id)`.
-- faille/ssrf.md & faille/auth_privilege_escalation.md: Documentation de sécurité mise à jour avec statut CORRIGÉ & VALIDÉ (09/09/2026).
+- prisma/schema.prisma: Ajout des colonnes `companyDescription` (@db.Text) et `companyDocumentUrl` (@db.Text) sur le modèle `User` pour stocker la description de l'entreprise et l'URL Cloudinary du justificatif officiel (RCCM / IFU). Base synchronisée via `prisma db push` et client régénéré.
+- lib/data/west-africa-locations.ts: Création du référentiel géographique pour les pays d'Afrique de l'Ouest (UEMOA / CEDEAO : Burkina Faso, Côte d'Ivoire, Sénégal, Bénin, Togo, Mali, Niger, Guinée, Ghana, Nigeria, Cameroun) avec leurs principaux pôles économiques, helpers et option "Autre" pour saisie libre.
+- lib/config.ts: Structuration des dossiers d'upload Cloudinary (`uploadFolders: { cvPhotos, companyDocuments }`) tout en maintenant le champ legacy `uploadFolder` pour rétrocompatibilité.
+- lib/cloudinary.ts: Ajout du helper mutualisé `uploadBufferToCloudinary(buffer, folder, resourceType)` pour téléversement en flux continu (stream) sans écriture sur disque.
+- app/api/upload/route.ts: Refactorisation pour consommer le helper `uploadBufferToCloudinary` et validation par liste blanche du dossier cible.
+- app/api/recruiter/register/route.ts: Refonte du endpoint d'enregistrement. Support natif de `multipart/form-data` avec téléversement direct du document justificatif (PDF ou images max 5 Mo) vers Cloudinary avant mise à jour PostgreSQL atomique (`recruiterStatus: 'PENDING'`). Maintien de la rétrocompatibilité `application/json`.
+- app/api/recruiter/status/route.ts: Exposition des champs `companyDescription` et `companyDocumentUrl` dans l'objet `company` pour pré-remplissage lors d'une re-soumission après rejet.
+- app/recruiter/register/page.tsx: Refonte intégrale en Wizard fluide 3 étapes (Étape 1: Identité entreprise avec compteur de 500 car. ; Étape 2: Coordonnées géographiques dynamiques, téléphone, site web et upload document ; Étape 3: Récapitulatif avec édition rapide par section). Bandeau ambré explicite en cas de rejet précédent, auto-scroll fluide vers les erreurs, et conformité accessibilité (htmlFor, id, autoComplete, ARIA).
+- app/api/admin/recruiters/route.ts: Ajout de `companyDescription` et `companyDocumentUrl` dans le `select` Prisma de la route GET pour la modération.
+- app/dashboard/hq-ops/recruiters/page.tsx: Affichage de la description de l'entreprise, intégration du lien externe vers le document officiel Cloudinary avec icône d'état, et prise en compte de la description dans la recherche textuelle.
+- __tests__/api/recruiter/register-route.test.ts: Ajout de tests automatisés pour la validation du protocole de site web, la limite de caractères de description, et la soumission multipart avec document joint (9/9 tests passés).
 
 Why:
-- Protéger la plateforme contre l'élévation de privilèges (CWE-269 / Mass Assignment) permettant à un compte utilisateur standard de s'octroyer le rôle ADMIN en injectant un payload forgé vers /api/auth/session.
-- Éliminer le risque de SSRF et de fuite de la clé secrète interne (INTERNAL_API_KEY) via manipulation de l'en-tête Host dans la génération PDF Puppeteer.
-- Établir une architecture Zero-Trust stricte où seules les variables d'environnement serveur et la base de données PostgreSQL font autorité.
+- Simplifier l'expérience d'inscription des recruteurs en éliminant les formulaires plats et fastidieux au profit d'un parcours guidé, clair et récapitulatif.
+- Éliminer le risque de fichiers orphelins sur Cloudinary et d'états asynchrones désynchronisés côté client grâce à un upload 100% orchestré côté serveur (conformité Règle d'ingénierie Jobsira #14).
+- Permettre à l'équipe HQ Ops de vérifier l'authenticité juridique des entreprises candidates grâce au document officiel RCCM/IFU avant toute approbation.
 
 Files affected:
-- auth.config.ts — Suppression de la logique d'assignation de rôle/statut non vérifiée.
-- app/recruiter/pending/page.tsx — Remplacement de update() par signOut() sécurisé vers le login.
-- app/recruiter/register/page.tsx — Suppression de l'appel update() résiduel.
-- app/recruiter/rejected/page.tsx — Suppression des appels update() résiduels.
-- app/api/pdf/generate/route.ts — Sécurisation de l'URL Puppeteer (anti-SSRF / anti-Host injection).
-- __tests__/auth/auth.config.test.ts — Tests automatisés de non-régression anti-privilege escalation.
-- faille/auth_privilege_escalation.md — Statut CORRIGÉ & VALIDÉ (09/09/2026).
-- faille/ssrf.md — Statut CORRIGÉ & VALIDÉ (09/09/2026).
+- prisma/schema.prisma — Définition des champs companyDescription et companyDocumentUrl.
+- lib/data/west-africa-locations.ts — Référentiel géographique Afrique de l'Ouest.
+- lib/config.ts — Configuration des dossiers Cloudinary par contexte.
+- lib/cloudinary.ts — Helper stream uploadBufferToCloudinary.
+- app/api/upload/route.ts — Sécurisation dossier et utilisation helper.
+- app/api/recruiter/register/route.ts — Support multipart, validation Zod renforcée et upload atomique.
+- app/api/recruiter/status/route.ts — Exposition description et documentUrl.
+- app/recruiter/register/page.tsx — Refonte Wizard 3 étapes, résumé et accessibilité.
+- app/api/admin/recruiters/route.ts — Exposition des nouveaux champs pour HQ Ops.
+- app/dashboard/hq-ops/recruiters/page.tsx — Affichage justificatif et description en modération.
+- __tests__/api/recruiter/register-route.test.ts — Tests unitaires de validation et upload.
 - commit.txt — Documentation factuelle du commit.
 
 Breaking changes:
-- None. Les recruteurs approuvés se reconnectent pour charger leur nouveau rôle (démarche déjà documentée dans l'email transactionnel d'approbation).
+- None. La route /api/recruiter/register conserve le support des requêtes JSON existantes.
 
 Notes for review:
 - npx tsc --noEmit validé avec 0 erreur.
-- npm test validé à 100% (31 fichiers de test, 376/376 tests passés avec succès).
+- npx vitest run validé à 100% (31 fichiers, 379/379 tests passés avec succès).
+- Base de données synchronisée avec succès via Prisma db push.

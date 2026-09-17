@@ -2577,6 +2577,8 @@ export const UserScalarFieldEnum = {
   companyCity: 'companyCity',
   companyCountry: 'companyCountry',
   companySize: 'companySize',
+  companyDescription: 'companyDescription',
+  companyDocumentUrl: 'companyDocumentUrl',
   recruiterStatus: 'recruiterStatus',
   recruiterRejectionReason: 'recruiterRejectionReason',
   recruiterVerifiedAt: 'recruiterVerifiedAt',
@@ -3065,6 +3067,8 @@ export const UserOrderByRelevanceFieldEnum = {
   companyCity: 'companyCity',
   companyCountry: 'companyCountry',
   companySize: 'companySize',
+  companyDescription: 'companyDescription',
+  companyDocumentUrl: 'companyDocumentUrl',
   recruiterStatus: 'recruiterStatus',
   recruiterRejectionReason: 'recruiterRejectionReason',
   schoolId: 'schoolId'

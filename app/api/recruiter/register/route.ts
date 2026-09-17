@@ -4,6 +4,9 @@
  * Authenticated endpoint: requires logged-in user.
  * Submits a recruiter registration dossier for manual Admin approval.
  *
+ * Supports both multipart/form-data (with direct document upload)
+ * and application/json (legacy & automated tests).
+ *
  * Status lifecycle:
  *   NONE -> PENDING (upon registration)
  *   PENDING -> APPROVED (by Admin in HQ Ops)
@@ -15,6 +18,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { z } from 'zod';
+import { APP_CONFIG } from '@/lib/config';
+import { uploadBufferToCloudinary } from '@/lib/cloudinary';
 
 const registerSchema = z.object({
   companyName: z.string().min(2, "Le nom de l'entreprise doit comporter au moins 2 caractères").max(100),
@@ -22,10 +27,23 @@ const registerSchema = z.object({
   companyPhone: z.string().min(6, "Le numéro de téléphone professionnel est requis").max(30),
   companyCity: z.string().min(2, "La ville est requise").max(100),
   companyCountry: z.string().min(2, "Le pays est requis").max(100),
-  companyWebsite: z.string().optional().or(z.literal('')),
+  companyWebsite: z.string().optional().or(z.literal('')).refine(
+    (val) => !val || /^https?:\/\//i.test(val),
+    { message: "L'adresse du site web doit commencer par http:// ou https://" }
+  ),
   companyTaxId: z.string().optional().or(z.literal('')), // RCCM / IFU optionnel
   companySize: z.string().optional().or(z.literal('')),
+  companyDescription: z.string().max(500, "La description ne doit pas dépasser 500 caractères").optional().or(z.literal('')),
+  companyDocumentUrl: z.string().optional().or(z.literal('')),
 });
+
+const ALLOWED_DOCUMENT_MIMES = [
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+];
+const MAX_DOCUMENT_SIZE = 5 * 1024 * 1024; // 5 Mo
 
 export async function POST(req: Request) {
   try {
@@ -45,7 +63,7 @@ export async function POST(req: Request) {
     // Fetch current user from DB to check current state
     const currentUser = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { role: true, recruiterStatus: true },
+      select: { role: true, recruiterStatus: true, companyDocumentUrl: true },
     });
 
     if (currentUser?.role === 'RECRUITER' && currentUser?.recruiterStatus === 'APPROVED') {
@@ -62,15 +80,69 @@ export async function POST(req: Request) {
       );
     }
 
-    const body = await req.json();
-    const result = registerSchema.safeParse(body);
+    const contentType = req.headers.get('content-type') || '';
+    let rawPayload: Record<string, any> = {};
+    let newlyUploadedDocUrl: string | null = null;
 
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await req.formData();
+      rawPayload = {
+        companyName: (formData.get('companyName') as string) || '',
+        companySector: (formData.get('companySector') as string) || '',
+        companyPhone: (formData.get('companyPhone') as string) || '',
+        companyCity: (formData.get('companyCity') as string) || '',
+        companyCountry: (formData.get('companyCountry') as string) || '',
+        companyWebsite: (formData.get('companyWebsite') as string) || '',
+        companyTaxId: (formData.get('companyTaxId') as string) || '',
+        companySize: (formData.get('companySize') as string) || '',
+        companyDescription: (formData.get('companyDescription') as string) || '',
+      };
+
+      const documentFile = formData.get('companyDocument') as File | null;
+      if (documentFile && typeof documentFile === 'object' && documentFile.size > 0) {
+        // Validate MIME type
+        if (!ALLOWED_DOCUMENT_MIMES.includes(documentFile.type)) {
+          return NextResponse.json(
+            { error: 'Format de document non autorisé. Formats acceptés : PDF, JPEG, PNG, WebP.' },
+            { status: 400 }
+          );
+        }
+
+        // Validate file size
+        if (documentFile.size > MAX_DOCUMENT_SIZE) {
+          return NextResponse.json(
+            { error: 'Le document justificatif est trop volumineux (maximum 5 Mo).' },
+            { status: 400 }
+          );
+        }
+
+        // Stream direct to Cloudinary in company documents folder
+        const arrayBuffer = await documentFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const uploadResult = await uploadBufferToCloudinary(
+          buffer,
+          APP_CONFIG.uploadFolders.companyDocuments,
+          'auto'
+        );
+        newlyUploadedDocUrl = uploadResult.secure_url;
+      }
+    } else {
+      // JSON body (automated tests & direct API calls)
+      const body = await req.json();
+      rawPayload = body || {};
+      if (typeof rawPayload.companyDocumentUrl === 'string' && rawPayload.companyDocumentUrl.trim().length > 0) {
+        newlyUploadedDocUrl = rawPayload.companyDocumentUrl.trim();
+      }
+    }
+
+    const result = registerSchema.safeParse(rawPayload);
     if (!result.success) {
       const firstError = result.error.issues[0]?.message || 'Données invalides';
       return NextResponse.json({ error: firstError }, { status: 400 });
     }
 
     const data = result.data;
+    const finalDocumentUrl = newlyUploadedDocUrl || currentUser?.companyDocumentUrl || null;
 
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
@@ -83,6 +155,8 @@ export async function POST(req: Request) {
         companyWebsite: data.companyWebsite?.trim() || null,
         companyTaxId: data.companyTaxId?.trim() || null,
         companySize: data.companySize?.trim() || null,
+        companyDescription: data.companyDescription?.trim() || null,
+        companyDocumentUrl: finalDocumentUrl,
         recruiterStatus: 'PENDING',
         recruiterRejectionReason: null,
       },
@@ -90,6 +164,8 @@ export async function POST(req: Request) {
         id: true,
         companyName: true,
         recruiterStatus: true,
+        companyDescription: true,
+        companyDocumentUrl: true,
       },
     });
 

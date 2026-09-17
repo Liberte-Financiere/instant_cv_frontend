@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
@@ -21,6 +21,7 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
   const router = useRouter();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const verifyingRef = useRef(false);
 
   const isOnboardingPage = 
     pathname === '/recruiter/register' || 
@@ -42,17 +43,35 @@ export function RecruiterLayout({ children }: RecruiterLayoutProps) {
       }
 
       if (!isApprovedRecruiter) {
-        const recruiterStatus = session?.user?.recruiterStatus;
-        if (recruiterStatus === 'PENDING') {
-          router.push('/recruiter/pending');
-        } else if (recruiterStatus === 'REJECTED') {
-          router.push('/recruiter/rejected');
-        } else {
-          router.push('/recruiter/register');
-        }
+        if (verifyingRef.current) return;
+        verifyingRef.current = true;
+
+        fetch('/api/recruiter/status')
+          .then((res) => {
+            if (!res.ok) throw new Error('Status check failed');
+            return res.json();
+          })
+          .then(async (data) => {
+            if (data.status === 'APPROVED' || data.role === 'RECRUITER') {
+              await signOut({ callbackUrl: `/login?callbackUrl=${encodeURIComponent(pathname)}&message=recruiter_approved` });
+            } else if (data.status === 'PENDING') {
+              router.push('/recruiter/pending');
+            } else if (data.status === 'REJECTED') {
+              router.push('/recruiter/rejected');
+            } else {
+              router.push('/recruiter/register');
+            }
+          })
+          .catch((err) => {
+            console.error('[RECRUITER_GATEKEEPER_ERROR]', err);
+            router.push('/recruiter/register');
+          })
+          .finally(() => {
+            verifyingRef.current = false;
+          });
       }
     }
-  }, [status, isApprovedRecruiter, isOnboardingPage, pathname, router, session]);
+  }, [status, isApprovedRecruiter, isOnboardingPage, pathname, router]);
 
   // Dedicated clean minimalist layout for onboarding (register / pending / rejected)
   if (isOnboardingPage) {

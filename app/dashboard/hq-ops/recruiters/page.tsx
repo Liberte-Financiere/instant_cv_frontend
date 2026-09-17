@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { 
   Building2, CheckCircle2, XCircle, Clock, Globe, Phone, MapPin, 
   FileText, Search, RefreshCw, AlertCircle, ExternalLink, ShieldCheck, 
-  User, Check, X, Loader2
+  User, Check, X, Loader2, FileCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { toast } from 'sonner';
@@ -21,6 +21,8 @@ interface RecruiterDossier {
   companyWebsite: string | null;
   companyTaxId: string | null;
   companySize: string | null;
+  companyDescription: string | null;
+  companyDocumentUrl: string | null;
   recruiterStatus: string;
   recruiterRejectionReason: string | null;
   recruiterVerifiedAt: string | null;
@@ -112,7 +114,8 @@ export default function AdminRecruitersPage() {
       (r.name && r.name.toLowerCase().includes(q)) ||
       (r.email && r.email.toLowerCase().includes(q)) ||
       (r.companyCity && r.companyCity.toLowerCase().includes(q)) ||
-      (r.companyTaxId && r.companyTaxId.toLowerCase().includes(q))
+      (r.companyTaxId && r.companyTaxId.toLowerCase().includes(q)) ||
+      (r.companyDescription && r.companyDescription.toLowerCase().includes(q))
     );
   });
 
@@ -315,11 +318,25 @@ export default function AdminRecruitersPage() {
 
                   <div className="bg-slate-50 rounded-xl p-3">
                     <p className="text-slate-400 font-semibold mb-1 flex items-center gap-1.5">
-                      <FileText className="w-3.5 h-3.5" /> Numéro RCCM / IFU
+                      <FileText className="w-3.5 h-3.5" /> Justificatif RCCM / IFU
                     </p>
                     <p className="font-bold text-slate-800">
-                      {r.companyTaxId || <span className="text-slate-400 font-normal">Non renseigné</span>}
+                      {r.companyTaxId || <span className="text-slate-400 font-normal">Sans N°</span>}
                     </p>
+                    {r.companyDocumentUrl ? (
+                      <a
+                        href={r.companyDocumentUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-emerald-700 hover:text-emerald-800 font-bold flex items-center gap-1 mt-1.5 hover:underline"
+                      >
+                        <FileCheck className="w-3.5 h-3.5 shrink-0" />
+                        Voir le document officiel
+                        <ExternalLink className="w-3 h-3 shrink-0 ml-0.5" />
+                      </a>
+                    ) : (
+                      <span className="text-slate-400 font-normal block mt-1">Aucun document joint</span>
+                    )}
                   </div>
 
                   <div className="bg-slate-50 rounded-xl p-3">
@@ -341,6 +358,13 @@ export default function AdminRecruitersPage() {
                     )}
                   </div>
                 </div>
+
+                {r.companyDescription && (
+                  <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-xs space-y-1">
+                    <p className="text-slate-400 font-semibold">Présentation de l'entreprise :</p>
+                    <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{r.companyDescription}</p>
+                  </div>
+                )}
 
                 {isRejected && r.recruiterRejectionReason && (
                   <div className="bg-rose-50 border border-rose-100 rounded-xl p-3 text-xs text-rose-800 flex items-start gap-2">

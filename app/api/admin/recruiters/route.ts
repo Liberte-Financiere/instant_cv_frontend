@@ -43,6 +43,8 @@ export async function GET(req: Request) {
         companyWebsite: true,
         companyTaxId: true,
         companySize: true,
+        companyDescription: true,
+        companyDocumentUrl: true,
         recruiterStatus: true,
         recruiterRejectionReason: true,
         recruiterVerifiedAt: true,

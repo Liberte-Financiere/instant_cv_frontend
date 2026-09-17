@@ -124,6 +124,8 @@ model User {
   companyCity              String?
   companyCountry           String?
   companySize              String?   // '1-10', '11-50', '51-200', '200+'
+  companyDescription       String?   @db.Text
+  companyDocumentUrl       String?   @db.Text
   recruiterStatus          String    @default("NONE") // 'NONE' | 'PENDING' | 'APPROVED' | 'REJECTED'
   recruiterRejectionReason String?
   recruiterVerifiedAt      DateTime?
