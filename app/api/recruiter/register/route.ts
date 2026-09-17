@@ -20,6 +20,8 @@ import { auth } from '@/auth';
 import { z } from 'zod';
 import { APP_CONFIG } from '@/lib/config';
 import { uploadBufferToCloudinary } from '@/lib/cloudinary';
+import { generateAnnouncementEmail } from '@/lib/email-templates';
+import { sendEmailViaService } from '@/lib/email-client';
 
 const registerSchema = z.object({
   companyName: z.string().min(2, "Le nom de l'entreprise doit comporter au moins 2 caractères").max(100),
@@ -63,7 +65,13 @@ export async function POST(req: Request) {
     // Fetch current user from DB to check current state
     const currentUser = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { role: true, recruiterStatus: true, companyDocumentUrl: true },
+      select: {
+        role: true,
+        recruiterStatus: true,
+        companyDocumentUrl: true,
+        name: true,
+        email: true,
+      },
     });
 
     if (currentUser?.role === 'RECRUITER' && currentUser?.recruiterStatus === 'APPROVED') {
@@ -168,6 +176,29 @@ export async function POST(req: Request) {
         companyDocumentUrl: true,
       },
     });
+
+    // Notify Jobsira HQ Ops team asynchronously (fire-and-forget, non-blocking)
+    try {
+      const siteUrl = process.env.NEXTAUTH_URL || 'https://jobsira.com';
+      const opsEmail = process.env.OPS_NOTIFICATION_EMAIL || process.env.SUPPORT_EMAIL || 'admin@jobsira.com';
+      const applicantName = currentUser?.name || session.user.name || 'Utilisateur';
+      const applicantEmail = currentUser?.email || session.user.email || 'Email non renseigné';
+
+      const emailHtml = generateAnnouncementEmail({
+        subject: `Nouveau dossier recruteur déposé : ${data.companyName}`,
+        message: `Un nouveau dossier de compte recruteur vient d'être soumis sur Jobsira et attend votre validation dans HQ Ops :\n\n- **Entreprise :** ${data.companyName}\n- **Secteur :** ${data.companySector}\n- **Localisation :** ${data.companyCity}, ${data.companyCountry}\n- **Téléphone pro :** ${data.companyPhone}\n- **Demandeur :** ${applicantName} (${applicantEmail})\n- **Justificatif légal :** ${finalDocumentUrl ? 'Document joint fourni' : 'Non joint'}\n\nCliquez sur le bouton ci-dessous pour examiner les pièces et statuer sur ce dossier.`,
+        buttonText: 'Examiner le dossier dans HQ Ops',
+        buttonUrl: `${siteUrl}/dashboard/hq-ops/recruiters`,
+      });
+
+      sendEmailViaService({
+        recipient: { email: opsEmail, name: 'Jobsira HQ Ops' },
+        subject: `[HQ Ops] Nouveau dossier recruteur : ${data.companyName}`,
+        html: emailHtml,
+      }).catch((err) => console.error('[OPS_REGISTRATION_EMAIL_ERROR]', err));
+    } catch (notificationErr) {
+      console.error('[OPS_NOTIFICATION_PREPARE_ERROR]', notificationErr);
+    }
 
     return NextResponse.json({
       message: 'Votre dossier a été soumis avec succès. Notre équipe le valide sous 24h ouvrées.',

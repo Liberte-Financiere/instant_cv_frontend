@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { POST } from '@/app/api/recruiter/register/route';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+import { sendEmailViaService } from '@/lib/email-client';
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
@@ -14,6 +15,10 @@ vi.mock('@/lib/prisma', () => ({
 
 vi.mock('@/auth', () => ({
   auth: vi.fn(),
+}));
+
+vi.mock('@/lib/email-client', () => ({
+  sendEmailViaService: vi.fn().mockResolvedValue({ success: true }),
 }));
 
 vi.mock('@/lib/cloudinary', () => ({
@@ -269,5 +274,37 @@ describe('Recruiter Registration API (/api/recruiter/register)', () => {
         }),
       })
     );
+    expect(sendEmailViaService).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subject: expect.stringContaining('Nouveau dossier recruteur'),
+      })
+    );
+  });
+
+  it('devrait réussir même si le service email Ops échoue', async () => {
+    (auth as any).mockResolvedValue({
+      user: { id: 'user-fallback', role: 'USER' },
+    });
+    (prisma.user.findUnique as any).mockResolvedValue({
+      role: 'USER',
+      recruiterStatus: 'NONE',
+    });
+    (prisma.user.update as any).mockResolvedValue({
+      id: 'user-fallback',
+      companyName: 'FASO TECH SOLUTIONS',
+      recruiterStatus: 'PENDING',
+    });
+    (sendEmailViaService as any).mockRejectedValueOnce(new Error('Email service down'));
+
+    const req = new Request('http://localhost:3000/api/recruiter/register', {
+      method: 'POST',
+      body: JSON.stringify(validPayload),
+    });
+
+    const res = await POST(req);
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json.status).toBe('PENDING');
   });
 });
